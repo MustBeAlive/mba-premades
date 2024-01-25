@@ -1,26 +1,83 @@
 {
-  "id": "module",
-  "title": "New Module",
-  "description": "",
+  "id": "mba-premades",
+  "title": "MustBeAlive Premades",
+  "description": "MustBeAlive premade actor/items for private use.",
   "version": "#{VERSION}#",
   "library": "false",
   "manifestPlusVersion": "1.2.0",
   "compatibility": {
-    "minimum": 10,
-    "verified": 10,
-    "maximum": 11
+    "minimum": "11",
+    "verified": "11",
+    "maximum": "11"
   },
   "authors": [
     {
-      "name": "The League of Extraordinary FVTT Developers",
-      "url": "https://github.com/League-of-Foundry-Developers",
-      "discord": "discordID#0001"
+      "name": "MustBeAlive",
+      "url": "https://github.com/MustBeAlive",
+      "discord": "MustBeAlive#9625"
     }
   ],
   "relationships": {
-    "systems": [],
+    "systems": [
+      {
+        "id": "dnd5e",
+        "type": "system",
+        "manifest": "https://raw.githubusercontent.com/foundryvtt/dnd5e/master/system.json",
+        "compatibility": {
+          "minimum": "2.4.0",
+          "verified": "2.4.0"
+        }
+      }
+    ],
     "requires": []
   },
+  "packs": [
+    {
+      "name": "MBA Bestiary",
+      "label": "MBA Bestiary",
+      "path": "packs/mba-bestiary",
+      "type": "Actor",
+      "system": "dnd5e",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    },
+    {
+      "name": "MBA Spells",
+      "label": "MBA Spells",
+      "path": "packs/mba-spells",
+      "type": "Item",
+      "system": "dnd5e",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    },
+    {
+      "name": "MBA Music",
+      "label": "MBA Music",
+      "path": "packs/mba-music",
+      "type": "Playlist",
+      "system": "dnd5e",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    }
+  ],
+  "packFolders": [
+    {
+      "name": "MustBeAlive Premades",
+      "sorting": "a",
+      "color": "#005c8a",
+      "packs": [
+        "MBA Bestiary",
+        "MBA Spells",
+        "MBA Music"
+      ]
+    }
+  ],
   "esmodules": [
     "scripts/module.js"
   ],
