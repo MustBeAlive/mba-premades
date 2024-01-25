@@ -37,21 +37,21 @@
       "label": "MBA Bestiary",
       "path": "packs/mba-bestiary",
       "type": "Actor",
-      "system": "dnd5e",
+      "system": "dnd5e"
     },
     {
       "name": "MBA Spells",
       "label": "MBA Spells",
       "path": "packs/mba-spells",
       "type": "Item",
-      "system": "dnd5e",
+      "system": "dnd5e"
     },
     {
       "name": "MBA Music",
       "label": "MBA Music",
       "path": "packs/mba-music",
       "type": "Playlist",
-      "system": "dnd5e",
+      "system": "dnd5e"
     }
   ],
   "packFolders": [
