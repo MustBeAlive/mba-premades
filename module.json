@@ -38,10 +38,6 @@
       "path": "packs/mba-bestiary",
       "type": "Actor",
       "system": "dnd5e",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      }
     },
     {
       "name": "MBA Spells",
@@ -49,10 +45,6 @@
       "path": "packs/mba-spells",
       "type": "Item",
       "system": "dnd5e",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      }
     },
     {
       "name": "MBA Music",
@@ -60,10 +52,6 @@
       "path": "packs/mba-music",
       "type": "Playlist",
       "system": "dnd5e",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      }
     }
   ],
   "packFolders": [
@@ -102,7 +90,7 @@
   "media": [
     {
       "type": "icon",
-      "url": "https://avatars2.githubusercontent.com/u/71292812?s=400&u=ccdb4eeb7abf551ca8f314e5a9bfd0479a4d3d41&v=4"
+      "url": "https://avatars.githubusercontent.com/u/125880043?s=400&u=d4c6ce091ba3aa6996db7fc13161abd670100ea0&v=4"
     }
   ]
 }
