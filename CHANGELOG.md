@@ -1,3 +1,8 @@
+# 0.0.7 Release
+## New Content:
+## Bugfixes:
+## Update Notes:
+- Update to module.json required modules
 # 0.0.6.2 Release
 ## New Content:
 - Bestiary: CR 0, CR 1/8 (95%)
