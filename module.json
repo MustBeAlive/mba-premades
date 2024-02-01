@@ -245,6 +245,13 @@
 		]
 	},
 	"packs": [
+	  {
+	    "name": "MBA Actions",
+			"label": "MBA Actions",
+			"path": "packs/mba-actions",
+			"type": "Item",
+			"system": "dnd5e"
+	  },
 		{
 			"name": "MBA Bestiary",
 			"label": "MBA Bestiary",
@@ -294,6 +301,7 @@
 			"sorting": "a",
 			"color": "#005c8a",
 			"packs": [
+			  "MBA Actions",
 				"MBA Bestiary",
 				"MBA Features",
 				"MBA Items",
