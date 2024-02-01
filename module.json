@@ -29,7 +29,106 @@
         }
       }
     ],
-    "requires": []
+    "requires": [
+        {
+        "id": "midi-qol",
+        "type": "module",
+        "manifest": "https://gitlab.com/tposney/midi-qol/raw/v10/package/module.json",
+        "compatibility": {
+          "verified": "11.3.16",
+          "minimum": "11.3.16"
+        }
+      },
+        {
+        "id": "chris-premades",
+        "type": "module",
+        "manifest": "https://github.com/chrisk123999/chris-premades/releases/latest/download/module.json",
+        "compatibility": {
+          "verified": "0.9.49",
+          "minimum": ".9.49"
+        }
+      },
+      {
+        "id": "dfreds-convenient-effects",
+        "type": "module",
+        "manifest": "https://github.com/DFreds/dfreds-convenient-effects/releases/latest/download/module.json",
+        "compatibility": {
+          "verified": "6.0.1"
+        }
+      },
+      {
+        "id": "warpgate",
+        "type": "module",
+        "manifest": "https://github.com/trioderegion/warpgate/releases/latest/download/module.json",
+        "compatibility": {
+          "verified": "1.19.2"
+        }
+      },
+      {
+        "id": "effectmacro",
+        "type": "module",
+        "manifest": "https://github.com/krbz999/effectmacro/releases/latest/download/module.json",
+        "compatibility": {
+          "verified": "11.1.0"
+        }
+      },
+      {
+        "id": "templatemacro",
+        "type": "module",
+        "manifest": "https://github.com/krbz999/templatemacro/releases/latest/download/module.json",
+        "compatibility": {
+          "verified": "11.0.1"
+        }
+      },
+      {
+        "id": "sequencer",
+        "type": "module",
+        "manifest": "https://github.com/fantasycalendar/FoundryVTT-Sequencer/releases/latest/download/module.json",
+        "compatibility": {
+          "verified": "3.1.4"
+        }
+      },
+      {
+        "id": "token-attacher",
+        "type": "module",
+        "manifest": "https://raw.githubusercontent.com/KayelGee/token-attacher/master/module.json",
+        "compatibility": {
+          "verified": "4.5.13"
+        }
+      },
+      {
+        "id": "babonus",
+        "type": "module",
+        "manifest": "https://github.com/krbz999/babonus/releases/latest/download/module.json",
+        "compatibility": {
+          "verified": "11.7.0"
+        }
+      },
+      {
+        "id": "socketlib",
+        "type": "module",
+        "manifest": "https://raw.githubusercontent.com/manuelVo/foundryvtt-socketlib/master/module.json",
+        "compatibility": {
+          "verified": "1.0.13"
+        }
+      },
+      {
+        "id": "dae",
+        "type": "module",
+        "manifest": "https://gitlab.com/tposney/dae/raw/v10/package/module.json",
+        "compatibility": {
+          "verified": "11.1.11"
+        }
+      },
+      {
+        "id": "autoanimations",
+        "type": "module",
+        "manifest": "https://github.com/otigon/automated-jb2a-animations/releases/latest/download/module.json",
+        "compatibility": {
+          "verified": "4.2.71"
+        }
+      }
+    ]
   },
   "packs": [
     {
@@ -40,13 +139,13 @@
       "system": "dnd5e"
     },
     {
-      "name": "MBA Spells",
-      "label": "MBA Spells",
-      "path": "packs/mba-spells",
+      "name": "MBA Features",
+      "label": "MBA Features",
+      "path": "packs/mba-features",
       "type": "Item",
       "system": "dnd5e"
     },
-        {
+    {
       "name": "MBA Items",
       "label": "MBA Items",
       "path": "packs/mba-items",
@@ -59,6 +158,13 @@
       "path": "packs/mba-music",
       "type": "Playlist",
       "system": "dnd5e"
+    },
+    {
+      "name": "MBA Spells",
+      "label": "MBA Spells",
+      "path": "packs/mba-spells",
+      "type": "Item",
+      "system": "dnd5e"
     }
   ],
   "packFolders": [
@@ -68,9 +174,10 @@
       "color": "#005c8a",
       "packs": [
         "MBA Bestiary",
-        "MBA Spells",
+        "MBA Features"
         "MBA Items",
-        "MBA Music"
+        "MBA Music",
+        "MBA Spells"
       ]
     }
   ],
