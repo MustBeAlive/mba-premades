@@ -1,0 +1,7 @@
+2024/02/01-05:59:36.554 cbc Recovering log #47
+2024/02/01-05:59:36.604 cbc Delete type=0 #47
+2024/02/01-05:59:36.604 cbc Delete type=3 #46
+2024/02/01-06:51:29.192 39e4 Level-0 table #51: started
+2024/02/01-06:51:29.226 39e4 Level-0 table #51: 131766 bytes OK
+2024/02/01-06:51:29.258 39e4 Delete type=0 #49
+2024/02/01-06:51:29.411 39e4 Manual compaction at level-0 from '!folders!0Fv7eGeEcOKuL5sj' @ 72057594037927935 : 1 .. '!items.effects!zFY8Yacyp5GAeRIV.Hx46i1074n2gxUgp' @ 0 : 0; will stop at (end)
