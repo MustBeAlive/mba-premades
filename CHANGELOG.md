@@ -1,3 +1,12 @@
+# 0.0.9 Release
+## New Content:
+## Bugfixes:
+- Giant Crab (Grapple Automation)
+- Homunculus (Bite Poi5+ Automation)
+- Myconid Sprout (Sunlight Sickness)
+- Octopus (Grapple Automation)
+- Quipper (Blood Frenzy)
+## Update Notes:
 # 0.0.8 Release
 ## New Content:
 - Bestiary: CR 0, CR 1/8 (97%)
