@@ -7,6 +7,7 @@
 - Octopus (Grapple Automation)
 - Quipper (Blood Frenzy)
 ## Update Notes:
+- Module settings testing
 # 0.0.8 Release
 ## New Content:
 - Bestiary: CR 0, CR 1/8 (97%)
