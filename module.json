@@ -267,13 +267,6 @@
 			"system": "dnd5e"
 		},
 		{
-			"name": "MBA Generic Actions",
-			"label": "MBA Generic Actions",
-			"path": "packs/mba-genericactions",
-			"type": "Macro",
-			"system": "dnd5e"
-		},
-		{
 			"name": "MBA Items",
 			"label": "MBA Items",
 			"path": "packs/mba-items",
@@ -311,7 +304,6 @@
 			  "MBA Actions",
 				"MBA Bestiary",
 				"MBA Features",
-				"MBA Generic Actions",
 				"MBA Items",
 				"MBA Macro",
 				"MBA Music",
