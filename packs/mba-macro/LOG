@@ -1,25 +1,3 @@
-2024/02/01-23:52:39.678 179c Recovering log #15
-2024/02/01-23:52:39.678 179c Level-0 table #17: started
-2024/02/01-23:52:39.761 179c Level-0 table #17: 9928 bytes OK
-2024/02/01-23:52:39.808 179c Delete type=0 #15
-2024/02/01-23:52:39.808 179c Delete type=3 #13
-2024/02/02-02:00:51.609 1b6c Level-0 table #20: started
-2024/02/02-02:00:51.636 1b6c Level-0 table #20: 2891 bytes OK
-2024/02/02-02:00:51.668 1b6c Delete type=0 #18
-2024/02/02-02:00:51.776 1b6c Manual compaction at level-0 from '!folders!anKVuBahuXC0tTKz' @ 72057594037927935 : 1 .. '!macros!wICCOoWaOFzFNa9Y' @ 0 : 0; will stop at '!macros!wICCOoWaOFzFNa9Y' @ 28 : 1
-2024/02/02-02:00:51.776 1b6c Compacting 3@0 + 0@1 files
-2024/02/02-02:00:51.805 1b6c Generated table #21@0: 8 keys, 4073 bytes
-2024/02/02-02:00:51.805 1b6c Compacted 3@0 + 0@1 files => 4073 bytes
-2024/02/02-02:00:51.859 1b6c compacted to: files[ 0 1 1 0 0 0 0 ]
-2024/02/02-02:00:51.859 1b6c Delete type=2 #14
-2024/02/02-02:00:51.859 1b6c Delete type=2 #17
-2024/02/02-02:00:51.860 1b6c Delete type=2 #20
-2024/02/02-02:00:51.860 1b6c Manual compaction at level-0 from '!macros!wICCOoWaOFzFNa9Y' @ 28 : 1 .. '!macros!wICCOoWaOFzFNa9Y' @ 0 : 0; will stop at (end)
-2024/02/02-02:00:51.860 1b6c Manual compaction at level-1 from '!folders!anKVuBahuXC0tTKz' @ 72057594037927935 : 1 .. '!macros!wICCOoWaOFzFNa9Y' @ 0 : 0; will stop at '!macros!wICCOoWaOFzFNa9Y' @ 28 : 1
-2024/02/02-02:00:51.860 1b6c Compacting 1@1 + 1@2 files
-2024/02/02-02:00:51.914 1b6c Generated table #22@1: 11 keys, 6097 bytes
-2024/02/02-02:00:51.914 1b6c Compacted 1@1 + 1@2 files => 6097 bytes
-2024/02/02-02:00:51.951 1b6c compacted to: files[ 0 0 1 0 0 0 0 ]
-2024/02/02-02:00:51.951 1b6c Delete type=2 #10
-2024/02/02-02:00:51.951 1b6c Delete type=2 #21
-2024/02/02-02:00:52.102 1b6c Manual compaction at level-1 from '!macros!wICCOoWaOFzFNa9Y' @ 28 : 1 .. '!macros!wICCOoWaOFzFNa9Y' @ 0 : 0; will stop at (end)
+2024/02/03-22:12:50.625 b24 Recovering log #58
+2024/02/03-22:12:50.672 b24 Delete type=0 #58
+2024/02/03-22:12:50.673 b24 Delete type=3 #57
