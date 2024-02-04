@@ -1,4 +1,4 @@
-function registerSettings() {
+export function registerSettings() {
     game.settings.register('mba-premades', 'Check For Updates', {
         name: "Check For Updates",
         hint: "If enabled, automatically checks for available updates",
