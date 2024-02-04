@@ -12,5 +12,5 @@ export let mba = {
         }
         let description = page.text.content;
         return description;
-    }
+    },
 }
