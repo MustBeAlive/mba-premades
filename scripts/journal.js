@@ -1,4 +1,4 @@
-let welcomeText = `<p>Any item, spell, or feature that is added to your sheet temporarily needs a description. Module updates will replace the compendiums they're stored in, so instead the descriptions will be pulled from this journal entry. All pages after this one will not get regenerated when updating this module.</p>`;
+let welcomeText = `<p>Как же я пытаюсь избавится от этого правового костыля с журналом — кто бы знал, ей богу. Проще в колено себе выстрелить, чем разобраться в этом всем. Эх.</p>`;
 export async function setupJournalEntry() {
     let journalName = 'MBA - Descriptions';
     let journalEntry = game.journal.getName(journalName);
@@ -24,11 +24,6 @@ export async function setupJournalEntry() {
             'ownership': {
                 'default': 2
             }
-        });
-        let message = '<hr>View MBA Premades readme here: @UUID[JournalEntry.' + journalEntry.id + ']{Read Me}';
-        ChatMessage.create({
-            'speaker': {'alias': 'MBA Premades'},
-            'content': message
         });
     } else {
         let page = journalEntry.pages.getName('Info');
@@ -65,7 +60,5 @@ export async function setupJournalEntry() {
         }
     }
     await preparePages(journalEntry, 'mba-premades.MBA Actions');
-    await preparePages(journalEntry, 'mba-premades.MBA Features');
-    await preparePages(journalEntry, 'mba-premades.MBA Items');
     await preparePages(journalEntry, 'mba-premades.MBA Spells');
 }
