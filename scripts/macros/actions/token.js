@@ -1,3 +1,4 @@
+import {mba} from '../../helperFunctions.js';
 export async function addActions(token, options, userId) {
     let option = game.settings.get('mba-premades', 'Add Generic Actions');
     if (option === 'none' || userId != game.user.id || !token.actor) return;
@@ -30,6 +31,8 @@ export async function addActions(token, options, userId) {
         if (token.actor.items.getName(i.name)) continue;
         let itemData = i.toObject();
         delete itemData._id;
+        itemData.system.description.value = mba.getItemDescription('MBA - Descriptions', itemData.name);
+        newItemData.push(itemData);
     }
-    if (newItemData.length) await token.actor.createEmbeddedDocuments('Item', ItemData);
+    if (newItemData.length) await token.actor.createEmbeddedDocuments('Item', newItemData);
 }
