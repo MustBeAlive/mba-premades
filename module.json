@@ -313,8 +313,7 @@
 	],
 	"scripts": [
       "scripts/module.js",
-      "scripts/settings.js",
-	  "scripts/update.js"
+      "scripts/settings.js"
 	],
 	"languages": [
 		{
