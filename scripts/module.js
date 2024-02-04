@@ -1,11 +1,7 @@
-import {addMenuSetting, mbaSettingsGeneral} from './settingsMenu.js';
-import {settingButton} from './settingsMenu';
-import {checkUpdate} from './update.js';
-
-Hooks.once('init', async function() {
+Hooks.once('init', () => {
     registerSettings();
 });
 
-Hooks.once('ready', async function() {
-    if (game.settings.get('mba-premades', 'Check For Updates')) checkUpdate()
+Hooks.once('ready', () => {
+  
 });
