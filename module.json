@@ -35,7 +35,7 @@
 				"type": "module",
 				"manifest": "https://github.com/kandashi/Active-Auras",
 				"compatibility": {
-					"verified": "0.9.4"
+					"verified": "0.9.5"
 				}
 			},
 			{
@@ -93,8 +93,8 @@
 				"type": "module",
 				"manifest": "https://github.com/chrisk123999/chris-premades/",
 				"compatibility": {
-					"verified": "0.9.50",
-					"minimum": "0.9.50"
+					"verified": "0.9.54",
+					"minimum": "0.9.54"
 				}
 			},
 			{
@@ -102,7 +102,7 @@
 				"type": "module",
 				"manifest": "https://github.com/MrVauxs/dnd5e-animations",
 				"compatibility": {
-					"verified": "1.6.1"
+					"verified": "1.6.2"
 				}
 			},
 			{
@@ -118,8 +118,8 @@
 				"type": "module",
 				"manifest": "https://github.com/DFreds/dfreds-convenient-effects",
 				"compatibility": {
-					"verified": "6.0.2",
-					"minimum": "6.0.2"
+					"verified": "6.0.3",
+					"minimum": "6.0.3"
 				}
 			},
 			{
@@ -153,7 +153,7 @@
 				"type": "module",
 				"manifest": "https://github.com/gambit07/gambits-premades",
 				"compatibility": {
-					"verified": "0.0.23"
+					"verified": "0.0.31"
 				}
 			},
 			{
