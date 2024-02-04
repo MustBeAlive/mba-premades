@@ -311,6 +311,10 @@
 			]
 		}
 	],
+		"scripts": [
+      "scripts/module.js",
+      "scripts/settings.js"
+	],
 	"esmodules": [
 		"scripts/module.js"
 	],
