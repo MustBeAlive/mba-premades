@@ -25,5 +25,12 @@ export async function addActions(token, options, userId) {
     let pack = game.packs.get('mba-premades.MBA Actions');
     if (!pack) return;
     await pack.getDocuments();
-    await token.actor.createEmbeddedDocuments('Item');
+    let newItemData = [];
+    for (let i of pack.contents) {
+        if (token.actor.items.getName(i.name)) continue;
+        let itemData = i.toObject();
+        delete itemData._id;
+        newItemData.push(itemData);
+    }
+    if (newItemData.length) await token.actor.createEmbeddedDocuments('Item', newItemData);
 }

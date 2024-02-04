@@ -1,7 +1,7 @@
 export function registerSettings() {
     game.settings.register('mba-premades', 'Check For Updates', {
-        name: "Check For Updates",
-        hint: "If enabled, automatically checks for available updates",
+        name: "Уведомлять об обновлениях",
+        hint: "Если включено, уведомляет ГМа об обновлениях модуля при запуске мира",
         scope: 'world',
         config: true,
         type: Boolean,
