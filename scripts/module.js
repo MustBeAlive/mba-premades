@@ -2,7 +2,6 @@ import {addActions} from './macros/actions/token.js';
 import {cast} from './macros/animations/cast.js';
 import {checkUpdate} from './update.js';
 import {registerSettings} from './settings.js';
-import {settingButton} from './settingsMenu.js';
 Hooks.once('init', () => {
     registerSettings();
 });
@@ -13,6 +12,3 @@ Hooks.once('ready', async function() {
     if (game.settings.get('mba-premades', 'Cast Animations')) Hooks.on('midi-qol.postPreambleComplete', cast);
     Hooks.on('createToken', addActions);
 });
-globalThis['mbaPremades'] = {
-    settingButton
-}
