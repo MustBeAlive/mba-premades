@@ -13,7 +13,7 @@ export async function checkUpdate() {
             .replaceAll('New Monster Content:', '<b><u>New Monster Content:</u></b>')
             .replaceAll('Bug Fixes:', '<b><u>Bug Fixes:</u></b>')
             .replaceAll('Update Notes:', '<b><u>Update Notes:</u></b>')
-        let message = '<hr>MBA Premades update <b>' + info.tag_name + '</b> available!<hr>' + body;
+        let message = '<hr>MBA Premades, доступно обновление. Версия: <b>' + info.tag_name + '</b><hr>' + body;
         await ChatMessage.create({
             'speaker': {'alias': name},
             'content': message,
