@@ -153,7 +153,7 @@
 				"type": "module",
 				"manifest": "https://github.com/gambit07/gambits-premades",
 				"compatibility": {
-					"verified": "0.0.31"
+					"verified": "0.0.36"
 				}
 			},
 			{
@@ -313,9 +313,6 @@
 	],
 	"esmodules": [
 		"scripts/module.js"
-	],
-	"styles": [
-		"sripts/buttons.css"
 	],
 	"languages": [
 		{
