@@ -13,4 +13,16 @@ export let mba = {
         let description = page.text.content;
         return description;
     },
+    'jb2aCheck': function _jb2aCheck() {
+        let patreon = game.modules.get('jb2a_patreon')?.active;
+        let free = game.modules.get('JB2A_DnD5e')?.active;
+        if (patreon && free) {
+            ui.notifications.info('Both JB2A Modules are Active Please Disable the Free Version.');
+            return 'patreon';
+        }
+        if (patreon) return 'patreon';
+        if (free) return 'free';
+        ui.notifications.info('No JB2A Module Active');
+        return false;
+    },
 }
