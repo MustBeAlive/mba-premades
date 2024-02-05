@@ -32,7 +32,7 @@ export function registerSettings() {
         'name': 'Blinded',
         'hint': 'Эта настройка отключает ограничения видимости для контролирующего токен при получении condition: Blinded',
         'scope': 'world',
-        'config': false,
+        'config': true,
         'type': Boolean,
         'default': false,
         'onChange': value => {
