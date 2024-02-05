@@ -1,15 +1,15 @@
 export function registerSettings() {
     game.settings.register('mba-premades', 'Check For Updates', {
-        name: "Check for Update",
-        hint: "Display a message when an update is available.",
+        name: "Проверять обновления",
+        hint: "Показывать сообщение при входе в мир если доступно обновление модуля",
         scope: 'world',
         config: true,
         type: Boolean,
         default: false
     });
     game.settings.register('mba-premades', 'Add Generic Actions', {
-        name: "Add Generic Actions",
-        hint: "When enabled special actions will be added to the actor on token drop",
+        name: "Добавить базовые действия",
+        hint: "Добавляет базовые действия в лист персонажа при дропе токена на карту",
         scope: 'world',
         config: true,
         type: String,
