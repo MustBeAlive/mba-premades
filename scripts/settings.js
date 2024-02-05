@@ -1,6 +1,4 @@
 import {cast} from './macros/animations/cast.js';
-import {addActions} from './macros/actions/token.js';
-import { addMenuSetting } from './settingsMenu.js';
 let moduleName = 'mba-premades';
 export function registerSettings() {
     game.settings.register(moduleName, 'Check For Updates', {
@@ -11,7 +9,6 @@ export function registerSettings() {
         type: Boolean,
         default: false
     });
-    addMenuSetting('Check For Updates', 'General');
     game.settings.register(moduleName, 'Add Generic Actions', {
         name: "Добавить базовые действия",
         hint: "Добавляет базовые действия в лист персонажа при дропе токена на карту",
@@ -30,7 +27,6 @@ export function registerSettings() {
             'lCharacter': 'Linked Character Actors'
         }
     });
-    addMenuSetting('Add Generic Actions', 'General');
     game.settings.register(moduleName, 'Enable Random Bullshit', {
         name: "Enable Random Bullshit",
         hint: "If enabled, automatically distributes Random Bullshit",
@@ -39,7 +35,6 @@ export function registerSettings() {
         type: Boolean,
         default: false
     });
-    addMenuSetting('Enable Random Bullshit', 'General');
     game.settings.register(moduleName, 'Cast Animations', {
         'name': ' Cast Animations',
         'hint': 'Enable to automatically play JB2A spell cast animations for all spells.',
@@ -55,7 +50,6 @@ export function registerSettings() {
             }
         }
     });
-    addMenuSetting('Cast Animations', 'Animations');
     game.settings.register(moduleName, 'abj_color', {
         'name': 'Abjuration Color',
         'hint': 'Color to use for abjuration spells.',
@@ -72,7 +66,6 @@ export function registerSettings() {
             'yellow': 'Yellow'
         }
     });
-    addMenuSetting('abj_color', 'Animations');
     game.settings.register(moduleName, 'con_color', {
         'name': 'Conjuration Color',
         'hint': 'Color to use for conjuration spells.',
@@ -89,7 +82,6 @@ export function registerSettings() {
             'yellow': 'Yellow'
         }
     });
-    addMenuSetting('con_color', 'Animations');
     game.settings.register(moduleName, 'div_color', {
         'name': 'Divination Color',
         'hint': 'Color to use for divination spells.',
@@ -106,7 +98,6 @@ export function registerSettings() {
             'yellow': 'Yellow'
         }
     });
-    addMenuSetting('div_color', 'Animations');
     game.settings.register(moduleName, 'enc_color', {
         'name': 'Enchantment Color',
         'hint': 'Color to use for enchantment spells.',
@@ -123,7 +114,6 @@ export function registerSettings() {
             'yellow': 'Yellow'
         }
     });
-    addMenuSetting('enc_color', 'Animations');
     game.settings.register(moduleName, 'evo_color', {
         'name': 'Evocation Color',
         'hint': 'Color to use for evocation spells.',
@@ -140,7 +130,6 @@ export function registerSettings() {
             'yellow': 'Yellow'
         }
     });
-    addMenuSetting('evo_color', 'Animations');
     game.settings.register(moduleName, 'ill_color', {
         'name': 'Illusion Color',
         'hint': 'Color to use for illusion spells.',
@@ -157,7 +146,6 @@ export function registerSettings() {
             'yellow': 'Yellow'
         }
     });
-    addMenuSetting('ill_color', 'Animations');
     game.settings.register(moduleName, 'nec_color', {
         'name': 'Necromancy Color',
         'hint': 'Color to use for necromancy spells.',
@@ -174,7 +162,6 @@ export function registerSettings() {
             'yellow': 'Yellow'
         }
     });
-    addMenuSetting('nec_color', 'Animations');
     game.settings.register(moduleName, 'trs_color', {
         'name': 'Transmutation Color',
         'hint': 'Color to use for transmutation spells.',
@@ -191,5 +178,4 @@ export function registerSettings() {
             'yellow': 'Yellow'
         }
     });
-    addMenuSetting('trs_color', 'Animations');
 }
