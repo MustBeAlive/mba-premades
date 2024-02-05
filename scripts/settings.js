@@ -36,8 +36,8 @@ export function registerSettings() {
         default: false
     });
     game.settings.register(moduleName, 'Cast Animations', {
-        'name': ' Cast Animations',
-        'hint': 'Enable to automatically play JB2A spell cast animations for all spells.',
+        'name': 'Анимации Заклинаний',
+        'hint': 'Включает автоматический проигрыш анимаций от JB2A при сотворении любых заклинаний',
         'scope': 'world',
         'config': true,
         'type': Boolean,
@@ -51,8 +51,8 @@ export function registerSettings() {
         }
     });
     game.settings.register(moduleName, 'abj_color', {
-        'name': 'Abjuration Color',
-        'hint': 'Color to use for abjuration spells.',
+        'name': 'Abjuration',
+        'hint': 'Цвет для заклинаний школы abjuration',
         'scope': 'client',
         'config': true,
         'type': String,
@@ -67,8 +67,8 @@ export function registerSettings() {
         }
     });
     game.settings.register(moduleName, 'con_color', {
-        'name': 'Conjuration Color',
-        'hint': 'Color to use for conjuration spells.',
+        'name': 'Conjuration',
+        'hint': 'Цвет для заклинаний школы conjuration.',
         'scope': 'client',
         'config': true,
         'type': String,
@@ -83,8 +83,8 @@ export function registerSettings() {
         }
     });
     game.settings.register(moduleName, 'div_color', {
-        'name': 'Divination Color',
-        'hint': 'Color to use for divination spells.',
+        'name': 'Divination',
+        'hint': 'Цвет для заклинаний школы divination.',
         'scope': 'client',
         'config': true,
         'type': String,
@@ -99,8 +99,8 @@ export function registerSettings() {
         }
     });
     game.settings.register(moduleName, 'enc_color', {
-        'name': 'Enchantment Color',
-        'hint': 'Color to use for enchantment spells.',
+        'name': 'Enchantment',
+        'hint': 'Цвет для заклинаний школы enchantment.',
         'scope': 'client',
         'config': true,
         'type': String,
@@ -115,8 +115,8 @@ export function registerSettings() {
         }
     });
     game.settings.register(moduleName, 'evo_color', {
-        'name': 'Evocation Color',
-        'hint': 'Color to use for evocation spells.',
+        'name': 'Evocation',
+        'hint': 'Цвет для заклинаний школы evocation.',
         'scope': 'client',
         'config': true,
         'type': String,
@@ -131,8 +131,8 @@ export function registerSettings() {
         }
     });
     game.settings.register(moduleName, 'ill_color', {
-        'name': 'Illusion Color',
-        'hint': 'Color to use for illusion spells.',
+        'name': 'Illusion',
+        'hint': 'Цвет для заклинаний школы illusion.',
         'scope': 'client',
         'config': true,
         'type': String,
@@ -147,8 +147,8 @@ export function registerSettings() {
         }
     });
     game.settings.register(moduleName, 'nec_color', {
-        'name': 'Necromancy Color',
-        'hint': 'Color to use for necromancy spells.',
+        'name': 'Necromancy',
+        'hint': 'Цвет для заклинаний школы necromancy.',
         'scope': 'client',
         'config': true,
         'type': String,
@@ -163,8 +163,8 @@ export function registerSettings() {
         }
     });
     game.settings.register(moduleName, 'trs_color', {
-        'name': 'Transmutation Color',
-        'hint': 'Color to use for transmutation spells.',
+        'name': 'Transmutation',
+        'hint': 'Цвет для заклинаний школы transmutation.',
         'scope': 'client',
         'config': true,
         'type': String,
