@@ -314,9 +314,6 @@
 	"esmodules": [
 		"scripts/module.js"
 	],
-	"styles": [
-		"scripts/styles.css"
-	],
 	"languages": [
 		{
 			"lang": "en",
