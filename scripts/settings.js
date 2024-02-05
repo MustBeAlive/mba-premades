@@ -39,7 +39,7 @@ export function registerSettings() {
         'name': ' Cast Animations',
         'hint': 'Enable to automatically play JB2A spell cast animations for all spells.',
         'scope': 'world',
-        'config': false,
+        'config': true,
         'type': Boolean,
         'default': false,
         'onChange': value => {
@@ -54,7 +54,7 @@ export function registerSettings() {
         'name': 'Abjuration Color',
         'hint': 'Color to use for abjuration spells.',
         'scope': 'client',
-        'config': false,
+        'config': true,
         'type': String,
         'default': 'blue',
         'choices': {
@@ -70,7 +70,7 @@ export function registerSettings() {
         'name': 'Conjuration Color',
         'hint': 'Color to use for conjuration spells.',
         'scope': 'client',
-        'config': false,
+        'config': true,
         'type': String,
         'default': 'yellow',
         'choices': {
@@ -86,7 +86,7 @@ export function registerSettings() {
         'name': 'Divination Color',
         'hint': 'Color to use for divination spells.',
         'scope': 'client',
-        'config': false,
+        'config': true,
         'type': String,
         'default': 'blue',
         'choices': {
@@ -102,7 +102,7 @@ export function registerSettings() {
         'name': 'Enchantment Color',
         'hint': 'Color to use for enchantment spells.',
         'scope': 'client',
-        'config': false,
+        'config': true,
         'type': String,
         'default': 'pink',
         'choices': {
@@ -118,7 +118,7 @@ export function registerSettings() {
         'name': 'Evocation Color',
         'hint': 'Color to use for evocation spells.',
         'scope': 'client',
-        'config': false,
+        'config': true,
         'type': String,
         'default': 'red',
         'choices': {
@@ -134,7 +134,7 @@ export function registerSettings() {
         'name': 'Illusion Color',
         'hint': 'Color to use for illusion spells.',
         'scope': 'client',
-        'config': false,
+        'config': true,
         'type': String,
         'default': 'purple',
         'choices': {
@@ -150,7 +150,7 @@ export function registerSettings() {
         'name': 'Necromancy Color',
         'hint': 'Color to use for necromancy spells.',
         'scope': 'client',
-        'config': false,
+        'config': true,
         'type': String,
         'default': 'green',
         'choices': {
@@ -166,7 +166,7 @@ export function registerSettings() {
         'name': 'Transmutation Color',
         'hint': 'Color to use for transmutation spells.',
         'scope': 'client',
-        'config': false,
+        'config': true,
         'type': String,
         'default': 'yellow',
         'choices': {
