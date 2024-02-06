@@ -245,13 +245,13 @@
 		]
 	},
 	"packs": [
-	  {
-	    "name": "MBA Actions",
+	  	{
+	   		"name": "MBA Actions",
 			"label": "MBA Actions",
 			"path": "packs/mba-actions",
 			"type": "Item",
 			"system": "dnd5e"
-	  },
+		},
 		{
 			"name": "MBA Bestiary",
 			"label": "MBA Bestiary",
