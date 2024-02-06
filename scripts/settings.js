@@ -41,7 +41,7 @@ export function registerSettings() {
         }
     });
     game.settings.register(moduleName, 'Invisibility Fix', {
-        'name': 'Blinded',
+        'name': 'Invisible',
         'hint': 'Эта настройка отключает ограничения видимости при получении Condition: Invisible',
         'scope': 'world',
         'config': true,
