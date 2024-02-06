@@ -30,7 +30,7 @@ export function registerSettings() {
         }
     });
     game.settings.register(moduleName, 'Blindness Fix', {
-        'name': 'Blinded',
+        'name': 'Condition: Blinded (Visual Fix)',
         'hint': 'Эта настройка отключает ограничения видимости при получении Condition: Blinded',
         'scope': 'world',
         'config': true,
@@ -41,7 +41,7 @@ export function registerSettings() {
         }
     });
     game.settings.register(moduleName, 'Invisibility Fix', {
-        'name': 'Invisible',
+        'name': 'Condition: Invisible (Visual Fix)',
         'hint': 'Эта настройка отключает ограничения видимости при получении Condition: Invisible',
         'scope': 'world',
         'config': true,
