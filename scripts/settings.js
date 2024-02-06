@@ -1,5 +1,6 @@
 import {cast} from './macros/animations/cast.js';
-import {removeDumbV10Effects} from './macros/mechanics/conditions.js';
+import {removeDumbV10EffectsBlind} from './macros/mechanics/blindness.js';
+import {removeDumbV10EffectsInvisible} from './macros/mechanics/invisibility.js';
 let moduleName = 'mba-premades';
 export function registerSettings() {
     game.settings.register(moduleName, 'Check For Updates', {
@@ -28,15 +29,26 @@ export function registerSettings() {
             'lCharacter': 'Linked Character Actors'
         }
     });
-    game.settings.register(moduleName, 'Condition Fixes', {
+    game.settings.register(moduleName, 'Blindness Fix', {
         'name': 'Blinded',
-        'hint': 'Эта настройка отключает ограничения видимости для контролирующего токен при получении condition: Blinded',
+        'hint': 'Эта настройка отключает ограничения видимости при получении Condition: Blinded',
         'scope': 'world',
         'config': true,
         'type': Boolean,
         'default': false,
         'onChange': value => {
-            if (value) removeDumbV10Effects();
+            if (value) removeDumbV10EffectsBlind();
+        }
+    });
+    game.settings.register(moduleName, 'Invisibility Fix', {
+        'name': 'Blinded',
+        'hint': 'Эта настройка отключает ограничения видимости при получении Condition: Invisible',
+        'scope': 'world',
+        'config': true,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) removeDumbV10EffectsInvisible();
         }
     });
     game.settings.register(moduleName, 'Enable Random Bullshit', {
