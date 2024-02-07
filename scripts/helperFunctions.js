@@ -17,12 +17,12 @@ export let mba = {
         let patreon = game.modules.get('jb2a_patreon')?.active;
         let free = game.modules.get('JB2A_DnD5e')?.active;
         if (patreon && free) {
-            ui.notifications.info('Both JB2A Modules are Active Please Disable the Free Version.');
+            ui.notifications.info('Включены обе версии модуля JB2A. Выключи бесплатную.');
             return 'patreon';
         }
         if (patreon) return 'patreon';
         if (free) return 'free';
-        ui.notifications.info('No JB2A Module Active');
+        ui.notifications.info('Модуль JB2A не включен');
         return false;
     },
 }
