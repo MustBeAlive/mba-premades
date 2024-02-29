@@ -329,17 +329,8 @@
 				"MBA Macro",
 				"MBA Music",
 				"MBA Spells",
-				"MBA Summons"
-			]
-		}
-	],
-	"folders": [
-		{
-			"name": "Internal Use",
-			"sorting": "a",
-			"color": "",
-			"packs": [
 				"MBA Spell Features",
+				"MBA Summons",
 				"MBA Summon Features"
 			]
 		}
