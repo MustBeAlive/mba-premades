@@ -245,8 +245,8 @@
 		]
 	},
 	"packs": [
-	  	{
-	   		"name": "MBA Actions",
+		{
+			"name": "MBA Actions",
 			"label": "MBA Actions",
 			"path": "packs/mba-actions",
 			"type": "Item",
@@ -274,6 +274,13 @@
 			"system": "dnd5e"
 		},
 		{
+			"name": "MBA Macro",
+			"label": "MBA Macro",
+			"path": "packs/mba-macro",
+			"type": "Macro",
+			"system": "dnd5e"
+		},
+		{
 			"name": "MBA Music",
 			"label": "MBA Music",
 			"path": "packs/mba-music",
@@ -288,10 +295,24 @@
 			"system": "dnd5e"
 		},
 		{
-			"name": "MBA Macro",
-			"label": "MBA Macro",
-			"path": "packs/mba-macro",
-			"type": "Macro",
+			"name": "MBA Spell Features",
+			"label": "MBA Spell Features",
+			"path": "packs/mba-spells",
+			"type": "Item",
+			"system": "dnd5e"
+		},
+		{
+			"name": "MBA Summons",
+			"label": "MBA Summons",
+			"path": "packs/mba-summons",
+			"type": "Actor",
+			"system": "dnd5e"
+		},
+		{
+			"name": "MBA Summon Features",
+			"label": "MBA Summon Features",
+			"path": "packs/mba-summon-features",
+			"type": "Item",
 			"system": "dnd5e"
 		}
 	],
@@ -307,7 +328,19 @@
 				"MBA Items",
 				"MBA Macro",
 				"MBA Music",
-				"MBA Spells"
+				"MBA Spells",
+				"MBA Summons"
+			]
+		}
+	],
+	"folders": [
+		{
+			"name": "Internal Use",
+			"sorting": "a",
+			"color": "",
+			"packs": [
+				"MBA Spell Features",
+				"MBA Summon Features"
 			]
 		}
 	],
