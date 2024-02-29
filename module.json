@@ -297,7 +297,7 @@
 		{
 			"name": "MBA Spell Features",
 			"label": "MBA Spell Features",
-			"path": "packs/mba-spells",
+			"path": "packs/mba-spell-features",
 			"type": "Item",
 			"system": "dnd5e"
 		},
