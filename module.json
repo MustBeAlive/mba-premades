@@ -35,7 +35,7 @@
 				"type": "module",
 				"manifest": "https://github.com/kandashi/Active-Auras",
 				"compatibility": {
-					"verified": "0.9.5"
+					"verified": "0.9.8"
 				}
 			},
 			{
@@ -93,8 +93,8 @@
 				"type": "module",
 				"manifest": "https://github.com/chrisk123999/chris-premades/",
 				"compatibility": {
-					"verified": "0.9.54",
-					"minimum": "0.9.54"
+					"verified": "0.9.64",
+					"minimum": "0.9.64"
 				}
 			},
 			{
@@ -127,8 +127,8 @@
 				"type": "module",
 				"manifest": "https://gitlab.com/tposney/dae",
 				"compatibility": {
-					"verified": "11.1.11",
-					"minimum": "11.1.11"
+					"verified": "11.1.13",
+					"minimum": "11.1.13"
 				}
 			},
 			{
@@ -136,8 +136,8 @@
 				"type": "module",
 				"manifest": "https://github.com/krbz999/effectmacro",
 				"compatibility": {
-					"verified": "11.1.0",
-					"minimum": "11.1.0"
+					"verified": "11.2.2",
+					"minimum": "11.2.2"
 				}
 			},
 			{
@@ -153,7 +153,7 @@
 				"type": "module",
 				"manifest": "https://github.com/gambit07/gambits-premades",
 				"compatibility": {
-					"verified": "0.0.36"
+					"verified": "0.0.84"
 				}
 			},
 			{
@@ -161,8 +161,8 @@
 				"type": "module",
 				"manifest": "https://github.com/Foundry-Workshop/Item-Macro",
 				"compatibility": {
-					"verified": "1.10.5",
-					"minimum": "1.10.5"
+					"verified": "1.11.1",
+					"minimum": "1.11.1"
 				}
 			},
 			{
@@ -170,7 +170,7 @@
 				"type": "module",
 				"manifest": "https://www.patreon.com/JB2A",
 				"compatibility": {
-					"verified": "0.6.5"
+					"verified": "0.6.6"
 				}
 			},
 			{
@@ -178,8 +178,8 @@
 				"type": "module",
 				"manifest": "https://gitlab.com/tposney/midi-qol",
 				"compatibility": {
-					"verified": "11.3.18",
-					"minimum": "11.3.18"
+					"verified": "11.3.24",
+					"minimum": "11.3.24"
 				}
 			},
 			{
@@ -187,7 +187,7 @@
 				"type": "module",
 				"manifest": "https://github.com/ironmonk88/monks-tokenbar",
 				"compatibility": {
-					"verified": "11.11"
+					"verified": "11.14"
 				}
 			},
 			{
@@ -309,6 +309,13 @@
 			"system": "dnd5e"
 		},
 		{
+			"name": "MBA Monster Summons",
+			"label": "MBA Monster Summons",
+			"path": "packs/mba-summons-monster",
+			"type": "Actor",
+			"system": "dnd5e"
+		},
+		{
 			"name": "MBA Summon Features",
 			"label": "MBA Summon Features",
 			"path": "packs/mba-summon-features",
@@ -331,6 +338,7 @@
 				"MBA Spells",
 				"MBA Spell Features",
 				"MBA Summons",
+				"MBA Monster Summons",
 				"MBA Summon Features"
 			]
 		}
