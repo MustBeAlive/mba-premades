@@ -281,6 +281,20 @@
 			"system": "dnd5e"
 		},
 		{
+			"name": "MBA Monster Features",
+			"label": "MBA Monster Features",
+			"path": "packs/mba-monster-features",
+			"type": "Item",
+			"system": "dnd5e"
+		},
+		{
+			"name": "MBA Monster Summons",
+			"label": "MBA Monster Summons",
+			"path": "packs/mba-summons-monster",
+			"type": "Actor",
+			"system": "dnd5e"
+		},
+		{
 			"name": "MBA Music",
 			"label": "MBA Music",
 			"path": "packs/mba-music",
@@ -309,13 +323,6 @@
 			"system": "dnd5e"
 		},
 		{
-			"name": "MBA Monster Summons",
-			"label": "MBA Monster Summons",
-			"path": "packs/mba-summons-monster",
-			"type": "Actor",
-			"system": "dnd5e"
-		},
-		{
 			"name": "MBA Summon Features",
 			"label": "MBA Summon Features",
 			"path": "packs/mba-summon-features",
@@ -334,11 +341,12 @@
 				"MBA Features",
 				"MBA Items",
 				"MBA Macro",
+				"MBA Monster Features",
+				"MBA Monster Summons",
 				"MBA Music",
 				"MBA Spells",
 				"MBA Spell Features",
 				"MBA Summons",
-				"MBA Monster Summons",
 				"MBA Summon Features"
 			]
 		}
