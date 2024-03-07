@@ -290,7 +290,7 @@
 		{
 			"name": "MBA Monster Summons",
 			"label": "MBA Monster Summons",
-			"path": "packs/mba-summons-monster",
+			"path": "packs/mba-monster-summons",
 			"type": "Actor",
 			"system": "dnd5e"
 		},
@@ -302,6 +302,13 @@
 			"system": "dnd5e"
 		},
 		{
+			"name": "MBA Spell Features",
+			"label": "MBA Spell Features",
+			"path": "packs/mba-spell-features",
+			"type": "Item",
+			"system": "dnd5e"
+		},
+		{
 			"name": "MBA Spells",
 			"label": "MBA Spells",
 			"path": "packs/mba-spells",
@@ -309,9 +316,9 @@
 			"system": "dnd5e"
 		},
 		{
-			"name": "MBA Spell Features",
-			"label": "MBA Spell Features",
-			"path": "packs/mba-spell-features",
+			"name": "MBA Summon Features",
+			"label": "MBA Summon Features",
+			"path": "packs/mba-summon-features",
 			"type": "Item",
 			"system": "dnd5e"
 		},
@@ -320,13 +327,6 @@
 			"label": "MBA Summons",
 			"path": "packs/mba-summons",
 			"type": "Actor",
-			"system": "dnd5e"
-		},
-		{
-			"name": "MBA Summon Features",
-			"label": "MBA Summon Features",
-			"path": "packs/mba-summon-features",
-			"type": "Item",
 			"system": "dnd5e"
 		}
 	],

@@ -1,21 +1,6 @@
-2024/02/12-02:53:43.536 3094 Recovering log #354
-2024/02/12-02:53:43.573 3094 Delete type=0 #354
-2024/02/12-02:53:43.573 3094 Delete type=3 #352
-2024/02/12-03:49:07.201 14f0 Level-0 table #363: started
-2024/02/12-03:49:07.335 14f0 Level-0 table #363: 583511 bytes OK
-2024/02/12-03:49:07.361 14f0 Delete type=0 #361
-2024/02/12-03:49:07.493 14f0 Manual compaction at level-0 from '!actors!05UWVHTwbwXJWJ8h' @ 72057594037927935 : 1 .. '!folders!ywtDVPEh2Mi9Ncrs' @ 0 : 0; will stop at (end)
-2024/02/12-03:49:07.493 14f0 Manual compaction at level-1 from '!actors!05UWVHTwbwXJWJ8h' @ 72057594037927935 : 1 .. '!folders!ywtDVPEh2Mi9Ncrs' @ 0 : 0; will stop at '!actors.items.effects!wKUnqXhCiL5TgU82.APHdh4lilAIGlcbx.zPopeyeiKTHzGS8N' @ 7428 : 1
-2024/02/12-03:49:07.493 14f0 Compacting 1@1 + 4@2 files
-2024/02/12-03:49:07.814 14f0 Generated table #364@1: 508 keys, 2117497 bytes
-2024/02/12-03:49:08.116 14f0 Generated table #365@1: 1421 keys, 2124622 bytes
-2024/02/12-03:49:08.444 14f0 Generated table #366@1: 1579 keys, 2128521 bytes
-2024/02/12-03:49:08.605 14f0 Generated table #367@1: 1331 keys, 986004 bytes
-2024/02/12-03:49:08.605 14f0 Compacted 1@1 + 4@2 files => 7356644 bytes
-2024/02/12-03:49:08.634 14f0 compacted to: files[ 0 0 4 0 0 0 0 ]
-2024/02/12-03:49:08.634 14f0 Delete type=2 #356
-2024/02/12-03:49:08.635 14f0 Delete type=2 #357
-2024/02/12-03:49:08.641 14f0 Delete type=2 #358
-2024/02/12-03:49:08.641 14f0 Delete type=2 #359
-2024/02/12-03:49:08.642 14f0 Delete type=2 #363
-2024/02/12-03:49:08.793 14f0 Manual compaction at level-1 from '!actors.items.effects!wKUnqXhCiL5TgU82.APHdh4lilAIGlcbx.zPopeyeiKTHzGS8N' @ 7428 : 1 .. '!folders!ywtDVPEh2Mi9Ncrs' @ 0 : 0; will stop at (end)
+2024/03/07-16:59:44.182 2eb8 Recovering log #541
+2024/03/07-16:59:44.182 2eb8 Level-0 table #543: started
+2024/03/07-16:59:44.204 2eb8 Level-0 table #543: 4703 bytes OK
+2024/03/07-16:59:44.240 2eb8 Delete type=0 #541
+2024/03/07-16:59:44.240 2eb8 Delete type=3 #540
+2024/03/07-17:21:20.221 24ec Moved #543 to level-1 4703 bytes OK: files[ 0 1 7 0 0 0 0 ]
