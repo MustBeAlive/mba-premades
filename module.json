@@ -157,15 +157,6 @@
 				}
 			},
 			{
-				"id": "itemacro",
-				"type": "module",
-				"manifest": "https://github.com/Foundry-Workshop/Item-Macro",
-				"compatibility": {
-					"verified": "1.11.1",
-					"minimum": "1.11.1"
-				}
-			},
-			{
 				"id": "jb2a_patreon",
 				"type": "module",
 				"manifest": "https://www.patreon.com/JB2A",
