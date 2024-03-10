@@ -1,6 +1,7 @@
 import {addActions} from './macros/actions/token.js';
 import {cast} from './macros/animations/cast.js';
 import {checkUpdate} from './update.js';
+import {macros} from './macros.js';
 import {registerSettings} from './settings.js';
 import {removeDumbV10EffectsBlind} from './macros/mechanics/blindness.js';
 import {removeDumbV10EffectsInvisible} from './macros/mechanics/invisibility.js';
@@ -16,3 +17,6 @@ Hooks.once('ready', async function() {
     if (game.settings.get('mba-premades', 'Invisibility Fix')) removeDumbV10EffectsInvisible();
     Hooks.on('createToken', addActions);
 });
+globalThis['mbaPremades'] = {
+    macros
+}
