@@ -9,6 +9,7 @@ export async function checkUpdate() {
         if (!isNewerVersion(info.tag_name, currentVersion)) return;
         let body = info.body.replaceAll('\r\n\r\n', '<hr>')
             .replaceAll('\r\n', '<br>')
+            .replaceAll('Update Notes:', '<b><u>Update Notes:</u></b>')
             .replaceAll('Items:', '<b><u>Items:</u></b>')
             .replaceAll('Cantrip:', '<b><u>Cantrip:</u></b>')
             .replaceAll('Level 1:', '<b><u>Level 1:</u></b>')
@@ -21,8 +22,6 @@ export async function checkUpdate() {
             .replaceAll('Level 8:', '<b><u>Level 8:</u></b>')
             .replaceAll('Level 9:', '<b><u>Level 9:</u></b>')
             .replaceAll('Monsters:', '<b><u>Monsters:</u></b>')
-            .replaceAll('New Content:', '<b><u>New Content:</u></b>')
-            .replaceAll('Update Notes:', '<b><u>Update Notes:</u></b>')
         let message = '<hr>MBA Premades, доступно обновление. Версия: <b>' + info.tag_name + '</b><hr>' + body;
         await ChatMessage.create({
             'speaker': {'alias': name},
