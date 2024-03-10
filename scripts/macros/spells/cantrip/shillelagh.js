@@ -1,3 +1,4 @@
+// Original macro by MidiQOL
 export async function shillelagh({speaker, actor, token, character, item, args, scope, workflow}) {
     const lastArg = args[args.length - 1];
     let weapons = actor.items.filter(i => i.type === `weapon` && ["club","quarterstaff"].includes(i.system.baseItem));

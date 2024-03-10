@@ -1,42 +1,44 @@
-import {absorbElements} from './macros/spells/absorbElements.js';
-import {acidSplash} from './macros/spells/acidSplash.js';
-import {animalFriendship} from './macros/spells/animalFriendship.js';
-import {beastBond} from './macros/spells/beastBond.js';
-import {burningHands} from './macros/spells/burningHands.js';
-import {ceremony} from './macros/spells/ceremony.js';
-import {chaosBolt} from './macros/spells/chaosBolt.js';
-import {charmPerson} from './macros/spells/charmPerson.js';
-import {colorSpray} from './macros/spells/colorSpray.js';
-import {command} from './macros/spells/command.js';
-import {dancingLights} from './macros/spells/dancingLights.js';
-import {dissonantWhispers} from './macros/spells/dissonantWhispers.js';
-import {ensnaringStrike} from './macros/spells/ensnaringStrike.js';
-import {falseLife} from './macros/spells/falseLife.js';
-import {frostFingers} from './macros/spells/frostFingers.js';
-import {goodberry} from './macros/spells/goodberry.js';
-import {gust} from './macros/spells/gust.js';
-import {hailOfThorns} from './macros/spells/hailOfThorns.js';
-import {heroism} from './macros/spells/heroism.js';
-import {iceKnife} from './macros/spells/iceKnife.js';
-import {identify} from './macros/spells/identify.js';
-import {infestation} from './macros/spells/infestation.js';
-import {light} from './macros/spells/light.js';
-import {mageHand} from './macros/spells/mageHand.js';
-import {magicMissile} from './macros/spells/magicMissile.js';
-import {magicStone} from './macros/spells/magicStone.js';
-import {produceFlame} from './macros/spells/produceFlame.js';
-import {shield} from './macros/spells/shield.js';
-import {shillelagh} from './macros/spells/shillelagh.js';
-import {shockingGrasp} from './macros/spells/shockingGrasp.js';
-import {sleep} from './macros/spells/sleep.js';
-import {spareTheDying} from './macros/spells/spareTheDying.js';
-import {tashaHideousLaughter} from './macros/spells/tashaHideousLaughter.js';
-import {tenserFloatingDisk} from './macros/spells/tenserFloatingDisk.js';
-import {thunderousSmite} from './macros/spells/thunderousSmite.js';
-import {unseenServant} from './macros/spells/unseenServant.js';
-import {viciousMockery} from './macros/spells/viciousMockery.js';
-import {witchBolt} from './macros/spells/witchBolt.js';
-import {wordOfRadiance} from './macros/spells/wordOfRadiance.js';
+import {absorbElements} from './macros/spells/level1/absorbElements.js';
+import {acidSplash} from './macros/spells/cantrip/acidSplash.js';
+import {animalFriendship} from './macros/spells/level1/animalFriendship.js';
+import {beastBond} from './macros/spells/level1/beastBond.js';
+import {burningHands} from './macros/spells/level1/burningHands.js';
+import {ceremony} from './macros/spells/level1/ceremony.js';
+import {chaosBolt} from './macros/spells/level1/chaosBolt.js';
+import {charmPerson} from './macros/spells/level1/charmPerson.js';
+import {colorSpray} from './macros/spells/level1/colorSpray.js';
+import {command} from './macros/spells/level1/command.js';
+import {dancingLights} from './macros/spells/cantrip/dancingLights.js';
+import {dissonantWhispers} from './macros/spells/level1/dissonantWhispers.js';
+import {ensnaringStrike} from './macros/spells/level1/ensnaringStrike.js';
+import {falseLife} from './macros/spells/level1/falseLife.js';
+import {frostFingers} from './macros/spells/level1/frostFingers.js';
+import {goodberry} from './macros/spells/level1/goodberry.js';
+import {gust} from './macros/spells/cantrip/gust.js';
+import {hailOfThorns} from './macros/spells/level1/hailOfThorns.js';
+import {heroism} from './macros/spells/level1/heroism.js';
+import {holyWater} from './macros/items/holyWater.js';
+import {iceKnife} from './macros/spells/level1/iceKnife.js';
+import {identify} from './macros/spells/level1/identify.js';
+import {infestation} from './macros/spells/cantrip/infestation.js';
+import {light} from './macros/spells/cantrip/light.js';
+import {mageHand} from './macros/spells/cantrip/mageHand.js';
+import {magicMissile} from './macros/spells/level1/magicMissile.js';
+import {magicStone} from './macros/spells/cantrip/magicStone.js';
+import {potionOfHealing} from './macros/items/potionOfHealing.js';
+import {produceFlame} from './macros/spells/cantrip/produceFlame.js';
+import {shield} from './macros/spells/level1/shield.js';
+import {shillelagh} from './macros/spells/cantrip/shillelagh.js';
+import {shockingGrasp} from './macros/spells/cantrip/shockingGrasp.js';
+import {sleep} from './macros/spells/level1/sleep.js';
+import {spareTheDying} from './macros/spells/cantrip/spareTheDying.js';
+import {tashaHideousLaughter} from './macros/spells/level1/tashaHideousLaughter.js';
+import {tenserFloatingDisk} from './macros/spells/level1/tenserFloatingDisk.js';
+import {thunderousSmite} from './macros/spells/level1/thunderousSmite.js';
+import {unseenServant} from './macros/spells/level1/unseenServant.js';
+import {viciousMockery} from './macros/spells/cantrip/viciousMockery.js';
+import {witchBolt} from './macros/spells/level1/witchBolt.js';
+import {wordOfRadiance} from './macros/spells/cantrip/wordOfRadiance.js';
 
 
 
@@ -60,6 +62,7 @@ export let macros = {
     'gust': gust,
     'hailOfThorns': hailOfThorns,
     'heroism': heroism,
+    'holyWater': holyWater,
     'iceKnife': iceKnife,
     'identify': identify,
     'infestation': infestation,
@@ -67,6 +70,7 @@ export let macros = {
     'mageHand': mageHand,
     'magicMissile': magicMissile,
     'magicStone': magicStone,
+    'potionOfHealing': potionOfHealing,
     'produceFlame': produceFlame,
     'shield': shield,
     'shillelagh': shillelagh,

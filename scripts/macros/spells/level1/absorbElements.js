@@ -1,10 +1,11 @@
+// Original macro by MISC (Bradeck/thatlonelybugbear)
 export async function absorbElements({speaker, actor, token, character, item, args, scope, workflow}) {
     const damageTypes = [['🧪 Acid', 'acid'], ['❄️ Cold', 'cold'], ['🔥 Fire', 'fire'], ['⚡ Lightning', 'lightning'], ['☁️ Thunder', 'thunder']]; //All possible damage types
 
     /* Choose wich element to absorb */
     const buttons = damageTypes.map(([label, value]) => ({label, value}));
     const title = 'Absorb Elements';
-    const content ='<strong>Выбери элемент для поглощения:</strong>';
+    const content ='<strong>Choose element:</strong>';
     const absorbedElement = await warpgate.buttonDialog ({buttons,title,content}, 'column');
     if (absorbedElement.buttons === false) return;
 

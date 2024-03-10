@@ -1,3 +1,4 @@
+// Original macro by GPS
 export async function viciousMockery({speaker, actor, token, character, item, args, scope, workflow}) {
     const gmInputType = "freeform"; //Input "freeform" for a text box users can enter their text into. Input "dropdown" to use a list of selectable options for players that you can change below in gmInputText. Input "" to disable animations.
     const gmInputText = ["I really really really don't like you", "You shall not pass", "Ew gross"];
@@ -10,9 +11,8 @@ export async function viciousMockery({speaker, actor, token, character, item, ar
     const saveAbility = "wis";
     const damageType = "psychic";
     const spellDC = actor.system.attributes.spelldc;
-    const actorLevel = actor.system.details.level;
-    let attackNum = 1;
-    if (actorLevel >= 5) attackNum += Math.floor(actorLevel / 5);
+    let level = workflow.actor.system.details.level ?? workflow.actor.system.details.cr;
+    let attackNum = 1 + (Math.floor((level + 1) / 6));
 
     if(!hasDeafenedApplied)
     {
@@ -112,12 +112,12 @@ export async function viciousMockery({speaker, actor, token, character, item, ar
     if(gmInputType === "dropdown") {
         wordInput = await warpgate.menu({
             inputs: [{
-                label: `Что говоришь?`,
+                label: `What do you say?`,
                 type: 'select',
                 options: gmInputText.map(text => ({ label: text, value: text }))
             }],
             buttons: [{
-                label: 'Сотворить!',
+                label: 'Let\'s go!',
                 value: 1
             }],
             title: 'Vicious Mockery'
@@ -127,12 +127,12 @@ export async function viciousMockery({speaker, actor, token, character, item, ar
         wordInput = await warpgate.menu({
 
             inputs: [{
-                    label: `Что говоришь?`,
+                    label: `What do you say?`,
                     type: 'text',
                 options: ``
             }],
                 buttons: [{
-                    label: 'Сотворить!',
+                    label: 'Let\'s go!',
                     value: 1}]
                 },
                 {title: 'Vicious Mockery'}
@@ -249,6 +249,6 @@ export async function viciousMockery({speaker, actor, token, character, item, ar
     }
     else
     {
-        ui.notifications.warn("Цель не может тебя услышать и поэтому невосприимчива к Vicious Mockery")
+        ui.notifications.warn("Taget cannot hear you and is unaffected by Vicious Mockery")
     }
 }

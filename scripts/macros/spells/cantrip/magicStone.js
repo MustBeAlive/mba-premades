@@ -1,3 +1,4 @@
+// Original macro by MISC (Bradeck/Coolhand/SagaTympana)
 export async function magicStone({speaker, actor, token, character, item, args, scope, workflow}) {
     const mutName = 'Magic Stones';
     const mutDescription = `Accept magic stones ?`;

@@ -48,6 +48,7 @@ export async function gust({speaker, actor, token, character, item, args, scope,
                 'user': game.user,
                 'distance': 7,
                 'direction': 45,
+                'width': 7,
                 'fillColor': game.user.color,
                 'flags': {
                     'dnd5e': {

@@ -1,3 +1,4 @@
+// based on CPR summons 
 export async function mageHand({speaker, actor, token, character, item, args, scope, workflow}) {
     let folder = chrisPremades.helpers.getConfiguration(workflow.item, 'folder') ?? 'Mage Hand';
     if (folder === '') folder = 'Mage Hand';

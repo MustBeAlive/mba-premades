@@ -1,3 +1,4 @@
+// Original macro by GPS
 export async function identify({speaker, actor, token, character, item, args, scope, workflow}) {
     let dialog = await new Dialog({
             title: "Identify",

@@ -1,3 +1,4 @@
+// Original macro by thatlonelybugbear
 export async function light({speaker, actor, token, character, item, args, scope, workflow}) {
     const dim = 40;
     const bright = 20;

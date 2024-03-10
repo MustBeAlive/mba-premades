@@ -1,3 +1,4 @@
+// Original macro by CPR
 export async function burningHands({speaker, actor, token, character, item, args, scope, workflow}) {
     //Animations by: eskiemoh
     let animation = chrisPremades.helpers.getConfiguration(workflow.item, 'animation') ?? 'default';

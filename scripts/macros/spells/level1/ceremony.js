@@ -116,8 +116,8 @@ export async function ceremony({speaker, actor, token, character, item, args, sc
             break;
         }
         case 'Wedding': {
-            if (targets.size > 2) {
-                ui.notifications.warn('Too many targets!');
+            if (targets.size != 2) {
+                ui.notifications.warn('Wrong ammount of targets!');
                 return;
             }
             async function loop(targets) {
