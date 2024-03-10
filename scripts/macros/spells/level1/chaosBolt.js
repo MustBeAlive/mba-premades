@@ -1,4 +1,4 @@
-export async function chaosBolt({speaker, actor, token, character, item, args, scope, workflow, words, newWord}) {
+export async function chaosBolt({speaker, actor, token, character, item, args, scope, workflow, words, newWord, i}) {
     // Chaos Bolt Nacro by Wasp
     // Minor edits to work with v10.
     // Remove all damage rolls from the item
