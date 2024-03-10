@@ -1,5 +1,3 @@
-2024/03/07-16:59:45.302 27fc Recovering log #3
-2024/03/07-16:59:45.303 27fc Level-0 table #5: started
-2024/03/07-16:59:45.350 27fc Level-0 table #5: 43841 bytes OK
-2024/03/07-16:59:45.391 27fc Delete type=0 #3
-2024/03/07-16:59:45.392 27fc Delete type=3 #2
+2024/03/10-00:39:22.878 e8c Recovering log #36
+2024/03/10-00:39:22.907 e8c Delete type=0 #36
+2024/03/10-00:39:22.907 e8c Delete type=3 #35
