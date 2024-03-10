@@ -2,6 +2,7 @@ import {addActions} from './macros/actions/token.js';
 import {cast} from './macros/animations/cast.js';
 import {checkUpdate} from './update.js';
 import {macros} from './macros.js';
+import {mba as helpers} from './helperFunctions.js';
 import {registerSettings} from './settings.js';
 import {removeDumbV10EffectsBlind} from './macros/mechanics/blindness.js';
 import {removeDumbV10EffectsInvisible} from './macros/mechanics/invisibility.js';
@@ -18,5 +19,6 @@ Hooks.once('ready', async function() {
     Hooks.on('createToken', addActions);
 });
 globalThis['mbaPremades'] = {
+    helpers,
     macros
 }
