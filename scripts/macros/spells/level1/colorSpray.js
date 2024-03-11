@@ -1,6 +1,6 @@
-// Original Macro by DDB and based on @ccjmk and @crymic macro for sleep.
+// Reworked; Original Macro by DDB and based on @ccjmk and @crymic macro for sleep.
 export async function colorSpray({speaker, actor, token, character, item, args, scope, workflow}) {
-	const blindHp = await args[0].damageTotal;
+	const blindHp = await workflow.damageTotal;
 	const immuneConditions = [game.i18n.localize("Blinded"), game.i18n.localize("Unconscious")];
 	console.log(`Color Spray Spell => Available HP Pool [${blindHp}] points`);
 
@@ -28,7 +28,7 @@ export async function colorSpray({speaker, actor, token, character, item, args, 
 					},
 					'flags': { 
 						'dae': { 
-						'specialDuration': ['turnEndSource']
+							'specialDuration': ['turnEndSource']
 						} 
 					},
 					'changes': [
@@ -50,7 +50,7 @@ export async function colorSpray({speaker, actor, token, character, item, args, 
 	}
 	await warpgate.wait(500);
 	const blindResults = `<div><div class="midi-qol-nobox">${blindTarget.join('')}</div></div>`;
-	const chatMessage = game.messages.get(args[0].itemCardId);
+	const chatMessage = game.messages.get(workflow.itemCardId);
 	let content = duplicate(chatMessage.content);
 	const searchString = /<div class="midi-qol-hits-display">[\s\S]*<div class="end-midi-qol-hits-display">/g;
 	const replaceString = `<div class="midi-qol-hits-display"><div class="end-midi-qol-hits-display">${blindResults}`;
