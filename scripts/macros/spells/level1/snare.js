@@ -1,5 +1,5 @@
 // Original macro by MISC (Quinn Dexter)
-async function trigger() {
+async function trigger({speaker, actor, token, character, item, args, scope, workflow}) {
     //If the entering event has been triggered by a forced move, when walking through the template, do not execute this macro again
     if (template.getFlag("world", "snareTrapTriggered")) {
         return
@@ -78,7 +78,7 @@ async function trigger() {
 
 }
 
-async function end() {
+async function end({speaker, actor, token, character, item, args, scope, workflow}) {
     /*This Macro makes an automated dexterity saving throw at the end of the token effected. If the saving throw is successful, the
     condition restrained is removed and the template is removed**/
 
