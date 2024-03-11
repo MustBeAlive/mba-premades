@@ -1,13 +1,7 @@
 async function attack({speaker, actor, token, character, item, args, scope, workflow}) {
     let effect = chrisPremades.helpers.findEffect(workflow.actor, 'Zephyr Strike');
-    if (!effect) {
-        console.log('Can\'t find the effect!');
-        return;
-    }
-    if (workflow.item.system.actionType != 'mwak' && workflow.item.system.actionType != 'rwak') {
-        console.log('Attack is not mwak/rwak, returning');
-        return;
-    }
+    if (!effect) return;
+    if (workflow.item.system.actionType != 'mwak' && workflow.item.system.actionType != 'rwak') return;
     let choices  = [
         ['Yes!', 'true'],
         ['No!', 'false']
@@ -43,13 +37,13 @@ async function attack({speaker, actor, token, character, item, args, scope, work
                 'key': 'system.bonuses.mwak.damage',
                 'mode': 2,
                 'value': damageBonus,
-                'priority': 40
+                'priority': 20
             },
             {
                 'key': 'system.bonuses.rwak.damage',
                 'mode': 2,
                 'value': damageBonus,
-                'priority': 40
+                'priority': 20
             }
         ]
     }

@@ -43,6 +43,7 @@ import {unseenServant} from './macros/spells/level1/unseenServant.js';
 import {viciousMockery} from './macros/spells/cantrip/viciousMockery.js';
 import {witchBolt} from './macros/spells/level1/witchBolt.js';
 import {wordOfRadiance} from './macros/spells/cantrip/wordOfRadiance.js';
+import {wrathfulSmite} from './macros/spells/level1/wrathfulSmite.js';
 import {zephyrStrike} from './macros/spells/level1/zephyrStrike.js';
 
 
@@ -93,5 +94,6 @@ export let macros = {
     'viciousMockery': viciousMockery,
     'witchBolt': witchBolt,
     'wordOfRadiance': wordOfRadiance,
+    'wrathfulSmite': wrathfulSmite,
     'zephyrStrike': zephyrStrike
 }

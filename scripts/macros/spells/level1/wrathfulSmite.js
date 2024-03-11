@@ -1,14 +1,12 @@
 async function item({speaker, actor, token, character, item, args, scope, workflow}) {
-
     async function effectMacro() {
         await (warpgate.wait(200));
-        let targetEffectUuid = effect.flags['mba-premades']?.spell?.ensnaringStrike?.targetEffectUuid;
+        let targetEffectUuid = effect.flags['mba-premades']?.spell?.wrathfulSmite?.targetEffectUuid;
         if (!targetEffectUuid) return;
         let targetEffect = await fromUuid(targetEffectUuid);
         if (!targetEffect) return;
         await chrisPremades.helpers.removeEffect(targetEffect);
     }
-	
     let effectData = {
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
@@ -20,14 +18,14 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             {
                 'key': 'flags.midi-qol.onUseMacroName',
                 'mode': 0,
-                'value': 'function.mbaPremades.macros.ensnaringStrike.damage,postDamageRoll',
+                'value': 'function.chrisPremades.macros.wrathfulSmite.damage,postDamageRoll',
                 'priority': 20
             }
         ],
         'flags': {
             'mba-premades': {
                 'spell': {
-                    'ensnaringStrike': {
+                    'wrathfulSmite': {
                         'dc': chrisPremades.helpers.getSpellDC(workflow.item),
                         'level': workflow.castData.castLevel,
                         'used': false
@@ -43,35 +41,32 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
     };
     let effect = await chrisPremades.helpers.createEffect(workflow.actor, effectData);
     let updates = {
-        'flags.mba-premades.spell.ensnaringStrike.targetEffectUuid': effect.uuid
+        'flags.mba-premades.spell.wrathfulSmite.targetEffectUuid': effect.uuid
     };
     await chrisPremades.helpers.updateEffect(effect, updates);
 }
 
 async function damage({speaker, actor, token, character, item, args, scope, workflow}) {
     if (workflow.hitTargets.size != 1 || !workflow.item) return;
-    if (workflow.item.system.actionType != 'mwak' && workflow.item.system.actionType != 'rwak') return;
-    let effect = workflow.actor.effects.find(i => i.flags['mba-premades']?.spell?.ensnaringStrike);
-    if (!effect) {
-        ui.notifications.warn('Missing flag!');
-        return;
-    }
-    if (effect.flags['mba-premades'].spell.ensnaringStrike.used) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'ensnaringStrike', 250);
+    if (workflow.item.system.actionType != 'mwak') return;
+    let effect = workflow.actor.effects.find(i => i.flags['mba-premades']?.spell?.wrathfulSmite);
+    if (!effect) return;
+    let targetToken = workflow.targets.first();
+    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'wrathfulSmite', 250);
     if (!queueSetup) return;
     let oldFormula = workflow.damageRoll._formula;
-    let bonusDamageFormula = effect.flags['mba-premades'].spell.ensnaringStrike.level + 'd6[piercing]';
+    let bonusDamageFormula = '1d6[psychic]';
     if (workflow.isCritical) bonusDamageFormula = chrisPremades.helpers.getCriticalFormula(bonusDamageFormula);
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRoll = await new Roll(damageFormula).roll({async: true});
     await workflow.setDamageRoll(damageRoll);
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Ensnaring Strike: Thorny Vines');
+    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Wrathful Smite: Fear');
     if (!featureData) {
         chrisPremades.queue.remove(workflow.item.uuid);
         return;
     }
     delete featureData._id;
-    featureData.system.save.dc = effect.flags['mba-premades'].spell.ensnaringStrike.dc;
+    featureData.system.save.dc = effect.flags['mba-premades'].spell.wrathfulSmite.dc;
     let feature = new CONFIG.Item.documentClass(featureData, {'parent': workflow.actor});
     let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([targetToken.document.uuid]);
     await warpgate.wait(100);
@@ -84,7 +79,7 @@ async function damage({speaker, actor, token, character, item, args, scope, work
             await chrisPremades.helpers.removeEffect(originEffect);
         }
         let effectData = {
-            'name': 'Ensnaring Strike: Thorny Vines',
+            'name': 'Wrathful Smite: Fear',
             'icon': effect.icon,
             'origin': effect.uuid,
             'duration': {
@@ -94,19 +89,13 @@ async function damage({speaker, actor, token, character, item, args, scope, work
                 {
                     'key': 'flags.midi-qol.OverTime',
                     'mode': 0,
-                    'value': 'actionSave=true, saveAbility=str, saveDC=' + effect.flags['mba-premades'].spell.ensnaringStrike.dc + ' , saveMagic=true, name=Thorny Vines',
-                    'priority': 20
-                },
-                {
-                    'key': 'flags.midi-qol.OverTime',
-                    'mode': 0,
-                    'value': 'turn=start, damageBeforeSave=true, damageRoll=' + effect.flags['mba-premades'].spell.ensnaringStrike.level + 'd6[piercing] , damageType=piercing, name=Thorny Vines',
+                    'value': 'actionSave=true, rollType=check, saveAbility=wis, saveDC=' + effect.flags['mba-premades'].spell.wrathfulSmite.dc + ' , saveMagic=true, name=Wrathful Smite',
                     'priority': 20
                 },
                 {
                     'key': 'macro.CE',
                     'mode': 0,
-                    'value': 'Restrained',
+                    'value': 'Frightened',
                     'priority': 20
                 }
             ],
@@ -123,7 +112,7 @@ async function damage({speaker, actor, token, character, item, args, scope, work
             'flags': {
                 'mba-premades': {
                     'spell': {
-                        'ensnaringStrike': {
+                        'wrathfulSmite': {
                             'used': true,
                             'targetEffectUuid': targetEffect.uuid
                         }
@@ -136,7 +125,7 @@ async function damage({speaker, actor, token, character, item, args, scope, work
     }
 }
 
-export let ensnaringStrike = {
+export let wrathfulSmite = {
     'damage': damage,
     'item': item
 }
