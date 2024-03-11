@@ -18,5 +18,5 @@ async function onCast({speaker, actor, token, character, item, args, scope, work
 export let heroism = {
     'turnStart': turnStart,
     'end': end,
-    'early': onCast
+    'onCast': onCast
 }

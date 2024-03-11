@@ -1,9 +1,31 @@
-export async function charmPerson({speaker, actor, token, character, item, args, scope, workflow}) {
+async function onCast({speaker, actor, token, character, item, args, scope, workflow}) {
+    let ammount = workflow.castData.castLevel;
+    if (workflow.targets.size <= ammount) return;
+    let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), true, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+    if (!selection.buttons) return;
+    let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
+    await chrisPremades.helpers.updateTargets(newTargets);
+    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Charm Person: Charm', false);
+    if (!featureData) {
+        ui.notifications.warn('Can\'t find item in compenidum! (Charm Person: Charm)');
+        return
+    }
+    let originItem = workflow.item;
+    if (!originItem) return;
+    featureData.system.save.dc = chrisPremades.helpers.getSpellDC(originItem);
+    setProperty(featureData, 'chris-premades.spell.castData.school', originItem.system.school);
+    let feature = new CONFIG.Item.documentClass(featureData, {'parent': workflow.actor});
+    let targetUuids = newTargets;
+    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions(targetUuids);
+    await MidiQOL.completeItemUse(feature, config, options);
+}
+
+async function save({speaker, actor, token, character, item, args, scope, workflow}) {
     let targets = workflow.targets;
     async function loop(targets) {
-        let target = targets;
-        let type = chrisPremades.helpers.raceOrType(target.actor);
-        let immuneData = {
+        let i = targets;
+        let type = chrisPremades.helpers.raceOrType(i.actor);
+        let immuneData = {  
             'name': 'Save Immunity',
             'icon': 'assets/library/icons/sorted/generic/generic_buff.png',
             'description': "You succeed on the next save you make",
@@ -32,14 +54,14 @@ export async function charmPerson({speaker, actor, token, character, item, args,
             }
         };
         if (type != 'humanoid') {
-            ChatMessage.create({ flavor: target.name + ' is unaffected by charm! (not humanoid)', speaker: ChatMessage.getSpeaker({ actor: workflow.actor}) });
-            await chrisPremades.helpers.createEffect(target.actor, immuneData);
+            ChatMessage.create({ flavor: i.name + ' is unaffected by charm! (not humanoid)', speaker: ChatMessage.getSpeaker({ actor: workflow.actor}) });
+            await chrisPremades.helpers.createEffect(i.actor, immuneData);
             return;
         }
-        let hasCharmImmunity = chrisPremades.helpers.checkTrait(target.actor, 'ci', 'charmed');
+        let hasCharmImmunity = chrisPremades.helpers.checkTrait(i.actor, 'ci', 'charmed');
         if (hasCharmImmunity) {
-            ChatMessage.create({ flavor: target.name + ' is unaffected by charm! (immune to condition: Charmed)', speaker: ChatMessage.getSpeaker({ actor: workflow.actor}) });
-            await chrisPremades.helpers.createEffect(target.actor, immuneData);
+            ChatMessage.create({ flavor: i.name + ' is unaffected by charm! (immune to condition: Charmed)', speaker: ChatMessage.getSpeaker({ actor: workflow.actor}) });
+            await chrisPremades.helpers.createEffect(i.actor, immuneData);
             return;
         }
         if (chrisPremades.helpers.inCombat()) {
@@ -71,8 +93,13 @@ export async function charmPerson({speaker, actor, token, character, item, args,
                     }
                 }
             };
-            await chrisPremades.helpers.createEffect(target.actor, effectData);
+            await chrisPremades.helpers.createEffect(i.actor, effectData);
         }
     }
     targets.forEach(loop);
+}
+
+export let charmPerson = {
+    'onCast': onCast,
+    'save': save
 }

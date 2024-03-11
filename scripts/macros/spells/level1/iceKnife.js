@@ -1,53 +1,23 @@
 export async function iceKnife({speaker, actor, token, character, item, args, scope, workflow}) {
-    // Midi-qol "on use"
-    const lastArg = args[args.length - 1];
-    const tokenOrActor = await fromUuid(lastArg.actorUuid);
-    const casterActor = tokenOrActor.actor ? tokenOrActor.actor : tokenOrActor;
-
-    if (lastArg.targets.length > 0) {
-    let areaSpellData = duplicate(lastArg.item);
-    const damageDice = 1 + lastArg.spellLevel;
-    delete (areaSpellData.effects);
-    delete (areaSpellData.id);
-    delete (areaSpellData.flags["midi-qol"].onUseMacroName);
-    delete (areaSpellData.flags["midi-qol"].onUseMacroParts);
-    delete (areaSpellData.flags.itemacro);
-    delete (areaSpellData.flags.dae.macro);
-    areaSpellData.name = "Ice Knife: Explosion";
-    areaSpellData.system.damage.parts = [[`${damageDice}d6[cold]`, "cold"]];
-    areaSpellData.system.actionType = "save";
-    areaSpellData.system.save.ability = "dex";
-    areaSpellData.system.scaling = { mode: "level", formula: "1d6" };
-    areaSpellData.system.preparation.mode = "atwill";
-    areaSpellData.system.target.value = 99;
-    const areaSpell = new CONFIG.Item.documentClass(areaSpellData, { parent: casterActor });
-    const target = canvas.tokens.get(lastArg.targets[0].id);
-    const aoeTargets = MidiQOL
-        .findNearby(null, target, 5, { includeIncapacitated: true })
-        .filter((possible) => {
-        const collisionRay = new Ray(target, possible);
-        const collision = game.modules.get("ddb-importer").api.effects.checkCollision(collisionRay, ["sight"]);
-        if (collision) return false;
-        else return true;
-        })
-        .concat(target)
-        .map((t) => t.document.uuid);
-
-    const options = {
-        showFullCard: false,
-        createWorkflow: true,
-        targetUuids: aoeTargets,
-        configureDialog: false,
-        versatile: false,
-        consumeResource: false,
-        consumeSlot: false,
-        // workflowOptions: {
-        //   autoRollDamage: 'always'
-        // }
-    };
-
-    await MidiQOL.completeItemUse(areaSpell, {}, options);
-    } else {
-    ui.notifications.error("Ice Knife: No target selected: unable to automate burst effect.");
+    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Ice Knife: Explosion', false);
+    if (!featureData) {
+        ui.notifications.warn('Can\'t find item in compenidum! (Ice Knife: Explosion)');
+        return
     }
+    let damageDice = 1 + workflow.castData.castLevel;
+    featureData.system.damage.parts = [
+        [
+            damageDice + 'd6[cold]',
+            'cold'
+        ]
+    ];
+    let originItem = workflow.item;
+    if (!originItem) return;
+    featureData.system.save.dc = chrisPremades.helpers.getSpellDC(originItem);
+    setProperty(featureData, 'chris-premades.spell.castData.school', originItem.system.school);
+    let feature = new CONFIG.Item.documentClass(featureData, {'parent': workflow.actor});
+    let targetToken = workflow.targets.first();
+    let targetUuids = await chrisPremades.helpers.findNearby(targetToken, 5).concat(targetToken).map(t => t.document.uuid);
+    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions(targetUuids);
+    await MidiQOL.completeItemUse(feature, config, options);
 }

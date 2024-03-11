@@ -26,6 +26,7 @@ import {iceKnife} from './macros/spells/level1/iceKnife.js';
 import {identify} from './macros/spells/level1/identify.js';
 import {infestation} from './macros/spells/cantrip/infestation.js';
 import {light} from './macros/spells/cantrip/light.js';
+import {longstrider} from './macros/spells/level1/longstrider.js';
 import {mageHand} from './macros/spells/cantrip/mageHand.js';
 import {magicMissile} from './macros/spells/level1/magicMissile.js';
 import {magicStone} from './macros/spells/cantrip/magicStone.js';
@@ -75,6 +76,7 @@ export let macros = {
     'identify': identify,
     'infestation': infestation,
     'light': light,
+    'longstrider': longstrider,
     'mageHand': mageHand,
     'magicMissile': magicMissile,
     'magicStone': magicStone,
