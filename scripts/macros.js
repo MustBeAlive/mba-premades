@@ -35,7 +35,6 @@ import {produceFlame} from './macros/spells/cantrip/produceFlame.js';
 import {shield} from './macros/spells/level1/shield.js';
 import {shillelagh} from './macros/spells/cantrip/shillelagh.js';
 import {shockingGrasp} from './macros/spells/cantrip/shockingGrasp.js';
-import {snare} from './macros/spells/level1/snare.js';
 import {sleep} from './macros/spells/level1/sleep.js';
 import {spareTheDying} from './macros/spells/cantrip/spareTheDying.js';
 import {tashaHideousLaughter} from './macros/spells/level1/tashaHideousLaughter.js';
@@ -86,7 +85,6 @@ export let macros = {
     'shield': shield,
     'shillelagh': shillelagh,
     'shockingGrasp': shockingGrasp,
-    'snare': snare,
     'sleep': sleep,
     'spareTheDying': spareTheDying,
     'tashaHideousLaughter': tashaHideousLaughter,
