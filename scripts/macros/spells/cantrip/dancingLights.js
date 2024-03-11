@@ -1,3 +1,4 @@
+// Based on multiple CPR Summon Macro
 export async function dancingLights({speaker, actor, token, character, item, args, scope, workflow}) {
     let DLBlueTeal = game.actors.getName('DL - BlueTeal');
     let DLBlueYellow = game.actors.getName('DL - BlueYellow');

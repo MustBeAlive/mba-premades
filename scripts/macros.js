@@ -39,11 +39,11 @@ import {sleep} from './macros/spells/level1/sleep.js';
 import {spareTheDying} from './macros/spells/cantrip/spareTheDying.js';
 import {tashaHideousLaughter} from './macros/spells/level1/tashaHideousLaughter.js';
 import {tenserFloatingDisk} from './macros/spells/level1/tenserFloatingDisk.js';
-import {thunderousSmite} from './macros/spells/level1/thunderousSmite.js';
 import {unseenServant} from './macros/spells/level1/unseenServant.js';
 import {viciousMockery} from './macros/spells/cantrip/viciousMockery.js';
 import {witchBolt} from './macros/spells/level1/witchBolt.js';
 import {wordOfRadiance} from './macros/spells/cantrip/wordOfRadiance.js';
+import {zephyrStrike} from './macros/spells/level1/zephyrStrike.js';
 
 
 
@@ -89,9 +89,9 @@ export let macros = {
     'spareTheDying': spareTheDying,
     'tashaHideousLaughter': tashaHideousLaughter,
     'tenserFloatingDisk': tenserFloatingDisk,
-    'thunderousSmite': thunderousSmite,
     'unseenServant': unseenServant,
     'viciousMockery': viciousMockery,
     'witchBolt': witchBolt,
-    'wordOfRadiance': wordOfRadiance
+    'wordOfRadiance': wordOfRadiance,
+    'zephyrStrike': zephyrStrike
 }

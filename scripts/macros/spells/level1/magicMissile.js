@@ -1,3 +1,4 @@
+// Original macro by CPR
 export async function magicMissile({speaker, actor, token, character, item, args, scope, workflow}) {
     if (workflow.targets.size === 0) return;
     let maxMissiles = 3 + (workflow.castData.castLevel - 1);

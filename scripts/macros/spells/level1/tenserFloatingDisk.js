@@ -1,3 +1,4 @@
+// Based on multiple CPR Summon Macro
 export async function tenserFloatingDisk({speaker, actor, token, character, item, args, scope, workflow}) {
     let sourceActor = game.actors.getName('MBA - Floating Disk');
     if (!sourceActor) {

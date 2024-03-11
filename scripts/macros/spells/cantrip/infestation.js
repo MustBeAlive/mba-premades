@@ -1,4 +1,4 @@
-// Original macros by GPS
+// Original macro by GPS
 export async function infestation({speaker, actor, token, character, item, args, scope, workflow}) {
     if (workflow.failedSaves.size != 0) {
         let target = workflow.failedSaves.first();

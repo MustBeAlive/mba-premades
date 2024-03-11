@@ -1,12 +1,12 @@
+// Original macro by DDBi
 export async function witchBolt({speaker, actor, token, character, item, args, scope, workflow}) {
     async function sustainedDamage({ options, damageType, damageDice, sourceItem, caster }) {
         const damageRoll = await new Roll(`${damageDice}[${damageType}]`).evaluate({ async: true });
         if (game.dice3d) game.dice3d.showForRoll(damageRoll, game.users.get(options.userId));
       
-        // console.warn({ options, damageType, damageDice, sourceItem, caster });
         const targets = await Promise.all(options.targets.map(async (uuid) => {
-          const tok = await fromUuid(uuid);
-          return tok.object;
+          	const tok = await fromUuid(uuid);
+          	return tok.object;
         }));
         const casterToken = await fromUuid(options.sourceUuid);
         const itemData = sourceItem.toObject();
@@ -15,66 +15,69 @@ export async function witchBolt({speaker, actor, token, character, item, args, s
         delete itemData._id;
       
         const workflow = await new MidiQOL.DamageOnlyWorkflow(
-          caster,
-          casterToken,
-          damageRoll.total,
-          damageType,
-          targets,
-          damageRoll,
-          {
-            flavor: `(${CONFIG.DND5E.damageTypes[damageType]})`,
-            itemCardId: "new",
-            itemData,
-            isCritical: false,
-          }
+			caster,
+			casterToken,
+			damageRoll.total,
+			damageType,
+			targets,
+			damageRoll,
+          		{
+					flavor: `(${CONFIG.DND5E.damageTypes[damageType]})`,
+					itemCardId: "new",
+					itemData,
+					isCritical: false,
+          		}
         );
-      }
+    }
       
-      async function cancel(caster) {
+    async function cancel(caster) {
         const concentration = caster.effects.find((i) => i.name ?? i.label === "Concentrating");
         if (concentration) {
-          await MidiQOL.socket().executeAsGM("removeEffects", { actorUuid: caster.uuid, effects: [concentration.id] });
+        	await MidiQOL.socket().executeAsGM("removeEffects", { actorUuid: caster.uuid, effects: [concentration.id] });
         }
         await DAE.unsetFlag(caster, "witchBoltSpell");
-      }
+    }
       
-      const lastArg = args[args.length - 1];
-      const damageDice = "1d12";
-      const damageType = "lightning";
+    const lastArg = args[args.length - 1];
+    const damageDice = "1d12";
+    const damageType = "lightning";
       
-      if (args[0].macroPass === "postActiveEffects") {
+    if (args[0].macroPass === "postActiveEffects") {
         if (args[0].hitTargetUuids.length === 0) return {}; // did not hit anyone
       
         const effectData = [{
-          label: "WitchBolt (Concentration)",
-          name: "WitchBolt (Concentration)",
-          icon: args[0].item.img,
-          duration: { rounds: 10, startTime: game.time.worldTime },
-          origin: args[0].item.uuid,
-          changes: [{
-            key: "macro.itemMacro.local",
-            value: "",
-            mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
-            priority: 20,
-          }],
-          disabled: false,
-          "flags.dae.macroRepeat": "startEveryTurn",
+         	 label: "WitchBolt (Concentration)",
+         	 name: "WitchBolt (Concentration)",
+         	 icon: args[0].item.img,
+         	 duration: { rounds: 10, startTime: game.time.worldTime },
+         	 origin: args[0].item.uuid,
+        	  changes: [
+				{
+          		 	key: "macro.itemMacro.local",
+            		value: "",
+           			mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
+            		priority: 20,
+          		}
+			],
+        	disabled: false,
+        	"flags.dae.macroRepeat": "startEveryTurn",
         }];
       
         const options = {
-          targets: args[0].hitTargetUuids,
-          sourceUuid: args[0].tokenUuid,
-          distance: args[0].item.system.range.value,
-          userId: game.userId,
+          	targets: args[0].hitTargetUuids,
+          	sourceUuid: args[0].tokenUuid,
+          	distance: args[0].item.system.range.value,
+          	userId: game.userId,
         };
       
         DAE.setFlag(args[0].actor, "witchBoltSpell", options);
         await args[0].actor.createEmbeddedDocuments("ActiveEffect", effectData);
-      } else if (args[0] == "off") {
+    } else if (args[0] == "off") {
         const sourceItem = await fromUuid(lastArg.origin);
         const caster = sourceItem.parent;
         DAE.unsetFlag(caster, "witchBoltSpell");
-      } else if (args[0] == "each") {
+
+    } else if (args[0] == "each") {
         const sourceItem = await fromUuid(lastArg.origin);
         const caster = sourceItem.parent;
         const options = DAE.getFlag(caster, "witchBoltSpell");
@@ -87,20 +90,20 @@ export async function witchBolt({speaker, actor, token, character, item, args, s
             speaker: caster.uuid,
             whisper: game.users.filter((u) => userIds.includes(u.id) || u.isGM),
           });
-          new Dialog({
-            title: sourceItem.name,
-            content: "<p>Продолжить поддерживать Witch Bolt? (Action)</p>",
-            buttons: {
-              continue: {
-                label: "Да, урон!",
-                callback: () => sustainedDamage({options, damageType, damageDice, sourceItem, caster} )
-              },
-              end: {
-                label: "Нет, прекратить концентрацию.",
-                callback: () => cancel(caster)
-              }
-            }
-          }).render(true);
+          	new Dialog({
+            	title: sourceItem.name,
+            	content: "<p>Продолжить поддерживать Witch Bolt? (Action)</p>",
+            	buttons: {
+              		continue: {
+						label: "Yes, deal damage!",
+						callback: () => sustainedDamage({options, damageType, damageDice, sourceItem, caster} )
+					},
+					end: {
+						label: "No, stop concentrating!",
+						callback: () => cancel(caster)
+					}
+            	}
+          	}).render(true);
         }
-      }
+    }
 }
