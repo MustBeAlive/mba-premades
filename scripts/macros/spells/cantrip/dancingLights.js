@@ -14,7 +14,7 @@ export async function dancingLights({speaker, actor, token, character, item, arg
     let sourceActors = await chrisPremades.helpers.selectDocuments('Choose color: (Max ' + totalSummons + ')', [DLBlueTeal, DLBlueYellow, DLGreen, DLPink, DLPurpleGreen, DLRed, DLYellow]);
         if (!sourceActors) return;
         if (sourceActors.length > totalSummons) {
-            ui.notifications.info('Too much tokens!');
+            ui.notifications.info('Too much actors selected!');
             return;
         }
         let updates =  {

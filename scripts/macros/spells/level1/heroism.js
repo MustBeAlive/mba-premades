@@ -1,33 +1,22 @@
-export async function heroism({speaker, actor, token, character, item, args, scope, workflow}) {
-    const lastArg = args[args.length - 1];
-    const tokenOrActor = await fromUuid(lastArg.actorUuid);
-    const targetActor = tokenOrActor.actor ? tokenOrActor.actor : tokenOrActor;
-    const amount = args[1];
-    const currentTemp = Number.isInteger(targetActor.system.attributes.hp.temp)
-    ? targetActor.system.attributes.hp.temp
-    : 0;
+// Original macro by CPR
+async function turnStart(token, origin) {
+    let tempHP = chrisPremades.helpers.getSpellMod(origin);
+    await chrisPremades.helpers.applyDamage([token], tempHP, 'temphp');
+}
+async function end(actor) {
+    await actor.update({'system.attributes.hp.temp': 0});
+}
+async function early({speaker, actor, token, character, item, args, scope, workflow}) {
+    let castLevel = workflow.castData.castLevel;
+    if (workflow.targets.size <= castLevel) return;
+    let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + castLevel + ')');
+    if (!selection.buttons) return;
+    let newTargets = selection.inputs.filter(i => i).slice(0, castLevel);
+    chrisPremades.helpers.updateTargets(newTargets);
+}
 
-    async function rejuvenateTempHP(tempHP) {
-    if (tempHP > currentTemp) {
-        await DAE.setFlag(targetActor, "heroismSpell", tempHP);
-        await targetActor.update({ "system.attributes.hp.temp": tempHP });
-        ChatMessage.create({ content: `Heroism applies ${tempHP} temporary HP to ${targetActor.name}` });
-    }
-    }
-
-    if (args[0] === "on") {
-    await rejuvenateTempHP(amount);
-    }
-    if (args[0] === "off") {
-    const flag = await DAE.getFlag(targetActor, "heroismSpell");
-    if (flag) {
-        const endTempHP = currentTemp > flag ? currentTemp - flag : null;
-        await targetActor.update({ "system.attributes.hp.temp": endTempHP });
-        await DAE.unsetFlag(targetActor, "heroismSpell");
-    }
-    ChatMessage.create({ content: `Heroism ends on ${targetActor.name}` });
-    }
-    if (args[0] === "each") {
-    await rejuvenateTempHP(amount);
-    }
+export let heroism = {
+    'turnStart': turnStart,
+    'end': end,
+    'early': early
 }

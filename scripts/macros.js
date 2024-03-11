@@ -1,7 +1,9 @@
 import {absorbElements} from './macros/spells/level1/absorbElements.js';
 import {acidSplash} from './macros/spells/cantrip/acidSplash.js';
 import {animalFriendship} from './macros/spells/level1/animalFriendship.js';
+import {bane} from './macros/spells/level1/bane.js';
 import {beastBond} from './macros/spells/level1/beastBond.js';
+import {bless} from './macros/spells/level1/bless.js';
 import {burningHands} from './macros/spells/level1/burningHands.js';
 import {ceremony} from './macros/spells/level1/ceremony.js';
 import {chaosBolt} from './macros/spells/level1/chaosBolt.js';
@@ -16,6 +18,7 @@ import {frostFingers} from './macros/spells/level1/frostFingers.js';
 import {goodberry} from './macros/spells/level1/goodberry.js';
 import {gust} from './macros/spells/cantrip/gust.js';
 import {hailOfThorns} from './macros/spells/level1/hailOfThorns.js';
+import {healingWord} from './macros/spells/level1/healingWord.js';
 import {heroism} from './macros/spells/level1/heroism.js';
 import {holyWater} from './macros/items/holyWater.js';
 import {iceKnife} from './macros/spells/level1/iceKnife.js';
@@ -46,7 +49,9 @@ export let macros = {
     'absorbElements': absorbElements,
     'acidSplash': acidSplash,
     'animalFriendship': animalFriendship,
+    'bane': bane,
     'beastBond': beastBond,
+    'bless': bless,
     'burningHands': burningHands,
     'ceremony': ceremony,
     'chaosBolt': chaosBolt,
@@ -61,6 +66,7 @@ export let macros = {
     'goodberry': goodberry,
     'gust': gust,
     'hailOfThorns': hailOfThorns,
+    'healingWord': healingWord,
     'heroism': heroism,
     'holyWater': holyWater,
     'iceKnife': iceKnife,

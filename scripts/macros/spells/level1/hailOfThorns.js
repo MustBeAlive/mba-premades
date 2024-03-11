@@ -1,10 +1,14 @@
+// Original macro by CPR
 export async function hailOfThorns({speaker, actor, token, character, item, args, scope, workflow}) {
     if (workflow.hitTargets.size != 1) return;
     if (workflow.item?.system?.actionType != 'rwak') return;
     let effect = chrisPremades.helpers.findEffect(workflow.actor, 'Hail of Thorns');
     if (!effect) return;
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Hail of Thorns - Burst', false);
-    if (!featureData) return;
+    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Hail of Thorns: Burst', false);
+    if (!featureData) {
+        ui.notifications.warn('Can\'t find item in compenidum! (Hail of Thorns: Burst)');
+        return
+    }
     let damageDice = Math.min(effect.flags['midi-qol'].castData.castLevel, 6);
     featureData.system.damage.parts = [
         [
