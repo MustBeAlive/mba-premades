@@ -1,3 +1,4 @@
+// Based on CPR Searing/Thunderous Smite
 async function item({speaker, actor, token, character, item, args, scope, workflow}) {
 
     async function effectMacro() {
