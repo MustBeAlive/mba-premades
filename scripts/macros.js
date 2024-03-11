@@ -8,6 +8,7 @@ import {chaosBolt} from './macros/spells/level1/chaosBolt.js';
 import {charmPerson} from './macros/spells/level1/charmPerson.js';
 import {colorSpray} from './macros/spells/level1/colorSpray.js';
 import {command} from './macros/spells/level1/command.js';
+import {cureWounds} from './macros/spells/level1/cureWounds.js';
 import {dancingLights} from './macros/spells/cantrip/dancingLights.js';
 import {dissonantWhispers} from './macros/spells/level1/dissonantWhispers.js';
 import {ensnaringStrike} from './macros/spells/level1/ensnaringStrike.js';
@@ -53,6 +54,7 @@ export let macros = {
     'charmPerson': charmPerson,
     'colorSpray': colorSpray,
     'command': command,
+    'cureWounds': cureWounds,
     'dancingLights': dancingLights,
     'dissonantWhispers': dissonantWhispers,
     'ensnaringStrike': ensnaringStrike,
