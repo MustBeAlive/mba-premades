@@ -1,13 +1,16 @@
+// Reworked; Original macro by GPS
 async function start({speaker, actor, token, character, item, args, scope, workflow}) {
     if (workflow.failedSaves.size != 1) return;
-    let target = workflow.targets.first();
-    await chrisPremades.helpers.addCondition(target.actor, 'prone');
+    const target = workflow.targets.first();
+	await chrisPremades.helpers.addCondition(target.actor, 'Prone');
 	const intScore = target.actor.system.abilities.int.value;
 	const uuid = workflow.actor.uuid;
 	if (intScore <= 4) {
 		ui.notifications.warn("This creature is not effected, its Intelligence score is too low.")
 		await game.dfreds.effectInterface.removeEffect({ effectName: 'Concentrating', uuid });
+		await chrisPremades.helpers.removeCondition(target.actor, 'Prone');
 	}
+	
 }
 
 async function isDamaged({speaker, actor, token, character, item, args, scope, workflow}) {
