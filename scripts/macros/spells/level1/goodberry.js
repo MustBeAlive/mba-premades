@@ -1,3 +1,4 @@
+// Original macro by MISC (Elwin#1410, based on Crymic's Goodberry macro)
 export async function goodberry({speaker, actor, token, character, item, args, scope, workflow}) {
     // ##################################################################################################
     // Read First!!!!

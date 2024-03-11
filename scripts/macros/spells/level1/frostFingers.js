@@ -1,3 +1,4 @@
+// Original macro by CPR
 export async function frostFingers({speaker, actor, token, character, item, args, scope, workflow}) {
     let template = await fromUuid(workflow.templateUuid);
     await new Sequence()

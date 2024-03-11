@@ -12,7 +12,6 @@ import {cureWounds} from './macros/spells/level1/cureWounds.js';
 import {dancingLights} from './macros/spells/cantrip/dancingLights.js';
 import {dissonantWhispers} from './macros/spells/level1/dissonantWhispers.js';
 import {ensnaringStrike} from './macros/spells/level1/ensnaringStrike.js';
-import {falseLife} from './macros/spells/level1/falseLife.js';
 import {frostFingers} from './macros/spells/level1/frostFingers.js';
 import {goodberry} from './macros/spells/level1/goodberry.js';
 import {gust} from './macros/spells/cantrip/gust.js';
@@ -58,7 +57,6 @@ export let macros = {
     'dancingLights': dancingLights,
     'dissonantWhispers': dissonantWhispers,
     'ensnaringStrike': ensnaringStrike,
-    'falseLife': falseLife,
     'frostFingers': frostFingers,
     'goodberry': goodberry,
     'gust': gust,
