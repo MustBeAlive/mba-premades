@@ -6,7 +6,7 @@ async function turnStart(token, origin) {
 async function end(actor) {
     await actor.update({'system.attributes.hp.temp': 0});
 }
-async function early({speaker, actor, token, character, item, args, scope, workflow}) {
+async function onCast({speaker, actor, token, character, item, args, scope, workflow}) {
     let castLevel = workflow.castData.castLevel;
     if (workflow.targets.size <= castLevel) return;
     let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + castLevel + ')');
@@ -18,5 +18,5 @@ async function early({speaker, actor, token, character, item, args, scope, workf
 export let heroism = {
     'turnStart': turnStart,
     'end': end,
-    'early': early
+    'early': onCast
 }
