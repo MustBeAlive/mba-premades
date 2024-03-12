@@ -1,14 +1,4 @@
 async function onCast({speaker, actor, token, character, item, args, scope, workflow}) {
-    let ammount = workflow.castData.castLevel - 1;
-    if (workflow.targets.size <= ammount) return;
-    let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
-    if (!selection.buttons) return;
-    let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
-    chrisPremades.helpers.updateTargets(newTargets);
-}
-
-async function postSave({speaker, actor, token, character, item, args, scope, workflow}) {
-    if (workflow.failedSaves.size === 0) return;
     let tempEffectData = {
         'name': 'Blindness Temp',
         'flags': {
@@ -22,6 +12,20 @@ async function postSave({speaker, actor, token, character, item, args, scope, wo
         }
     };
     let effect = await chrisPremades.helpers.createEffect(workflow.actor, tempEffectData);
+    let ammount = workflow.castData.castLevel - 1;
+    if (workflow.targets.size <= ammount) return;
+    let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+    if (!selection.buttons) return;
+    let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
+    chrisPremades.helpers.updateTargets(newTargets);
+}
+
+async function postSave({speaker, actor, token, character, item, args, scope, workflow}) {
+    let effect = await chrisPremades.helpers.findEffect(workflow.actor, 'Blindness Temp')
+    if (workflow.failedSaves.size === 0) {
+        await chrisPremades.helpers.removeEffect(effect);
+        return;
+    }
     let targets = workflow.targets;
     async function loop(targets) {
         let i = targets;

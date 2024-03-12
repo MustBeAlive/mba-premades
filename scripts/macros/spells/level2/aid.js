@@ -2,7 +2,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
     let level = workflow.castData.castLevel;
     let targets = Array.from(workflow.targets);
     let healAmmount = (5 * (level - 1));
-    for (i of targets) {
+    for (let i of targets) {
         await chrisPremades.helpers.applyDamage([i], healAmmount, 'healing');
     }
 }
