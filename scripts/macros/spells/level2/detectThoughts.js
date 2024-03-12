@@ -1,9 +1,10 @@
+// Reworked; Original macro by CPR
 async function detectThoughtsItem({speaker, actor, token, character, item, args, scope, workflow}) {
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Detect Thoughts: Probe', false);
+    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Detect Thoughts: Probe Mind', false);
     if (!featureData) return;
     featureData.system.save.dc = chrisPremades.helpers.getSpellDC(workflow.item);
     async function effectMacro () {
-        await warpgate.revert(token.document, 'Detect Thoughts: Probe');
+        await warpgate.revert(token.document, 'Detect Thoughts: Probe Mind');
     }
     let effectData = {
         'label': workflow.item.name,
