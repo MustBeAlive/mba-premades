@@ -15,7 +15,7 @@ export async function crownOfMadness({speaker, actor, token, character, item, ar
         return;
     }
     async function effectMacro() {
-        await warpgate.wait(100);
+        await warpgate.wait(200);
         let concEffect = await chrisPremades.helpers.findEffect(actor, 'Concentrating');
         if (!concEffect) return;
         let choices  = [
