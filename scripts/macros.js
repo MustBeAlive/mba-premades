@@ -17,6 +17,7 @@ import {colorSpray} from './macros/spells/level1/colorSpray.js';
 import {command} from './macros/spells/level1/command.js';
 import {cureWounds} from './macros/spells/level1/cureWounds.js';
 import {dancingLights} from './macros/spells/cantrip/dancingLights.js';
+import {detectThoughts} from './macros/spells/level2/detectThoughts.js';
 import {dissonantWhispers} from './macros/spells/level1/dissonantWhispers.js';
 import {earthbind} from './macros/spells/level2/earthbind.js';
 import {enhanceAbility} from './macros/spells/level2/enhanceAbility.js';
@@ -86,6 +87,7 @@ export let macros = {
     'command': command,
     'cureWounds': cureWounds,
     'dancingLights': dancingLights,
+    'detectThoughts': detectThoughts,
     'dissonantWhispers': dissonantWhispers,
     'earthbind': earthbind,
     'enhanceAbility': enhanceAbility,
