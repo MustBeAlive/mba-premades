@@ -1,6 +1,6 @@
 // Original macro by MISC (Bradeck/thatlonelybugbear)
 export async function absorbElements({speaker, actor, token, character, item, args, scope, workflow}) {
-    const damageTypes = [['🧪 Acid', 'acid'], ['❄️ Cold', 'cold'], ['🔥 Fire', 'fire'], ['⚡ Lightning', 'lightning'], ['☁️ Thunder', 'thunder']]; //All possible damage types
+    const damageTypes = [['Acid 🧪', 'acid'], ['Cold ❄️', 'cold'], ['Fire 🔥', 'fire'], ['Lightning ⚡', 'lightning'], ['Thunder ☁️', 'thunder']]; //All possible damage types
 
     /* Choose wich element to absorb */
     const buttons = damageTypes.map(([label, value]) => ({label, value}));
