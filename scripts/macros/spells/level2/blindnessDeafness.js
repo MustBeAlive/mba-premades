@@ -1,4 +1,4 @@
-async function onCast({speaker, actor, token, character, item, args, scope, workflow}) {
+async function cast({speaker, actor, token, character, item, args, scope, workflow}) {
     let ammount = workflow.castData.castLevel - 1;
     if (workflow.targets.size <= ammount) return;
     let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
@@ -7,7 +7,7 @@ async function onCast({speaker, actor, token, character, item, args, scope, work
     chrisPremades.helpers.updateTargets(newTargets);
 }
 
-async function postSave({speaker, actor, token, character, item, args, scope, workflow}) {
+async function item({speaker, actor, token, character, item, args, scope, workflow}) {
     if (workflow.failedSaves.size === 0) {
         return;
     }
@@ -67,6 +67,7 @@ async function postSave({speaker, actor, token, character, item, args, scope, wo
                     }
                 };
                 await chrisPremades.helpers.createEffect(target.actor, effectData);
+                console.log(i);
                 break;
             }
             case 'deaf': {
@@ -103,6 +104,7 @@ async function postSave({speaker, actor, token, character, item, args, scope, wo
                     }
                 };
                 await chrisPremades.helpers.createEffect(target.actor, effectData);
+                console.log(i);
             }
         }
     }
@@ -110,6 +112,6 @@ async function postSave({speaker, actor, token, character, item, args, scope, wo
 }
 
 export let blindnessDeafness = {
-    'onCast': onCast,
-    'postSave': postSave,
+    'cast': cast,
+    'item': item,
 }
