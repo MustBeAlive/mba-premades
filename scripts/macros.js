@@ -1,13 +1,18 @@
 import {absorbElements} from './macros/spells/level1/absorbElements.js';
 import {acidSplash} from './macros/spells/cantrip/acidSplash.js';
+import {aid} from './macros/spells/level2/aid.js';
+import {alterSelf} from './macros/spells/level2/alterSelf.js';
 import {animalFriendship} from './macros/spells/level1/animalFriendship.js';
+import {animalMessenger} from './macros/spells/level2/animalMessenger.js';
 import {bane} from './macros/spells/level1/bane.js';
 import {beastBond} from './macros/spells/level1/beastBond.js';
 import {bless} from './macros/spells/level1/bless.js';
+import {blindnessDeafness} from './macros/spells/level2/blindnessDeafness.js';
 import {burningHands} from './macros/spells/level1/burningHands.js';
 import {ceremony} from './macros/spells/level1/ceremony.js';
 import {chaosBolt} from './macros/spells/level1/chaosBolt.js';
 import {charmPerson} from './macros/spells/level1/charmPerson.js';
+import {chromaticOrb} from './macros/spells/level1/chromaticOrb.js';
 import {colorSpray} from './macros/spells/level1/colorSpray.js';
 import {command} from './macros/spells/level1/command.js';
 import {cureWounds} from './macros/spells/level1/cureWounds.js';
@@ -32,6 +37,7 @@ import {magicMissile} from './macros/spells/level1/magicMissile.js';
 import {magicStone} from './macros/spells/cantrip/magicStone.js';
 import {potionOfHealing} from './macros/items/potionOfHealing.js';
 import {produceFlame} from './macros/spells/cantrip/produceFlame.js';
+import {removeTemplate} from './macros/generic/removeTemplate.js';
 import {shield} from './macros/spells/level1/shield.js';
 import {shillelagh} from './macros/spells/cantrip/shillelagh.js';
 import {shockingGrasp} from './macros/spells/cantrip/shockingGrasp.js';
@@ -40,6 +46,7 @@ import {spareTheDying} from './macros/spells/cantrip/spareTheDying.js';
 import {tashaHideousLaughter} from './macros/spells/level1/tashaHideousLaughter.js';
 import {tenserFloatingDisk} from './macros/spells/level1/tenserFloatingDisk.js';
 import {thunderousSmite} from './macros/spells/level1/thunderousSmite.js';
+import {thunderwave} from './macros/spells/level1/thunderwave.js';
 import {unseenServant} from './macros/spells/level1/unseenServant.js';
 import {viciousMockery} from './macros/spells/cantrip/viciousMockery.js';
 import {witchBolt} from './macros/spells/level1/witchBolt.js';
@@ -52,14 +59,19 @@ import {zephyrStrike} from './macros/spells/level1/zephyrStrike.js';
 export let macros = {
     'absorbElements': absorbElements,
     'acidSplash': acidSplash,
+    'aid': aid,
+    'alterSelf': alterSelf,
     'animalFriendship': animalFriendship,
+    'animalMessenger': animalMessenger,
     'bane': bane,
     'beastBond': beastBond,
     'bless': bless,
+    'blindnessDeafness': blindnessDeafness,
     'burningHands': burningHands,
     'ceremony': ceremony,
     'chaosBolt': chaosBolt,
     'charmPerson': charmPerson,
+    'chromaticOrb': chromaticOrb,
     'colorSpray': colorSpray,
     'command': command,
     'cureWounds': cureWounds,
@@ -84,6 +96,7 @@ export let macros = {
     'magicStone': magicStone,
     'potionOfHealing': potionOfHealing,
     'produceFlame': produceFlame,
+    'removeTemplate': removeTemplate,
     'shield': shield,
     'shillelagh': shillelagh,
     'shockingGrasp': shockingGrasp,
@@ -92,6 +105,7 @@ export let macros = {
     'tashaHideousLaughter': tashaHideousLaughter,
     'tenserFloatingDisk': tenserFloatingDisk,
     'thunderousSmite': thunderousSmite,
+    'thunderwave': thunderwave,
     'unseenServant': unseenServant,
     'viciousMockery': viciousMockery,
     'witchBolt': witchBolt,

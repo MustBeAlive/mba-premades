@@ -3,11 +3,11 @@ export async function identify({speaker, actor, token, character, item, args, sc
     let dialog = await new Dialog({
             title: "Identify",
             content: `
-            <p>Какой предмет хочешь идентифицировать? (Перетащи его в окно ниже)</p>
+            <p>Would you like to identify an item? (Drag it to the box below!)</p>
             <form>
                 <div class="form-group">
                 <div class="form-fields">
-                    <input type="text" placeholder="Тащить сюда..." id="identify" readonly>
+                    <input type="text" placeholder="Drag item here..." id="identify" readonly>
                     <div style="width: 50px; height: 50px; display: inline-block;">
                     <img id="itemImage" src="" alt="Item Image" style="max-width: 100%; max-height: 100%; display: none;">
                     </div>
@@ -27,7 +27,7 @@ export async function identify({speaker, actor, token, character, item, args, sc
         
                 // Check if the item exists
                 if (!findItem) {
-                    ui.notifications.error("Предмет не найден");
+                    ui.notifications.error("Item not found");
                     return;
                 }
         
@@ -52,15 +52,15 @@ export async function identify({speaker, actor, token, character, item, args, sc
                     }
                 }
                 // No active module found to identify the item
-                ui.notifications.error("Нет активных модулей для идентификации предметов");
+                ui.notifications.error("No active module found to identify the item");
                 }
             },
             cancel: {
-                label: "Отмена",
+                label: "Cancel",
                 callback: () => false
             }
             },
-            default: "Отмена",
+            default: "Cancel",
         render: (html) => {
             const inputField = html.find("#identify")[0];
             const itemImage = html.find("#itemImage")[0];
@@ -111,17 +111,17 @@ export async function identify({speaker, actor, token, character, item, args, sc
             const itemQuantity = findItemNew.system.quantity || 1;
             const itemText = itemQuantity === 1 ? `${itemQuantity} <a class="open-item-sheet" data-item-id="${findItemNew.id}">${findItemNew.name}</a> item` : `${itemQuantity} <a class="open-item-sheet" data-item-id="${findItemNew.id}">${findItemNew.name}</a> items`;
         
-            const content = `<p>Ты опознал ${itemText}!</p>`;
+            const content = `<p>You identified ${itemText}!</p>`;
         
             const dialogSuccess = new Dialog({
-            title: "Опознано",
+            title: "Identified",
             content: content,
             buttons: {
                 okay: {
-                label: "Ок!"
+                label: "Ok!"
                 }
             },
-            default: "Ок!",
+            default: "Ok!",
             render: (html) => {
                 html.find('.open-item-sheet').click((ev) => {
                 findItemNew.sheet.render(true);

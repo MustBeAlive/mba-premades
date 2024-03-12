@@ -1,3 +1,4 @@
+// Original macro by CPR
 async function item({speaker, actor, token, character, item, args, scope, workflow}) {
     let effectData = {
         'name': workflow.item.name,
@@ -18,13 +19,13 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             'mba-premades': {
                 'spell': {
                     'thunderousSmite': {
-                        'dc': chrisPremades.helpersgetSpellDC(workflow.item)
+                        'dc': chrisPremades.helpers.getSpellDC(workflow.item)
                     }
                 }
             }
         }
     };
-    await chrisPremades.helperscreateEffect(workflow.actor, effectData);
+    await chrisPremades.helpers.createEffect(workflow.actor, effectData);
 }
 
 async function damage({speaker, actor, token, character, item, args, scope, workflow}) {
@@ -37,11 +38,11 @@ async function damage({speaker, actor, token, character, item, args, scope, work
     if (!queueSetup) return;
     let oldFormula = workflow.damageRoll._formula;
     let bonusDamageFormula = '2d6[thunder]';
-    if (workflow.isCritical) bonusDamageFormula = chrisPremades.helpersgetCriticalFormula(bonusDamageFormula);
+    if (workflow.isCritical) bonusDamageFormula = chrisPremades.helpers.getCriticalFormula(bonusDamageFormula);
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRoll = await new Roll(damageFormula).roll({async: true});
     await workflow.setDamageRoll(damageRoll);
-    let featureData = await chrisPremades.helpersgetItemFromCompendium('mba-premades.MBA Spell Features', 'Thunderous Smite: Push');
+    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Thunderous Smite: Push');
     if (!featureData) {
         chrisPremades.queue.remove(workflow.item.uuid);
         return;
@@ -53,12 +54,11 @@ async function damage({speaker, actor, token, character, item, args, scope, work
     await warpgate.wait(100);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (featureWorkflow.failedSaves.size) {
-        await chrisPremades.helperspushToken(workflow.token, targetToken, 10);
-        if (!chrisPremades.helperscheckTrait(targetToken.actor, 'ci', 'prone')) await chrisPremades.helpersaddCondition(targetToken.actor, 'Prone');
+        await chrisPremades.helpers.pushToken(workflow.token, targetToken, 10);
+        if (!chrisPremades.helpers.checkTrait(targetToken.actor, 'ci', 'prone')) await chrisPremades.helpers.addCondition(targetToken.actor, 'Prone');
     }
-    await chrisPremades.helpersremoveEffect(effect);
-    let conEffect = chrisPremades.helpersfindEffect(workflow.actor, 'Concentrating');
-    if (conEffect) await chrisPremades.helpersremoveEffect(conEffect);
+    let conEffect = chrisPremades.helpers.findEffect(workflow.actor, 'Concentrating');
+    if (conEffect) await chrisPremades.helpers.removeEffect(conEffect);
     chrisPremades.queue.remove(workflow.item.uuid);
 }
 

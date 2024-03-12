@@ -4,13 +4,13 @@ export async function animalFriendship({speaker, actor, token, character, item, 
     let effect = await chrisPremades.helpers.findEffect(target.actor, 'Animal Friendship');
     let type = chrisPremades.helpers.raceOrType(target.actor);
     if (type != 'beast') {
-        ui.notifications.warn('Animal Friendship работает только на существ типа "beast"!');
+        ui.notifications.warn('Animal Friendship can only affect beasts!');
         await chrisPremades.helpers.removeEffect(effect);
         return;
     }
     let targetIntValue = target.actor.system.abilities.int.value;
     if (targetIntValue >= 4) {
-        ui.notifications.warn('Animal Friendship работает только на существ с значением интеллекта ниже 4!');
+        ui.notifications.warn('Animal Friendship can only affect creatures with Intelligence score of 4 or lower!');
         await chrisPremades.helpers.removeEffect(effect);
         return;
     }
