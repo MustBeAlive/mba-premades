@@ -18,8 +18,11 @@ import {command} from './macros/spells/level1/command.js';
 import {cureWounds} from './macros/spells/level1/cureWounds.js';
 import {dancingLights} from './macros/spells/cantrip/dancingLights.js';
 import {dissonantWhispers} from './macros/spells/level1/dissonantWhispers.js';
+import {earthBind} from './macros/spells/level2/earthbind.js';
+import {enhanceAbility} from './macros/spells/level2/enhanceAbility.js';
 import {ensnaringStrike} from './macros/spells/level1/ensnaringStrike.js';
 import {falseLife} from './macros/spells/level1/falseLife.js';
+import {flamingSphere} from './macros/spells/level2/flamingSphere.js';
 import {frostFingers} from './macros/spells/level1/frostFingers.js';
 import {goodberry} from './macros/spells/level1/goodberry.js';
 import {gust} from './macros/spells/cantrip/gust.js';
@@ -30,19 +33,26 @@ import {holyWater} from './macros/items/holyWater.js';
 import {iceKnife} from './macros/spells/level1/iceKnife.js';
 import {identify} from './macros/spells/level1/identify.js';
 import {infestation} from './macros/spells/cantrip/infestation.js';
+import {lesserRestoration} from './macros/spells/level2/lesserRestoration.js';
 import {light} from './macros/spells/cantrip/light.js';
 import {longstrider} from './macros/spells/level1/longstrider.js';
 import {mageHand} from './macros/spells/cantrip/mageHand.js';
 import {magicMissile} from './macros/spells/level1/magicMissile.js';
 import {magicStone} from './macros/spells/cantrip/magicStone.js';
+import {maximilianEarthenGrasp} from './macros/spells/level2/maximilianEarthenGrasp.js';
 import {potionOfHealing} from './macros/items/potionOfHealing.js';
+import {prayerOfHealing} from './macros/spells/level2/prayerOfHealing.js';
 import {produceFlame} from './macros/spells/cantrip/produceFlame.js';
+import {protectionFromPoison} from './macros/spells/level2/protectionFromPoison.js';
 import {removeTemplate} from './macros/generic/removeTemplate.js';
+import {scorchingRay} from './macros/spells/level2/scorchingRay.js';
 import {shield} from './macros/spells/level1/shield.js';
 import {shillelagh} from './macros/spells/cantrip/shillelagh.js';
 import {shockingGrasp} from './macros/spells/cantrip/shockingGrasp.js';
 import {sleep} from './macros/spells/level1/sleep.js';
 import {spareTheDying} from './macros/spells/cantrip/spareTheDying.js';
+import {spiritualWeapon} from './macros/spells/level2/spiritualWeapon.js';
+import {suggestion} from './macros/spells/level2/suggestion.js';
 import {tashaHideousLaughter} from './macros/spells/level1/tashaHideousLaughter.js';
 import {tenserFloatingDisk} from './macros/spells/level1/tenserFloatingDisk.js';
 import {thunderousSmite} from './macros/spells/level1/thunderousSmite.js';
@@ -77,8 +87,11 @@ export let macros = {
     'cureWounds': cureWounds,
     'dancingLights': dancingLights,
     'dissonantWhispers': dissonantWhispers,
+    'earthBind': earthBind,
+    'enhanceAbility': enhanceAbility,
     'ensnaringStrike': ensnaringStrike,
     'falseLife': falseLife,
+    'flamingSphere': flamingSphere,
     'frostFingers': frostFingers,
     'goodberry': goodberry,
     'gust': gust,
@@ -89,19 +102,26 @@ export let macros = {
     'iceKnife': iceKnife,
     'identify': identify,
     'infestation': infestation,
+    'lesserRestoration': lesserRestoration,
     'light': light,
     'longstrider': longstrider,
     'mageHand': mageHand,
     'magicMissile': magicMissile,
     'magicStone': magicStone,
+    'maximilianEarthenGrasp': maximilianEarthenGrasp,
     'potionOfHealing': potionOfHealing,
+    'prayerOfHealing': prayerOfHealing,
     'produceFlame': produceFlame,
+    'protectionFromPoison': protectionFromPoison,
     'removeTemplate': removeTemplate,
+    'scorchingRay': scorchingRay,
     'shield': shield,
     'shillelagh': shillelagh,
     'shockingGrasp': shockingGrasp,
     'sleep': sleep,
     'spareTheDying': spareTheDying,
+    'spiritualWeapon': spiritualWeapon,
+    'suggestion': suggestion,
     'tashaHideousLaughter': tashaHideousLaughter,
     'tenserFloatingDisk': tenserFloatingDisk,
     'thunderousSmite': thunderousSmite,
