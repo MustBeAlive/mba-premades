@@ -67,7 +67,6 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                     }
                 };
                 await chrisPremades.helpers.createEffect(target.actor, effectData);
-                console.log(i);
                 break;
             }
             case 'deaf': {
@@ -104,7 +103,6 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                     }
                 };
                 await chrisPremades.helpers.createEffect(target.actor, effectData);
-                console.log(i);
             }
         }
     }

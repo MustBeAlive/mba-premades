@@ -54,13 +54,13 @@ async function save({speaker, actor, token, character, item, args, scope, workfl
             }
         };
         if (type != 'humanoid') {
-            ChatMessage.create({ flavor: i.name + ' is unaffected by charm! (not humanoid)', speaker: ChatMessage.getSpeaker({ actor: workflow.actor}) });
+            ChatMessage.create({ flavor: i.name + ' is unaffected by Charm Person! (Target is not humanoid)', speaker: ChatMessage.getSpeaker({ actor: workflow.actor}) });
             await chrisPremades.helpers.createEffect(i.actor, immuneData);
             return;
         }
         let hasCharmImmunity = chrisPremades.helpers.checkTrait(i.actor, 'ci', 'charmed');
         if (hasCharmImmunity) {
-            ChatMessage.create({ flavor: i.name + ' is unaffected by charm! (immune to condition: Charmed)', speaker: ChatMessage.getSpeaker({ actor: workflow.actor}) });
+            ChatMessage.create({ flavor: i.name + ' is unaffected by Charm Person! (Target is immune to condition: Charmed)', speaker: ChatMessage.getSpeaker({ actor: workflow.actor}) });
             await chrisPremades.helpers.createEffect(i.actor, immuneData);
             return;
         }
