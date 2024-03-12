@@ -1,3 +1,4 @@
+// Based on multiple CPR Summon Macro
 export async function flamingSphere({speaker, actor, token, character, item, args, scope, workflow}) {
     let folder = chrisPremades.helpers.getConfiguration(workflow.item, 'folder') ?? 'Flaming Sphere';
     if (folder === '') folder = 'Flaming Sphere';

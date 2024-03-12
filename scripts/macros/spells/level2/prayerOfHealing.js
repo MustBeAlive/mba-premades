@@ -1,3 +1,4 @@
+// Base on CPR mass cure wounds macro
 export async function prayerOfHealing({speaker, actor, token, character, item, args, scope, workflow}) {
     if (workflow.targets.size === 0) return;
     let targetTokens = [];

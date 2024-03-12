@@ -1,4 +1,4 @@
-export async function earthBind(token) {
+export async function earthbind(token) {
     const tokenDoc = token.document;
     let tokenHeight = tokenDoc.elevation;
     let newTokenHeight;

@@ -18,7 +18,7 @@ import {command} from './macros/spells/level1/command.js';
 import {cureWounds} from './macros/spells/level1/cureWounds.js';
 import {dancingLights} from './macros/spells/cantrip/dancingLights.js';
 import {dissonantWhispers} from './macros/spells/level1/dissonantWhispers.js';
-import {earthBind} from './macros/spells/level2/earthbind.js';
+import {earthbind} from './macros/spells/level2/earthbind.js';
 import {enhanceAbility} from './macros/spells/level2/enhanceAbility.js';
 import {ensnaringStrike} from './macros/spells/level1/ensnaringStrike.js';
 import {falseLife} from './macros/spells/level1/falseLife.js';
@@ -87,7 +87,7 @@ export let macros = {
     'cureWounds': cureWounds,
     'dancingLights': dancingLights,
     'dissonantWhispers': dissonantWhispers,
-    'earthBind': earthBind,
+    'earthbind': earthbind,
     'enhanceAbility': enhanceAbility,
     'ensnaringStrike': ensnaringStrike,
     'falseLife': falseLife,
