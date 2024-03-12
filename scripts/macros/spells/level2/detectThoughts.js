@@ -41,9 +41,6 @@ async function detectThoughtsItem({speaker, actor, token, character, item, args,
 
 async function detectThoughtsProbeItem({speaker, actor, token, character, item, args, scope, workflow}) {
     if (workflow.failedSaves.size === 1) return;
-    let effect = chrisPremades.helpers.findEffect(workflow.actor, 'Detect Thoughts');
-    if (!effect) return;
-    await chrisPremades.helpers.removeEffect(effect);
     await chrisPremades.helpers.removeCondition(workflow.actor, 'Concentrating');
 }
 

@@ -18,7 +18,6 @@ export async function dragonsBreath({speaker, actor, token, character, item, arg
         return;
     }
     let damageValue = 1 + workflow.castData.castLevel;
-    console.log(damageValue);
     let damageParts;
     switch (chooseDamage) {
         case 'acid': {
@@ -45,7 +44,7 @@ export async function dragonsBreath({speaker, actor, token, character, item, arg
     async function effectMacro () {
         await warpgate.revert(token.document, 'Dragon\'s Breath: Attack');
     }
-    effectData = {
+    let effectData = {
         'label': 'Dragon\'s Breath',
         'icon': 'assets/library/icons/sorted/spells/level2/dragon_breath.webp',
         'description': 'You are imbued with power to spew magical energy from your mouth',

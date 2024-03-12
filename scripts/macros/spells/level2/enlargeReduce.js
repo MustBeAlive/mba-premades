@@ -225,7 +225,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             await chrisPremades.macros.enlargeReduce.end(token);
         }
         let effectData = {
-            'name': workflow.item.name,
+            'name': 'Enlarge',
             'icon': 'assets/library/icons/sorted/spells/level2/enlarge_reduce1.webp',
             'origin': workflow.item.uuid,
             'duration': {
@@ -356,7 +356,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             await chrisPremades.macros.enlargeReduce.end(token);
         }
         let effectData = {
-            'name': 'workflow.item.name',
+            'name': 'Reduce',
             'icon': 'assets/library/icons/sorted/spells/level2/enlarge_reduce2.webp',
             'origin': workflow.item.uuid,
             'duration': {
