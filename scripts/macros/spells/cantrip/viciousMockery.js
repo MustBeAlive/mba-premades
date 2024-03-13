@@ -52,7 +52,8 @@ export async function viciousMockery({speaker, actor, token, character, item, ar
             flags: { "dae": { "token": targetUuid, "specialDuration": ["1Attack","turnEnd"] } },
             disabled: false,
             name: `Vicious Mockery`,
-            icon: "assets/library/icons/sorted/spells/cantrip/vicious_mockery.webp"
+            icon: "assets/library/icons/sorted/spells/cantrip/vicious_mockery.webp",
+            description: "You have disadvantage on the next attack roll you make before the end of your next turn"
         }];
         const checkEffect = targetActor.effects.find(i => i.name ===  `Vicious Mockery`);
         if(!checkEffect) await MidiQOL.socket().executeAsGM("createEffects", { actorUuid: uuid, effects: effectDisadv });
