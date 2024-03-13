@@ -9,6 +9,7 @@ import {beastBond} from './macros/spells/level1/beastBond.js';
 import {bless} from './macros/spells/level1/bless.js';
 import {blindnessDeafness} from './macros/spells/level2/blindnessDeafness.js';
 import {burningHands} from './macros/spells/level1/burningHands.js';
+import {causeFear} from './macros/spells/level1/causeFear.js';
 import {ceremony} from './macros/spells/level1/ceremony.js';
 import {chaosBolt} from './macros/spells/level1/chaosBolt.js';
 import {charmPerson} from './macros/spells/level1/charmPerson.js';
@@ -22,6 +23,7 @@ import {detectThoughts} from './macros/spells/level2/detectThoughts.js';
 import {dissonantWhispers} from './macros/spells/level1/dissonantWhispers.js';
 import {dragonsBreath} from './macros/spells/level2/dragonsBreath.js';
 import {earthbind} from './macros/spells/level2/earthbind.js';
+import {elementalBane} from './macros/spells/level4/elementalBane.js';
 import {enhanceAbility} from './macros/spells/level2/enhanceAbility.js';
 import {enlargeReduce} from './macros/spells/level2/enlargeReduce.js';
 import {ensnaringStrike} from './macros/spells/level1/ensnaringStrike.js';
@@ -83,6 +85,7 @@ export let macros = {
     'bless': bless,
     'blindnessDeafness': blindnessDeafness,
     'burningHands': burningHands,
+    'causeFear': causeFear,
     'ceremony': ceremony,
     'chaosBolt': chaosBolt,
     'charmPerson': charmPerson,
@@ -96,6 +99,7 @@ export let macros = {
     'dissonantWhispers': dissonantWhispers,
     'dragonsBreath': dragonsBreath,
     'earthbind': earthbind,
+    'elementalBane': elementalBane,
     'enhanceAbility': enhanceAbility,
     'enlargeReduce': enlargeReduce,
     'ensnaringStrike': ensnaringStrike,
