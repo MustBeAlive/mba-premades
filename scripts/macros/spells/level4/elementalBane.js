@@ -65,7 +65,7 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
 async function item({speaker, actor, token, character, item, args, scope, workflow}) {
     if (workflow.failedSaves.size === 0)
         return;
-    let concEffect = workflow.actor.effects.find(i=>i.flags['mba-premades']?.spell?.elementalBane);
+    let concEffect = chrisPremades.helpers.findEffect(workflow.actor, 'Concentrating');
     console.log(concEffect);
     let targets = Array.from(workflow.failedSaves);
     for (let i = 0; i < targets.length; i++) {
@@ -91,7 +91,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         const effectData = {
             'name': 'Elemental Bane',
             'icon': 'assets/library/icons/sorted/spells/level4/elemental_bane.webp',
-            'origin': concEffect.uuid,
+            'origin': concEffect.origin,
             'duration': {
                 'seconds': 60
             },
