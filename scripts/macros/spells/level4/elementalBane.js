@@ -8,7 +8,7 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
             await chrisPremades.helpers.removeEffect(concEffect);
             return;
         }
-        let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
+        let newTargets = selection.inputs.filter(i=>i).slice(0, ammount);
         await chrisPremades.helpers.updateTargets(newTargets);
     }
     let targets = Array.from(game.user.targets);
@@ -20,7 +20,7 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
             distanceArray.push(chrisPremades.helpers.getDistance(target1, target2));
         }
     }
-    const found = distanceArray.some((distance) => distance > 30);
+    const found = distanceArray.some((distance)=>distance > 30);
     if (found === true) {
         ui.notifications.warn('Targets cannot be further than 30 ft. of each other!')
         await chrisPremades.helpers.removeEffect(concEffect);
@@ -33,6 +33,7 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
                 'spell': {
                     'elementalBane': {
                         'dc': chrisPremades.helpers.getSpellDC(workflow.item),
+                        'sourceEffectUuid': concEffect.uuid
                     }
                 }
             }
@@ -45,36 +46,35 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
         return
     }
     let originItem = workflow.item;
-    if (!originItem) return;
+    if (!originItem)
+        return;
     featureData.system.save.dc = chrisPremades.helpers.getSpellDC(originItem);
     setProperty(featureData, 'chris-premades.spell.castData.school', originItem.system.school);
-    let feature = new CONFIG.Item.documentClass(featureData, {'parent': workflow.actor});
+    let feature = new CONFIG.Item.documentClass(featureData,{
+        'parent': workflow.actor
+    });
     let targetUuids = [];
     for (let i of targets) {
         targetUuids.push(i.document.uuid);
     }
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions(targetUuids);
+    let[config,options] = chrisPremades.constants.syntheticItemWorkflowOptions(targetUuids);
     await warpgate.wait(100);
     await MidiQOL.completeItemUse(feature, config, options);
 }
 
-
-async function item({speaker, actor, token, character, item, args, scope, workflow}) {  
-    if (workflow.failedSaves.size === 0) return;
+async function item({speaker, actor, token, character, item, args, scope, workflow}) {
+    if (workflow.failedSaves.size === 0)
+        return;
+    let concEffect = workflow.actor.effects.find(i=>i.flags['mba-premades']?.spell?.elementalBane);
+    console.log(concEffect);
     let targets = Array.from(workflow.failedSaves);
     for (let i = 0; i < targets.length; i++) {
         let target = fromUuidSync(targets[i].document.uuid).object;
-        let selection = await chrisPremades.helpers.dialog('Choose damage type for ' + target.document.name, [
-            ['Acid 🧪', 'acid'], 
-            ['Cold ❄️', 'cold'], 
-            ['Fire 🔥', 'fire'], 
-            ['Lightning ⚡', 'lightning'], 
-            ['Thunder ☁️', 'thunder']
-        ]);
-        if (!selection) return;
+        let selection = await chrisPremades.helpers.dialog('Choose damage type for ' + target.document.name, [['Acid 🧪', 'acid'], ['Cold ❄️', 'cold'], ['Fire 🔥', 'fire'], ['Lightning ⚡', 'lightning'], ['Thunder ☁️', 'thunder']]);
+        if (!selection)
+            return;
         async function effectMacro() {
             let effect = chrisPremades.helpers.findEffect(actor, 'Elemental Bane');
-            console.log(effect);
             let updates = {
                 'flags': {
                     'mba-premades': {
@@ -87,29 +87,25 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                 }
             };
             await chrisPremades.helpers.updateEffect(effect, updates);
-            console.log(effect);
         }
         const effectData = {
             'name': 'Elemental Bane',
             'icon': 'assets/library/icons/sorted/spells/level4/elemental_bane.webp',
-            'origin': workflow.item.uuid,
+            'origin': concEffect.uuid,
             'duration': {
                 'seconds': 60
             },
-            'changes': [
-                {
-                    'key': 'flags.midi-qol.onUseMacroName',
-                    'mode': 0,
-                    'value': 'function.mbaPremades.macros.elementalBane.damage,preTargetDamageApplication',
-                    'priority': 20
-                },
-                {
-                    'key': 'system.traits.dr.value',
-                    'mode': 0,
-                    'value': '-' + selection,
-                    'priority': 20
-                }
-            ],
+            'changes': [{
+                'key': 'flags.midi-qol.onUseMacroName',
+                'mode': 0,
+                'value': 'function.mbaPremades.macros.elementalBane.damage,preTargetDamageApplication',
+                'priority': 20
+            }, {
+                'key': 'system.traits.dr.value',
+                'mode': 0,
+                'value': '-' + selection,
+                'priority': 20
+            }],
             'flags': {
                 'mba-premades': {
                     'spell': {
@@ -130,17 +126,39 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
     }
 }
 
-
 async function damage({speaker, actor, token, character, item, args, scope, workflow}) {
     let effect = await chrisPremades.helpers.findEffect(actor, 'Elemental Bane');
-    if (effect.flags['mba-premades']?.spell?.elementalBane?.used === true) return;
-    let type = effect.flags['mba-premades']?.spell?.elementalBane?.type;
-    if (!workflow.item.system.damage.parts.includes('"' + type + '"')) {
-        console.log('Wrong damage type, returning');
+    if (effect.flags['mba-premades']?.spell?.elementalBane?.used === true)
         return;
+    let type = effect.flags['mba-premades']?.spell?.elementalBane?.type;
+    console.log(workflow.damageItem);
+    let typeCheck = workflow.damageDetail?.some(d=>d.type === type);
+    if (!typeCheck)
+        return;
+    let damageFormula;
+    if (workflow.damageItem.critical === true) {
+        damageFormula = '4d6[' + type + ']';
+    } else {
+        damageFormula = '2d6[' + type + ']';
     }
-    let newDamage = workflow.damageItem.hpdamage + '2d6[' + type + ']';
-    workflow.damageItem.hpDamage = newDamage; 
+    let damageRoll = await new Roll(damageFormula).roll({
+        'async': true
+    });
+    damageRoll.toMessage({
+        rollMode: 'roll',
+        speaker: {
+            'alias': name
+        },
+        flavor: 'Elemental Bane: Bonus Damage'
+    });
+    let damageTotal = damageRoll.total;
+    workflow.damageItem.damageDetail[0].push({
+        'damage': damageTotal,
+        'type': type
+    });
+    workflow.damageItem.totalDamage += damageTotal;
+    workflow.damageItem.appliedDamage += damageTotal;
+    workflow.damageItem.hpDamage += damageTotal;
     let updates = {
         'flags': {
             'mba-premades': {
@@ -154,7 +172,6 @@ async function damage({speaker, actor, token, character, item, args, scope, work
     };
     await chrisPremades.helpers.updateEffect(effect, updates);
 }
-
 
 export let elementalBane = {
     'cast': cast,
