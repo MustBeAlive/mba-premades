@@ -1,10 +1,15 @@
 async function onCast({speaker, actor, token, character, item, args, scope, workflow}) {
     let ammount = workflow.castData.castLevel;
-    if (workflow.targets.size <= ammount) return;
-    let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), true, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
-    if (!selection.buttons) return;
-    let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
-    await chrisPremades.helpers.updateTargets(newTargets);
+    if (workflow.targets.size > ammount) {
+        let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), true, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+        if (!selection.buttons) {
+            ui.notifications.warn('Failed to select right ammount of targets, try again!')
+            return;
+        }
+        let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
+        await chrisPremades.helpers.updateTargets(newTargets);
+    }
+    let targets = Array.from(game.user.targets);
     let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Charm Person: Charm', false);
     if (!featureData) {
         ui.notifications.warn('Can\'t find item in compenidum! (Charm Person: Charm)');
@@ -15,7 +20,8 @@ async function onCast({speaker, actor, token, character, item, args, scope, work
     featureData.system.save.dc = chrisPremades.helpers.getSpellDC(originItem);
     setProperty(featureData, 'chris-premades.spell.castData.school', originItem.system.school);
     let feature = new CONFIG.Item.documentClass(featureData, {'parent': workflow.actor});
-    let targetUuids = newTargets;
+    let targetUuids = [];
+    for (let i of targets) targetUuids.push(i.document.uuid);
     let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions(targetUuids);
     await MidiQOL.completeItemUse(feature, config, options);
 }
