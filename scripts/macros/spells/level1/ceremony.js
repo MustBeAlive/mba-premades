@@ -1,7 +1,5 @@
 export async function ceremony({speaker, actor, token, character, item, args, scope, workflow}) {
     const target = workflow.targets.first();
-    const targets = workflow.targets;
-    const source = workflow.actor;
     let choices  = [
         ['Atonement', 'Atonement'],
         ['Bless Water', 'Water'],
@@ -27,7 +25,7 @@ export async function ceremony({speaker, actor, token, character, item, args, sc
                 },
             };
             const userID = MidiQOL.playerForActor(workflow.actor).id;
-            const save = await MidiQOL.socket().executeAsUser('rollAbility', userID, saveRollData);      
+            const check = await MidiQOL.socket().executeAsUser('rollAbility', userID, saveRollData);      
             break;
         }
         case 'Water': {
@@ -116,18 +114,33 @@ export async function ceremony({speaker, actor, token, character, item, args, sc
             break;
         }
         case 'Wedding': {
-            if (targets.size != 2) {
+            let targets = Array.from(workflow.targets);
+            if (targets.length != 2) {
                 ui.notifications.warn('Wrong ammount of targets!');
                 return;
             }
-            async function loop(targets) {
-                let target = targets;
+            for (let i = 0; i < targets.length; i++) {
+                let target = targets[i];
+                let type = chrisPremades.helpers.raceOrType(target.actor);
+                if (type != 'humanoid') {
+                    ui.notifications.warn('One of the targets is not human!');
+                    return;
+                } 
+            }
+
+            let t1 = targets[0];
+            let t2 = targets[1];
+
+            async function effectMacro() {
+                let effect = chrisPremades.helpers.findEffect(actor, 'Ceremony: Wedding');
+                let partnerName = effect.flags['mba-premades']?.spell?.ceremony?.name;
+                let nearbyPartner = await MidiQOL.findNearby(null, token, 30, { includeIncapacitated: true }).filter(i => i.name === partnerName);
+                if (nearbyPartner.length != 1) return;
                 const effectData = {
-                    'name': "Ceremony: Wedding",
-                    'icon': "assets/library/icons/sorted/spells/level1/ceremony.webp",
-                    'description': "For the next 7 days, you have a +2 bonus to AC while you are within 30 feet of your partner.",
+                    'name': "Ceremony: AC bonus",
+                    'icon': "assets/library/icons/sorted/spells/level1/ceremony.webp", // temp icon, find something better or recolor original
                     'duration': {
-                        'seconds': 604800
+                        turns: 1,
                     },
                     'changes': [
                         {
@@ -137,10 +150,57 @@ export async function ceremony({speaker, actor, token, character, item, args, sc
                             'priority': 20
                         }
                     ]
-                };
-                await chrisPremades.helpers.createEffect(target.actor, effectData);
+                }
+                await chrisPremades.helpers.createEffect(actor, effectData);
             }
-            targets.forEach(loop);
+
+            const effectData1 = {
+                'name': "Ceremony: Wedding",
+                'icon': "assets/library/icons/sorted/spells/level1/ceremony.webp",
+                'description': "For the next 7 days, you have a +2 bonus to AC while you are within 30 feet of your partner.",
+                'duration': {
+                    'seconds': 604800
+                },
+                'flags': {
+                    'mba-premades': {
+                        'spell': {
+                            'ceremony': {
+                                'name': t2.document.name
+                            }
+                        }
+                    },
+                    'effectmacro': {
+                        'onEachTurn': {
+                            'script': chrisPremades.helpers.functionToString(effectMacro)
+                        }
+                    }
+                }
+            };
+
+            const effectData2 = {
+                'name': "Ceremony: Wedding",
+                'icon': "assets/library/icons/sorted/spells/level1/ceremony.webp",
+                'description': "For the next 7 days, you have a +2 bonus to AC while you are within 30 feet of your partner.",
+                'duration': {
+                    'seconds': 604800
+                },
+                'flags': {
+                    'mba-premades': {
+                        'spell': {
+                            'ceremony': {
+                                'name': t1.document.name
+                            }
+                        }
+                    },
+                    'effectmacro': {
+                        'onEachTurn': {
+                            'script': chrisPremades.helpers.functionToString(effectMacro)
+                        }
+                    }
+                }
+            };
+            await chrisPremades.helpers.createEffect(t1.actor, effectData1);
+            await chrisPremades.helpers.createEffect(t2.actor, effectData2);
         }
     }
 }

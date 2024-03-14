@@ -26,6 +26,7 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
         targetUuids.push(i.document.uuid);
     }
     let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions(targetUuids);
+    await game.messages.get(workflow.itemCardId).delete();
     await MidiQOL.completeItemUse(feature, config, options);
 }
 

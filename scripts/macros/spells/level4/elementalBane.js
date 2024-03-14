@@ -59,6 +59,7 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
     }
     let[config,options] = chrisPremades.constants.syntheticItemWorkflowOptions(targetUuids);
     await warpgate.wait(100);
+    await game.messages.get(workflow.itemCardId).delete();
     await MidiQOL.completeItemUse(feature, config, options);
 }
 
