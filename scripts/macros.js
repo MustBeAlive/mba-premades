@@ -53,6 +53,7 @@ import {prayerOfHealing} from './macros/spells/level2/prayerOfHealing.js';
 import {produceFlame} from './macros/spells/cantrip/produceFlame.js';
 import {protectionFromPoison} from './macros/spells/level2/protectionFromPoison.js';
 import {removeTemplate} from './macros/generic/removeTemplate.js';
+import {sending} from './macros/spells/level3/sending.js';
 import {scorchingRay} from './macros/spells/level2/scorchingRay.js';
 import {shield} from './macros/spells/level1/shield.js';
 import {shillelagh} from './macros/spells/cantrip/shillelagh.js';
@@ -131,6 +132,7 @@ export let macros = {
     'produceFlame': produceFlame,
     'protectionFromPoison': protectionFromPoison,
     'removeTemplate': removeTemplate,
+    'sending': sending,
     'scorchingRay': scorchingRay,
     'shield': shield,
     'shillelagh': shillelagh,
