@@ -66,7 +66,6 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
     if (workflow.failedSaves.size === 0)
         return;
     let concEffect = chrisPremades.helpers.findEffect(workflow.actor, 'Concentrating');
-    console.log(concEffect);
     let targets = Array.from(workflow.failedSaves);
     for (let i = 0; i < targets.length; i++) {
         let target = fromUuidSync(targets[i].document.uuid).object;
@@ -134,7 +133,6 @@ async function damage({speaker, actor, token, character, item, args, scope, work
     if (effect.flags['mba-premades']?.spell?.elementalBane?.used === true)
         return;
     let type = effect.flags['mba-premades']?.spell?.elementalBane?.type;
-    console.log(workflow.damageItem);
     let typeCheck = workflow.damageDetail?.some(d=>d.type === type);
     if (!typeCheck)
         return;
