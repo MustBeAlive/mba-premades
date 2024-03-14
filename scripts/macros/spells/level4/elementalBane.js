@@ -95,17 +95,20 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             'duration': {
                 'seconds': 60
             },
-            'changes': [{
-                'key': 'flags.midi-qol.onUseMacroName',
-                'mode': 0,
-                'value': 'function.mbaPremades.macros.elementalBane.damage,preTargetDamageApplication',
-                'priority': 20
-            }, {
-                'key': 'system.traits.dr.value',
-                'mode': 0,
-                'value': '-' + selection,
-                'priority': 20
-            }],
+            'changes': [
+                {
+                    'key': 'flags.midi-qol.onUseMacroName',
+                    'mode': 0,
+                    'value': 'function.mbaPremades.macros.elementalBane.damage,preTargetDamageApplication',
+                    'priority': 20
+                }, 
+                {
+                    'key': 'system.traits.dr.value',
+                    'mode': 0,
+                    'value': '-' + selection,
+                    'priority': 20
+                }
+            ],
             'flags': {
                 'mba-premades': {
                     'spell': {

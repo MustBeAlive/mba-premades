@@ -40,6 +40,7 @@ import {holyWater} from './macros/items/holyWater.js';
 import {iceKnife} from './macros/spells/level1/iceKnife.js';
 import {identify} from './macros/spells/level1/identify.js';
 import {infestation} from './macros/spells/cantrip/infestation.js';
+import {intellectFortress} from './macros/spells/level3/intellectFortress.js';
 import {lesserRestoration} from './macros/spells/level2/lesserRestoration.js';
 import {light} from './macros/spells/cantrip/light.js';
 import {longstrider} from './macros/spells/level1/longstrider.js';
@@ -61,6 +62,7 @@ import {spareTheDying} from './macros/spells/cantrip/spareTheDying.js';
 import {spiritualWeapon} from './macros/spells/level2/spiritualWeapon.js';
 import {suggestion} from './macros/spells/level2/suggestion.js';
 import {tashaHideousLaughter} from './macros/spells/level1/tashaHideousLaughter.js';
+import {tashaMindWhip} from './macros/spells/level2/tashaMindWhip.js';
 import {tenserFloatingDisk} from './macros/spells/level1/tenserFloatingDisk.js';
 import {thunderousSmite} from './macros/spells/level1/thunderousSmite.js';
 import {thunderwave} from './macros/spells/level1/thunderwave.js';
@@ -116,6 +118,7 @@ export let macros = {
     'iceKnife': iceKnife,
     'identify': identify,
     'infestation': infestation,
+    'intellectFortress': intellectFortress,
     'lesserRestoration': lesserRestoration,
     'light': light,
     'longstrider': longstrider,
@@ -137,6 +140,7 @@ export let macros = {
     'spiritualWeapon': spiritualWeapon,
     'suggestion': suggestion,
     'tashaHideousLaughter': tashaHideousLaughter,
+    'tashaMindWhip': tashaMindWhip,
     'tenserFloatingDisk': tenserFloatingDisk,
     'thunderousSmite': thunderousSmite,
     'thunderwave': thunderwave,

@@ -25,4 +25,17 @@ export let mba = {
         ui.notifications.info('Модуль JB2A не включен');
         return false;
     },
+    'distance30': function _distance30 (targets) {
+        const distanceArray = [];
+        for (let i = 0; i < targets.length; i++) {
+            for (let k = i + 1; k < targets.length; k++) {
+                let target1 = fromUuidSync(targets[i].document.uuid).object;
+                let target2 = fromUuidSync(targets[k].document.uuid).object;
+                distanceArray.push(chrisPremades.helpers.getDistance(target1, target2));
+            }
+        }
+        const found = distanceArray.some((distance) => distance > 30);
+        if (found) return 'true';
+        if (!found) return 'false';
+    }
 }
