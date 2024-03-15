@@ -1,59 +1,90 @@
-// Original macro by GPS
-export async function dissonantWhispers({speaker, actor, token, character, item, args, scope, workflow}) {
-	if (args[0].macroPass === "postActiveEffects") {
-		const target = workflow.hitTargets.values().next().value;
-		const uuid = target.document.uuid;
-		const saveAbility = "wis";
-		const damageType = "psychic";
-		const attackNum = Math.floor(workflow.itemLevel + 2);
-		const spellDC = actor.system.attributes.spelldc;
-		const hasEffectApplied = await game.dfreds.effectInterface.hasEffectApplied('Deafened', uuid);
-		const hasEffectAppliedReaction = await game.dfreds.effectInterface.hasEffectApplied('Reaction', uuid);
-		
-		if (hasEffectApplied) {
-			ui.notifications.info("Target is deafened and automatically succeeds");
-			let damageRoll = await new Roll(`${attackNum}d6 / 2`).roll({async: true});
-			damageRoll.total = Math.floor(damageRoll.total);
-			damageRoll._total = Math.floor(damageRoll.total);
-			await MidiQOL.displayDSNForRoll(damageRoll,'damageRoll');
-			await new MidiQOL.DamageOnlyWorkflow(actor, token, damageRoll.total, damageType, target ? [target] : [], damageRoll, {flavor: "Damage Roll (Psychic)", itemCardId: workflow.itemCardId});
-		} else {
-			const itemData = item.clone({
-				name: item.name.concat(" Damage"),
-				img: "assets/library/icons/sorted/spells/level1/Dissonant_Whispers.webp",
-				type: "feat",
-				effects: [],
-				flags: {
-					"midi-qol": {
-						noProvokeReaction: true,
-						onUseMacroName: null,
-						forceCEOff: true
-					},
-					"midiProperties": {
-						halfdam: true
-					},
-				},
-				system: {
-					equipped: true,
-					actionType: "save",
-					save: { dc: spellDC, ability: saveAbility, scaling: "flat" },
-					damage: { parts: [[`${attackNum}d6`, damageType]] },
-					"target.type": "self",
-					components: { concentration: false, material: false, ritual: false, somatic: false, value: "", vocal: false },
-					duration: { units: "inst", value: undefined },
-				},
-			}, { keepId:true });
-			itemData.system.target.type = "self";
-			setProperty(itemData.flags, "autoanimations.killAnim", true);
-			const itemUpdate = new CONFIG.Item.documentClass(itemData, { parent: target.actor });
-			const options = { showFullCard: false, createWorkflow: true, versatile: false, configureDialog: false, workflowOptions: {autoRollDamage: 'always', autoFastDamage: true} };
-			const saveResult = await MidiQOL.completeItemUse(itemUpdate, {}, options);
-			if (saveResult.failedSaves.size == 1) {
-				if (!hasEffectAppliedReaction)	{
-					await game.dfreds.effectInterface.addEffect({ effectName: 'Reaction', uuid });
-				}
-				ChatMessage.create({ flavor: 'Target of Dissonant Whispers must move away from the caster of the spell, as far as its speed allows. The creature doesn\'t move into obviously dangerous ground.', speaker: ChatMessage.getSpeaker({ actor: workflow.actor}) });
-			}
-		}
-	}
+async function cast({speaker, actor, token, character, item, args, scope, workflow}) {
+    let target = workflow.targets.first();
+    let deafened = await chrisPremades.helpers.findEffect(target.actor, 'Deafened');
+    if (deafened) {
+        ChatMessage.create({ flavor: target.document.name + ' is deafened and automatically succeeds on the save', speaker: ChatMessage.getSpeaker({ actor: workflow.actor}) });
+        let immuneData = {  
+            'name': 'Save Immunity',
+            'icon': 'assets/library/icons/sorted/generic/generic_buff.png',
+            'description': "You succeed on the next save you make",
+            'duration': {
+                'turns': 1  
+            },
+            'changes': [
+                {
+                    'key': 'flags.midi-qol.min.ability.save.wis',
+                    'value': '40',
+                    'mode': 2,
+                    'priority': 120
+                }
+            ],
+            'flags': {
+                'dae': {
+                    'specialDuration': [
+                        'isSave'
+                    ]
+                },
+                'chris-premades': {
+                    'effect': {
+                        'noAnimation': true
+                    }
+                }
+            }
+        };
+        await chrisPremades.helpers.createEffect(target.actor, immuneData);
+    }
+}
+
+async function item({speaker, actor, token, character, item, args, scope, workflow}) {
+    if (workflow.failedSaves.size != 1) return;
+    let target = workflow.targets.first();
+    let reaction = chrisPremades.helpers.findEffect(target.actor, 'Reaction');
+    if (reaction) return;
+    async function effectMacro() {
+        await new Dialog({
+            title: "Dissonant Whispers",
+            content: "<p>You must immediately use your reaction to move as far as your speed allows away from the caster of the spell.</p><p>You don't have to move into obviously dangerous ground, such as a fire or a pit.</p>",
+            buttons: {
+              ok: {
+                label: "Ok!",
+                callback: async (html) => {
+                    return;
+                },
+              },
+            },
+            default: "Ok!"
+          }).render(true);
+    };
+    const effectData = {
+        'name': "Dissonant Whispers",
+        'icon': "assets/library/icons/sorted/spells/level1/Dissonant_Whispers.webp",
+        'description': "",
+        'duration': {
+            'rounds': 1
+        },
+        'flags': {
+            'effectmacro': {
+                'onCreate': {
+                    'script': chrisPremades.helpers.functionToString(effectMacro)
+                }
+            },
+            'dae': {
+                    'specialDuration': ['turnStart']
+            }
+        },
+        'changes': [
+            {
+                'key': 'macro.CE',
+                'mode': 0,
+                'value': "Reaction",
+                'priority': 20
+            }
+        ]
+    };
+    await chrisPremades.helpers.createEffect(target.actor, effectData);
+}
+
+export let dissonantWhispers = {
+    'cast': cast,
+    'item': item
 }
