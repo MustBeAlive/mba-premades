@@ -27,6 +27,7 @@ import {elementalBane} from './macros/spells/level4/elementalBane.js';
 import {enhanceAbility} from './macros/spells/level2/enhanceAbility.js';
 import {enlargeReduce} from './macros/spells/level2/enlargeReduce.js';
 import {ensnaringStrike} from './macros/spells/level1/ensnaringStrike.js';
+import {eyebite} from './macros/spells/level6/eyebite.js';
 import {falseLife} from './macros/spells/level1/falseLife.js';
 import {flamingSphere} from './macros/spells/level2/flamingSphere.js';
 import {frostFingers} from './macros/spells/level1/frostFingers.js';
@@ -49,6 +50,8 @@ import {magicMissile} from './macros/spells/level1/magicMissile.js';
 import {magicStone} from './macros/spells/cantrip/magicStone.js';
 import {maximilianEarthenGrasp} from './macros/spells/level2/maximilianEarthenGrasp.js';
 import {potionOfHealing} from './macros/items/potionOfHealing.js';
+import {powerWordKill} from './macros/spells/level9/powerWordKill.js';
+import {powerWordPain} from './macros/spells/level7/powerWordPain.js';
 import {prayerOfHealing} from './macros/spells/level2/prayerOfHealing.js';
 import {produceFlame} from './macros/spells/cantrip/produceFlame.js';
 import {protectionFromPoison} from './macros/spells/level2/protectionFromPoison.js';
@@ -106,6 +109,7 @@ export let macros = {
     'enhanceAbility': enhanceAbility,
     'enlargeReduce': enlargeReduce,
     'ensnaringStrike': ensnaringStrike,
+    'eyebite': eyebite,
     'falseLife': falseLife,
     'flamingSphere': flamingSphere,
     'frostFingers': frostFingers,
@@ -128,6 +132,8 @@ export let macros = {
     'magicStone': magicStone,
     'maximilianEarthenGrasp': maximilianEarthenGrasp,
     'potionOfHealing': potionOfHealing,
+    'powerWordKill': powerWordKill,
+    'powerWordPain': powerWordPain,
     'prayerOfHealing': prayerOfHealing,
     'produceFlame': produceFlame,
     'protectionFromPoison': protectionFromPoison,

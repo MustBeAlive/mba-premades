@@ -1,18 +1,19 @@
 //Janky on the code side, but for now looks good enough.
-export async function sending({speaker, actor, token, character, item, args, scope, workflow}) {
+export async function sending({ speaker, actor, token, character, item, args, scope, workflow }) {
     let word = [];
     let wordInput = await warpgate.menu({
         inputs: [{
-                label: `Input text (Max: 25 words)`,
-                type: 'text',
+            label: `Input text (Max: 25 words)`,
+            type: 'text',
             options: ``
         }],
-            buttons: [{
-                label: 'Ok',
-                value: 1}]
-            },
-            {title: 'Sending'}
-        );
+        buttons: [{
+            label: 'Ok',
+            value: 1
+        }]
+    },
+        { title: 'Sending' }
+    );
     word.push(wordInput.inputs);
 
     let words = word.toString();
@@ -35,7 +36,7 @@ export async function sending({speaker, actor, token, character, item, args, sco
         fontWeight: "bold"
     };
 
-    for (let i=0; i < wordsArr.length; i++) {
+    for (let i = 0; i < wordsArr.length; i++) {
         let word = wordsArr[i];
         new Sequence()
             .effect()
@@ -44,8 +45,8 @@ export async function sending({speaker, actor, token, character, item, args, sco
             .duration(4100)
 
             .effect()
-            .atLocation(token, {offset: {x: 3.5, y: 0}})
-            .animateProperty("sprite", "position.x", { from: 3.5, to: -3.5, duration: 5000, gridUnits: true})
+            .atLocation(token, { offset: { x: 3.5, y: 0 } })
+            .animateProperty("sprite", "position.x", { from: 3.5, to: -3.5, duration: 5000, gridUnits: true })
             .text(`${word}`, style)
             .fadeIn(750)
             .filter("Glow", { color: 0x8e1a1a })
