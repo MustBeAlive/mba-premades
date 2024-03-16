@@ -124,7 +124,7 @@ export async function prismaticSpray({speaker, actor, token, character, item, ar
                 ChatMessage.create({ flavor: `Prismatic spray - ${rayColor} restrained ${target.document.name}`, speaker: ChatMessage.getSpeaker({ actor: target.actor}) });
                 new Sequence().effect().atLocation(workflow.token).stretchTo(target).file(animation).play();
                 break;
-            case 7:
+            case 7: // Promts at wrong time, find a way to promt on source turn start
                 if (saved) break;
                 let alreadyBlinded = chrisPremades.helpers.findEffect(target.actor, 'Prismatic Spray: Violet');
                 if (alreadyBlinded) break;
