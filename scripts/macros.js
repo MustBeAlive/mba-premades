@@ -55,6 +55,7 @@ import {powerWordKill} from './macros/spells/level9/powerWordKill.js';
 import {powerWordPain} from './macros/spells/level7/powerWordPain.js';
 import {powerWordStun} from './macros/spells/level8/powerWordStun.js';
 import {prayerOfHealing} from './macros/spells/level2/prayerOfHealing.js';
+import {prismaticSpray} from './macros/spells/level7/prismaticSpray.js';
 import {produceFlame} from './macros/spells/cantrip/produceFlame.js';
 import {protectionFromPoison} from './macros/spells/level2/protectionFromPoison.js';
 import {removeTemplate} from './macros/generic/removeTemplate.js';
@@ -138,6 +139,7 @@ export let macros = {
     'powerWordPain': powerWordPain,
     'powerWordStun': powerWordStun,
     'prayerOfHealing': prayerOfHealing,
+    'prismaticSpray': prismaticSpray,
     'produceFlame': produceFlame,
     'protectionFromPoison': protectionFromPoison,
     'removeTemplate': removeTemplate,
