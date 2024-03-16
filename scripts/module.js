@@ -1,6 +1,7 @@
 import {addActions} from './macros/actions/token.js';
 import {cast} from './macros/animations/cast.js';
 import {checkUpdate} from './update.js';
+import {deathSaves} from './macros/mechanics/deathsaves.js';
 import {macros} from './macros.js';
 import {mba as helpers} from './helperFunctions.js';
 import {registerSettings} from './settings.js';
@@ -16,6 +17,7 @@ Hooks.once('ready', async function() {
     if (game.settings.get('mba-premades', 'Cast Animations')) Hooks.on('midi-qol.postPreambleComplete', cast);
     if (game.settings.get('mba-premades', 'Blindness Fix')) removeDumbV10EffectsBlind();
     if (game.settings.get('mba-premades', 'Invisibility Fix')) removeDumbV10EffectsInvisible();
+    if (game.settings.get('mba-premades', 'Auto Death Save')) Hooks.on("updateCombat", deathSaves);
     Hooks.on('createToken', addActions);
 });
 globalThis['mbaPremades'] = {

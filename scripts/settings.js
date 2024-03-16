@@ -1,5 +1,6 @@
 import {cast} from './macros/animations/cast.js';
 import {removeDumbV10EffectsBlind} from './macros/mechanics/blindness.js';
+import { deathSaves } from './macros/mechanics/deathsaves.js';
 import {removeDumbV10EffectsInvisible} from './macros/mechanics/invisibility.js';
 let moduleName = 'mba-premades';
 export function registerSettings() {
@@ -49,6 +50,17 @@ export function registerSettings() {
         'default': false,
         'onChange': value => {
             if (value) removeDumbV10EffectsInvisible();
+        }
+    });
+    game.settings.register(moduleName, 'Auto Death Save', {
+        'name': 'Autro Death Save Request',
+        'hint': 'Эта настройка включает автоматический промт death save\'ов в бою (monk\'s token bar)',
+        'scope': 'world',
+        'config': true,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) deathSaves();
         }
     });
     game.settings.register(moduleName, 'Enable Random Bullshit', {
