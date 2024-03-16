@@ -32,5 +32,8 @@ export async function powerWordKill({speaker, actor, token, character, item, arg
         await warpgate.wait(100);
         await chrisPremades.helpers.removeCondition(target.actor, 'Unconscious');
         await chrisPremades.helpers.addCondition(target.actor, 'Dead', true);
+    } else {
+        ui.notifications.warn('Target HP is higher than 100!');
+        return;
     }
 }

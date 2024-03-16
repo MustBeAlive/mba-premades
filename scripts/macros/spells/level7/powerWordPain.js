@@ -10,10 +10,10 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         ui.notifications.warn('Target is immune to condition: Charmed!');
         return;
     }
-    
+
     new Sequence()
         .effect()
-        .file("jb2a.sacred_flame.source.purple")
+        .file("jb2a.sacred_flame.source.white")
         .atLocation(target)
         .anchor(0.5)
         .scaleToObject(1.5)
@@ -21,7 +21,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         .fadeOut(500)
 
         .effect()
-        .file("jb2a.sacred_flame.target.purple")
+        .file("jb2a.sacred_flame.target.white")
         .atLocation(target)
         .scaleToObject(2.5)
         .anchor(0.5)
@@ -145,22 +145,10 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
 }
 
 async function check({speaker, actor, token, character, item, args, scope, workflow}) {
-    console.log(workflow.item.type);
-    if (workflow.item.type != "spell") return;
+    if (workflow.item.type != "spell" || workflow.item.name === "Crippling Pain") return;
     let effect = await chrisPremades.helpers.findEffect(actor, "Power Word: Pain");
     let spellDC = effect.flags['mba-premades']?.spell?.powerWordPain?.dc;
-    const saveRollData =  {
-        request: "save",
-        targetUuid: token.actor.uuid,
-        ability: "con",
-            options: {
-                chatMessage: true,
-                flavor: `DC${spellDC} vs Power Word Pain: Waste Spell`,
-        },
-    };
-    //const userID = MidiQOL.playerForActor(workflow.actor).id;
-    //const saveRoll = await MidiQOL.socket().executeAsUser('rollAbility', userID, saveRollData);   
-    const saveRoll = await MidiQOL.socket().executeAsGM("rollAbility", saveRollData);
+    let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'con');
     if (saveRoll.total < spellDC) {
         ui.notifications.warn('Spell fails!');
         return false;

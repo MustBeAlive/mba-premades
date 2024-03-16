@@ -50,8 +50,10 @@ import {magicMissile} from './macros/spells/level1/magicMissile.js';
 import {magicStone} from './macros/spells/cantrip/magicStone.js';
 import {maximilianEarthenGrasp} from './macros/spells/level2/maximilianEarthenGrasp.js';
 import {potionOfHealing} from './macros/items/potionOfHealing.js';
+import {powerWordHeal} from './macros/spells/level9/powerWordHeal.js';
 import {powerWordKill} from './macros/spells/level9/powerWordKill.js';
 import {powerWordPain} from './macros/spells/level7/powerWordPain.js';
+import {powerWordStun} from './macros/spells/level8/powerWordStun.js';
 import {prayerOfHealing} from './macros/spells/level2/prayerOfHealing.js';
 import {produceFlame} from './macros/spells/cantrip/produceFlame.js';
 import {protectionFromPoison} from './macros/spells/level2/protectionFromPoison.js';
@@ -76,7 +78,6 @@ import {witchBolt} from './macros/spells/level1/witchBolt.js';
 import {wordOfRadiance} from './macros/spells/cantrip/wordOfRadiance.js';
 import {wrathfulSmite} from './macros/spells/level1/wrathfulSmite.js';
 import {zephyrStrike} from './macros/spells/level1/zephyrStrike.js';
-
 
 
 export let macros = {
@@ -132,8 +133,10 @@ export let macros = {
     'magicStone': magicStone,
     'maximilianEarthenGrasp': maximilianEarthenGrasp,
     'potionOfHealing': potionOfHealing,
+    'powerWordHeal': powerWordHeal,
     'powerWordKill': powerWordKill,
     'powerWordPain': powerWordPain,
+    'powerWordStun': powerWordStun,
     'prayerOfHealing': prayerOfHealing,
     'produceFlame': produceFlame,
     'protectionFromPoison': protectionFromPoison,
