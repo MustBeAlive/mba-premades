@@ -3,7 +3,7 @@ export async function scorchingRay({speaker, actor, token, character, item, args
     if (!workflow.token) return;
     let maxRays = 3 + (workflow.castData.castLevel - 2);
     let skipDead = false;
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Scorching Ray Bolt', false);
+    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Scorching Ray: Bolt', false);
     if (!featureData) return;
     featureData.system.ability = workflow.item.system.ability;
     featureData.flags['chris-premades'] = {

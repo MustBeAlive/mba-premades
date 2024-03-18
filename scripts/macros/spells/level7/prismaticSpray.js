@@ -1,3 +1,4 @@
+//rework banishment
 export async function prismaticSpray({speaker, actor, token, character, item, args, scope, workflow}) {
     let targets = Array.from(workflow.targets);
     let saves = Array.from(workflow.saves);

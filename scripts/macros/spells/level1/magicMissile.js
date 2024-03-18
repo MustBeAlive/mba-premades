@@ -13,7 +13,7 @@ export async function magicMissile({speaker, actor, token, character, item, args
         ui.notifications.info('Перебор зарядов, попробуй еще раз!');
         return;
     }
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Magic Missile Bolt', false);
+    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Magic Missile: Bolt', false);
     if (!featureData) return;
     featureData.flags['chris-premades'] = {
         'spell': {

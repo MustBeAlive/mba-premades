@@ -31,7 +31,7 @@ export async function intellectFortress({speaker, actor, token, character, item,
         let target = (targets[i]);
         const effectData = {
             'name': 'Intellect Fortress',
-            'icon': 'icons/magic/control/control-influence-rally-purple.webp',
+            'icon': 'assets/library/icons/sorted/spells/level3/intellect_fortress.webp',
             'origin': workflow.item.uuid,
             'description': 'You have advantage on Intelligence, Wisdom, and Charisma saving throws, as well as resistance to psychic damage.',
             'duration': {

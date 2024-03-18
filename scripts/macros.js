@@ -4,10 +4,15 @@ import {aid} from './macros/spells/level2/aid.js';
 import {alterSelf} from './macros/spells/level2/alterSelf.js';
 import {animalFriendship} from './macros/spells/level1/animalFriendship.js';
 import {animalMessenger} from './macros/spells/level2/animalMessenger.js';
+import {auraOfVitality} from './macros/spells/level3/auraOfVitality.js';
 import {bane} from './macros/spells/level1/bane.js';
+import {banishingSmite} from './macros/spells/level5/banishingSmite.js';
+import {banishment} from './macros/spells/level4/banishment.js';
 import {beastBond} from './macros/spells/level1/beastBond.js';
 import {bless} from './macros/spells/level1/bless.js';
+import {blindingSmite} from './macros/spells/level3/blindingSmite.js';
 import {blindnessDeafness} from './macros/spells/level2/blindnessDeafness.js';
+import {brandingSmite} from './macros/spells/level2/brandingSmite.js';
 import {burningHands} from './macros/spells/level1/burningHands.js';
 import {causeFear} from './macros/spells/level1/causeFear.js';
 import {ceremony} from './macros/spells/level1/ceremony.js';
@@ -21,6 +26,7 @@ import {cureWounds} from './macros/spells/level1/cureWounds.js';
 import {dancingLights} from './macros/spells/cantrip/dancingLights.js';
 import {detectThoughts} from './macros/spells/level2/detectThoughts.js';
 import {dissonantWhispers} from './macros/spells/level1/dissonantWhispers.js';
+import {divineWord} from './macros/spells/level7/divineWord.js';
 import {dragonsBreath} from './macros/spells/level2/dragonsBreath.js';
 import {earthbind} from './macros/spells/level2/earthbind.js';
 import {elementalBane} from './macros/spells/level4/elementalBane.js';
@@ -34,7 +40,10 @@ import {frostFingers} from './macros/spells/level1/frostFingers.js';
 import {goodberry} from './macros/spells/level1/goodberry.js';
 import {gust} from './macros/spells/cantrip/gust.js';
 import {hailOfThorns} from './macros/spells/level1/hailOfThorns.js';
+import {harm} from './macros/spells/level6/harm.js';
+import {heal} from './macros/spells/level6/heal.js';
 import {healingWord} from './macros/spells/level1/healingWord.js';
+import {heroesFeast} from './macros/spells/level6/heroesFeast.js';
 import {heroism} from './macros/spells/level1/heroism.js';
 import {holdPerson} from './macros/spells/level2/holdPerson.js';
 import {holyWater} from './macros/items/holyWater.js';
@@ -58,7 +67,9 @@ import {prayerOfHealing} from './macros/spells/level2/prayerOfHealing.js';
 import {prismaticSpray} from './macros/spells/level7/prismaticSpray.js';
 import {produceFlame} from './macros/spells/cantrip/produceFlame.js';
 import {protectionFromPoison} from './macros/spells/level2/protectionFromPoison.js';
+import {regenerate} from './macros/spells/level7/regenerate.js';
 import {removeTemplate} from './macros/generic/removeTemplate.js';
+import {searingSmite} from './macros/spells/level1/searingSmite.js';
 import {sending} from './macros/spells/level3/sending.js';
 import {scorchingRay} from './macros/spells/level2/scorchingRay.js';
 import {shield} from './macros/spells/level1/shield.js';
@@ -67,6 +78,7 @@ import {shockingGrasp} from './macros/spells/cantrip/shockingGrasp.js';
 import {sleep} from './macros/spells/level1/sleep.js';
 import {spareTheDying} from './macros/spells/cantrip/spareTheDying.js';
 import {spiritualWeapon} from './macros/spells/level2/spiritualWeapon.js';
+import {staggeringSmite} from './macros/spells/level4/staggeringSmite.js';
 import {suggestion} from './macros/spells/level2/suggestion.js';
 import {tashaHideousLaughter} from './macros/spells/level1/tashaHideousLaughter.js';
 import {tashaMindWhip} from './macros/spells/level2/tashaMindWhip.js';
@@ -88,10 +100,15 @@ export let macros = {
     'alterSelf': alterSelf,
     'animalFriendship': animalFriendship,
     'animalMessenger': animalMessenger,
+    'auraOfVitality': auraOfVitality,
     'bane': bane,
+    'banishingSmite': banishingSmite,
+    'banishment': banishment,
     'beastBond': beastBond,
     'bless': bless,
+    'blindingSmite': blindingSmite,
     'blindnessDeafness': blindnessDeafness,
+    'brandingSmite': brandingSmite,
     'burningHands': burningHands,
     'causeFear': causeFear,
     'ceremony': ceremony,
@@ -105,6 +122,7 @@ export let macros = {
     'dancingLights': dancingLights,
     'detectThoughts': detectThoughts,
     'dissonantWhispers': dissonantWhispers,
+    'divineWord': divineWord,
     'dragonsBreath': dragonsBreath,
     'earthbind': earthbind,
     'elementalBane': elementalBane,
@@ -118,7 +136,10 @@ export let macros = {
     'goodberry': goodberry,
     'gust': gust,
     'hailOfThorns': hailOfThorns,
+    'harm': harm,
+    'heal': heal,
     'healingWord': healingWord,
+    'heroesFeast': heroesFeast,
     'heroism': heroism,
     'holdPerson': holdPerson,
     'holyWater': holyWater,
@@ -142,7 +163,9 @@ export let macros = {
     'prismaticSpray': prismaticSpray,
     'produceFlame': produceFlame,
     'protectionFromPoison': protectionFromPoison,
+    'regenerate': regenerate,
     'removeTemplate': removeTemplate,
+    'searingSmite': searingSmite,   
     'sending': sending,
     'scorchingRay': scorchingRay,
     'shield': shield,
@@ -151,6 +174,7 @@ export let macros = {
     'sleep': sleep,
     'spareTheDying': spareTheDying,
     'spiritualWeapon': spiritualWeapon,
+    'staggeringSmite': staggeringSmite,
     'suggestion': suggestion,
     'tashaHideousLaughter': tashaHideousLaughter,
     'tashaMindWhip': tashaMindWhip,
