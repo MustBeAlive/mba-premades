@@ -15,7 +15,11 @@ async function damage({speaker, actor, token, character, item, args, scope, work
 async function item({speaker, actor, token, character, item, args, scope, workflow}) {
     if (workflow.failedSaves.size != 1) return;
     let target = workflow.targets.first();
+    let maxHP = target.actor.system.attributes.hp.max;
     let ammount = workflow.damageRoll.total;
+    if (ammount > maxHP) {
+        ammount = maxHP - 1;
+    };
     let effectData = {
         'name': "Harm",
         'icon': "assets/library/icons/sorted/spells/level6/harm.webp",

@@ -1,7 +1,6 @@
 async function cast({speaker, actor, token, character, item, args, scope, workflow}) {
-    let targetTokens = Array.from(workflow.targets);
-    let selection = await chrisPremades.helpers.selectTarget('Choose any number of targets', buttons, targetTokens, true, 'multiple');
-    let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
+    let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Choose which targets to keep');
+    let newTargets = selection.inputs.filter(i => i).slice(0);
     chrisPremades.helpers.updateTargets(newTargets);
 }
 
@@ -11,7 +10,32 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         let target = fromUuidSync(targets[i].document.uuid).object;
         let type = await chrisPremades.helpers.raceOrType(target.actor);
         if (type === 'celestial' || type === 'elemental' || type === 'fey' || type === 'fiend') {
-            await target.document.update({ hidden: true }); // change to AE with effect macro "on creation" to hide the token
+            async function effectMacroCreate() {
+                await token.document.update({ hidden: true });
+            };
+            async function effectMacroEnd() {
+                await token.document.update({ hidden: false});
+            };
+            const effectData = {
+                'name': 'Banishment',
+                'description': "For the next 24 hours, you are banished to your plane of origin.",
+                'icon': 'assets/library/icons/sorted/spells/level4/banishment.webp',
+                'origin': workflow.item.uuid,
+                'duration': {
+                    'seconds': 86400
+                },
+                'flags': {
+                    'effectmacro': {
+                        'onCreate': {
+                            'script': chrisPremades.helpers.functionToString(effectMacroCreate)
+                        },
+                        'onDelete': {
+                            'script': chrisPremades.helpers.functionToString(effectMacroEnd)
+                        }
+                    }
+                }
+            };
+            await chrisPremades.helpers.createEffect(target.actor, effectData);
             return;
         }
         let currentHP = target.actor.system.attributes.hp.value;

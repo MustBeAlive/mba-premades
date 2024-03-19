@@ -85,11 +85,6 @@ async function damage({speaker, actor, token, character, item, args, scope, work
             'flags': {
                 'dae': {
                     'specialDuration': ['turnEnd']
-                },
-                'effectmacro': {
-                    'onDelete': {
-                        'script': chrisPremades.helpers.functionToString(effectMacro)
-                    }
                 }
             }
         };

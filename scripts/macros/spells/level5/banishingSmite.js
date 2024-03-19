@@ -18,7 +18,13 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             {
                 'key': 'flags.midi-qol.onUseMacroName',
                 'mode': 0,
-                'value': 'function.chrisPremades.macros.banishingSmite.damage,postDamageRoll',
+                'value': 'function.mbaPremades.macros.banishingSmite.damage,postDamageRoll',
+                'priority': 20
+            },
+            {
+                'key': 'flags.midi-qol.onUseMacroName',
+                'mode': 0,
+                'value': 'function.mbaPremades.macros.banishingSmite.post,postActiveEffects',
                 'priority': 20
             }
         ],
@@ -49,7 +55,6 @@ async function damage({speaker, actor, token, character, item, args, scope, work
     if (workflow.item.system.actionType != 'mwak' && workflow.item.system.actionType != 'rwak') return;
     let effect = workflow.actor.effects.find(i => i.flags['mba-premades']?.spell?.banishingSmite);
     if (!effect) return;
-    let targetToken = workflow.targets.first();
     let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'banishingSmite', 250);
     if (!queueSetup) return;
     let oldFormula = workflow.damageRoll._formula;
@@ -58,6 +63,15 @@ async function damage({speaker, actor, token, character, item, args, scope, work
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRoll = await new Roll(damageFormula).roll({async: true});
     await workflow.setDamageRoll(damageRoll);
+    chrisPremades.queue.remove(workflow.item.uuid);
+}
+
+async function post({speaker, actor, token, character, item, args, scope, workflow}) {
+    if (workflow.hitTargets.size != 1 || !workflow.item) return;
+    if (workflow.item.system.actionType != 'mwak' && workflow.item.system.actionType != 'rwak') return;
+    let effect = workflow.actor.effects.find(i => i.flags['mba-premades']?.spell?.banishingSmite);
+    if (!effect) return;
+    let targetToken = workflow.targets.first();
     if (targetToken.actor.system.attributes.hp.value <= 50) {
         async function effectMacroCreate() {
             await token.document.update({ hidden: true });
@@ -95,7 +109,7 @@ async function damage({speaker, actor, token, character, item, args, scope, work
                 }
             }
         };
-        let targetEffect = await chrisPremades.helpers.createEffect(workflow.targets.first().actor, effectData);
+        let targetEffect = await chrisPremades.helpers.createEffect(targetToken.actor, effectData);
         let updates = {
             'flags': {
                 'mba-premades': {
@@ -109,11 +123,11 @@ async function damage({speaker, actor, token, character, item, args, scope, work
             }
         };
         await chrisPremades.helpers.updateEffect(effect, updates);
-        chrisPremades.queue.remove(workflow.item.uuid);
     }
 }
 
 export let banishingSmite = {
     'damage': damage,
-    'item': item
+    'item': item,
+    'post': post
 }

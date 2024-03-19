@@ -9,17 +9,17 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         await chrisPremades.helpers.removeEffect(targetEffect);
     }
     let effectData = {
+        'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'duration': {
             'seconds': 60
         },
-        'name': workflow.item.name,
         'changes': [
             {
                 'key': 'flags.midi-qol.onUseMacroName',
                 'mode': 0,
-                'value': 'function.chrisPremades.macros.brandingSmite.damage,postDamageRoll',
+                'value': 'function.mbaPremades.macros.brandingSmite.damage,postDamageRoll',
                 'priority': 20
             }
         ],
@@ -55,8 +55,7 @@ async function damage({speaker, actor, token, character, item, args, scope, work
     let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'brandingSmite', 250);
     if (!queueSetup) return;
     let oldFormula = workflow.damageRoll._formula;
-    let level = effect.flags['mba-premades']?.spell?.brandingSmite?.level + 1;
-    let bonusDamageFormula = level + 'd6[radiant]';
+    let bonusDamageFormula = effect.flags['mba-premades']?.spell?.brandingSmite?.level + 'd6[radiant]';
     if (workflow.isCritical) bonusDamageFormula = chrisPremades.helpers.getCriticalFormula(bonusDamageFormula);
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRoll = await new Roll(damageFormula).roll({async: true});

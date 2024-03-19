@@ -27,60 +27,60 @@ export async function intellectFortress({speaker, actor, token, character, item,
         return;
     }
     await warpgate.wait(100);
-    for (let i=0; i < targets.length; i++) {
-        let target = (targets[i]);
-        const effectData = {
-            'name': 'Intellect Fortress',
-            'icon': 'assets/library/icons/sorted/spells/level3/intellect_fortress.webp',
-            'origin': workflow.item.uuid,
-            'description': 'You have advantage on Intelligence, Wisdom, and Charisma saving throws, as well as resistance to psychic damage.',
-            'duration': {
-                'seconds': 3600
+    const effectData = {
+        'name': 'Intellect Fortress',
+        'icon': 'assets/library/icons/sorted/spells/level3/intellect_fortress.webp',
+        'origin': workflow.item.uuid,
+        'description': 'You have advantage on Intelligence, Wisdom, and Charisma saving throws, as well as resistance to psychic damage.',
+        'duration': {
+            'seconds': 3600
+        },
+        'changes': [
+            {
+                'key': 'system.traits.dr.value',
+                'mode': 0,
+                'value': "psychic",
+                'priority': 20
             },
-            'changes': [
-                {
-                    'key': 'system.traits.dr.value',
-                    'mode': 0,
-                    'value': "psychic",
-                    'priority': 20
-                },
-                {
-                    'key': 'flags.midi-qol.advantage.ability.save.int',
-                    'mode': 2,
-                    'value': 1,
-                    'priority': 20
-                },        {
-                    'key': 'flags.midi-qol.advantage.ability.save.wis',
-                    'mode': 2,
-                    'value': 1,
-                    'priority': 20
-                },
-                {
-                    'key': 'flags.midi-qol.advantage.ability.save.cha',
-                    'mode': 2,
-                    'value': 1,
-                    'priority': 20
-                },
-                {
-                    'key': 'flags.adv-reminder.message.ability.save.int',
-                    'mode': 2,
-                    'value': "You have advantage on Intelligence, Wisdom, and Charisma saving throws.",
-                    'priority': 20
-                },
-                {
-                    'key': 'flags.adv-reminder.message.ability.save.wis',
-                    'mode': 2,
-                    'value': "You have advantage on Intelligence, Wisdom, and Charisma saving throws.",
-                    'priority': 20
-                },
-                {
-                    'key': 'flags.adv-reminder.message.ability.save.cha',
-                    'mode': 2,
-                    'value': "You have advantage on Intelligence, Wisdom, and Charisma saving throws.",
-                    'priority': 20
-                }
-            ]
-        };
+            {
+                'key': 'flags.midi-qol.advantage.ability.save.int',
+                'mode': 2,
+                'value': 1,
+                'priority': 20
+            },        {
+                'key': 'flags.midi-qol.advantage.ability.save.wis',
+                'mode': 2,
+                'value': 1,
+                'priority': 20
+            },
+            {
+                'key': 'flags.midi-qol.advantage.ability.save.cha',
+                'mode': 2,
+                'value': 1,
+                'priority': 20
+            },
+            {
+                'key': 'flags.adv-reminder.message.ability.save.int',
+                'mode': 2,
+                'value': "You have advantage on Intelligence, Wisdom, and Charisma saving throws.",
+                'priority': 20
+            },
+            {
+                'key': 'flags.adv-reminder.message.ability.save.wis',
+                'mode': 2,
+                'value': "You have advantage on Intelligence, Wisdom, and Charisma saving throws.",
+                'priority': 20
+            },
+            {
+                'key': 'flags.adv-reminder.message.ability.save.cha',
+                'mode': 2,
+                'value': "You have advantage on Intelligence, Wisdom, and Charisma saving throws.",
+                'priority': 20
+            }
+        ]
+    };
+    for (let i = 0; i < targets.length; i++) {
+        let target = (targets[i]);
         await chrisPremades.helpers.createEffect(target.actor, effectData);
     }
 }

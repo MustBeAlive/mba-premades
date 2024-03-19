@@ -9,12 +9,12 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         await chrisPremades.helpers.removeEffect(targetEffect);
     }
     let effectData = {
+        'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'duration': {
             'seconds': 60
         },
-        'name': workflow.item.name,
         'changes': [
             {
                 'key': 'flags.midi-qol.onUseMacroName',
@@ -50,7 +50,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
 async function damage({speaker, actor, token, character, item, args, scope, workflow}) {
     if (workflow.hitTargets.size != 1 || !workflow.item) return;
     if (workflow.item.system.actionType != 'mwak') return;
-    let effect = chrisPremades.helpers.getEffects(workflow.actor).find(i => i.flags['mba-premades']?.spell?.searingSmite);
+    let effect = workflow.actor.effects.find(i => i.flags['mba-premades']?.spell?.searingSmite);
     if (!effect) return;
     if (effect.flags['mba-premades'].spell.searingSmite.used) return;
     let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'searingSmite', 250);

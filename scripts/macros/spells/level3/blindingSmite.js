@@ -8,8 +8,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         await chrisPremades.helpers.removeEffect(targetEffect);
     }
     let effectData = {
-        'name': "Blinding Smite: Blind",
-        'description': "You are blinded ",
+        'name': "Blinding Smite",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'duration': {
@@ -19,7 +18,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             {
                 'key': 'flags.midi-qol.onUseMacroName',
                 'mode': 0,
-                'value': 'function.chrisPremades.macros.blindingSmite.damage,postDamageRoll',
+                'value': 'function.mbaPremades.macros.blindingSmite.damage,postDamageRoll',
                 'priority': 20
             }
         ],
