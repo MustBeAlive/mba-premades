@@ -1,8 +1,8 @@
 export async function haste(actor) {
     const effectData = {
-        'name': "Haste - Lethargic",
+        'name': "Haste: Lethargic",
         'icon': "assets/library/icons/sorted/conditions/downed.png",
-        'description': "You are swept by a wave of lethargy: you can't move or take actions until the end of your next turn.",
+        'description': "You are swept by a wave of lethargy. You can't move or take actions until the end of your next turn.",
         'flags': {
             'dae': {
                 'showIcon': true,
@@ -10,5 +10,5 @@ export async function haste(actor) {
             }
         }
       };
-      actor.createEmbeddedDocuments("ActiveEffect", [effectData]);
+      await chrisPremades.helpers.createEffect(actor, effectData);
 }

@@ -44,20 +44,47 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
     };
     await chrisPremades.helpers.createEffect(target.actor, effectData);
 }
-
+//IS BORKED, REWORK
 async function isDamaged({speaker, actor, token, character, item, args, scope, workflow}) {
+    const originItem = await fromUuid(actor.effects.find((eff) => eff.name === 'Enemies Abound').origin);
     let effect = chrisPremades.helpers.findEffect(actor, 'Enemies Abound');
     if (!effect) return;
     let spellDC = effect.flags['mba-premades']?.spell?.enemiesAbound?.dc;
-    let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'int');
-    if (saveRoll.total >= spellDC) {
+    const itemData = originItem.clone({
+	    name: "Enemies Abound: Saving Throw",
+	    type: "feat",
+	    effects: [],
+	    flags: {
+		    "midi-qol": {
+		        noProvokeReaction: true,
+		        onUseMacroName: null,
+		        forceCEOff: true
+		    },
+	    },
+	    system: {
+		    equipped: true,
+		    actionType: "save",
+		    save: { dc: spellDC, ability: "int", scaling: "flat" }, "target.type": "self",
+		    components: { concentration: false, material: false, ritual: false, somatic: false, value: "", vocal: false },
+		    duration: { units: "inst", value: undefined },
+	    },
+	},{ keepId:true });
+	itemData.system.target.type = "self";
+	setProperty(itemData.flags, "autoanimations.killAnim", true);
+	const itemUpdate = new CONFIG.Item.documentClass(itemData, { parent: actor });
+	const options = { showFullCard: false, createWorkflow: true, versatile: false, configureDialog: false };
+	const saveResult = await MidiQOL.completeItemUse(itemUpdate, {}, options);
+    if (saveResult.failedSaves.size === 0) {
         await chrisPremades.helpers.removeEffect(effect);
-    }
+	}
 }
 
+// IS BORKED, REWORK
 async function targetCheck({speaker, actor, token, character, item, args, scope, workflow}) {
     let range = workflow.item.system.range.value;
     if (!range) {
+        let isSelf = workflow.item.system.target.type;
+        if (isSelf = self) return;
         ui.notifications.warn("Item has no range value. Ask GM for target randomisation (if it can be applied to the used item).");
         return;
     }

@@ -126,7 +126,7 @@ async function check({speaker, actor, token, character, item, args, scope, workf
             'flags': { 
                 'dae': {
                     'showIcon': true, 
-                    'specialDuration': ["1Spell"] 
+                    'specialDuration': ["1Spell", "turnEnd"] 
                 } 
             },
         };
