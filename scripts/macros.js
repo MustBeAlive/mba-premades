@@ -31,7 +31,7 @@ import {divineWord} from './macros/spells/level7/divineWord.js';
 import {dragonsBreath} from './macros/spells/level2/dragonsBreath.js';
 import {earthbind} from './macros/spells/level2/earthbind.js';
 import {elementalBane} from './macros/spells/level4/elementalBane.js';
-import {enemiesAbound} from './macros/spells/level3/enemiesAbound.js';
+//import {enemiesAbound} from './macros/spells/level3/enemiesAbound.js';
 import {enhanceAbility} from './macros/spells/level2/enhanceAbility.js';
 import {enlargeReduce} from './macros/spells/level2/enlargeReduce.js';
 import {ensnaringStrike} from './macros/spells/level1/ensnaringStrike.js';
@@ -132,7 +132,7 @@ export let macros = {
     'dragonsBreath': dragonsBreath,
     'earthbind': earthbind,
     'elementalBane': elementalBane,
-    'enemiesAbound': enemiesAbound,
+//    'enemiesAbound': enemiesAbound,
     'enhanceAbility': enhanceAbility,
     'enlargeReduce': enlargeReduce,
     'ensnaringStrike': ensnaringStrike,
