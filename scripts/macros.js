@@ -12,6 +12,7 @@ import {beastBond} from './macros/spells/level1/beastBond.js';
 import {bless} from './macros/spells/level1/bless.js';
 import {blindingSmite} from './macros/spells/level3/blindingSmite.js';
 import {blindnessDeafness} from './macros/spells/level2/blindnessDeafness.js';
+import {borrowedKnowledge} from './macros/spells/level2/borrowedKnowledge.js';
 import {brandingSmite} from './macros/spells/level2/brandingSmite.js';
 import {burningHands} from './macros/spells/level1/burningHands.js';
 import {causeFear} from './macros/spells/level1/causeFear.js';
@@ -30,17 +31,20 @@ import {divineWord} from './macros/spells/level7/divineWord.js';
 import {dragonsBreath} from './macros/spells/level2/dragonsBreath.js';
 import {earthbind} from './macros/spells/level2/earthbind.js';
 import {elementalBane} from './macros/spells/level4/elementalBane.js';
+import {enemiesAbound} from './macros/spells/level3/enemiesAbound.js';
 import {enhanceAbility} from './macros/spells/level2/enhanceAbility.js';
 import {enlargeReduce} from './macros/spells/level2/enlargeReduce.js';
 import {ensnaringStrike} from './macros/spells/level1/ensnaringStrike.js';
 import {eyebite} from './macros/spells/level6/eyebite.js';
 import {falseLife} from './macros/spells/level1/falseLife.js';
+import {fear} from './macros/spells/level3/fear.js';
 import {flamingSphere} from './macros/spells/level2/flamingSphere.js';
 import {frostFingers} from './macros/spells/level1/frostFingers.js';
 import {goodberry} from './macros/spells/level1/goodberry.js';
 import {gust} from './macros/spells/cantrip/gust.js';
 import {hailOfThorns} from './macros/spells/level1/hailOfThorns.js';
 import {harm} from './macros/spells/level6/harm.js';
+import {haste} from './macros/spells/level3/haste.js';
 import {heal} from './macros/spells/level6/heal.js';
 import {healingWord} from './macros/spells/level1/healingWord.js';
 import {heroesFeast} from './macros/spells/level6/heroesFeast.js';
@@ -76,6 +80,7 @@ import {shield} from './macros/spells/level1/shield.js';
 import {shillelagh} from './macros/spells/cantrip/shillelagh.js';
 import {shockingGrasp} from './macros/spells/cantrip/shockingGrasp.js';
 import {sleep} from './macros/spells/level1/sleep.js';
+import {slow} from './macros/spells/level3/slow.js';
 import {spareTheDying} from './macros/spells/cantrip/spareTheDying.js';
 import {spiritualWeapon} from './macros/spells/level2/spiritualWeapon.js';
 import {staggeringSmite} from './macros/spells/level4/staggeringSmite.js';
@@ -108,6 +113,7 @@ export let macros = {
     'bless': bless,
     'blindingSmite': blindingSmite,
     'blindnessDeafness': blindnessDeafness,
+    'borrowedKnowledge': borrowedKnowledge,
     'brandingSmite': brandingSmite,
     'burningHands': burningHands,
     'causeFear': causeFear,
@@ -126,17 +132,20 @@ export let macros = {
     'dragonsBreath': dragonsBreath,
     'earthbind': earthbind,
     'elementalBane': elementalBane,
+    'enemiesAbound': enemiesAbound,
     'enhanceAbility': enhanceAbility,
     'enlargeReduce': enlargeReduce,
     'ensnaringStrike': ensnaringStrike,
     'eyebite': eyebite,
     'falseLife': falseLife,
+    'fear': fear,
     'flamingSphere': flamingSphere,
     'frostFingers': frostFingers,
     'goodberry': goodberry,
     'gust': gust,
     'hailOfThorns': hailOfThorns,
     'harm': harm,
+    'haste': haste,
     'heal': heal,
     'healingWord': healingWord,
     'heroesFeast': heroesFeast,
@@ -172,6 +181,7 @@ export let macros = {
     'shillelagh': shillelagh,
     'shockingGrasp': shockingGrasp,
     'sleep': sleep,
+    'slow': slow,
     'spareTheDying': spareTheDying,
     'spiritualWeapon': spiritualWeapon,
     'staggeringSmite': staggeringSmite,
