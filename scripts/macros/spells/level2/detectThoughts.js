@@ -7,7 +7,7 @@ async function detectThoughtsItem({speaker, actor, token, character, item, args,
         await warpgate.revert(token.document, 'Detect Thoughts: Probe Mind');
     }
     let effectData = {
-        'label': workflow.item.name,
+        'name': workflow.item.name,
         'icon': workflow.item.img,
         'duration': {
             'seconds': 60

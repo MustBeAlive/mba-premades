@@ -90,6 +90,7 @@ import {staggeringSmite} from './macros/spells/level4/staggeringSmite.js';
 import {suggestion} from './macros/spells/level2/suggestion.js';
 import {tashaHideousLaughter} from './macros/spells/level1/tashaHideousLaughter.js';
 import {tashaMindWhip} from './macros/spells/level2/tashaMindWhip.js';
+import {telekinesis} from './macros/spells/level5/telekinesis.js';
 import {tenserFloatingDisk} from './macros/spells/level1/tenserFloatingDisk.js';
 import {thunderousSmite} from './macros/spells/level1/thunderousSmite.js';
 import {thunderwave} from './macros/spells/level1/thunderwave.js';
@@ -194,6 +195,7 @@ export let macros = {
     'suggestion': suggestion,
     'tashaHideousLaughter': tashaHideousLaughter,
     'tashaMindWhip': tashaMindWhip,
+    'telekinesis': telekinesis,
     'tenserFloatingDisk': tenserFloatingDisk,
     'thunderousSmite': thunderousSmite,
     'thunderwave': thunderwave,

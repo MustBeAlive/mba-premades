@@ -1,3 +1,3 @@
-export function removeDumbV10EffectsInvisible() {
+export function removeV10EffectsInvisible() {
     CONFIG.specialStatusEffects.INVISIBLE = null;
 }
