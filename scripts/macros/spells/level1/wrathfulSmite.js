@@ -19,7 +19,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             {
                 'key': 'flags.midi-qol.onUseMacroName',
                 'mode': 0,
-                'value': 'function.chrisPremades.macros.wrathfulSmite.damage,postDamageRoll',
+                'value': 'function.mbaPremades.macros.wrathfulSmite.damage,postDamageRoll',
                 'priority': 20
             }
         ],

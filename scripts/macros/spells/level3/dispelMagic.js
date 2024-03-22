@@ -10,7 +10,7 @@ export async function dispelMagic({ speaker, actor, token, character, item, args
     let selection = [];
     for (let i = 0; i < effects.length; i++) {
         let effect = effects[i];
-        let level = effect.flags['midi-qol']?.castData.castLevel;
+        let level = effect.flags['midi-qol']?.castData?.castLevel;
         if (level === undefined) continue;
         let name = effect.name;
         let icon = effect.icon;

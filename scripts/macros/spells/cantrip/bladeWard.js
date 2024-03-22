@@ -17,13 +17,11 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
                 'showIcon': true,
                 'specialDuration': ['turnEndSource']
             },
-            'flags': {
-                'midi-qol': {
-                    'castData': {
-                        baseLevel: 0,
-                        castLevel: workflow.castData.castLevel,
-                        itemUuid: workflow.item.uuid
-                    }
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 0,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
                 }
             }
         }
