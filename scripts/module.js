@@ -7,7 +7,7 @@ import {mba as helpers} from './helperFunctions.js';
 import {registerSettings} from './settings.js';
 import {removeV10EffectsBlind} from './macros/mechanics/blindness.js';
 import {removeV10EffectsInvisible} from './macros/mechanics/invisibility.js';
-Hooks.once('init', () => {
+Hooks.once('init', async function() {
     registerSettings();
 });
 Hooks.once('ready', async function() {
