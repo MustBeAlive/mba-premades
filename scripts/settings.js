@@ -60,16 +60,12 @@ export function registerSettings() {
         'type': Boolean,
         'default': false,
         'onChange': value => {
-            if (value) deathSaves();
+            if (value) {
+                Hooks.on("updateCombat", deathSaves());
+            } else {
+                Hooks.off("updateCombat", deathSaves());
+            }
         }
-    });
-    game.settings.register(moduleName, 'Enable Random Bullshit', {
-        name: "Enable Random Bullshit",
-        hint: "If enabled, automatically distributes Random Bullshit",
-        scope: 'world',
-        config: true,
-        type: Boolean,
-        default: false
     });
     game.settings.register(moduleName, 'Cast Animations', {
         'name': 'Анимации Заклинаний',
