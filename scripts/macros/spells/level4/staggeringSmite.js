@@ -22,6 +22,13 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                         'dc': chrisPremades.helpers.getSpellDC(workflow.item)
                     }
                 }
+            },
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 4,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
+                }
             }
         }
     };
@@ -85,6 +92,13 @@ async function damage({speaker, actor, token, character, item, args, scope, work
             'flags': {
                 'dae': {
                     'specialDuration': ['turnEnd']
+                },
+                'midi-qol': {
+                    'castData': {
+                        baseLevel: 4,
+                        castLevel: effect.flags['midi-qol']?.castData.castLevel,
+                        itemUuid: effect.uuid
+                    }
                 }
             }
         };

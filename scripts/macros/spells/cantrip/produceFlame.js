@@ -2,7 +2,6 @@ export async function produceFlame({speaker, actor, token, character, item, args
     if (!workflow.token) return;
     let level = workflow.actor.system.details.level ?? workflow.actor.system.details.cr;
     let dice = 1 + (Math.floor((level + 1) / 6));
-    console.log(dice);
     let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Produce Flame: Hurl', false);
     if (!featureData) return;
     featureData.system.damage.parts[0][0] = dice + 'd8[fire]';
@@ -42,9 +41,13 @@ export async function produceFlame({speaker, actor, token, character, item, args
                     'script': chrisPremades.helpers.functionToString(effectMacro)
                 }
             },
-            'chris-premades': {
-                'vae': {
-                    'button': featureData.name
+            'flags': {
+                'midi-qol': {
+                    'castData': {
+                        baseLevel: 0,
+                        castLevel: workflow.castData.castLevel,
+                        itemUuid: workflow.item.uuid
+                    }
                 }
             }
         }

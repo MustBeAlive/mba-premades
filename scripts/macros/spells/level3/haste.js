@@ -9,6 +9,6 @@ export async function haste(actor) {
                 'specialDuration': ['turnEnd']
             }
         }
-      };
-      await chrisPremades.helpers.createEffect(actor, effectData);
+    };
+    await chrisPremades.helpers.createEffect(actor, effectData);
 }

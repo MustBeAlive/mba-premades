@@ -43,6 +43,13 @@ export async function powerWordStun({speaker, actor, token, character, item, arg
             'flags': {
                 'dae': {
                     'showIcon': true,
+                },
+                'midi-qol': {
+                    'castData': {
+                        baseLevel: 8,
+                        castLevel: workflow.castData.castLevel,
+                        itemUuid: workflow.item.uuid
+                    }
                 }
             }
         };

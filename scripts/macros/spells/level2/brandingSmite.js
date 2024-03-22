@@ -37,6 +37,15 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                 'onDelete': {
                     'script': chrisPremades.helpers.functionToString(effectMacro)
                 }
+            },
+            'flags': {
+                'midi-qol': {
+                    'castData': {
+                        baseLevel: 2,
+                        castLevel: workflow.castData.castLevel,
+                        itemUuid: workflow.item.uuid
+                    }
+                }
             }
         }
     };
@@ -91,6 +100,13 @@ async function damage({speaker, actor, token, character, item, args, scope, work
             'effectmacro': {
                 'onDelete': {
                     'script': chrisPremades.helpers.functionToString(effectMacro)
+                }
+            },
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 2,
+                    castLevel: effect.flags['midi-qol'].castData.castLevel,
+                    itemUuid: effect.uuid
                 }
             }
         }

@@ -1,6 +1,5 @@
 // Based on CPR Searing/Thunderous Smite
 async function item({speaker, actor, token, character, item, args, scope, workflow}) {
-
     async function effectMacro() {
         await (warpgate.wait(200));
         let targetEffectUuid = effect.flags['mba-premades']?.spell?.ensnaringStrike?.targetEffectUuid;
@@ -9,7 +8,6 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         if (!targetEffect) return;
         await chrisPremades.helpers.removeEffect(targetEffect);
     }
-	
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
@@ -38,6 +36,13 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             'effectmacro': {
                 'onDelete': {
                     'script': chrisPremades.helpers.functionToString(effectMacro)
+                }
+            },
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 1,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
                 }
             }
         }
@@ -115,6 +120,13 @@ async function damage({speaker, actor, token, character, item, args, scope, work
                 'effectmacro': {
                     'onDelete': {
                         'script': chrisPremades.helpers.functionToString(effectMacro)
+                    }
+                },
+                'midi-qol': {
+                    'castData': {
+                        baseLevel: 1,
+                        castLevel: effect.flags['midi-qol'].castData.castLevel,
+                        itemUuid: effect.uuid
                     }
                 }
             }

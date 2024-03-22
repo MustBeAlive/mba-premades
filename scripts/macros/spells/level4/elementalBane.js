@@ -64,8 +64,7 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
 }
 
 async function item({speaker, actor, token, character, item, args, scope, workflow}) {
-    if (workflow.failedSaves.size === 0)
-        return;
+    if (!workflow.failedSaves.size) return;
     let concEffect = chrisPremades.helpers.findEffect(workflow.actor, 'Concentrating');
     let targets = Array.from(workflow.failedSaves);
     for (let i = 0; i < targets.length; i++) {
@@ -121,6 +120,13 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                 'effectmacro': {
                     'onEachTurn': {
                         'script': chrisPremades.helpers.functionToString(effectMacro)
+                    }
+                },
+                'midi-qol': {
+                    'castData': {
+                        baseLevel: 4,
+                        castLevel: workflow.castData.castLevel,
+                        itemUuid: workflow.item.uuid
                     }
                 }
             }

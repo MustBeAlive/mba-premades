@@ -57,6 +57,13 @@ export async function dragonsBreath({speaker, actor, token, character, item, arg
                 'onDelete': {
                     'script': chrisPremades.helpers.functionToString(effectMacro)
                 }
+            },
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 2,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
+                }
             }
         }
     };

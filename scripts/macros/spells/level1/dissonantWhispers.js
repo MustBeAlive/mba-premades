@@ -58,7 +58,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
     const effectData = {
         'name': "Dissonant Whispers",
         'icon': "assets/library/icons/sorted/spells/level1/Dissonant_Whispers.webp",
-        'description': "",
+        'description': "You must immediately use your reaction to move as far as your speed allows away from the caster of the spell. You don't have to move into obviously dangerous ground, such as a fire or a pit.",
         'duration': {
             'rounds': 1
         },
@@ -70,6 +70,13 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             },
             'dae': {
                     'specialDuration': ['turnStart']
+            },
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 1,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
+                }
             }
         },
         'changes': [

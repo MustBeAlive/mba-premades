@@ -118,6 +118,13 @@ export async function prismaticSpray({speaker, actor, token, character, item, ar
                             'onTurnEnd': {
                                 'script': chrisPremades.helpers.functionToString(effectMacro1)
                             }
+                        },
+                        'midi-qol': {
+                            'castData': {
+                                baseLevel: 7,
+                                castLevel: workflow.castData.castLevel,
+                                itemUuid: workflow.item.uuid
+                            }
                         }
                     }
                 };
@@ -195,6 +202,13 @@ export async function prismaticSpray({speaker, actor, token, character, item, ar
                         'effectmacro': {
                             'onTurnStart': {
                                 'script': chrisPremades.helpers.functionToString(effectMacro2)
+                            }
+                        },
+                        'midi-qol': {
+                            'castData': {
+                                baseLevel: 7,
+                                castLevel: workflow.castData.castLevel,
+                                itemUuid: workflow.item.uuid
                             }
                         }
                     }

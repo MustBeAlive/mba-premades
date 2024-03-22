@@ -37,7 +37,16 @@ export async function enhanceAbility({speaker, actor, token, character, item, ar
                         'value': "1",
                         'priority': 20
                     }
-                ]
+                ],
+                'flags': {
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 2,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
+                    }
+                }
             };
             break;
         }
@@ -57,7 +66,16 @@ export async function enhanceAbility({speaker, actor, token, character, item, ar
                         'value': "1",
                         'priority': 20
                     }
-                ]
+                ],
+                'flags': {
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 2,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
+                    }
+                }
             };
             break;
         }
@@ -96,7 +114,16 @@ export async function enhanceAbility({speaker, actor, token, character, item, ar
                         'value': "1",
                         'priority': 20
                     }
-                ]
+                ],
+                'flags': {
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 2,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
+                    }
+                }
             };
             if (target.actor.system.attributes.hp.temp < damageRoll.total) {         
                 await chrisPremades.helpers.applyDamage([target.actor], damageRoll.total, 'temphp');
@@ -119,7 +146,16 @@ export async function enhanceAbility({speaker, actor, token, character, item, ar
                         'value': "1",
                         'priority': 20
                     }
-                ]
+                ],
+                'flags': {
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 2,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
+                    }
+                }
             };
             break;
         }
@@ -139,7 +175,16 @@ export async function enhanceAbility({speaker, actor, token, character, item, ar
                         'value': "1",
                         'priority': 20
                     }
-                ]
+                ],
+                'flags': {
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 2,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
+                    }
+                }
             };
             break;
         }
@@ -159,7 +204,16 @@ export async function enhanceAbility({speaker, actor, token, character, item, ar
                         'value': "1",
                         'priority': 20
                     }
-                ]
+                ],
+                'flags': {
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 2,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
+                    }
+                }
             };
         }
     }

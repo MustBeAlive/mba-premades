@@ -47,6 +47,13 @@ export async function heroesFeast({speaker, actor, token, character, item, args,
                 'onDelete': {
                     'script': chrisPremades.helpers.functionToString(effectMacro)
                 }
+            },
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 6,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
+                }
             }
         }
     };

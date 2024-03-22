@@ -19,6 +19,13 @@ export async function regenerate({speaker, actor, token, character, item, args, 
                 'onCreate': {
                     'script': chrisPremades.helpers.functionToString(effectMacro)
                 }
+            },
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 7,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
+                }
             }
         }
     };

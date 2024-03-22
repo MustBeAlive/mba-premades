@@ -8,7 +8,7 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
 }
 
 async function item({speaker, actor, token, character, item, args, scope, workflow}) {
-    if (workflow.failedSaves.size < 1) return;
+    if (!workflow.failedSaves.size) return;
     let targets = Array.from(workflow.failedSaves);
     async function effectMacroCreate() {
         await token.document.update({ hidden: true });
@@ -56,6 +56,13 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                 },
                 'onDelete': {
                     'script': chrisPremades.helpers.functionToString(effectMacroEnd)
+                }
+            },
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 4,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
                 }
             }
         }

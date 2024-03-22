@@ -25,6 +25,15 @@ export async function spareTheDying({speaker, actor, token, character, item, arg
         'flags': {
             'dae': {
                 'specialDuration': ['isHealed', 'shortRest', 'longRest'],
+            },
+            'flags': {
+                'midi-qol': {
+                    'castData': {
+                        baseLevel: 0,
+                        castLevel: workflow.castData.castLevel,
+                        itemUuid: workflow.item.uuid
+                    }
+                }
             }
         },
         'changes': [

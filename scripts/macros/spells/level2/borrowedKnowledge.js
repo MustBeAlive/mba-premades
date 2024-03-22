@@ -24,7 +24,16 @@ export async function borrowedKnowledge({speaker, actor, token, character, item,
                 'value': 1,
                 'priority': 20
             }
-        ]
+        ],
+        'flags': {
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 2,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
+                }
+            }
+        }
     };
     let effect = chrisPremades.helpers.findEffect(workflow.actor, workflow.item.name);
     if (effect) await chrisPremades.helpers.removeEffect(effect);

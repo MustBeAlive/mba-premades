@@ -7,7 +7,7 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
 }
 
 async function item({speaker, actor, token, character, item, args, scope, workflow}) {
-    if (workflow.failedSaves.size < 1) {
+    if (!workflow.failedSaves.size) {
         await chrisPremades.helpers.removeCondition(workflow.actor, 'Concentrating');
         return;
     }
@@ -77,6 +77,13 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             'effectmacro': {
                 'onTurnStart': {
                     'script': chrisPremades.helpers.functionToString(effectMacroStart)
+                }
+            },
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 3,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
                 }
             }
         }

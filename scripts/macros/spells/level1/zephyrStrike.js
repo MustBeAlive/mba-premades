@@ -18,7 +18,7 @@ async function attack({speaker, actor, token, character, item, args, scope, work
         'flags': {
             'dae': {
                 'specialDuration': ['1Attack'],
-            }
+            },
         },
         'changes': [
             {

@@ -28,18 +28,6 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
         return;
     }
     await warpgate.wait(100);
-    let updates = {
-        'flags': {
-            'mba-premades': {
-                'spell': {
-                    'holdPerson': {
-                        'dc': chrisPremades.helpers.getSpellDC(workflow.item),
-                    }
-                }
-            }
-        }
-    };
-    await chrisPremades.helpers.updateEffect(concEffect, updates);
     let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Hold Person: Hold', false);
     if (!featureData) {
         ui.notifications.warn('Can\'t find item in compenidum! (Hold Person: Hold)');
@@ -74,7 +62,7 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
                     {
                         'key': 'flags.midi-qol.OverTime',
                         'mode': 0,
-                        'value': 'turn=end, saveAbility=wis, saveDC=' + concEffect.flags['mba-premades'].spell.holdPerson.dc + ' , saveMagic=true, name=Hold Person: Hold',
+                        'value': 'turn=end, saveAbility=wis, saveDC=' + chrisPremades.helpers.getSpellDC(workflow.item) + ' , saveMagic=true, name=Hold Person: Hold',
                         'priority': 20
                     },
                     {
@@ -83,7 +71,16 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
                         'value': 'Paralyzed',
                         'priority': 20
                     }
-                ]
+                ],
+                'flags': {
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 2,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
+                    }
+                }
             };
             await chrisPremades.helpers.createEffect(target.actor, effectData);
             await new Sequence()

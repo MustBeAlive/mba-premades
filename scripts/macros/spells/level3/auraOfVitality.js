@@ -18,6 +18,15 @@ export async function auraOfVitality({speaker, actor, token, character, item, ar
                 'onDelete': {
                     'script': chrisPremades.helpers.functionToString(effectMacro)
                 }
+            },
+            'flags': {
+                'midi-qol': {
+                    'castData': {
+                        baseLevel: 3,
+                        castLevel: workflow.castData.castLevel,
+                        itemUuid: workflow.item.uuid
+                    }
+                }
             }
         }
     };

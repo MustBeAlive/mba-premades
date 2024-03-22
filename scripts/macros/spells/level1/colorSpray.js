@@ -29,7 +29,14 @@ export async function colorSpray({speaker, actor, token, character, item, args, 
 					'flags': { 
 						'dae': { 
 							'specialDuration': ['turnEndSource']
-						} 
+						},
+						'midi-qol': {
+							'castData': {
+								baseLevel: 1,
+								castLevel: workflow.castData.castLevel,
+								itemUuid: workflow.item.uuid
+							}
+						}
 					},
 					'changes': [
 						{

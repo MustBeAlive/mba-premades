@@ -1,4 +1,4 @@
-async function damage({speaker, actor, token, character, item, args, scope, workflow}) {
+async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ditem = workflow.damageItem;
     if (ditem.newHP != 0 || ditem.oldHP === 0) return;
     let targetActor = workflow.targets.first().actor;
@@ -12,8 +12,8 @@ async function damage({speaker, actor, token, character, item, args, scope, work
     chrisPremades.queue.remove(workflow.uuid);
 }
 
-async function item({speaker, actor, token, character, item, args, scope, workflow}) {
-    if (workflow.failedSaves.size != 1) return;
+async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
+    if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
     let maxHP = target.actor.system.attributes.hp.max;
     let ammount = workflow.damageRoll.total;
@@ -29,13 +29,22 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         },
         'changes': [
             {
-                'key': "system.attributes.hp.tempmax", 
-                'mode': 2, 
-                'value': '-' + ammount, 
+                'key': "system.attributes.hp.tempmax",
+                'mode': 2,
+                'value': '-' + ammount,
                 'priority': 20
             }
         ],
-      };
+        'flags': {
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 6,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
+                }
+            }
+        } 
+    };
     await chrisPremades.helpers.createEffect(target.actor, effectData);
 }
 

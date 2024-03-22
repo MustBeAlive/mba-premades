@@ -9,6 +9,7 @@ import {bane} from './macros/spells/level1/bane.js';
 import {banishingSmite} from './macros/spells/level5/banishingSmite.js';
 import {banishment} from './macros/spells/level4/banishment.js';
 import {beastBond} from './macros/spells/level1/beastBond.js';
+import {bladeWard} from './macros/spells/cantrip/bladeWard.js';
 import {bless} from './macros/spells/level1/bless.js';
 import {blindingSmite} from './macros/spells/level3/blindingSmite.js';
 import {blindnessDeafness} from './macros/spells/level2/blindnessDeafness.js';
@@ -26,6 +27,7 @@ import {crownOfMadness} from './macros/spells/level2/crownOfMadness.js';
 import {cureWounds} from './macros/spells/level1/cureWounds.js';
 import {dancingLights} from './macros/spells/cantrip/dancingLights.js';
 import {detectThoughts} from './macros/spells/level2/detectThoughts.js';
+import {dispelMagic} from './macros/spells/level3/dispelMagic.js';
 import {dissonantWhispers} from './macros/spells/level1/dissonantWhispers.js';
 import {divineWord} from './macros/spells/level7/divineWord.js';
 import {dragonsBreath} from './macros/spells/level2/dragonsBreath.js';
@@ -70,6 +72,7 @@ import {powerWordStun} from './macros/spells/level8/powerWordStun.js';
 import {prayerOfHealing} from './macros/spells/level2/prayerOfHealing.js';
 import {prismaticSpray} from './macros/spells/level7/prismaticSpray.js';
 import {produceFlame} from './macros/spells/cantrip/produceFlame.js';
+import {protectionFromEnergy} from './macros/spells/level3/protectionFromEnergy.js';
 import {protectionFromPoison} from './macros/spells/level2/protectionFromPoison.js';
 import {regenerate} from './macros/spells/level7/regenerate.js';
 import {removeTemplate} from './macros/generic/removeTemplate.js';
@@ -110,6 +113,7 @@ export let macros = {
     'banishingSmite': banishingSmite,
     'banishment': banishment,
     'beastBond': beastBond,
+    'bladeWard': bladeWard,
     'bless': bless,
     'blindingSmite': blindingSmite,
     'blindnessDeafness': blindnessDeafness,
@@ -126,6 +130,7 @@ export let macros = {
     'crownOfMadness': crownOfMadness,
     'cureWounds': cureWounds,
     'dancingLights': dancingLights,
+    'dispelMagic': dispelMagic,
     'detectThoughts': detectThoughts,
     'dissonantWhispers': dissonantWhispers,
     'divineWord': divineWord,
@@ -171,6 +176,7 @@ export let macros = {
     'prayerOfHealing': prayerOfHealing,
     'prismaticSpray': prismaticSpray,
     'produceFlame': produceFlame,
+    'protectionFromEnergy': protectionFromEnergy,
     'protectionFromPoison': protectionFromPoison,
     'regenerate': regenerate,
     'removeTemplate': removeTemplate,

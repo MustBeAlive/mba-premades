@@ -267,6 +267,15 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                     'spell': {
                         'enlargeReduce': selection
                     }
+                },
+                'flags': {
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 2,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
+                    }
                 }
             }
         };
@@ -397,6 +406,15 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                 'chris-premades': {
                     'spell': {
                         'enlargeReduce': selection
+                    }
+                },
+                'flags': {
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 2,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
                     }
                 }
             }

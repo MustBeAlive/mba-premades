@@ -22,6 +22,13 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                         'dc': chrisPremades.helpers.getSpellDC(workflow.item)
                     }
                 }
+            },
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 1,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
+                }
             }
         }
     };

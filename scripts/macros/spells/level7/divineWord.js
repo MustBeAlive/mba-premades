@@ -32,6 +32,13 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                         'onDelete': {
                             'script': chrisPremades.helpers.functionToString(effectMacroEnd)
                         }
+                    },
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 7,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
                     }
                 }
             };
@@ -56,7 +63,16 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                         'value': 'Deafened',
                         'priority': 20
                     }
-                ]
+                ],
+                'flags': {
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 7,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
+                    }
+                }
             };
             await chrisPremades.helpers.createEffect(target.actor, effectData);
         }
@@ -82,7 +98,16 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                         'value': 'Deafened',
                         'priority': 20
                     }
-                ]
+                ],
+                'flags': {
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 7,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
+                    }
+                }
             };
             await chrisPremades.helpers.createEffect(target.actor, effectData);
         }
@@ -114,7 +139,16 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                         'value': 'Stunned',
                         'priority': 20
                     }
-                ]
+                ],
+                'flags': {
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 7,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
+                    }
+                }
             };
             await chrisPremades.helpers.createEffect(target.actor, effectData);
         }

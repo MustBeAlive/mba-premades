@@ -139,6 +139,13 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                     }
                 }
             },
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 7,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
+                }
+            }
         }
     };
     await chrisPremades.helpers.createEffect(target.actor, effectData);

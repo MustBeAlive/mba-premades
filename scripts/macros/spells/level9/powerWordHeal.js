@@ -56,7 +56,7 @@ export async function powerWordHeal({speaker, actor, token, character, item, arg
                         },
                         no: {
                             label: "No",
-                            callback: async (hyml) => {
+                            callback: async (html) => {
                                 await chrisPremades.helpers.removeEffect(effect);
                                 return;
                             }

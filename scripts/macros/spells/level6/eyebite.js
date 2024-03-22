@@ -25,6 +25,13 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
                         'name': workflow.token.document.name,
                     }
                 }
+            },
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 6,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
+                }
             }
         }
     };

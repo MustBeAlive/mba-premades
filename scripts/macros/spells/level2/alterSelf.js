@@ -27,7 +27,16 @@ export async function alterSelf({speaker, actor, token, character, item, args, s
                         'value': '@attributes.movement.walk',
                         'priority': 20
                     }
-                ]
+                ],
+                'flags': {
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 2,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
+                    }
+                }
             };
             await chrisPremades.helpers.createEffect(source, effectData);
             break;
@@ -40,6 +49,15 @@ export async function alterSelf({speaker, actor, token, character, item, args, s
                 'origin': workflow.item.uuid,
                 'duration': {
                     'seconds': 3600
+                },
+                'flags': {
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 2,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
+                    }
                 }
             };
             await chrisPremades.helpers.createEffect(source, effectData);
@@ -91,6 +109,15 @@ export async function alterSelf({speaker, actor, token, character, item, args, s
                     'effectmacro': {
                         'onDelete': {
                             'script': chrisPremades.helpers.functionToString(effectMacro)
+                        }
+                    },
+                    'flags': {
+                        'midi-qol': {
+                            'castData': {
+                                baseLevel: 2,
+                                castLevel: workflow.castData.castLevel,
+                                itemUuid: workflow.item.uuid
+                            }
                         }
                     }
                 }

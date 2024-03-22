@@ -76,7 +76,16 @@ export async function ceremony({speaker, actor, token, character, item, args, sc
                         'value': "+1d4",
                         'priority': 20
                     }
-                ]
+                ],
+                'flags': {
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 1,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
+                    }
+                }
             };
             await chrisPremades.helpers.createEffect(target.actor, effectData);
             break;
@@ -96,7 +105,16 @@ export async function ceremony({speaker, actor, token, character, item, args, sc
                         'value': "+1d4",
                         'priority': 20
                     }
-                ]
+                ],
+                'flags': {
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 1,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
+                    }
+                }
             };
             await chrisPremades.helpers.createEffect(target.actor, effectData);
             break;
@@ -108,6 +126,15 @@ export async function ceremony({speaker, actor, token, character, item, args, sc
                 'description': "For the next 7 days you can't become undead",
                 'duration': {
                     'seconds': 604800
+                },
+                'flags': {
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 1,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
+                    }
                 }
             };
             await chrisPremades.helpers.createEffect(target.actor, effectData);
@@ -149,7 +176,16 @@ export async function ceremony({speaker, actor, token, character, item, args, sc
                             'value': "+2",
                             'priority': 20
                         }
-                    ]
+                    ],
+                    'flags': {
+                        'midi-qol': {
+                            'castData': {
+                                baseLevel: 1,
+                                castLevel: workflow.castData.castLevel,
+                                itemUuid: workflow.item.uuid
+                            }
+                        }
+                    }
                 }
                 await chrisPremades.helpers.createEffect(actor, effectData);
             }

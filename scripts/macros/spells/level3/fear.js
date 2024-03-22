@@ -60,6 +60,13 @@ export async function fear({speaker, actor, token, character, item, args, scope,
                         'dc': chrisPremades.helpers.getSpellDC(workflow.item)
                     }
                 }
+            },
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 3,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
+                }
             }
         }
     };

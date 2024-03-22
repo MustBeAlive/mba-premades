@@ -38,6 +38,13 @@ export async function sleep({speaker, actor, token, character, item, args, scope
                 'flags': { 
                     'dae': { 
                         'specialDuration': ["isDamaged"] 
+                    },
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 1,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
                     } 
                 },
                 'changes': [
