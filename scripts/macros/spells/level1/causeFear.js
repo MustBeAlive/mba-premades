@@ -94,7 +94,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         let type = chrisPremades.helpers.raceOrType(i.actor);
         let immuneData = {  
             'name': 'Save Immunity',
-            'icon': 'assets/library/icons/sorted/generic/generic_buff.png',
+            'icon': 'assets/library/icons/sorted/generic/generic_buff.webp',
             'description': "You succeed on the next save you make",
             'duration': {
                 'turns': 1  

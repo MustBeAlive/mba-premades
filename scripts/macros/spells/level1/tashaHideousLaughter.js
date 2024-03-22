@@ -21,7 +21,7 @@ async function isDamaged({speaker, actor, token, character, item, args, scope, w
 
 	let effectData = {
         'name': 'Save Advantage',
-        'icon': 'assets/library/icons/sorted/generic/generic_buff.png',
+        'icon': 'assets/library/icons/sorted/generic/generic_buff.webp',
         'description': "You have advantage on the next save you make",
         'duration': {
             'turns': 1

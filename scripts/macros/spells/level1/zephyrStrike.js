@@ -11,7 +11,7 @@ async function attack({speaker, actor, token, character, item, args, scope, work
     let damageBonus = '1d8[force]';
     const effectData = {
         'name': 'Zephyr Strike: Advantage',
-        'icon': 'assets/library/icons/sorted/generic/generic_buff.png',
+        'icon': 'assets/library/icons/sorted/generic/generic_buff.webp',
         'duration': {
             'turns': 1
         },

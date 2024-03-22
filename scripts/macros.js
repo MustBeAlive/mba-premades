@@ -40,6 +40,7 @@ import {ensnaringStrike} from './macros/spells/level1/ensnaringStrike.js';
 import {eyebite} from './macros/spells/level6/eyebite.js';
 import {falseLife} from './macros/spells/level1/falseLife.js';
 import {fear} from './macros/spells/level3/fear.js';
+import {fizbanPlatinumShield} from './macros/spells/level6/fizbanPlatinumShield.js';
 import {flamingSphere} from './macros/spells/level2/flamingSphere.js';
 import {frostFingers} from './macros/spells/level1/frostFingers.js';
 import {goodberry} from './macros/spells/level1/goodberry.js';
@@ -70,6 +71,7 @@ import {powerWordKill} from './macros/spells/level9/powerWordKill.js';
 import {powerWordPain} from './macros/spells/level7/powerWordPain.js';
 import {powerWordStun} from './macros/spells/level8/powerWordStun.js';
 import {prayerOfHealing} from './macros/spells/level2/prayerOfHealing.js';
+import {primordialWard} from './macros/spells/level6/primordialWard.js';
 import {prismaticSpray} from './macros/spells/level7/prismaticSpray.js';
 import {produceFlame} from './macros/spells/cantrip/produceFlame.js';
 import {protectionFromEnergy} from './macros/spells/level3/protectionFromEnergy.js';
@@ -82,12 +84,14 @@ import {scorchingRay} from './macros/spells/level2/scorchingRay.js';
 import {shield} from './macros/spells/level1/shield.js';
 import {shillelagh} from './macros/spells/cantrip/shillelagh.js';
 import {shockingGrasp} from './macros/spells/cantrip/shockingGrasp.js';
+import {skillEmpowerment} from './macros/spells/level5/skillEmpowerment.js';
 import {sleep} from './macros/spells/level1/sleep.js';
 import {slow} from './macros/spells/level3/slow.js';
 import {spareTheDying} from './macros/spells/cantrip/spareTheDying.js';
 import {spiritualWeapon} from './macros/spells/level2/spiritualWeapon.js';
 import {staggeringSmite} from './macros/spells/level4/staggeringSmite.js';
 import {suggestion} from './macros/spells/level2/suggestion.js';
+import {sunbeam} from './macros/spells/level6/sunBeam.js';
 import {tashaHideousLaughter} from './macros/spells/level1/tashaHideousLaughter.js';
 import {tashaMindWhip} from './macros/spells/level2/tashaMindWhip.js';
 import {telekinesis} from './macros/spells/level5/telekinesis.js';
@@ -145,6 +149,7 @@ export let macros = {
     'eyebite': eyebite,
     'falseLife': falseLife,
     'fear': fear,
+    'fizbanPlatinumShield': fizbanPlatinumShield,
     'flamingSphere': flamingSphere,
     'frostFingers': frostFingers,
     'goodberry': goodberry,
@@ -175,6 +180,7 @@ export let macros = {
     'powerWordPain': powerWordPain,
     'powerWordStun': powerWordStun,
     'prayerOfHealing': prayerOfHealing,
+    'primordialWard': primordialWard,
     'prismaticSpray': prismaticSpray,
     'produceFlame': produceFlame,
     'protectionFromEnergy': protectionFromEnergy,
@@ -187,12 +193,14 @@ export let macros = {
     'shield': shield,
     'shillelagh': shillelagh,
     'shockingGrasp': shockingGrasp,
+    'skillEmpowerment': skillEmpowerment,
     'sleep': sleep,
     'slow': slow,
     'spareTheDying': spareTheDying,
     'spiritualWeapon': spiritualWeapon,
     'staggeringSmite': staggeringSmite,
     'suggestion': suggestion,
+    'sunbeam': sunbeam,
     'tashaHideousLaughter': tashaHideousLaughter,
     'tashaMindWhip': tashaMindWhip,
     'telekinesis': telekinesis,

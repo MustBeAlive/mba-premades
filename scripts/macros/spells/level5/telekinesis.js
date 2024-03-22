@@ -254,11 +254,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                         'targetUuid': target.document.uuid
                     }
                 }
-            },
-            'effectMacro': {
-                'onDelete': {
-                    'script': ""
-                }
             }
         }
     }

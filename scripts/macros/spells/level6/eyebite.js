@@ -59,7 +59,7 @@ async function save({speaker, actor, token, character, item, args, scope, workfl
     if (!effect) return;
     let immuneData = {  
         'name': 'Save Immunity',
-        'icon': 'assets/library/icons/sorted/generic/generic_buff.png',
+        'icon': 'assets/library/icons/sorted/generic/generic_buff.webp',
         'description': "You succeed on the next save you make",
         'duration': {
             'turns': 1  
@@ -90,7 +90,7 @@ async function save({speaker, actor, token, character, item, args, scope, workfl
 
 async function item({speaker, actor, token, character, item, args, scope, workflow}) {
     const target = workflow.targets.first();
-    if (workflow.failedSaves.size != 1) {
+    if (!workflow.failedSaves.size) {
         let effectData = {
             'name': 'Eyebite: Immunity',
             'icon': 'assets/library/icons/sorted/spells/level6/eyebite_immune.webp',
