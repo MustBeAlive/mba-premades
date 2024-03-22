@@ -1,7 +1,7 @@
 import {cast} from './macros/animations/cast.js';
-import {removeDumbV10EffectsBlind} from './macros/mechanics/blindness.js';
-import { deathSaves } from './macros/mechanics/deathsaves.js';
-import {removeDumbV10EffectsInvisible} from './macros/mechanics/invisibility.js';
+import {removeV10EffectsBlind} from './macros/mechanics/blindness.js';
+import {deathSaves} from './macros/mechanics/deathsaves.js';
+import {removeV10EffectsInvisible} from './macros/mechanics/invisibility.js';
 let moduleName = 'mba-premades';
 export function registerSettings() {
     game.settings.register(moduleName, 'Check For Updates', {
@@ -38,7 +38,7 @@ export function registerSettings() {
         'type': Boolean,
         'default': false,
         'onChange': value => {
-            if (value) removeDumbV10EffectsBlind();
+            if (value) removeV10EffectsBlind();
         }
     });
     game.settings.register(moduleName, 'Invisibility Fix', {
@@ -49,7 +49,7 @@ export function registerSettings() {
         'type': Boolean,
         'default': false,
         'onChange': value => {
-            if (value) removeDumbV10EffectsInvisible();
+            if (value) removeV10EffectsInvisible();
         }
     });
     game.settings.register(moduleName, 'Auto Death Save', {

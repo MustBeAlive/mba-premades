@@ -60,34 +60,6 @@ export let mba = {
             }
         );
     },
-    'createEffect': async function _createEffect(actor, effectData) {
-        if (effectData.label) {
-            console.warn('The effect "' + effectData.label + '" has effect data with a label instead of a name!');
-            effectData.name = effectData.label;
-            delete effectData.label;
-        }
-        if (chris.firstOwner(actor).id === game.user.id) {
-            let effects = await actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
-            return effects[0];
-        } else {
-            return await fromUuid(await socket.executeAsGM('createEffect', actor.uuid, effectData));
-        }
-    },
-    'removeEffect': async function _removeEffect(effect) {
-        if (chris.firstOwner(effect).id === game.user.id) {
-            await effect.delete();
-        } else {
-            await socket.executeAsGM('removeEffect', effect.uuid);
-        }
-    },
-    'updateEffect': async function _updateEffect(effect, updates) {
-        if (game.user.isGM) {
-            await effect.update(updates);
-        } else {
-            updates._id = effect.id;
-            await socket.executeAsGM('updateEffect', effect.uuid, updates);
-        }
-    },
     'raceOrType': function _raceOrType(entity) {
         return MidiQOL.typeOrRace(entity);
     },
@@ -168,14 +140,5 @@ export let mba = {
     },
     'getCriticalFormula': function _getCriticalFormula(formula) {
         return new CONFIG.Dice.DamageRoll(formula, {}, {'critical': true, 'powerfulCritical': game.settings.get('dnd5e', 'criticalDamageMaxDice'), 'multiplyNumeric': game.settings.get('dnd5e', 'criticalDamageModifiers')}).formula;
-    },
-    'rollRequest': async function _rollRequest(token, request, ability) {
-        let userID = chris.firstOwner(token).id;
-        let data = {
-            'targetUuid': token.document.uuid,
-            'request': request,
-            'ability': ability
-        };
-        return await MidiQOL.socket().executeAsUser('rollAbility', userID, data);
-    },
+    }
 }
