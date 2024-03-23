@@ -65,6 +65,7 @@ import {mageHand} from './macros/spells/cantrip/mageHand.js';
 import {magicMissile} from './macros/spells/level1/magicMissile.js';
 import {magicStone} from './macros/spells/cantrip/magicStone.js';
 import {maximilianEarthenGrasp} from './macros/spells/level2/maximilianEarthenGrasp.js';
+import {melfMinuteMeteors} from './macros/spells/level3/melfMinuteMeteors.js';
 import {potionOfHealing} from './macros/items/potionOfHealing.js';
 import {powerWordHeal} from './macros/spells/level9/powerWordHeal.js';
 import {powerWordKill} from './macros/spells/level9/powerWordKill.js';
@@ -174,6 +175,7 @@ export let macros = {
     'magicMissile': magicMissile,
     'magicStone': magicStone,
     'maximilianEarthenGrasp': maximilianEarthenGrasp,
+    'melfMinuteMeteors': melfMinuteMeteors,
     'potionOfHealing': potionOfHealing,
     'powerWordHeal': powerWordHeal,
     'powerWordKill': powerWordKill,
