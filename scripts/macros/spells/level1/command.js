@@ -1,5 +1,5 @@
 export async function command({speaker, actor, token, character, item, args, scope, workflow}) {
-    if (workflow.failedSaves.size != 1) return;
+    if (!workflow.failedSaves.size) return;
     const target = workflow.targets.first();
     let choices  = [
         ['Approach', 'Appro'],

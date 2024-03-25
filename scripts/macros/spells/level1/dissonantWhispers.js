@@ -1,42 +1,41 @@
 async function cast({speaker, actor, token, character, item, args, scope, workflow}) {
     let target = workflow.targets.first();
     let deafened = await chrisPremades.helpers.findEffect(target.actor, 'Deafened');
-    if (deafened) {
-        ChatMessage.create({ flavor: target.document.name + ' is deafened and automatically succeeds on the save', speaker: ChatMessage.getSpeaker({ actor: workflow.actor}) });
-        let immuneData = {  
-            'name': 'Save Immunity',
-            'icon': 'assets/library/icons/sorted/generic/generic_buff.webp',
-            'description': "You succeed on the next save you make",
-            'duration': {
-                'turns': 1  
+    if (!deafened) return;
+    ChatMessage.create({ flavor: target.document.name + ' is deafened and automatically succeeds on the save', speaker: ChatMessage.getSpeaker({ actor: workflow.actor}) });
+    let immuneData = {  
+        'name': 'Save Immunity',
+        'icon': 'assets/library/icons/sorted/generic/generic_buff.webp',
+        'description': "You succeed on the next save you make",
+        'duration': {
+            'turns': 1  
+        },
+        'changes': [
+            {
+                'key': 'flags.midi-qol.min.ability.save.wis',
+                'value': '40',
+                'mode': 2,
+                'priority': 120
+            }
+        ],
+        'flags': {
+            'dae': {
+                'specialDuration': [
+                    'isSave'
+                ]
             },
-            'changes': [
-                {
-                    'key': 'flags.midi-qol.min.ability.save.wis',
-                    'value': '40',
-                    'mode': 2,
-                    'priority': 120
-                }
-            ],
-            'flags': {
-                'dae': {
-                    'specialDuration': [
-                        'isSave'
-                    ]
-                },
-                'chris-premades': {
-                    'effect': {
-                        'noAnimation': true
-                    }
+            'chris-premades': {
+                'effect': {
+                    'noAnimation': true
                 }
             }
-        };
-        await chrisPremades.helpers.createEffect(target.actor, immuneData);
-    }
+        }
+    };
+    await chrisPremades.helpers.createEffect(target.actor, immuneData);
 }
 
 async function item({speaker, actor, token, character, item, args, scope, workflow}) {
-    if (workflow.failedSaves.size != 1) return;
+    if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
     let reaction = chrisPremades.helpers.findEffect(target.actor, 'Reaction');
     if (reaction) return;
@@ -56,8 +55,8 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
           }).render(true);
     };
     const effectData = {
-        'name': "Dissonant Whispers",
-        'icon': "assets/library/icons/sorted/spells/level1/Dissonant_Whispers.webp",
+        'name': workflow.item.name,
+        'icon': workflow.item.img,
         'description': "You must immediately use your reaction to move as far as your speed allows away from the caster of the spell. You don't have to move into obviously dangerous ground, such as a fire or a pit.",
         'duration': {
             'rounds': 1

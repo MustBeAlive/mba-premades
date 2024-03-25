@@ -15,17 +15,7 @@ export async function ceremony({speaker, actor, token, character, item, args, sc
     switch (selection) {
         case 'Atonement': {
             let spellDC = 20;
-            const saveRollData =  {
-                request: "skill",
-                targetUuid: token.actor.uuid,
-                ability: "ins",
-                options: {
-                    chatMessage: true,
-                    flavor: `DC${spellDC} vs Atonement (Insight)`,
-                },
-            };
-            const userID = MidiQOL.playerForActor(workflow.actor).id;
-            const check = await MidiQOL.socket().executeAsUser('rollAbility', userID, saveRollData);      
+            await chrisPremades.helpers.rollRequest(workflow.token, 'skill', 'ins');     
             break;
         }
         case 'Water': {
@@ -64,7 +54,7 @@ export async function ceremony({speaker, actor, token, character, item, args, sc
         case 'Age': {
             const effectData = {
                 'name': "Ceremony: Coming of Age",
-                'icon': "assets/library/icons/sorted/spells/level1/ceremony.webp",
+                'icon': workflow.item.img,
                 'description': "For the next 24 hours, whenever you make an ability check, you can roll a d4 and add the number rolled to the ability check.",
                 'duration': {
                     'seconds': 86400
@@ -93,7 +83,7 @@ export async function ceremony({speaker, actor, token, character, item, args, sc
         case 'Dedication': {
             const effectData = {
                 'name': "Ceremony: Dedication",
-                'icon': "assets/library/icons/sorted/spells/level1/ceremony.webp",
+                'icon': workflow.item.img,
                 'description': "For the next 24 hours, whenever you make a saving throw, you can roll a d4 and add the number rolled to the save.",
                 'duration': {
                     'seconds': 86400
@@ -122,7 +112,7 @@ export async function ceremony({speaker, actor, token, character, item, args, sc
         case 'Funeral': {
             const effectData = {
                 'name': "Ceremony: Funeral Rite",
-                'icon': "assets/library/icons/sorted/spells/level1/ceremony.webp",
+                'icon': workflow.item.img,
                 'description': "For the next 7 days you can't become undead",
                 'duration': {
                     'seconds': 604800

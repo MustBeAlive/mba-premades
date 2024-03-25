@@ -1,6 +1,6 @@
 // Original macro by CPR
 export async function magicMissile({speaker, actor, token, character, item, args, scope, workflow}) {
-    if (workflow.targets.size === 0) return;
+    if (!workflow.targets.size) return;
     let maxMissiles = 3 + (workflow.castData.castLevel - 1);
     let targets = Array.from(workflow.targets);
     let selection = await chrisPremades.helpers.selectTarget('Сколько зарядов и в кого? (Max: ' + maxMissiles + ')', chrisPremades.constants.okCancel, targets, true, 'number');

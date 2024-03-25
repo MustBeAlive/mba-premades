@@ -1,6 +1,5 @@
 export async function spareTheDying({speaker, actor, token, character, item, args, scope, workflow}) {
     let target = workflow.targets.first();
-    if (!target) return;
     if (target.document.uuid === token.document.uuid) {
         ui.notifications.warn('Wrong target selected!');
         return;
@@ -15,8 +14,8 @@ export async function spareTheDying({speaker, actor, token, character, item, arg
         return;
     }
     const effectData = {
-        'name': "Spare the Dying",
-        'icon': "assets/library/icons/sorted/spells/cantrip/spare_the_dying.webp",
+        'name': workflow.item.name,
+        'icon': workflow.item.img,
         'description': 'You are stable and no longer have to make death saving throws',
         'duration': {
             'startTime': game.time.worldTime,

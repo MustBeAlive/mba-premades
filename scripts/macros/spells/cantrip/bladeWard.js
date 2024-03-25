@@ -1,14 +1,14 @@
 async function cast({speaker, actor, token, character, item, args, scope, workflow}) {
     const effectData = {
-        'name': "Blade Ward",
-        'icon': "assets/library/icons/sorted/spells/cantrip/Blade_Ward.webp",
+        'name': workflow.item.name,
+        'icon': workflow.item.img,
         'description': "Until the end of your next turn, you have resistance against bludgeoning, piercing, and slashing damage dealt by weapon attacks.",
         'origin': workflow.item.uuid,
         'changes': [
             {
                 'key': 'flags.midi-qol.onUseMacroName',
                 'mode': 0,
-                'value': 'function.chrisPremades.macros.bladeWard.item,postDamageRoll',
+                'value': 'function.mbaPremades.macros.bladeWard.item,postDamageRoll',
                 'priority': 20
             }
         ],

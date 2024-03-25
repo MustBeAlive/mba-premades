@@ -1,6 +1,6 @@
 // Original macro by CPR
 export async function hailOfThorns({speaker, actor, token, character, item, args, scope, workflow}) {
-    if (workflow.hitTargets.size != 1) return;
+    if (!workflow.hitTargets.size) return;
     if (workflow.item?.system?.actionType != 'rwak') return;
     let effect = chrisPremades.helpers.findEffect(workflow.actor, 'Hail of Thorns');
     if (!effect) return;

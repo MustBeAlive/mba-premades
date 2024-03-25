@@ -33,6 +33,7 @@ import {divineWord} from './macros/spells/level7/divineWord.js';
 import {dragonsBreath} from './macros/spells/level2/dragonsBreath.js';
 import {earthbind} from './macros/spells/level2/earthbind.js';
 import {elementalBane} from './macros/spells/level4/elementalBane.js';
+import {elementalWeapon} from './macros/spells/level3/elementalWeapon.js';
 //import {enemiesAbound} from './macros/spells/level3/enemiesAbound.js';
 import {enhanceAbility} from './macros/spells/level2/enhanceAbility.js';
 import {enlargeReduce} from './macros/spells/level2/enlargeReduce.js';
@@ -64,6 +65,7 @@ import {longstrider} from './macros/spells/level1/longstrider.js';
 import {mageHand} from './macros/spells/cantrip/mageHand.js';
 import {magicMissile} from './macros/spells/level1/magicMissile.js';
 import {magicStone} from './macros/spells/cantrip/magicStone.js';
+import {magicWeapon} from './macros/spells/level2/magicWeapon.js';
 import {maximilianEarthenGrasp} from './macros/spells/level2/maximilianEarthenGrasp.js';
 import {melfMinuteMeteors} from './macros/spells/level3/melfMinuteMeteors.js';
 import {potionOfHealing} from './macros/items/potionOfHealing.js';
@@ -143,6 +145,7 @@ export let macros = {
     'dragonsBreath': dragonsBreath,
     'earthbind': earthbind,
     'elementalBane': elementalBane,
+    'elementalWeapon': elementalWeapon,
 //    'enemiesAbound': enemiesAbound,
     'enhanceAbility': enhanceAbility,
     'enlargeReduce': enlargeReduce,
@@ -174,6 +177,7 @@ export let macros = {
     'mageHand': mageHand,
     'magicMissile': magicMissile,
     'magicStone': magicStone,
+    'magicWeapon': magicWeapon,
     'maximilianEarthenGrasp': maximilianEarthenGrasp,
     'melfMinuteMeteors': melfMinuteMeteors,
     'potionOfHealing': potionOfHealing,
