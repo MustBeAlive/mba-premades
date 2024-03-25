@@ -45,6 +45,7 @@ import {fizbanPlatinumShield} from './macros/spells/level6/fizbanPlatinumShield.
 import {flamingSphere} from './macros/spells/level2/flamingSphere.js';
 import {frostFingers} from './macros/spells/level1/frostFingers.js';
 import {goodberry} from './macros/spells/level1/goodberry.js';
+import {greenFlameBlade} from './macros/spells/cantrip/greenFlameBlade.js';
 import {gust} from './macros/spells/cantrip/gust.js';
 import {hailOfThorns} from './macros/spells/level1/hailOfThorns.js';
 import {harm} from './macros/spells/level6/harm.js';
@@ -157,6 +158,7 @@ export let macros = {
     'flamingSphere': flamingSphere,
     'frostFingers': frostFingers,
     'goodberry': goodberry,
+    'greenFlameBlade': greenFlameBlade,
     'gust': gust,
     'hailOfThorns': hailOfThorns,
     'harm': harm,
