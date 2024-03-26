@@ -1,4 +1,4 @@
-//Animation by EskieMoh#2969 & Carnage Asada#3647; rework to be able to choose from folder of tokens
+//Animation by EskieMoh#2969 & Carnage Asada#3647;
 export async function disguiseSelf({ speaker, actor, token, character, item, args, scope, workflow }) {
     let tokenPath;
     let choices  = [

@@ -1,4 +1,4 @@
-//Animabtion by EskieMoh#2969
+//Animation by EskieMoh#2969
 export async function swordBurst({ speaker, actor, token, character, item, args, scope, workflow }) {
     let targets = Array.from(workflow.targets);
     new Sequence()

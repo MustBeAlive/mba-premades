@@ -38,7 +38,6 @@ import {dragonsBreath} from './macros/spells/level2/dragonsBreath.js';
 import {earthbind} from './macros/spells/level2/earthbind.js';
 import {elementalBane} from './macros/spells/level4/elementalBane.js';
 import {elementalWeapon} from './macros/spells/level3/elementalWeapon.js';
-//import {enemiesAbound} from './macros/spells/level3/enemiesAbound.js';
 import {enhanceAbility} from './macros/spells/level2/enhanceAbility.js';
 import {enlargeReduce} from './macros/spells/level2/enlargeReduce.js';
 import {ensnaringStrike} from './macros/spells/level1/ensnaringStrike.js';
@@ -120,7 +119,6 @@ import {witchBolt} from './macros/spells/level1/witchBolt.js';
 import {wordOfRadiance} from './macros/spells/cantrip/wordOfRadiance.js';
 import {wrathfulSmite} from './macros/spells/level1/wrathfulSmite.js';
 import {zephyrStrike} from './macros/spells/level1/zephyrStrike.js';
-import { disguiseSelf } from './macros/spells/level1/disguiseSelf.js';
 
 
 export let macros = {
@@ -164,7 +162,6 @@ export let macros = {
     'earthbind': earthbind,
     'elementalBane': elementalBane,
     'elementalWeapon': elementalWeapon,
-    //'enemiesAbound': enemiesAbound,
     'enhanceAbility': enhanceAbility,
     'enlargeReduce': enlargeReduce,
     'ensnaringStrike': ensnaringStrike,
