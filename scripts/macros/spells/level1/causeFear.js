@@ -1,5 +1,4 @@
 // Based on multiple CPR macro; Checks for right ammount of targets and checks right distance between them
-import {mba} from "../../../helperFunctions";
 async function cast({speaker, actor, token, character, item, args, scope, workflow}) {
     let ammount = workflow.castData.castLevel;
     let concEffect = await chrisPremades.helpers.findEffect(workflow.actor, 'Concentrating');
@@ -14,8 +13,16 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
         await chrisPremades.helpers.updateTargets(newTargets);
     }
     let targets = Array.from(game.user.targets);
-    let valid = await mba.over30(targets);
-    if (valid === true) {
+    const distanceArray = [];
+    for (let i = 0; i < targets.length; i++) {
+        for (let k = i + 1; k < targets.length; k++) {
+            let target1 = fromUuidSync(targets[i].document.uuid).object;
+            let target2 = fromUuidSync(targets[k].document.uuid).object;
+            distanceArray.push(chrisPremades.helpers.getDistance(target1, target2));
+        }
+    }
+    const found = distanceArray.some((distance) => distance > 30);
+    if (found === true) {
         ui.notifications.warn('Targets cannot be further than 30 ft. of each other!')
         await chrisPremades.helpers.removeEffect(concEffect);
         return;

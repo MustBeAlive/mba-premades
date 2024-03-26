@@ -43,8 +43,7 @@
 				"type": "module",
 				"manifest": "https://github.com/kandashi/Active-Token-Lighting",
 				"compatibility": {
-					"verified": "0.7.0",
-					"minimum": "0.7.0"
+					"verified": "0.7.2"
 				}
 			},
 			{
@@ -52,8 +51,7 @@
 				"type": "module",
 				"manifest": "https://github.com/League-of-Foundry-Developers/fvtt-advanced-macros",
 				"compatibility": {
-					"verified": "2.0.5",
-					"minimum": "2.0.5"
+					"verified": "2.0.5"
 				}
 			},
 			{
@@ -85,8 +83,7 @@
 				"type": "module",
 				"manifest": "https://github.com/chrisk123999/chris-premades/",
 				"compatibility": {
-					"verified": "0.9.64",
-					"minimum": "0.9.64"
+					"verified": "0.9.64"
 				}
 			},
 			{
@@ -102,8 +99,7 @@
 				"type": "module",
 				"manifest": "https://github.com/DFreds/dfreds-convenient-effects",
 				"compatibility": {
-					"verified": "6.0.3",
-					"minimum": "6.0.3"
+					"verified": "6.0.3"
 				}
 			},
 			{
@@ -111,8 +107,7 @@
 				"type": "module",
 				"manifest": "https://gitlab.com/tposney/dae",
 				"compatibility": {
-					"verified": "11.1.13",
-					"minimum": "11.1.13"
+					"verified": "11.1.13"
 				}
 			},
 			{
@@ -120,8 +115,7 @@
 				"type": "module",
 				"manifest": "https://github.com/krbz999/effectmacro",
 				"compatibility": {
-					"verified": "11.2.2",
-					"minimum": "11.2.2"
+					"verified": "11.2.2"
 				}
 			},
 			{
@@ -137,8 +131,7 @@
 				"type": "module",
 				"manifest": "https://gitlab.com/tposney/midi-qol",
 				"compatibility": {
-					"verified": "11.3.24",
-					"minimum": "11.3.24"
+					"verified": "11.3.24"
 				}
 			},
 			{
@@ -146,8 +139,7 @@
 				"type": "module",
 				"manifest": "https://github.com/fantasycalendar/FoundryVTT-Sequencer",
 				"compatibility": {
-					"verified": "3.1.4",
-					"minimum": "3.1.4"
+					"verified": "3.1.4"
 				}
 			},
 			{
@@ -163,8 +155,7 @@
 				"type": "module",
 				"manifest": "https://github.com/krbz999/templatemacro",
 				"compatibility": {
-					"verified": "11.0.1",
-					"minimum": "11.0.1"
+					"verified": "11.0.1"
 				}
 			},
 			{
@@ -172,8 +163,7 @@
 				"type": "module",
 				"manifest": "https://github.com/trioderegion/warpgate",
 				"compatibility": {
-					"verified": "1.19.2",
-					"minimum": "1.19.2"
+					"verified": "1.19.2"
 				}
 			}
 		]
