@@ -20,6 +20,7 @@ import {causeFear} from './macros/spells/level1/causeFear.js';
 import {ceremony} from './macros/spells/level1/ceremony.js';
 import {chaosBolt} from './macros/spells/level1/chaosBolt.js';
 import {charmPerson} from './macros/spells/level1/charmPerson.js';
+import {chillTouch} from './macros/spells/cantrip/chillTouch.js';
 import {chromaticOrb} from './macros/spells/level1/chromaticOrb.js';
 import {colorSpray} from './macros/spells/level1/colorSpray.js';
 import {command} from './macros/spells/level1/command.js';
@@ -133,6 +134,7 @@ export let macros = {
     'ceremony': ceremony,
     'chaosBolt': chaosBolt,
     'charmPerson': charmPerson,
+    'chillTouch': chillTouch,
     'chromaticOrb': chromaticOrb,
     'colorSpray': colorSpray,
     'command': command,
