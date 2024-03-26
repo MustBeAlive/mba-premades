@@ -14,10 +14,11 @@ Hooks.once('ready', async function() {
     if (game.user.isGM) {
         if (game.settings.get('mba-premades', 'Check For Updates')) checkUpdate();
     }
-    if (game.settings.get('mba-premades', 'Cast Animations')) Hooks.on('midi-qol.postPreambleComplete', cast);
     if (game.settings.get('mba-premades', 'Blindness Fix')) removeV10EffectsBlind();
     if (game.settings.get('mba-premades', 'Invisibility Fix')) removeV10EffectsInvisible();
-    if (game.settings.get('mba-premades', 'Auto Death Save')) Hooks.on("updateCombat", deathSaves);
+    if (game.settings.get('mba-premades', 'Cast Animations')) Hooks.on('midi-qol.postPreambleComplete', cast);
+    if (game.settings.get('mba-premades', 'Auto Death Save')) Hooks.on('updateCombat', deathSaves);
+    if (game.settings.get('mba-premades', 'Blur')) Hooks.on('midi-qol.preItemRoll', macros.blur);
     Hooks.on('createToken', addActions);
 });
 globalThis['mbaPremades'] = {

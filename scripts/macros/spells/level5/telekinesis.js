@@ -200,7 +200,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         let elevation = tokenDoc.elevation;
         if (elevation <= 0) return;
         let calc = Math.floor(elevation / 10);
-        console.log(calc);
         if (calc < 1) {
             tokenDoc.update({ "elevation": 0 })
             await chrisPremades.helpers.addCondition(actor, 'Prone');

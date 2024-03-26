@@ -1,6 +1,7 @@
 import {cast} from './macros/animations/cast.js';
-import {removeV10EffectsBlind} from './macros/mechanics/blindness.js';
 import {deathSaves} from './macros/mechanics/deathsaves.js';
+import {macros} from './macros.js';
+import {removeV10EffectsBlind} from './macros/mechanics/blindness.js';
 import {removeV10EffectsInvisible} from './macros/mechanics/invisibility.js';
 let moduleName = 'mba-premades';
 export function registerSettings() {
@@ -11,6 +12,21 @@ export function registerSettings() {
         config: true,
         type: Boolean,
         default: false
+    });
+    game.settings.register(moduleName, 'Blur', {
+        'name': 'Blur Automation',
+        'hint': 'Включает автоматизацию заклинания Blur через Midi-Qol hooks.',
+        'scope': 'world',
+        'config': true,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preItemRoll', macros.blur);
+            } else {
+                Hooks.off('midi-qol.preItemRoll', macros.blur);
+            }
+        }
     });
     game.settings.register(moduleName, 'Add Generic Actions', {
         name: "Добавить базовые действия",
@@ -53,7 +69,7 @@ export function registerSettings() {
         }
     });
     game.settings.register(moduleName, 'Auto Death Save', {
-        'name': 'Autro Death Save Request',
+        'name': 'Auto Death Save Request',
         'hint': 'Эта настройка включает автоматический промт death save\'ов в бою (monk\'s token bar)',
         'scope': 'world',
         'config': true,
