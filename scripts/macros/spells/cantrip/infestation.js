@@ -12,7 +12,7 @@ export async function infestation({ speaker, actor, token, character, item, args
 
     const directionRoll = await new Roll(`1d4`).roll({ async: true });
     await MidiQOL.displayDSNForRoll(directionRoll, 'damageRoll')
-    directionResult = directionRoll.total;
+    const directionResult = directionRoll.total;
     const directions = ["North", "South", "East", "West"];
     const directionContent = directions[directionResult - 1];
 

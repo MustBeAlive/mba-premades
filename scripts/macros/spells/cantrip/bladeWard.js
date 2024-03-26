@@ -8,7 +8,7 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
             {
                 'key': 'flags.midi-qol.onUseMacroName',
                 'mode': 0,
-                'value': 'function.mbaPremades.macros.bladeWard.item,postDamageRoll',
+                'value': 'function.mbaPremades.macros.bladeWard.item,preTargetDamageApplication',
                 'priority': 20
             }
         ],
