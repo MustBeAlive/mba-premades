@@ -1,17 +1,17 @@
-import {cast} from './macros/animations/cast.js';
-import {deathSaves} from './macros/mechanics/deathsaves.js';
-import {macros} from './macros.js';
-import {removeV10EffectsBlind} from './macros/mechanics/blindness.js';
-import {removeV10EffectsInvisible} from './macros/mechanics/invisibility.js';
+import { cast } from './macros/animations/cast.js';
+import { deathSaves } from './macros/mechanics/deathsaves.js';
+import { macros } from './macros.js';
+import { removeV10EffectsBlind } from './macros/mechanics/blindness.js';
+import { removeV10EffectsInvisible } from './macros/mechanics/invisibility.js';
 let moduleName = 'mba-premades';
 export function registerSettings() {
     game.settings.register(moduleName, 'Check For Updates', {
-        name: "Проверять обновления",
-        hint: "Показывать сообщение при входе в мир если доступно обновление модуля",
-        scope: 'world',
-        config: true,
-        type: Boolean,
-        default: false
+        'name': "Проверять обновления",
+        'hint': "Показывать сообщение при входе в мир если доступно обновление модуля",
+        'scope': 'world',
+        'config': true,
+        'type': Boolean,
+        'default': false
     });
     game.settings.register(moduleName, 'Blur', {
         'name': 'Blur Automation',
@@ -29,12 +29,12 @@ export function registerSettings() {
         }
     });
     game.settings.register(moduleName, 'Add Generic Actions', {
-        name: "Добавить базовые действия",
-        hint: "Добавляет базовые действия в лист персонажа при дропе токена на карту",
-        scope: 'world',
-        config: true,
-        type: String,
-        default: 'none',
+        'name': "Добавить базовые действия",
+        'hint': "Добавляет базовые действия в лист персонажа при дропе токена на карту",
+        'scope': 'world',
+        'config': true,
+        'type': String,
+        'default': 'none',
         'choices': {
             'none': 'None',
             'all': 'All Actors',

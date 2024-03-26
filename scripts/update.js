@@ -24,7 +24,7 @@ export async function checkUpdate() {
             .replaceAll('### Monsters:', '<b><u>Monsters:</u></b>')
         let message = '<hr>MBA Premades, доступно обновление. Версия: <b>' + info.tag_name + '</b><hr>' + body;
         await ChatMessage.create({
-            'speaker': {'alias': name},
+            'speaker': { 'alias': name },
             'content': message,
             'whisper': [game.user.id],
             'flags': {
@@ -33,5 +33,5 @@ export async function checkUpdate() {
                 }
             }
         });
-    } catch {};
+    } catch { };
 }
