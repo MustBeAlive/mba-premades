@@ -2,10 +2,7 @@
 export async function spiderClimb({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacro() {
-        if (Tagger.hasTags(token, "SpiderClimb")) {
-            await Tagger.removeTags(token, "SpiderClimb");
             await Sequencer.EffectManager.endEffects({ name: "SpiderLeg", object: token })
-        }
     }
     let effectData = {
         'name': workflow.item.name,
@@ -62,8 +59,6 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
     let delay6 = Math.random() * (500 - 0) + 0;
     let delay7 = Math.random() * (500 - 0) + 0;
     let delay8 = Math.random() * (500 - 0) + 0;
-
-    Tagger.addTags(target, "SpiderClimb")
 
     await new Sequence()
 
@@ -297,10 +292,7 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         .waitUntilFinished()
 
         .thenDo(function () {
-
-            Tagger.removeTags(target, "SpiderClimb");
             Sequencer.EffectManager.endEffects({ name: "SpiderLeg", object: target })
-
         })
 
         .play()

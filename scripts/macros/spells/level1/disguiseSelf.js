@@ -114,9 +114,6 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
     }
 
     async function effectMacroDel() {
-        if (Tagger.hasTags(token, "DisguiseSelf")) {
-            await Tagger.removeTags(token, "DisguiseSelf");
-
             new Sequence()
                 .animation()
                 .on(token)
@@ -124,7 +121,6 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
                 .play();
 
             await Sequencer.EffectManager.endEffects({ name: "DisguiseSelf", object: token })
-        }
     }
     let effectData = {
         'name': workflow.item.name,
@@ -174,10 +170,6 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
         .playbackRate(1)
         .zIndex(2)
         .waitUntilFinished(-1000)
-
-        .thenDo(function () {
-            Tagger.addTags(token, "DisguiseSelf")
-        })
 
         .animation()
         .on(token)

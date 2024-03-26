@@ -11,15 +11,12 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let targets = Array.from(workflow.targets);
     async function effectMacro() {
-        if (Tagger.hasTags(token, "Flying")) {
-            await Tagger.removeTags(token, "Flying");
-            await Sequencer.EffectManager.endEffects({ name: "Fly", object: token })
-            new Sequence()
-                .animation()
-                .on(token)
-                .opacity(1)
-                .play();
-        }
+        await Sequencer.EffectManager.endEffects({ name: "Fly", object: token })
+        new Sequence()
+            .animation()
+            .on(token)
+            .opacity(1)
+            .play();
     }
     let effectData = {
         'name': workflow.item.name,
@@ -55,7 +52,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     };
     for (let i = 0; i < targets.length; i++) {
         let target = fromUuidSync(targets[i].document.uuid).object;
-        await Tagger.addTags(target, "Flying")
         await new Sequence()
             .effect()
             .atLocation(workflow.token)

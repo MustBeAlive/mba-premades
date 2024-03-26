@@ -36,30 +36,27 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         await chrisPremades.helpers.removeEffect(effect);
     }
     async function effectMacroDel() {
-        if (Tagger.hasTags(token, "SpeakWithDead")) {
-            await token.document.update({ hidden: true });
-            Tagger.removeTags(token, "SpeakWithDead");
-            Sequencer.EffectManager.endEffects({ name: `Speak With Dead` });   
-            
-            new Sequence()
-                .animation()
-                .on(token)
-                .opacity(1)
-                
-                .effect()
-                .from(token)
-                .attachTo(token, { bindAlpha: false, followRotation: false })
-                .scaleToObject(1, { considerTokenScale: true })
-                .animateProperty("spriteContainer", "position.y", { from: -0.2, to: 0, duration: 2000, gridUnits: true, ease: "easeInSine" })
-                .zIndex(0.2)
-                .waitUntilFinished()
+        await token.document.update({ hidden: true });
+        Sequencer.EffectManager.endEffects({ name: `Speak With Dead` });
 
-            	.thenDo(function () {
-                    token.document.update({ hidden: false});
-                    chrisPremades.helpers.addCondition(actor, 'Dead', true)
-                })
-                .play();
-        }
+        new Sequence()
+            .animation()
+            .on(token)
+            .opacity(1)
+
+            .effect()
+            .from(token)
+            .attachTo(token, { bindAlpha: false, followRotation: false })
+            .scaleToObject(1, { considerTokenScale: true })
+            .animateProperty("spriteContainer", "position.y", { from: -0.2, to: 0, duration: 2000, gridUnits: true, ease: "easeInSine" })
+            .zIndex(0.2)
+            .waitUntilFinished()
+
+            .thenDo(function () {
+                token.document.update({ hidden: false });
+                chrisPremades.helpers.addCondition(actor, 'Dead', true)
+            })
+            .play();
     }
     let effectData = {
         'name': workflow.item.name,
@@ -86,7 +83,6 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
             }
         }
     };
-    await Tagger.addTags(target, "SpeakWithDead");
     //Magic Circle Effect
     new Sequence()
 
