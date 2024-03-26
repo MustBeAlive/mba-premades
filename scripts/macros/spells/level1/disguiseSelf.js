@@ -1,7 +1,7 @@
 //Animation by EskieMoh#2969 & Carnage Asada#3647;
 export async function disguiseSelf({ speaker, actor, token, character, item, args, scope, workflow }) {
     let tokenPath;
-    let choices  = [
+    let choices = [
         ['Choose Premade', 'premade'],
         ['Input URL', 'url']
     ];
@@ -97,9 +97,8 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
         case 'url': {
             const adress = await warpgate.menu({
                 inputs: [{
-                    label: `🎩 Input Image URL`,
                     type: 'text',
-                    value: '1'
+                    label: `🎩 Input Image URL`
                 }],
                 buttons: [{
                     label: 'Ok',
@@ -113,17 +112,17 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
             break;
         }
     }
-    
+
     async function effectMacroDel() {
         if (Tagger.hasTags(token, "DisguiseSelf")) {
             await Tagger.removeTags(token, "DisguiseSelf");
-    
+
             new Sequence()
                 .animation()
                 .on(token)
                 .opacity(1)
                 .play();
-    
+
             await Sequencer.EffectManager.endEffects({ name: "DisguiseSelf", object: token })
         }
     }
@@ -153,7 +152,7 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
         }
     };
     new Sequence()
-    
+
         .effect()
         .file("modules/jb2a_patreon/Library/Generic/Marker/MarkerCircleOfStars_Regular_OrangePurple_400x400.webm")
         .atLocation(token)
@@ -164,7 +163,7 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
         .attachTo(token, { bindAlpha: false })
         .loopProperty("sprite", "rotation", { from: 0, to: 360, duration: 60000 })
         .zIndex(1)
-    
+
         .effect()
         .file("modules/jb2a_patreon/Library/1st_Level/Sneak_Attack/Sneak_Attack_Dark_Purple_300x300.webm")
         .atLocation(token)
@@ -175,15 +174,15 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
         .playbackRate(1)
         .zIndex(2)
         .waitUntilFinished(-1000)
-    
+
         .thenDo(function () {
             Tagger.addTags(token, "DisguiseSelf")
         })
-    
+
         .animation()
         .on(token)
         .opacity(0)
-    
+
         .effect()
         .file(tokenPath)
         .name("DisguiseSelf")
@@ -193,7 +192,7 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
         .attachTo(token, { bindAlpha: false })
         .fadeOut(2000, { ease: "easeOutCubic" })
         .scaleOut(0.5, 3000, { ease: "easeOutCubic" })
-    
+
         .effect()
         .file("jb2a.sleep.cloud.01.dark_purple")
         .atLocation(token)
@@ -204,11 +203,11 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
         .belowTokens()
         .duration(1000)
         .fadeOut(1000)
-    
+
         .thenDo(function () {
             chrisPremades.helpers.createEffect(workflow.actor, effectData);
         })
-    
+
         .effect()
         .file("jb2a.particles.outward.purple.02.03")
         .name("DisguiseSelf")
@@ -221,6 +220,6 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
         .persist()
         .fadeIn(760)
         .fadeOut(2500)
-    
+
         .play();
 }
