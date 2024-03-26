@@ -67,7 +67,6 @@ import {infestation} from './macros/spells/cantrip/infestation.js';
 import {intellectFortress} from './macros/spells/level3/intellectFortress.js';
 import {lesserRestoration} from './macros/spells/level2/lesserRestoration.js';
 import {light} from './macros/spells/cantrip/light.js';
-import {lightningBolt} from './macros/spells/level3/lightningBolt.js';
 import {longstrider} from './macros/spells/level1/longstrider.js';
 import {mageHand} from './macros/spells/cantrip/mageHand.js';
 import {magicMissile} from './macros/spells/level1/magicMissile.js';
@@ -191,7 +190,6 @@ export let macros = {
     'intellectFortress': intellectFortress,
     'lesserRestoration': lesserRestoration,
     'light': light,
-    'lightningBolt': lightningBolt,
     'longstrider': longstrider,
     'mageHand': mageHand,
     'magicMissile': magicMissile,
