@@ -44,13 +44,17 @@ import {ensnaringStrike} from './macros/spells/level1/ensnaringStrike.js';
 import {eyebite} from './macros/spells/level6/eyebite.js';
 import {falseLife} from './macros/spells/level1/falseLife.js';
 import {fear} from './macros/spells/level3/fear.js';
+import {fingerOfDeath} from './macros/spells/level7/fingerOfDeath.js';
 import {fireball} from './macros/spells/level3/fireball.js';
 import {fizbanPlatinumShield} from './macros/spells/level6/fizbanPlatinumShield.js';
+import {flameStrike} from './macros/spells/level5/flameStrike.js';
 import {flamingSphere} from './macros/spells/level2/flamingSphere.js';
 import {fly} from './macros/spells/level3/fly.js';
 import {frostFingers} from './macros/spells/level1/frostFingers.js';
 import {goodberry} from './macros/spells/level1/goodberry.js';
+import {grease} from './macros/spells/level1/grease.js';
 import {greenFlameBlade} from './macros/spells/cantrip/greenFlameBlade.js';
+import {guidingBolt} from './macros/spells/level1/guidingBolt.js';
 import {gust} from './macros/spells/cantrip/gust.js';
 import {hailOfThorns} from './macros/spells/level1/hailOfThorns.js';
 import {harm} from './macros/spells/level6/harm.js';
@@ -59,8 +63,10 @@ import {heal} from './macros/spells/level6/heal.js';
 import {healingWord} from './macros/spells/level1/healingWord.js';
 import {heroesFeast} from './macros/spells/level6/heroesFeast.js';
 import {heroism} from './macros/spells/level1/heroism.js';
+import {hex} from './macros/spells/level1/hex.js';
 import {holdPerson} from './macros/spells/level2/holdPerson.js';
 import {holyWater} from './macros/items/holyWater.js';
+import {huntersMark} from './macros/spells/level1/huntersMark.js';
 import {iceKnife} from './macros/spells/level1/iceKnife.js';
 import {identify} from './macros/spells/level1/identify.js';
 import {infestation} from './macros/spells/cantrip/infestation.js';
@@ -114,6 +120,7 @@ import {thunderousSmite} from './macros/spells/level1/thunderousSmite.js';
 import {thunderwave} from './macros/spells/level1/thunderwave.js';
 import {unseenServant} from './macros/spells/level1/unseenServant.js';
 import {viciousMockery} from './macros/spells/cantrip/viciousMockery.js';
+import {web} from './macros/spells/level2/web.js';
 import {witchBolt} from './macros/spells/level1/witchBolt.js';
 import {wordOfRadiance} from './macros/spells/cantrip/wordOfRadiance.js';
 import {wrathfulSmite} from './macros/spells/level1/wrathfulSmite.js';
@@ -167,13 +174,17 @@ export let macros = {
     'eyebite': eyebite,
     'falseLife': falseLife,
     'fear': fear,
+    'fingerOfDeath': fingerOfDeath,
     'fireball': fireball,
     'fizbanPlatinumShield': fizbanPlatinumShield,
+    'flameStrike': flameStrike,
     'flamingSphere': flamingSphere,
     'fly': fly,
     'frostFingers': frostFingers,
     'goodberry': goodberry,
+    'grease': grease,
     'greenFlameBlade': greenFlameBlade,
+    'guidingBolt': guidingBolt,
     'gust': gust,
     'hailOfThorns': hailOfThorns,
     'harm': harm,
@@ -182,8 +193,10 @@ export let macros = {
     'healingWord': healingWord,
     'heroesFeast': heroesFeast,
     'heroism': heroism,
+    'hex': hex,
     'holdPerson': holdPerson,
     'holyWater': holyWater,
+    'huntersMark': huntersMark,
     'iceKnife': iceKnife,
     'identify': identify,
     'infestation': infestation,
@@ -237,6 +250,7 @@ export let macros = {
     'thunderwave': thunderwave,
     'unseenServant': unseenServant,
     'viciousMockery': viciousMockery,
+    'web': web,
     'witchBolt': witchBolt,
     'wordOfRadiance': wordOfRadiance,
     'wrathfulSmite': wrathfulSmite,

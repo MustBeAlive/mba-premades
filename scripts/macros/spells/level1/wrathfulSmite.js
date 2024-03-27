@@ -97,7 +97,7 @@ async function damage({speaker, actor, token, character, item, args, scope, work
                 {
                     'key': 'flags.midi-qol.OverTime',
                     'mode': 0,
-                    'value': 'actionSave=true, rollType=check, saveAbility=wis, saveDC=' + effect.flags['mba-premades'].spell.wrathfulSmite.dc + ' , saveMagic=true, name=Wrathful Smite',
+                    'value': 'actionSave=true, rollType=check, saveAbility=wis, saveDC=' + effect.flags['mba-premades'].spell.wrathfulSmite.dc + ', saveMagic=true, name=Wrathful Smite',
                     'priority': 20
                 },
                 {

@@ -99,7 +99,7 @@ async function damage({speaker, actor, token, character, item, args, scope, work
                 {
                     'key': 'flags.midi-qol.OverTime',
                     'mode': 0,
-                    'value': 'turn=end, saveAbility=con, saveDC=' + effect.flags['mba-premades'].spell.blindingSmite.dc + ' , saveMagic=true, name=Blinding Smite',
+                    'value': 'turn=end, saveAbility=con, saveDC=' + effect.flags['mba-premades'].spell.blindingSmite.dc + ', saveMagic=true, name=Blinding Smite',
                     'priority': 20
                 },
                 {

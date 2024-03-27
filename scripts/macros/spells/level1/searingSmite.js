@@ -85,7 +85,7 @@ async function damage({speaker, actor, token, character, item, args, scope, work
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': 'turn=start, saveAbility=con, saveDC=' + effect.flags['mba-premades'].spell.searingSmite.dc + ' , saveMagic=true, damageRoll=1d6[fire], damageType=fire, name=Searing Smite Burn',
+                'value': 'turn=start, saveAbility=con, saveDC=' + effect.flags['mba-premades'].spell.searingSmite.dc + ', saveMagic=true, damageRoll=1d6[fire], damageType=fire, name=Searing Smite Burn',
                 'priority': 20
             }
         ],

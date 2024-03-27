@@ -98,7 +98,8 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
             const adress = await warpgate.menu({
                 inputs: [{
                     type: 'text',
-                    label: `🎩 Input Image URL`
+                    label: `🎩 Input Image URL`,
+                    options: ``
                 }],
                 buttons: [{
                     label: 'Ok',

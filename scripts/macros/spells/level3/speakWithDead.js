@@ -36,7 +36,6 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         await chrisPremades.helpers.removeEffect(effect);
     }
     async function effectMacroDel() {
-        await token.document.update({ hidden: true });
         Sequencer.EffectManager.endEffects({ name: `Speak With Dead` });
 
         new Sequence()
@@ -53,7 +52,6 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
             .waitUntilFinished()
 
             .thenDo(function () {
-                token.document.update({ hidden: false });
                 chrisPremades.helpers.addCondition(actor, 'Dead', true)
             })
             .play();
