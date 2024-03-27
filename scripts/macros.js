@@ -26,6 +26,7 @@ import {chillTouch} from './macros/spells/cantrip/chillTouch.js';
 import {chromaticOrb} from './macros/spells/level1/chromaticOrb.js';
 import {colorSpray} from './macros/spells/level1/colorSpray.js';
 import {command} from './macros/spells/level1/command.js';
+import {cordonOfArrows} from './macros/spells/level2/cordonOfArrows.js';
 import {crownOfMadness} from './macros/spells/level2/crownOfMadness.js';
 import {cureWounds} from './macros/spells/level1/cureWounds.js';
 import {dancingLights} from './macros/spells/cantrip/dancingLights.js';
@@ -41,11 +42,13 @@ import {elementalWeapon} from './macros/spells/level3/elementalWeapon.js';
 import {enhanceAbility} from './macros/spells/level2/enhanceAbility.js';
 import {enlargeReduce} from './macros/spells/level2/enlargeReduce.js';
 import {ensnaringStrike} from './macros/spells/level1/ensnaringStrike.js';
+import {entangle} from './macros/spells/level1/entangle.js';
 import {eyebite} from './macros/spells/level6/eyebite.js';
 import {falseLife} from './macros/spells/level1/falseLife.js';
 import {fear} from './macros/spells/level3/fear.js';
 import {fingerOfDeath} from './macros/spells/level7/fingerOfDeath.js';
 import {fireball} from './macros/spells/level3/fireball.js';
+import {fireBolt} from './macros/spells/cantrip/firebolt.js';
 import {fizbanPlatinumShield} from './macros/spells/level6/fizbanPlatinumShield.js';
 import {flameStrike} from './macros/spells/level5/flameStrike.js';
 import {flamingSphere} from './macros/spells/level2/flamingSphere.js';
@@ -74,6 +77,7 @@ import {intellectFortress} from './macros/spells/level3/intellectFortress.js';
 import {lesserRestoration} from './macros/spells/level2/lesserRestoration.js';
 import {light} from './macros/spells/cantrip/light.js';
 import {longstrider} from './macros/spells/level1/longstrider.js';
+import {maelstrom} from './macros/spells/level5/maelstrom.js';
 import {mageHand} from './macros/spells/cantrip/mageHand.js';
 import {magicMissile} from './macros/spells/level1/magicMissile.js';
 import {magicStone} from './macros/spells/cantrip/magicStone.js';
@@ -156,6 +160,7 @@ export let macros = {
     'chromaticOrb': chromaticOrb,
     'colorSpray': colorSpray,
     'command': command,
+    'cordonOfArrows': cordonOfArrows,
     'crownOfMadness': crownOfMadness,
     'cureWounds': cureWounds,
     'dancingLights': dancingLights,
@@ -171,11 +176,13 @@ export let macros = {
     'enhanceAbility': enhanceAbility,
     'enlargeReduce': enlargeReduce,
     'ensnaringStrike': ensnaringStrike,
+    'entangle': entangle,
     'eyebite': eyebite,
     'falseLife': falseLife,
     'fear': fear,
     'fingerOfDeath': fingerOfDeath,
     'fireball': fireball,
+    'fireBolt': fireBolt,
     'fizbanPlatinumShield': fizbanPlatinumShield,
     'flameStrike': flameStrike,
     'flamingSphere': flamingSphere,
@@ -204,6 +211,7 @@ export let macros = {
     'lesserRestoration': lesserRestoration,
     'light': light,
     'longstrider': longstrider,
+    'maelstrom': maelstrom,
     'mageHand': mageHand,
     'magicMissile': magicMissile,
     'magicStone': magicStone,

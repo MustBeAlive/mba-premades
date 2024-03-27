@@ -1,5 +1,4 @@
 //Animation by EskieMoh#2969
-//Make alternate if misses?
 export async function guidingBolt({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDel() {

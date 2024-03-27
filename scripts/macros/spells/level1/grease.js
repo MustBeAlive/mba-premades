@@ -128,9 +128,21 @@ async function trigger(token, trigger) {
     let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([token.uuid]);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow.failedSaves.size) return;
-    for (let i of Array.from(featureWorkflow.failedSaves)) {
-        await chrisPremades.helpers.addCondition(i.actor, "Prone")
+    await chrisPremades.helpers.addCondition(token.actor, "Prone");
+}
+
+async function end(template, token) {
+    if (chrisPremades.helpers.inCombat()) {
+        let prev = game.combat.turn;
+        if (prev != 0 ) prev = game.combat.turn - 1;
+        else if (prev === 0) prev = game.combat.turns.length - 1;
+        let turn = game.combat.round + '-' + prev;
+        let lastTurn = template.flags['mba-premades']?.spell?.grease?.[token.id]?.turn;
+        if (turn === lastTurn) return;
     }
+    let trigger = template.flags['mba-premades']?.template;
+    if (!trigger) return;
+    await grease.trigger(token.document, trigger);
 }
 
 async function enter(template, token) {
@@ -146,6 +158,7 @@ async function del() {
 export let grease = {
     'cast': cast,
     'item': item,
+    'end': end,
     'trigger': trigger,
     'enter': enter,
     'del': del
