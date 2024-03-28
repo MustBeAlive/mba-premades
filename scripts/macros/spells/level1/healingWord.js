@@ -30,10 +30,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     const style = {
         "fill": "#ffffff",
         "fontFamily": "Helvetica",
-        "fontSize": 48 * target.data.width,
+        "fontSize": 48,
         "strokeThickness": 0,
         fontWeight: "bold",
-
     }
 
     new Sequence()
@@ -79,7 +78,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .animateProperty("sprite", "scale.y", { from: 0, to: -0.5, duration: 1000, delay: 500 })
         .rotateIn(-10, 1000, { ease: "easeOutElastic" })
         .scaleIn(0, 500, { ease: "easeOutElastic" })
-        .filter("Glow", { color: 0xd3eb6a })
+        .filter("Glow", { color: 0x006102 })
         .zIndex(1)
         .waitUntilFinished(-1000)
 
@@ -95,12 +94,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .opacity(0.5)
         .attachTo(target)
         .scaleToObject(target.document.texture.scaleX)
-        .filter("Glow", { color: 0xd3eb6a, distance: 20 })
+        .filter("Glow", { color: 0x006102, distance: 20 })
         .duration(1000)
         .fadeIn(500)
         .fadeOut(500, { ease: "easeInSine" })
         .filter("ColorMatrix", { brightness: 1.5 })
-        .tint(0xd3eb6a)
+        .tint(0x006102)
 
         .play()
 }

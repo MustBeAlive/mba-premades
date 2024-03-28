@@ -1,4 +1,4 @@
-async function item({speaker, actor, token, character, item, args, scope, workflow}) {
+async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacro() {
         await (warpgate.wait(200));
         let targetEffectUuid = effect.flags['mba-premades']?.spell?.blindingSmite?.targetEffectUuid;
@@ -37,13 +37,11 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                     'script': chrisPremades.helpers.functionToString(effectMacro)
                 }
             },
-            'flags': {
-                'midi-qol': {
-                    'castData': {
-                        baseLevel: 3,
-                        castLevel: workflow.castData.castLevel,
-                        itemUuid: workflow.item.uuid
-                    }
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 3,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
                 }
             }
         }
@@ -55,7 +53,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
     await chrisPremades.helpers.updateEffect(effect, updates);
 }
 
-async function damage({speaker, actor, token, character, item, args, scope, workflow}) {
+async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.hitTargets.size != 1 || !workflow.item) return;
     if (workflow.item.system.actionType != 'mwak') return;
     let effect = workflow.actor.effects.find(i => i.flags['mba-premades']?.spell?.blindingSmite);
@@ -67,7 +65,7 @@ async function damage({speaker, actor, token, character, item, args, scope, work
     let bonusDamageFormula = '3d8[radiant]';
     if (workflow.isCritical) bonusDamageFormula = chrisPremades.helpers.getCriticalFormula(bonusDamageFormula);
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
-    let damageRoll = await new Roll(damageFormula).roll({async: true});
+    let damageRoll = await new Roll(damageFormula).roll({ async: true });
     await workflow.setDamageRoll(damageRoll);
     let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Blinding Smite: Blind');
     if (!featureData) {
@@ -76,7 +74,7 @@ async function damage({speaker, actor, token, character, item, args, scope, work
     }
     delete featureData._id;
     featureData.system.save.dc = effect.flags['mba-premades'].spell.blindingSmite.dc;
-    let feature = new CONFIG.Item.documentClass(featureData, {'parent': workflow.actor});
+    let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
     let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([targetToken.document.uuid]);
     await warpgate.wait(100);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);

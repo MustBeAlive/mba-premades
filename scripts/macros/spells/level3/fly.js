@@ -48,7 +48,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 }
             }
         }
-
     };
     for (let i = 0; i < targets.length; i++) {
         let target = fromUuidSync(targets[i].document.uuid).object;

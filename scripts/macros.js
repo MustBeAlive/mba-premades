@@ -10,6 +10,7 @@ import {bane} from './macros/spells/level1/bane.js';
 import {banishingSmite} from './macros/spells/level5/banishingSmite.js';
 import {banishment} from './macros/spells/level4/banishment.js';
 import {beastBond} from './macros/spells/level1/beastBond.js';
+import {bestowCurse} from './macros/spells/level3/bestowCurse.js';
 import {bladeWard} from './macros/spells/cantrip/bladeWard.js';
 import {bless} from './macros/spells/level1/bless.js';
 import {blindingSmite} from './macros/spells/level3/blindingSmite.js';
@@ -27,6 +28,7 @@ import {chromaticOrb} from './macros/spells/level1/chromaticOrb.js';
 import {colorSpray} from './macros/spells/level1/colorSpray.js';
 import {command} from './macros/spells/level1/command.js';
 import {cordonOfArrows} from './macros/spells/level2/cordonOfArrows.js';
+import {createBonfire} from './macros/spells/cantrip/createBonfire.js';
 import {crownOfMadness} from './macros/spells/level2/crownOfMadness.js';
 import {cureWounds} from './macros/spells/level1/cureWounds.js';
 import {dancingLights} from './macros/spells/cantrip/dancingLights.js';
@@ -52,6 +54,7 @@ import {fireBolt} from './macros/spells/cantrip/firebolt.js';
 import {fizbanPlatinumShield} from './macros/spells/level6/fizbanPlatinumShield.js';
 import {flameStrike} from './macros/spells/level5/flameStrike.js';
 import {flamingSphere} from './macros/spells/level2/flamingSphere.js';
+import {fleshToStone} from './macros/spells/level6/fleshToStone.js';
 import {fly} from './macros/spells/level3/fly.js';
 import {frostFingers} from './macros/spells/level1/frostFingers.js';
 import {goodberry} from './macros/spells/level1/goodberry.js';
@@ -82,6 +85,7 @@ import {mageHand} from './macros/spells/cantrip/mageHand.js';
 import {magicMissile} from './macros/spells/level1/magicMissile.js';
 import {magicStone} from './macros/spells/cantrip/magicStone.js';
 import {magicWeapon} from './macros/spells/level2/magicWeapon.js';
+import {massHealingWord} from './macros/spells/level3/massHealingWord.js';
 import {maximilianEarthenGrasp} from './macros/spells/level2/maximilianEarthenGrasp.js';
 import {melfMinuteMeteors} from './macros/spells/level3/melfMinuteMeteors.js';
 import {ottoIrresistibleDance} from './macros/spells/level6/ottoIrresistibleDance.js';
@@ -96,6 +100,7 @@ import {prismaticSpray} from './macros/spells/level7/prismaticSpray.js';
 import {produceFlame} from './macros/spells/cantrip/produceFlame.js';
 import {protectionFromEnergy} from './macros/spells/level3/protectionFromEnergy.js';
 import {protectionFromPoison} from './macros/spells/level2/protectionFromPoison.js';
+import {pyrotechnics} from './macros/spells/level2/pyrotechnics.js';
 import {regenerate} from './macros/spells/level7/regenerate.js';
 import {removeTemplate} from './macros/generic/removeTemplate.js';
 import {revivify} from './macros/spells/level3/revivify.js';
@@ -113,6 +118,7 @@ import {speakWithDead} from './macros/spells/level3/speakWithDead.js';
 import {spiderClimb} from './macros/spells/level2/spiderClimb.js';
 import {spiritualWeapon} from './macros/spells/level2/spiritualWeapon.js';
 import {staggeringSmite} from './macros/spells/level4/staggeringSmite.js';
+import {stinkingCloud} from './macros/spells/level3/stinkingCloud.js';
 import {suggestion} from './macros/spells/level2/suggestion.js';
 import {sunbeam} from './macros/spells/level6/sunBeam.js';
 import {swordBurst} from './macros/spells/cantrip/swordBurst.js';
@@ -144,6 +150,7 @@ export let macros = {
     'banishingSmite': banishingSmite,
     'banishment': banishment,
     'beastBond': beastBond,
+    'bestowCurse': bestowCurse,
     'bladeWard': bladeWard,
     'bless': bless,
     'blindingSmite': blindingSmite,
@@ -161,6 +168,7 @@ export let macros = {
     'colorSpray': colorSpray,
     'command': command,
     'cordonOfArrows': cordonOfArrows,
+    'createBonfire': createBonfire,
     'crownOfMadness': crownOfMadness,
     'cureWounds': cureWounds,
     'dancingLights': dancingLights,
@@ -186,6 +194,7 @@ export let macros = {
     'fizbanPlatinumShield': fizbanPlatinumShield,
     'flameStrike': flameStrike,
     'flamingSphere': flamingSphere,
+    'fleshToStone': fleshToStone,
     'fly': fly,
     'frostFingers': frostFingers,
     'goodberry': goodberry,
@@ -216,6 +225,7 @@ export let macros = {
     'magicMissile': magicMissile,
     'magicStone': magicStone,
     'magicWeapon': magicWeapon,
+    'massHealingWord': massHealingWord,
     'maximilianEarthenGrasp': maximilianEarthenGrasp,
     'melfMinuteMeteors': melfMinuteMeteors,
     'ottoIrresistibleDance': ottoIrresistibleDance,
@@ -230,6 +240,7 @@ export let macros = {
     'produceFlame': produceFlame,
     'protectionFromEnergy': protectionFromEnergy,
     'protectionFromPoison': protectionFromPoison,
+    'pyrotechnics': pyrotechnics,
     'regenerate': regenerate,
     'removeTemplate': removeTemplate,
     'revivify': revivify,
@@ -247,6 +258,7 @@ export let macros = {
     'spiderClimb': spiderClimb,
     'spiritualWeapon': spiritualWeapon,
     'staggeringSmite': staggeringSmite,
+    'stinkingCloud': stinkingCloud,
     'suggestion': suggestion,
     'sunbeam': sunbeam,
     'swordBurst': swordBurst,
