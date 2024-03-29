@@ -2,7 +2,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Detect Poison and Disease: Target Creature', false);
     if (!featureData) return;
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Detect Poison` })
+        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Detect Poison and Disease` })
         await warpgate.revert(token.document, 'Detect Poison and Disease: Target Creature');
     }
     let effectData = {
@@ -73,12 +73,11 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .scaleToObject(2)
         .filter("ColorMatrix", { hue: 285 })
         .persist()
-        .name(`${token.document.name} Detect Poison`)
+        .name(`${token.document.name} Detect Poison and Disease`)
 
         .play()
 
     targets.forEach(target => {
-        if (target.name !== token.name) {
             const distance = Math.sqrt(
                 Math.pow(target.x - token.x, 2) + Math.pow(target.y - token.y, 2)
             );
@@ -112,7 +111,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
                 .playIf(() => {
                     if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
-                    let effects = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true || e.name.includes("Poison") && e.name != "Poisoned");
+                    let effects = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true || e.name.includes("Poison") && e.name != "Poisoned" && e.name != "Detect Poison and Disease");
                     return (effects.length)
                 })
 
@@ -131,18 +130,17 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 .belowTokens()
                 .playIf(() => {
                     if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
-                    let effects = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true || e.name.includes("Poison") && e.name != "Poisoned");
+                    let effects = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true || e.name.includes("Poison") && e.name != "Poisoned" && e.name != "Detect Poison and Disease");
                     return (effects.length)
                 })
 
-                .play()
-        }
+                .play();
     })
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    let effects = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true || e.name.includes("Poison") && e.name != "Poisoned");
+    let effects = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true || e.name.includes("Poison") && e.name != "Poisoned" && e.name != "Detect Poison and Disease");
     if (!effects.length) {
         new Sequence()
 
