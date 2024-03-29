@@ -1,4 +1,4 @@
-async function cast({speaker, actor, token, character, item, args, scope, workflow}) {
+async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel - 3;
     let concEffect = await chrisPremades.helpers.findEffect(workflow.actor, 'Concentrating');
     if (workflow.targets.size > ammount) {
@@ -8,7 +8,7 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
             await chrisPremades.helpers.removeEffect(concEffect);
             return;
         }
-        let newTargets = selection.inputs.filter(i=>i).slice(0, ammount);
+        let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
         await chrisPremades.helpers.updateTargets(newTargets);
     }
     let targets = Array.from(game.user.targets);
@@ -20,7 +20,7 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
             distanceArray.push(chrisPremades.helpers.getDistance(target1, target2));
         }
     }
-    const found = distanceArray.some((distance)=>distance > 30);
+    const found = distanceArray.some((distance) => distance > 30);
     if (found === true) {
         ui.notifications.warn('Targets cannot be further than 30 ft. of each other!')
         await chrisPremades.helpers.removeEffect(concEffect);
@@ -46,24 +46,23 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
         return
     }
     let originItem = workflow.item;
-    if (!originItem)
-        return;
+    if (!originItem) return;
     featureData.system.save.dc = chrisPremades.helpers.getSpellDC(originItem);
     setProperty(featureData, 'chris-premades.spell.castData.school', originItem.system.school);
-    let feature = new CONFIG.Item.documentClass(featureData,{
+    let feature = new CONFIG.Item.documentClass(featureData, {
         'parent': workflow.actor
     });
     let targetUuids = [];
     for (let i of targets) {
         targetUuids.push(i.document.uuid);
     }
-    let[config,options] = chrisPremades.constants.syntheticItemWorkflowOptions(targetUuids);
+    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions(targetUuids);
     await warpgate.wait(100);
     await game.messages.get(workflow.itemCardId).delete();
     await MidiQOL.completeItemUse(feature, config, options);
 }
 
-async function item({speaker, actor, token, character, item, args, scope, workflow}) {
+async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     let concEffect = chrisPremades.helpers.findEffect(workflow.actor, 'Concentrating');
     let targets = Array.from(workflow.failedSaves);
@@ -100,7 +99,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                     'mode': 0,
                     'value': 'function.mbaPremades.macros.elementalBane.damage,preTargetDamageApplication',
                     'priority': 20
-                }, 
+                },
                 {
                     'key': 'system.traits.dr.value',
                     'mode': 0,
@@ -135,28 +134,23 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
     }
 }
 
-async function damage({speaker, actor, token, character, item, args, scope, workflow}) {
+async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
     let effect = await chrisPremades.helpers.findEffect(actor, 'Elemental Bane');
     if (effect.flags['mba-premades']?.spell?.elementalBane?.used === true)
         return;
     let type = effect.flags['mba-premades']?.spell?.elementalBane?.type;
-    let typeCheck = workflow.damageDetail?.some(d=>d.type === type);
-    if (!typeCheck)
-        return;
+    let typeCheck = workflow.damageDetail?.some(d => d.type === type);
+    if (!typeCheck) return;
     let damageFormula;
     if (workflow.damageItem.critical === true) {
         damageFormula = '4d6[' + type + ']';
     } else {
         damageFormula = '2d6[' + type + ']';
     }
-    let damageRoll = await new Roll(damageFormula).roll({
-        'async': true
-    });
+    let damageRoll = await new Roll(damageFormula).roll({ 'async': true });
     damageRoll.toMessage({
         rollMode: 'roll',
-        speaker: {
-            'alias': name
-        },
+        speaker: { 'alias': name },
         flavor: 'Elemental Bane: Bonus Damage'
     });
     let damageTotal = damageRoll.total;
