@@ -101,7 +101,7 @@ export async function dispelMagic({ speaker, actor, token, character, item, args
             .sound("modules/dnd5e-animations/assets/sounds/Spells/Buff/spell-buff-short-8.mp3")
 
             .play();
-        await warpgate.wait(200);
+        await warpgate.wait(150);
         await chrisPremades.helpers.removeEffect(dispelEffect);
     }
     else {
@@ -118,7 +118,7 @@ export async function dispelMagic({ speaker, actor, token, character, item, args
                 .sound("modules/dnd5e-animations/assets/sounds/Spells/Buff/spell-buff-short-8.mp3")
 
                 .play();
-            await warpgate.wait(200);
+            await warpgate.wait(150);
             await chrisPremades.helpers.removeEffect(dispelEffect);
         }
     }

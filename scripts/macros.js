@@ -32,6 +32,9 @@ import {createBonfire} from './macros/spells/cantrip/createBonfire.js';
 import {crownOfMadness} from './macros/spells/level2/crownOfMadness.js';
 import {cureWounds} from './macros/spells/level1/cureWounds.js';
 import {dancingLights} from './macros/spells/cantrip/dancingLights.js';
+import {detectEvilAndGood} from './macros/spells/level1/detectEvilAndGood.js';
+import {detectMagic} from './macros/spells/level1/detectMagic.js';
+import {detectPoisonAndDisease} from './macros/spells/level1/detectPoisonAndDisease.js';
 import {detectThoughts} from './macros/spells/level2/detectThoughts.js';
 import {disguiseSelf} from './macros/spells/level1/disguiseSelf.js';
 import {dispelMagic} from './macros/spells/level3/dispelMagic.js';
@@ -172,9 +175,12 @@ export let macros = {
     'crownOfMadness': crownOfMadness,
     'cureWounds': cureWounds,
     'dancingLights': dancingLights,
-    'dispelMagic': dispelMagic,
+    'detectEvilAndGood': detectEvilAndGood,
+    'detectMagic': detectMagic,
+    'detectPoisonAndDisease': detectPoisonAndDisease,
     'detectThoughts': detectThoughts,
     'disguiseSelf': disguiseSelf,
+    'dispelMagic': dispelMagic,
     'dissonantWhispers': dissonantWhispers,
     'divineWord': divineWord,
     'dragonsBreath': dragonsBreath,
