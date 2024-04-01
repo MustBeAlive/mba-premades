@@ -26,6 +26,7 @@ import {charmPerson} from './macros/spells/level1/charmPerson.js';
 import {chillTouch} from './macros/spells/cantrip/chillTouch.js';
 import {chromaticOrb} from './macros/spells/level1/chromaticOrb.js';
 import {colorSpray} from './macros/spells/level1/colorSpray.js';
+import {confusion} from './macros/spells/level4/confusion.js';
 import {command} from './macros/spells/level1/command.js';
 import {cordonOfArrows} from './macros/spells/level2/cordonOfArrows.js';
 import {createBonfire} from './macros/spells/cantrip/createBonfire.js';
@@ -36,6 +37,7 @@ import {detectEvilAndGood} from './macros/spells/level1/detectEvilAndGood.js';
 import {detectMagic} from './macros/spells/level1/detectMagic.js';
 import {detectPoisonAndDisease} from './macros/spells/level1/detectPoisonAndDisease.js';
 import {detectThoughts} from './macros/spells/level2/detectThoughts.js';
+import {disease} from './macros/generic/disease.js';
 import {disguiseSelf} from './macros/spells/level1/disguiseSelf.js';
 import {dispelMagic} from './macros/spells/level3/dispelMagic.js';
 import {dissonantWhispers} from './macros/spells/level1/dissonantWhispers.js';
@@ -169,6 +171,7 @@ export let macros = {
     'chillTouch': chillTouch,
     'chromaticOrb': chromaticOrb,
     'colorSpray': colorSpray,
+    'confusion': confusion,
     'command': command,
     'cordonOfArrows': cordonOfArrows,
     'createBonfire': createBonfire,
@@ -179,6 +182,7 @@ export let macros = {
     'detectMagic': detectMagic,
     'detectPoisonAndDisease': detectPoisonAndDisease,
     'detectThoughts': detectThoughts,
+    'disease': disease,
     'disguiseSelf': disguiseSelf,
     'dispelMagic': dispelMagic,
     'dissonantWhispers': dissonantWhispers,

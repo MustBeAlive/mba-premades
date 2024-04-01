@@ -1,11 +1,5 @@
-export async function potionOfHealing({speaker, actor, token, character, item, args, scope, workflow}) {
-    if (!item || !actor) {
-        ui.notifications.warn("This macro only works from an item.");
-        return;
-    }
-
-    let targets = Array.from(game.user.targets);
-    let targetActor = targets.length === 1 ? targets[0].actor : actor;
+export async function potionOfHealing({ speaker, actor, token, character, item, args, scope, workflow }) {
+    let target = workflow.targets.first();
     let healingFormula = getHealingFormula(item.name);
 
     function getHealingFormula(potionName) {
@@ -33,7 +27,7 @@ export async function potionOfHealing({speaker, actor, token, character, item, a
         return;
     }
 
-    let useMaxHealing = await askActionOrBonus(); 
+    let useMaxHealing = await askActionOrBonus();
 
     function askActionOrBonus() {
         return new Promise(resolve => {
@@ -56,18 +50,66 @@ export async function potionOfHealing({speaker, actor, token, character, item, a
         });
     }
 
+    let potioncolor = scope.color ? scope.color : "red";
+    defaults = {
+        "blue": {
+            "color": "blue",
+            "tintColor": "0x2cf2ee",
+            "hue1": 10,
+            "hue2": -200,
+            "hue3": 0,
+            "saturate": 1
+        },
+        "green": {
+            "color": "green",
+            "tintColor": "0xbbf00",
+            "hue1": -105,
+            "hue2": 35,
+            "hue3": 0,
+            "saturate": 1
+        },
+        "puprle": {
+            "color": "purple",
+            "tintColor": "f50f95",
+            "hue1": 135,
+            "hue2": -95,
+            "hue3": 0,
+            "saturate": 1
+        },
+        "yellow": {
+            "color": "yellow",
+            "tintColor": "0xffbb00",
+            "hue1": 230,
+            "hue2": 10,
+            "hue3": 0,
+            "saturate": 1
+        },
+        "red": {
+            "color": "green",
+            "tintColor": "0xec0927",
+            "hue1": 180,
+            "hue2": -30,
+            "hue3": 275,
+            "saturate": 1
+        },
+    }
+    config = defaults[potioncolor]
+    config ??= defaults.red
+
     if (useMaxHealing) {
         let maxHealing = calculateMaxHealing(healingFormula);
-        await chrisPremades.helpers.applyDamage(targets, maxHealing, 'healing');
+        potionAnimation(target, config);
+        await chrisPremades.helpers.applyDamage(target, maxHealing, 'healing');
         ui.notifications.info(`Healed ${maxHealing} hit points.`);
     } else {
         let roll = new Roll(healingFormula);
-        roll.evaluate({async: false});
+        roll.evaluate({ async: false });
         roll.toMessage({
-            speaker: ChatMessage.getSpeaker({ actor: targetActor }),
+            speaker: ChatMessage.getSpeaker({ actor: target.actor }),
             flavor: "Healing Potion"
         });
-        await chrisPremades.helpers.applyDamage(targets, roll.total, 'healing');
+        potionAnimation(target, config);
+        await chrisPremades.helpers.applyDamage(target, roll.total, 'healing');
         ui.notifications.info(`Healed ${roll.total} hit points.`);
     }
 
@@ -83,5 +125,57 @@ export async function potionOfHealing({speaker, actor, token, character, item, a
         let maxDiceRoll = numDice * diceType;
 
         return maxDiceRoll + modifier;
+    }
+
+    function potionAnimation() {
+        new Sequence()
+
+            .effect()
+            .file("animated-spell-effects-cartoon.water.05")
+            .atLocation(target, { offset: { x: 0.2, y: -0.5 }, gridUnits: true })
+            .scaleToObject(1.25)
+            .opacity(0.9)
+            .rotate(90)
+            .filter("ColorMatrix", { saturate: config.saturate, hue: config.hue1 })
+            .zIndex(1)
+
+            .wait(200)
+
+            .effect()
+            .file(`jb2a.sacred_flame.source.${config.color}`)
+            .attachTo(target, { offset: { y: 0.15 }, gridUnits: true, followRotation: false })
+            .startTime(3400)
+            .scaleToObject(2.2)
+            .fadeOut(500)
+            .animateProperty("sprite", "position.y", { from: 0, to: -0.4, duration: 1000, gridUnits: true })
+            .filter("ColorMatrix", { hue: config.hue3 })
+            .zIndex(1)
+
+            .effect()
+            .from(target)
+            .scaleToObject(target.document.texture.scaleX)
+            .opacity(0.3)
+            .duration(1250)
+            .fadeIn(100)
+            .fadeOut(600)
+            .filter("Glow", { color: config.tintColor })
+            .tint(config.tintColor)
+
+            .effect()
+            .file(`jb2a.particles.outward.orange.01.03`)
+            .attachTo(target, { offset: { y: 0.1 }, gridUnits: true, followRotation: false })
+            .scale(0.2)
+            .duration(1000)
+            .fadeOut(800)
+            .scaleIn(0, 1000, { ease: "easeOutCubic" })
+            .animateProperty("sprite", "width", { from: 0, to: 0.25, duration: 500, gridUnits: true, ease: "easeOutBack" })
+            .animateProperty("sprite", "height", { from: 0, to: 1.0, duration: 1000, gridUnits: true, ease: "easeOutBack" })
+            .animateProperty("sprite", "position.y", { from: 0, to: -0.6, duration: 1000, gridUnits: true })
+            .filter("ColorMatrix", { saturate: 1, hue: config.hue2 })
+            .zIndex(0.3)
+
+            .wait(1000)
+
+            .play();
     }
 }

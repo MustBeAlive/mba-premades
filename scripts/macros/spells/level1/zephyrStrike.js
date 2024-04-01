@@ -1,11 +1,8 @@
-async function attack({speaker, actor, token, character, item, args, scope, workflow}) {
+async function attack({ speaker, actor, token, character, item, args, scope, workflow }) {
     let effect = chrisPremades.helpers.findEffect(workflow.actor, 'Zephyr Strike');
     if (!effect) return;
     if (workflow.item.system.actionType != 'mwak' && workflow.item.system.actionType != 'rwak') return;
-    let choices  = [
-        ['Yes!', 'true'],
-        ['No!', 'false']
-    ];
+    let choices = [['Yes!', 'true'], ['No!', 'false']];
     let selection = await chrisPremades.helpers.dialog('Use Zephyr Strike to gain advantage?', choices);
     if (selection === 'false') return;
     let damageBonus = '1d8[force]';
@@ -18,7 +15,7 @@ async function attack({speaker, actor, token, character, item, args, scope, work
         'flags': {
             'dae': {
                 'specialDuration': ['1Attack'],
-            },
+            }
         },
         'changes': [
             {
@@ -46,7 +43,7 @@ async function attack({speaker, actor, token, character, item, args, scope, work
                 'priority': 20
             }
         ]
-    }
+    };
     await chrisPremades.helpers.createEffect(workflow.actor, effectData);
     await chrisPremades.helpers.removeCondition(workflow.actor, 'Concentrating');
 }
@@ -60,10 +57,10 @@ async function del(actor) {
         },
         'icon': "assets/library/icons/sorted/spells/level1/zephyr_strike_move.webp",
         'changes': [
-            {   
-                'key': "system.attributes.movement.walk", 
-                'mode': 2, 
-                'value': "+30", 
+            {
+                'key': "system.attributes.movement.walk",
+                'mode': 2,
+                'value': "+30",
                 'priority': 20
             }
         ],

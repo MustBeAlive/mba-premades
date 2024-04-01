@@ -5,78 +5,63 @@ export async function lesserRestoration({ speaker, actor, token, character, item
     if (!selection1) return;
     if (selection1 === 'condition') {
         let choices2 = [
-            ['Blindned', 'Blind'],
-            ['Deafened', 'Deaf'],
-            ['Paralyzed', 'Paralyzed'],
-            ['Poisoned', 'Poison'],
-            ['Level of Exhaustion', 'Exhaust']
+            ['Blindned', 'blindness'],
+            ['Deafened', 'deafness'],
+            ['Paralyzed', 'paralyzed'],
+            ['Poisoned', 'poisoned'],
+            ['Level of Exhaustion', 'exhaustion']
         ];
         let selection2 = await chrisPremades.helpers.dialog('Which condition do you wish to remove?', choices2);
         if (!selection2) {
             return;
         }
         switch (selection2) {
-            case 'Blind': {
+            case 'blindness': {
                 await chrisPremades.helpers.removeCondition(target.actor, 'Blinded');
                 break;
             }
-            case 'Deaf': {
+            case 'deafness': {
                 await chrisPremades.helpers.removeCondition(target.actor, 'Deafened');
                 break;
             }
-            case 'Paralyzed': {
+            case 'paralyzed': {
                 await chrisPremades.helpers.removeCondition(target.actor, 'Paralyzed');
                 break;
             }
-            case 'Poison': {
+            case 'poisoned': {
                 await chrisPremades.helpers.removeCondition(target.actor, 'Poisoned');
                 break;
             }
-            case 'Exhaust': {
-                let effectNamePartial = "Exhaustion";
-                let matchingEffects = target.actor.effects.filter(effect => effect.name.toLowerCase().includes(effectNamePartial.toLowerCase()));
-                if (matchingEffects.length) {
-                    let effect = matchingEffects[0];
-                    let exhaustLevel = effect.changes[0].value;
-                    switch (exhaustLevel) {
-                        case '1': {
-                            await chrisPremades.helpers.removeCondition(target.actor, 'Exhaustion 1');
-                            break;
-                        }
-                        case '2': {
-                            await chrisPremades.helpers.removeCondition(target.actor, 'Exhaustion 2');
-                            await chrisPremades.helpers.addCondition(target.actor, 'Exhaustion 1');
-                            break;
-                        }
-                        case '3': {
-                            await chrisPremades.helpers.removeCondition(target.actor, 'Exhaustion 3');
-                            await chrisPremades.helpers.addCondition(target.actor, 'Exhaustion 2');
-                            break;
-                        }
-                        case '4': {
-                            await chrisPremades.helpers.removeCondition(target.actor, 'Exhaustion 4');
-                            await chrisPremades.helpers.addCondition(target.actor, 'Exhaustion 3');
-                            break;
-                        }
-                        case '5': {
-                            await chrisPremades.helpers.removeCondition(target.actor, 'Exhaustion 5');
-                            await chrisPremades.helpers.addCondition(target.actor, 'Exhaustion 4');
-
-                        }
-                    }
+            case 'exhaustion': {
+                let exhaustion = target.actor.effects.filter(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
+                if (!exhaustion.length) {
+                    ui.notifications.warn("Target has no levels of Exhaustion!");
+                    return;
                 }
+                let level = +exhaustion[0].name.slice(-1);
+                if (level === 1) {
+                    await chrisPremades.helpers.removeCondition(target.actor, "Exhaustion 1");
+                    return;
+                }
+                level -= 1;
+                await chrisPremades.helpers.addCondition(target.actor, "Exhaustion " + level);
             }
         }
         return;
     }
-    const effects = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true);
-    if (!effects.length) {
-        ui.notifications.info('Target is not affected by any disease!');
+    let curable = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true).filter(e => e.flags['mba-premades']?.lesserRestoration === true);
+    if (!curable.length) {
+        let uncurable = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true).filter(e => !e.flags['mba-premades']?.lesserRestoration === true);
+        if (!uncurable.length) {
+            ui.notifications.info('Target is not affected by any disease!');
+            return;
+        }
+        ui.notifications.info('Targeted creature is affected by a disease which can not be cured with Lesser Restoration!');
         return;
     }
     let selection = []
-    for (let i = 0; i < effects.length; i++) {
-        let effect = effects[i];
+    for (let i = 0; i < curable.length; i++) {
+        let effect = curable[i];
         let name = effect.flags['mba-premades']?.name;
         let description = effect.flags['mba-premades']?.description[0].toString();
         let icon = "assets/library/icons/sorted/conditions/nauseated.png";
@@ -84,55 +69,55 @@ export async function lesserRestoration({ speaker, actor, token, character, item
     }
     function generateEnergyBox(type) {
         return `
-            <label class="radio-label">
-            <input type="radio" name="type" value="${selection[type]}" />
-            <img src="${selection[type].slice(2)}" style="border: 0px; width: 50px; height: 50px"/>
-            ${selection[type].slice(0, -2)}
-            </label>
-        `;
+                <label class="radio-label">
+                <input type="radio" name="type" value="${selection[type]}" />
+                <img src="${selection[type].slice(2)}" style="border: 0px; width: 50px; height: 50px"/>
+                ${selection[type].slice(0, -2)}
+                </label>
+            `;
     }
     const effectSelection = Object.keys(selection).map((type) => generateEnergyBox(type)).join("\n");
     const content = `
-    <style>
-        .lesserRestoration 
-            .form-group {
-                display: flex;
-                flex-wrap: wrap;
-                width: 100%;
-                align-items: flex-start;
-            }
-        .lesserRestoration 
-            .radio-label {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            justify-items: center;
-            flex: 1 0 20%;
-            line-height: normal;
-            }
-        .lesserRestoration 
-            .radio-label input {
-            display: none;
-        }
-        .lesserRestoration img {
-            border: 0px;
-            width: 50px;
-            height: 50px;
-            flex: 0 0 50px;
-            cursor: pointer;
-        }
-        /* CHECKED STYLES */
-        .lesserRestoration [type="radio"]:checked + img {
-            outline: 2px solid #f00;
-        }
-    </style>
-    <form class="lesserRestoration">
-        <div class="form-group" id="types">
-            ${effectSelection}
-        </div>
-    </form>
-    `;
+            <style>
+                .lesserRestoration 
+                    .form-group {
+                        display: flex;
+                        flex-wrap: wrap;
+                        width: 100%;
+                        align-items: flex-start;
+                    }
+                .lesserRestoration 
+                    .radio-label {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    text-align: center;
+                    justify-items: center;
+                    flex: 1 0 20%;
+                    line-height: normal;
+                    }
+                .lesserRestoration 
+                    .radio-label input {
+                    display: none;
+                }
+                .lesserRestoration img {
+                    border: 0px;
+                    width: 50px;
+                    height: 50px;
+                    flex: 0 0 50px;
+                    cursor: pointer;
+                }
+                /* CHECKED STYLES */
+                .lesserRestoration [type="radio"]:checked + img {
+                    outline: 2px solid #f00;
+                }
+            </style>
+            <form class="lesserRestoration">
+                <div class="form-group" id="types">
+                    ${effectSelection}
+                </div>
+            </form>
+        `;
     const diseaseEffect = await new Promise((resolve) => {
         new Dialog({
             title: "Choose which disease to remove:",
@@ -146,7 +131,7 @@ export async function lesserRestoration({ speaker, actor, token, character, item
                     },
                 },
                 cancel: {
-                    label: "Stop ",
+                    label: "Cancel",
                     callback: async (html) => {
                         return;
                     }
@@ -156,9 +141,9 @@ export async function lesserRestoration({ speaker, actor, token, character, item
     });
     let diseaseFlagName = diseaseEffect.split(",")[0];
     let diseaseToRemoveName;
-    for (let i = 0; i < effects.length; i++) {
-        let effect = effects[i];
-        if (effect.flags['mba-premades']?.name === diseaseFlagName) diseaseToRemoveName = effect.name;;
+    for (let i = 0; i < curable.length; i++) {
+        let effect = curable[i];
+        if (effect.flags['mba-premades']?.name === diseaseFlagName) diseaseToRemoveName = effect.name;
     }
     let diseaseToRemove = await chrisPremades.helpers.findEffect(target.actor, diseaseToRemoveName);
     await chrisPremades.helpers.removeEffect(diseaseToRemove);

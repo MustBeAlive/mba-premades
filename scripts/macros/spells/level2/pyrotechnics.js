@@ -1,3 +1,4 @@
+// fix chris's flag for fog cloud
 export async function pyrotechnics({speaker, actor, token, character, item, args, scope, workflow}) {
     let choices = [['Smoke Cloud', 'cloud'], ['Fireworks Explosion', 'explosion']];
     let selection = await chrisPremades.helpers.dialog('Choose one of the following effects:', choices);

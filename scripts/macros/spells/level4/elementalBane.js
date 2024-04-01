@@ -136,22 +136,18 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
 async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
     let effect = await chrisPremades.helpers.findEffect(actor, 'Elemental Bane');
-    if (effect.flags['mba-premades']?.spell?.elementalBane?.used === true)
-        return;
+    if (effect.flags['mba-premades']?.spell?.elementalBane?.used === true) return;
     let type = effect.flags['mba-premades']?.spell?.elementalBane?.type;
     let typeCheck = workflow.damageDetail?.some(d => d.type === type);
     if (!typeCheck) return;
-    let damageFormula;
-    if (workflow.damageItem.critical === true) {
-        damageFormula = '4d6[' + type + ']';
-    } else {
-        damageFormula = '2d6[' + type + ']';
-    }
+    let damageFormula = '2d6[' + type + ']';
+    if (workflow.damageItem.critical === true) damageFormula = '4d6[' + type + ']';
     let damageRoll = await new Roll(damageFormula).roll({ 'async': true });
+    await MidiQOL.displayDSNForRoll(damageRoll, 'damageRoll');
     damageRoll.toMessage({
         rollMode: 'roll',
         speaker: { 'alias': name },
-        flavor: 'Elemental Bane: Bonus Damage'
+        flavor: '<b>Elemental Bane: Bonus Damage</b>'
     });
     let damageTotal = damageRoll.total;
     workflow.damageItem.damageDetail[0].push({
