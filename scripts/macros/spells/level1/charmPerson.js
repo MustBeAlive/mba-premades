@@ -52,9 +52,7 @@ async function save({speaker, actor, token, character, item, args, scope, workfl
             ],
             'flags': {
                 'dae': {
-                    'specialDuration': [
-                        'isSave'
-                    ]
+                    'specialDuration': ['isSave']
                 },
                 'chris-premades': {
                     'effect': {

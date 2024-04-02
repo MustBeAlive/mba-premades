@@ -7,9 +7,7 @@ export async function skillEmpowerment({speaker, actor, token, character, item, 
         choices.push([options[i].html, options[i].value]);
     }
     let selection = await chrisPremades.helpers.dialog('Choose one of the skills:', choices);
-    if (!selection) {
-        return;
-    }
+    if (!selection) return;
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
