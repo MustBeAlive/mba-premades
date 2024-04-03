@@ -67,7 +67,7 @@ export async function command({speaker, actor, token, character, item, args, sco
         }
         case 'Other': {
             name = "Command";
-            icon = "assets/library/icons/sorted/spells/level1/Command_Halt.webp";
+            icon = "assets/library/icons/sorted/spells/level1/command_halt.webp";
             description = "You follow the custom Command";
             break;
         }

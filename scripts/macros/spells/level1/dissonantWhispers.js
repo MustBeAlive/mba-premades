@@ -12,8 +12,8 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
         },
         'changes': [
             {
-                'key': 'flags.midi-qol.min.ability.save.wis',
-                'value': '40',
+                'key': 'flags.midi-qol.min.ability.save.all',
+                'value': '100',
                 'mode': 2,
                 'priority': 120
             }

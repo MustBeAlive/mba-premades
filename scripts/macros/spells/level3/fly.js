@@ -142,6 +142,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .persist()
 
             .play();
+
         await chrisPremades.helpers.createEffect(target.actor, effectData)
     }
 }

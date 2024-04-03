@@ -73,7 +73,7 @@ export async function dragonsBreath({speaker, actor, token, character, item, arg
                 [featureData.name]: featureData,
             },
             'ActiveEffect': {
-                [effectData.label]: effectData
+                [effectData.name]: effectData
             }
         }
     };

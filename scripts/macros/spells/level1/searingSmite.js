@@ -1,11 +1,15 @@
-// Original macro by CPR
-async function item({speaker, actor, token, character, item, args, scope, workflow}) {
-    async function effectMacro() {
+async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
+    async function effectMacroDel() {
         await (warpgate.wait(200));
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Searing Smite` });
         let targetEffectUuid = effect.flags['mba-premades']?.spell?.searingSmite?.targetEffectUuid;
         if (!targetEffectUuid) return;
         let targetEffect = await fromUuid(targetEffectUuid);
         if (!targetEffect) return;
+        let targetUuid = effect.flags['mba-premades']?.spell?.searingSmite?.targetUuid;
+        if (!targetUuid) return;
+        let target = await fromUuid(targetUuid);
+        await Sequencer.EffectManager.endEffects({ name: `${target.name} Searing Smite` })
         await chrisPremades.helpers.removeEffect(targetEffect);
     }
     let effectData = {
@@ -27,7 +31,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             'mba-premades': {
                 'spell': {
                     'searingSmite': {
-                        'dc': chrisPremades.helpers.getSpellDC(workflow.item),
+                        'saveDC': chrisPremades.helpers.getSpellDC(workflow.item),
                         'level': workflow.castData.castLevel,
                         'used': false
                     }
@@ -35,7 +39,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             },
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacro)
+                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -47,15 +51,55 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             }
         }
     };
+
+    await new Sequence()
+
+        .effect()
+        .delay(500)
+        .file(`jb2a.particles.outward.orange.02.03`)
+        .attachTo(token, { offset: { y: -0.25 }, gridUnits: true, followRotation: false })
+        .scaleToObject(1.2)
+        .playbackRate(2)
+        .duration(2000)
+        .fadeOut(800)
+        .fadeIn(1000)
+        .animateProperty("sprite", "height", { from: 0, to: 2, duration: 3000, gridUnits: true, ease: "easeOutBack" })
+        .filter("Blur", { blurX: 0, blurY: 15 })
+        .opacity(2)
+        .zIndex(0.2)
+
+        .effect()
+        .delay(1050)
+        .file("jb2a.divine_smite.caster.reversed.orange")
+        .atLocation(token)
+        .scaleToObject(2.2)
+        .startTime(900)
+        .fadeIn(200)
+
+        .effect()
+        .file("jb2a.divine_smite.caster.orange")
+        .atLocation(token)
+        .scaleToObject(1.85)
+        .belowTokens()
+        .waitUntilFinished(-1200)
+
+        .effect()
+        .file("jb2a.token_border.circle.static.orange.007")
+        .atLocation(token)
+        .attachTo(token)
+        .scaleToObject(2)
+        .persist()
+        .name(`${token.document.name} Searing Smite`)
+
+        .play();
+
     let effect = await chrisPremades.helpers.createEffect(workflow.actor, effectData);
-    let updates = {
-        'flags.mba-premades.spell.searingSmite.targetEffectUuid': effect.uuid
-    };
+    let updates = { 'flags.mba-premades.spell.searingSmite.targetEffectUuid': effect.uuid };
     await chrisPremades.helpers.updateEffect(effect, updates);
 }
 
-async function damage({speaker, actor, token, character, item, args, scope, workflow}) {
-    if (workflow.hitTargets.size != 1 || !workflow.item) return;
+async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
+    if (!workflow.hitTargets.size || !workflow.item) return;
     if (workflow.item.system.actionType != 'mwak') return;
     let effect = workflow.actor.effects.find(i => i.flags['mba-premades']?.spell?.searingSmite);
     if (!effect) return;
@@ -66,11 +110,12 @@ async function damage({speaker, actor, token, character, item, args, scope, work
     let bonusDamageFormula = effect.flags['mba-premades']?.spell?.searingSmite?.level + 'd6[fire]';
     if (workflow.isCritical) bonusDamageFormula = chrisPremades.helpers.getCriticalFormula(bonusDamageFormula);
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
-    let damageRoll = await new Roll(damageFormula).roll({async: true});
+    let damageRoll = await new Roll(damageFormula).roll({ async: true });
     await workflow.setDamageRoll(damageRoll);
-    async function effectMacro() {
+    async function effectMacroDel() {
         let originEffect = await fromUuid(effect.origin);
         if (!originEffect) return;
+        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Searing Smite`, object: token });
         await chrisPremades.helpers.removeEffect(originEffect);
     }
     let effectData = {
@@ -85,14 +130,14 @@ async function damage({speaker, actor, token, character, item, args, scope, work
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': 'turn=start, saveAbility=con, saveDC=' + effect.flags['mba-premades'].spell.searingSmite.dc + ', saveMagic=true, damageRoll=1d6[fire], damageType=fire, name=Searing Smite Burn',
+                'value': 'turn=start, saveAbility=con, saveDC=' + effect.flags['mba-premades'].spell.searingSmite.saveDC + ', saveMagic=true, damageRoll=1d6[fire], damageType=fire, name=Searing Smite: Burn',
                 'priority': 20
             }
         ],
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacro)
+                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -104,13 +149,57 @@ async function damage({speaker, actor, token, character, item, args, scope, work
             }
         }
     };
-    let targetEffect = await chrisPremades.helpers.createEffect(workflow.targets.first().actor, effectData);
+    let target = workflow.targets.first();
+    await new Sequence()
+
+        .canvasPan()
+        .delay(300)
+        .shake({ duration: 1000, strength: 1, rotation: false, fadeOutDuration: 1000 })
+
+        .effect()
+        .delay(300)
+        .file("jb2a.impact.ground_crack.orange.01")
+        .atLocation(target)
+        .size(2.3 * token.document.width, { gridUnits: true })
+        .belowTokens()
+        .playbackRate(0.85)
+        .randomRotation()
+
+        .effect()
+        .file("jb2a.divine_smite.target.orange")
+        .atLocation(target)
+        .rotateTowards(token)
+        .scaleToObject(3)
+        .spriteOffset({ x: -1.5 * token.document.width, y: -0 * token.document.width }, { gridUnits: true })
+        .mirrorY()
+        .rotate(90)
+        .zIndex(2)
+
+        .wait(600)
+
+        .thenDo(function () {
+            Sequencer.EffectManager.endEffects({ name: `${token.document.name} Searing Smite`, object: token })
+        })
+
+        .effect()
+        .file("jb2a.token_border.circle.static.orange.007")
+        .atLocation(target)
+        .attachTo(target)
+        .scaleToObject(2)
+        .scaleIn(0, 2000, { ease: "easeOutCubic" })
+        .persist()
+        .name(`${target.document.name} Searing Smite`)
+
+        .play();
+
+    let targetEffect = await chrisPremades.helpers.createEffect(target.actor, effectData);
     let updates = {
         'flags': {
             'mba-premades': {
                 'spell': {
                     'searingSmite': {
                         'used': true,
+                        'targetUuid': target.document.uuid,
                         'targetEffectUuid': targetEffect.uuid
                     }
                 }

@@ -1,7 +1,7 @@
-export async function alterSelf({speaker, actor, token, character, item, args, scope, workflow}) {
+export async function alterSelf({ speaker, actor, token, character, item, args, scope, workflow }) {
     let source = workflow.actor;
     let effectData;
-    let choices  = [
+    let choices = [
         ['Aquatic Adaptation', 'aquatic'],
         ['Change Appearance', 'change'],
         ['Natural Weapons', 'natural']
@@ -66,10 +66,10 @@ export async function alterSelf({speaker, actor, token, character, item, args, s
         case 'natural': {
             let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Alter Self: Unarmed Strike', false);
             if (!featureData) {
-                ui.notifications.warn('Missing item in the compendium! (Alter Self: Unarmed Strike)');    
+                ui.notifications.warn('Missing item in the compendium! (Alter Self: Unarmed Strike)');
                 return;
             }
-            let damageTypes  = [
+            let damageTypes = [
                 ['Piercing', 'piercing'],
                 ['Slashing', 'slashing'],
                 ['Bludgeoning', 'bludgeoning']
@@ -94,7 +94,7 @@ export async function alterSelf({speaker, actor, token, character, item, args, s
                 }
             }
             featureData.system.damage.parts = damageParts;
-            async function effectMacro () {
+            async function effectMacro() {
                 await warpgate.revert(token.document, 'Alter Self: Unarmed Strike');
             }
             effectData = {
@@ -139,5 +139,5 @@ export async function alterSelf({speaker, actor, token, character, item, args, s
             };
             await warpgate.mutate(workflow.token.document, updates, {}, options);
         }
-    }  
+    }
 }

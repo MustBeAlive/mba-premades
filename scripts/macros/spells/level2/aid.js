@@ -1,4 +1,4 @@
-async function item({speaker, actor, token, character, item, args, scope, workflow}) {
+async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let level = workflow.castData.castLevel;
     let targets = Array.from(workflow.targets);
     let healAmmount = (5 * (level - 1));

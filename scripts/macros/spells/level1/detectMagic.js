@@ -86,10 +86,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
     targets.forEach(target => {
         if (target.name !== token.name) {
-            const distance = Math.sqrt(
-                Math.pow(target.x - token.x, 2) + Math.pow(target.y - token.y, 2)
-            );
-            const gridDistance = distance / canvas.grid.size
+            const distance = Math.sqrt(Math.pow(target.x - token.x, 2) + Math.pow(target.y - token.y, 2));
+            const gridDistance = distance / canvas.grid.size;
 
             new Sequence()
 

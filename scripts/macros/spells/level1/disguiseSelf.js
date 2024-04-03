@@ -121,7 +121,7 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
                 .opacity(1)
                 .play();
 
-            await Sequencer.EffectManager.endEffects({ name: "DisguiseSelf", object: token })
+            await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Disguise Self`, object: token })
     }
     let effectData = {
         'name': workflow.item.name,
@@ -151,7 +151,7 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
     new Sequence()
 
         .effect()
-        .file("modules/jb2a_patreon/Library/Generic/Marker/MarkerCircleOfStars_Regular_OrangePurple_400x400.webm")
+        .file("jb2a.markers.circle_of_stars.orangepurple")
         .atLocation(token)
         .delay(200)
         .duration(7500)
@@ -162,7 +162,7 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
         .zIndex(1)
 
         .effect()
-        .file("modules/jb2a_patreon/Library/1st_Level/Sneak_Attack/Sneak_Attack_Dark_Purple_300x300.webm")
+        .file("jb2a.sneak_attack.dark_purple")
         .atLocation(token)
         .delay(200)
         .startTime(450)
@@ -178,7 +178,7 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
 
         .effect()
         .file(tokenPath)
-        .name("DisguiseSelf")
+        .name(`${token.document.name} Disguise Self`)
         .atLocation(token)
         .scaleToObject(0.95)
         .persist()
@@ -203,7 +203,7 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
 
         .effect()
         .file("jb2a.particles.outward.purple.02.03")
-        .name("DisguiseSelf")
+        .name(`${token.document.name} Disguise Self`)
         .atLocation(token)
         .delay(200)
         .scaleToObject(1.5)

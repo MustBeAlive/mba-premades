@@ -134,7 +134,7 @@ async function trigger(token, trigger) {
 async function end(template, token) {
     if (chrisPremades.helpers.inCombat()) {
         let prev = game.combat.turn;
-        if (prev != 0 ) prev = game.combat.turn - 1;
+        if (prev != 0) prev = game.combat.turn - 1;
         else if (prev === 0) prev = game.combat.turns.length - 1;
         let turn = game.combat.round + '-' + prev;
         let lastTurn = template.flags['mba-premades']?.spell?.grease?.[token.id]?.turn;

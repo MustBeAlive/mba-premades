@@ -1,5 +1,5 @@
 // Original macro by CPR
-export async function scorchingRay({speaker, actor, token, character, item, args, scope, workflow}) {
+export async function scorchingRay({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.token) return;
     let maxRays = 3 + (workflow.castData.castLevel - 2);
     let skipDead = false;
@@ -13,7 +13,7 @@ export async function scorchingRay({speaker, actor, token, character, item, args
     }
     featureData.flags['chris-premades'].spell.castData.school = workflow.item.system.school;
     delete featureData._id;
-    let feature = new CONFIG.Item.documentClass(featureData, {'parent': workflow.actor});
+    let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
     feature.prepareData();
     feature.prepareFinalAttributes();
     let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([]);
@@ -28,9 +28,9 @@ export async function scorchingRay({speaker, actor, token, character, item, args
             .atLocation(workflow.token)
             .file('jb2a.magic_signs.circle.02.evocation.loop.yellow')
             .scaleToObject(1.25)
-            .rotateIn(180, 600, {'ease': 'easeOutCubic'})
-            .scaleIn(0, 600, {'ease': 'easeOutCubic'})
-            .loopProperty('sprite', 'rotation', {'from': 0, 'to': -360, 'duration': 10000})
+            .rotateIn(180, 600, { 'ease': 'easeOutCubic' })
+            .scaleIn(0, 600, { 'ease': 'easeOutCubic' })
+            .loopProperty('sprite', 'rotation', { 'from': 0, 'to': -360, 'duration': 10000 })
             .belowTokens()
             .fadeOut(2000)
             .zIndex(0)
@@ -42,29 +42,29 @@ export async function scorchingRay({speaker, actor, token, character, item, args
             .atLocation(workflow.token)
             .file('jb2a.magic_signs.circle.02.evocation.loop.yellow')
             .scaleToObject(1.25)
-            .rotateIn(180, 600, {'ease': 'easeOutCubic'})
-            .scaleIn(0, 600, {'ease': 'easeOutCubic'})
-            .loopProperty('sprite', 'rotation', {'from': 0, 'to': -360, 'duration': 10000})
+            .rotateIn(180, 600, { 'ease': 'easeOutCubic' })
+            .scaleIn(0, 600, { 'ease': 'easeOutCubic' })
+            .loopProperty('sprite', 'rotation', { 'from': 0, 'to': -360, 'duration': 10000 })
             .belowTokens(true)
-            .filter('ColorMatrix', {'saturate': -1, 'brightness': 2})
-            .filter('Blur', {'blurX': 5, 'blurY': 10 })
+            .filter('ColorMatrix', { 'saturate': -1, 'brightness': 2 })
+            .filter('Blur', { 'blurX': 5, 'blurY': 10 })
             .zIndex(1)
             .duration(1200)
-            .fadeIn(200, {'ease': 'easeOutCirc', 'delay': 500})
-            .fadeOut(300, {'ease': 'linear'})
+            .fadeIn(200, { 'ease': 'easeOutCirc', 'delay': 500 })
+            .fadeOut(300, { 'ease': 'linear' })
             .persist()
             .attachTo(workflow.token)
             .name('Scorching Ray')
 
             .effect()
             .file('jb2a.particles.outward.white.01.02')
-            .scaleIn(0, 500, {'ease': 'easeOutQuint'})
+            .scaleIn(0, 500, { 'ease': 'easeOutQuint' })
             .delay(500)
             .fadeOut(1000)
             .atLocation(workflow.token)
             .duration(1000)
-            .size(1.75 * workflow.token.document.width, {'gridUnits': true})
-            .animateProperty('spriteContainer', 'position.y', {'from':0 , 'to': -0.5, 'gridUnits': true, 'duration': 1000})
+            .size(1.75 * workflow.token.document.width, { 'gridUnits': true })
+            .animateProperty('spriteContainer', 'position.y', { 'from': 0, 'to': -0.5, 'gridUnits': true, 'duration': 1000 })
             .zIndex(1)
             .waitUntilFinished(-200)
 
@@ -89,7 +89,7 @@ export async function scorchingRay({speaker, actor, token, character, item, args
         let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, targets, true, 'number', null, true, 'Select your targets (max: ' + maxRays + '):');
         if (!selection.buttons) {
             chrisPremades.queue.remove(workflow.item.uuid);
-            await Sequencer.EffectManager.endEffects({'name': 'Scorching Ray', 'object': workflow.token});
+            await Sequencer.EffectManager.endEffects({ 'name': 'Scorching Ray', 'object': workflow.token });
             return;
         }
         let total = 0;
@@ -144,55 +144,55 @@ export async function scorchingRay({speaker, actor, token, character, item, args
                         x: directionVector.x / distance,
                         y: directionVector.y / distance,
                     };
-                    let magicCircleDistance = canvas.grid.size/3;
+                    let magicCircleDistance = canvas.grid.size / 3;
                     let magicCircle = {
                         x: tokenCenter.x + normalizedDirectionVector.x * magicCircleDistance,
                         y: tokenCenter.y + normalizedDirectionVector.y * magicCircleDistance,
                     };
                     new Sequence()
 
-                    .wait(150)
-                    
-                    .effect()
-                    .file(path)
-                    .atLocation(magicCircle)
-                    .scale(0.6)
-                    .stretchTo(target, {'randomOffset': 0.75})
-                    .setMustache({
-                        'num': () => {
-                            let nums = ['01','02', '02'];
-                            if (color === 'rainbow01' || color === 'rainbow02') return '01';
-                            return nums[Math.floor(Math.random()*nums.length)];
-                        }
-                    })
-                    .randomizeMirrorY()
-                    .zIndex(1)
-                    .missed(!featureWorkflow.hitTargets.size)
-                    
-                    .effect()
-                    .delay(200)
-                    .from(target)
-                    .attachTo(target)
-                    .fadeIn(200)
-                    .fadeOut(500)
-                    .loopProperty('sprite', 'position.x', {'from': -0.05, 'to': 0.05, 'duration': 50, 'pingPong': true, 'gridUnits': true})
-                    .scaleToObject(target.document.texture.scaleX)
-                    .duration(1800)
-                    .opacity(0.25)
-                    .tint('#fb8b23')
-                    
-                    .effect()
-                    .delay(200,500)
-                    .file(particle)
-                    .attachTo(target, {'randomOffset': 0.2})
-                    .zIndex(1)
-                    .fadeIn(500)
-                    .fadeOut(1200)
-                    .duration(4500)
-                    .scaleToObject(1.5)
-                    .randomRotation()
-                    
-                    .play()
+                        .wait(150)
+
+                        .effect()
+                        .file(path)
+                        .atLocation(magicCircle)
+                        .scale(0.6)
+                        .stretchTo(target, { 'randomOffset': 0.75 })
+                        .setMustache({
+                            'num': () => {
+                                let nums = ['01', '02', '02'];
+                                if (color === 'rainbow01' || color === 'rainbow02') return '01';
+                                return nums[Math.floor(Math.random() * nums.length)];
+                            }
+                        })
+                        .randomizeMirrorY()
+                        .zIndex(1)
+                        .missed(!featureWorkflow.hitTargets.size)
+
+                        .effect()
+                        .delay(200)
+                        .from(target)
+                        .attachTo(target)
+                        .fadeIn(200)
+                        .fadeOut(500)
+                        .loopProperty('sprite', 'position.x', { 'from': -0.05, 'to': 0.05, 'duration': 50, 'pingPong': true, 'gridUnits': true })
+                        .scaleToObject(target.document.texture.scaleX)
+                        .duration(1800)
+                        .opacity(0.25)
+                        .tint('#fb8b23')
+
+                        .effect()
+                        .delay(200, 500)
+                        .file(particle)
+                        .attachTo(target, { 'randomOffset': 0.2 })
+                        .zIndex(1)
+                        .fadeIn(500)
+                        .fadeOut(1200)
+                        .duration(4500)
+                        .scaleToObject(1.5)
+                        .randomRotation()
+
+                        .play()
                 }
             }
         }
@@ -200,6 +200,6 @@ export async function scorchingRay({speaker, actor, token, character, item, args
     chrisPremades.queue.remove(workflow.item.uuid);
     if (animation === 'complex') {
         await warpgate.wait(1500);
-        await Sequencer.EffectManager.endEffects({'name': 'Scorching Ray', 'object': workflow.token});
+        await Sequencer.EffectManager.endEffects({ 'name': 'Scorching Ray', 'object': workflow.token });
     }
 }

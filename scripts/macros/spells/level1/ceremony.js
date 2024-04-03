@@ -1,6 +1,7 @@
-export async function ceremony({speaker, actor, token, character, item, args, scope, workflow}) {
+//To do: better holy water implementation; icons for Wedding case
+export async function ceremony({ speaker, actor, token, character, item, args, scope, workflow }) {
     const target = workflow.targets.first();
-    let choices  = [
+    let choices = [
         ['Atonement', 'Atonement'],
         ['Bless Water', 'Water'],
         ['Coming of Age', 'Age'],
@@ -15,9 +16,10 @@ export async function ceremony({speaker, actor, token, character, item, args, sc
     switch (selection) {
         case 'Atonement': {
             let spellDC = 20;
-            await chrisPremades.helpers.rollRequest(workflow.token, 'skill', 'ins');     
+            await chrisPremades.helpers.rollRequest(workflow.token, 'skill', 'ins');
             break;
         }
+        //update when 3.0+
         case 'Water': {
             let haveVial = actor.items
                 .filter(item => item.type === 'backpack')
@@ -142,7 +144,7 @@ export async function ceremony({speaker, actor, token, character, item, args, sc
                 if (type != 'humanoid') {
                     ui.notifications.warn('One of the targets is not human!');
                     return;
-                } 
+                }
             }
 
             let t1 = targets[0];
@@ -152,7 +154,7 @@ export async function ceremony({speaker, actor, token, character, item, args, sc
                 let effect = chrisPremades.helpers.findEffect(actor, 'Ceremony: Wedding');
                 let partnerName = effect.flags['mba-premades']?.spell?.ceremony?.name;
                 let nearbyPartner = await MidiQOL.findNearby(null, token, 30, { includeIncapacitated: true }).filter(i => i.name === partnerName);
-                if (nearbyPartner.length != 1) return;
+                if (!nearbyPartner.length) return;
                 const effectData = {
                     'name': "Ceremony: AC bonus",
                     'icon': "assets/library/icons/sorted/spells/level1/ceremony.webp", // temp icon, find something better or recolor original
@@ -179,7 +181,6 @@ export async function ceremony({speaker, actor, token, character, item, args, sc
                 }
                 await chrisPremades.helpers.createEffect(actor, effectData);
             }
-
             const effectData1 = {
                 'name': "Ceremony: Wedding",
                 'icon': "assets/library/icons/sorted/spells/level1/ceremony.webp",
@@ -202,7 +203,6 @@ export async function ceremony({speaker, actor, token, character, item, args, sc
                     }
                 }
             };
-
             const effectData2 = {
                 'name': "Ceremony: Wedding",
                 'icon': "assets/library/icons/sorted/spells/level1/ceremony.webp",

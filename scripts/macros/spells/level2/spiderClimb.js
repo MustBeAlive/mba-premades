@@ -2,7 +2,7 @@
 export async function spiderClimb({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacro() {
-            await Sequencer.EffectManager.endEffects({ name: "SpiderLeg", object: token })
+        await Sequencer.EffectManager.endEffects({ name: "SpiderLeg", object: token })
     }
     let effectData = {
         'name': workflow.item.name,
