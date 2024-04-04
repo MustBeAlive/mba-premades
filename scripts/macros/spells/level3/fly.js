@@ -13,9 +13,11 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     async function effectMacro() {
         await Sequencer.EffectManager.endEffects({ name: "Fly", object: token })
         new Sequence()
+
             .animation()
             .on(token)
             .opacity(1)
+
             .play();
     }
     let effectData = {
@@ -51,11 +53,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     };
     for (let i = 0; i < targets.length; i++) {
         let target = fromUuidSync(targets[i].document.uuid).object;
+
         await new Sequence()
+
             .effect()
-            .atLocation(workflow.token)
+            .atLocation(token)
             .file(`jb2a.magic_signs.circle.02.conjuration.loop.yellow`)
-            .scaleToObject(1.25)
+            .scaleToObject(1.5)
             .rotateIn(180, 600, { ease: "easeOutCubic" })
             .scaleIn(0, 600, { ease: "easeOutCubic" })
             .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
@@ -64,9 +68,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .duration(1400)
 
             .effect()
-            .atLocation(workflow.token)
+            .atLocation(token)
             .file(`jb2a.magic_signs.circle.02.conjuration.loop.yellow`)
-            .scaleToObject(1.25)
+            .scaleToObject(1.5)
             .rotateIn(180, 600, { ease: "easeOutCubic" })
             .scaleIn(0, 600, { ease: "easeOutCubic" })
             .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
@@ -106,7 +110,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .scaleToObject(1, { considerTokenScale: true })
             .opacity(1)
             .duration(800)
-            //.anchor({ x: target.document.texture.scaleX * 0.55, y: 0.9 })
             .animateProperty("sprite", "position.y", { from: 50, to: -10, duration: 500, ease: "easeOutBack" })
             .loopProperty("sprite", "position.y", { from: 0, to: -50, duration: 2500, pingPong: true, delay: 1000 })
             .filter("Glow", { color: 0xFFd129, distance: 10, outerStrength: 4, innerStrength: 0 })
@@ -120,7 +123,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .attachTo(target, { bindAlpha: false })
             .opacity(1)
             .duration(800)
-            //.anchor({ x: target.document.texture.scaleX * 0.55, y: 0.8 })
             .animateProperty("sprite", "position.y", { from: 50, to: -10, duration: 500, ease: "easeOutBack" })
             .loopProperty("sprite", "position.y", { from: 0, to: -50, duration: 2500, pingPong: true, delay: 1000 })
             .fadeIn(1000)

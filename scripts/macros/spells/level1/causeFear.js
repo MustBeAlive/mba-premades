@@ -246,6 +246,6 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 }
 
 export let causeFear = {
+	'item': item,
 	'cast': cast,
-	'item': item
 }

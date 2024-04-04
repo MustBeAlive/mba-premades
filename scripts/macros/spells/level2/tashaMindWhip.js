@@ -54,19 +54,24 @@ async function turnStart(actor, token) {
     if (!selection) {
         return;
     }
+    let flavor;
     switch (selection) {
         case 'action': {
-            ChatMessage.create({ flavor: 'Mind Whip: ' + token.document.name + ' chose to keep it\'s action', speaker: ChatMessage.getSpeaker({ actor: actor}) });
+            flavor = `Mind Whip: <b>${token.document.name}</b> chose to keep <b>Action</b>`;
             break;
         }
         case 'bonus': {
-            ChatMessage.create({ flavor: 'Mind Whip: ' + token.document.name + ' chose to keep it\'s bonus action', speaker: ChatMessage.getSpeaker({ actor: actor}) });
+            flavor = `Mind Whip: <b>${token.document.name}</b> chose to keep <b>Bonus Action</b>`;
             break;
         }
         case 'move': {
-            ChatMessage.create({ flavor: 'Mind Whip: ' + token.document.name + ' chose to keep it\'s movement', speaker: ChatMessage.getSpeaker({ actor: actor}) });
+            flavor = `Mind Whip: <b>${token.document.name}</b> chose to keep <b>Movement Action</b>`;
         }
     }
+    ChatMessage.create({ 
+        flavor: flavor, 
+        speaker: ChatMessage.getSpeaker({ actor: actor}) 
+    });
 }
 
 export let tashaMindWhip = {

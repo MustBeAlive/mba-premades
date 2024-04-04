@@ -4,6 +4,7 @@
 	"description": "MustBeAlive premade actor/items for private use.",
 	"version": "#{VERSION}#",
 	"library": "false",
+	"socket": true,
 	"manifestPlusVersion": "1.2.0",
 	"compatibility": {
 		"minimum": "11",

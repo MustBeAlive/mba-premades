@@ -7,8 +7,22 @@ import {mba as helpers} from './helperFunctions.js';
 import {registerSettings} from './settings.js';
 import {removeV10EffectsBlind} from './macros/mechanics/blindness.js';
 import {removeV10EffectsInvisible} from './macros/mechanics/invisibility.js';
+import {runAsGM, runAsUser} from './runAsGm.js';
+export let socket;
 Hooks.once('init', async function() {
     registerSettings();
+});
+Hooks.once('socketlib.ready', async function() {
+    socket = socketlib.registerModule('mba-premades');
+    socket.register('updateCombatant', runAsGM.updateCombatant);
+    socket.register('updateWall', runAsGM.updateWall);
+    socket.register('updateEffect', runAsGM.updateEffect);
+    socket.register('createEffect', runAsGM.createEffect);
+    socket.register('removeEffect', runAsGM.removeEffect);
+    socket.register('rollItem', runAsUser.rollItem);
+    socket.register('createFolder', runAsGM.createFolder);
+    socket.register('createActor', runAsGM.createActor);
+    socket.register('updateInitiative', runAsGM.updateInitiative);
 });
 Hooks.once('ready', async function() {
     if (game.user.isGM) {

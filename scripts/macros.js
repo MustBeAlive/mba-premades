@@ -83,6 +83,7 @@ import {identify} from './macros/spells/level1/identify.js';
 import {infestation} from './macros/spells/cantrip/infestation.js';
 import {intellectFortress} from './macros/spells/level3/intellectFortress.js';
 import {lesserRestoration} from './macros/spells/level2/lesserRestoration.js';
+import {levitate} from './macros/spells/level2/levitate.js';
 import {light} from './macros/spells/cantrip/light.js';
 import {longstrider} from './macros/spells/level1/longstrider.js';
 import {maelstrom} from './macros/spells/level5/maelstrom.js';
@@ -109,13 +110,14 @@ import {pyrotechnics} from './macros/spells/level2/pyrotechnics.js';
 import {regenerate} from './macros/spells/level7/regenerate.js';
 import {removeTemplate} from './macros/generic/removeTemplate.js';
 import {revivify} from './macros/spells/level3/revivify.js';
+import {scorchingRay} from './macros/spells/level2/scorchingRay.js';
 import {searingSmite} from './macros/spells/level1/searingSmite.js';
 import {sending} from './macros/spells/level3/sending.js';
-import {scorchingRay} from './macros/spells/level2/scorchingRay.js';
 import {shadowBlade} from './macros/spells/level2/shadowBlade.js';
 import {shield} from './macros/spells/level1/shield.js';
 import {shillelagh} from './macros/spells/cantrip/shillelagh.js';
 import {shockingGrasp} from './macros/spells/cantrip/shockingGrasp.js';
+import {silence} from './macros/spells/level2/silence.js';
 import {skillEmpowerment} from './macros/spells/level5/skillEmpowerment.js';
 import {sleep} from './macros/spells/level1/sleep.js';
 import {slow} from './macros/spells/level3/slow.js';
@@ -229,6 +231,7 @@ export let macros = {
     'infestation': infestation,
     'intellectFortress': intellectFortress,
     'lesserRestoration': lesserRestoration,
+    'levitate': levitate,
     'light': light,
     'longstrider': longstrider,
     'maelstrom': maelstrom,
@@ -255,13 +258,14 @@ export let macros = {
     'regenerate': regenerate,
     'removeTemplate': removeTemplate,
     'revivify': revivify,
+    'scorchingRay': scorchingRay,
     'searingSmite': searingSmite,   
     'sending': sending,
-    'scorchingRay': scorchingRay,
     'shadowBlade': shadowBlade,
     'shield': shield,
     'shillelagh': shillelagh,
     'shockingGrasp': shockingGrasp,
+    'silence': silence,
     'skillEmpowerment': skillEmpowerment,
     'sleep': sleep,
     'slow': slow,

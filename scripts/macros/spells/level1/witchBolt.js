@@ -1,109 +1,176 @@
-// Original macro by DDBi
 export async function witchBolt({ speaker, actor, token, character, item, args, scope, workflow }) {
-    async function sustainedDamage({ options, damageType, damageDice, sourceItem, caster }) {
-        const damageRoll = await new Roll(`${damageDice}[${damageType}]`).evaluate({ async: true });
-        if (game.dice3d) game.dice3d.showForRoll(damageRoll, game.users.get(options.userId));
-
-        const targets = await Promise.all(options.targets.map(async (uuid) => {
-            const tok = await fromUuid(uuid);
-            return tok.object;
-        }));
-        const casterToken = await fromUuid(options.sourceUuid);
-        const itemData = sourceItem.toObject();
-        setProperty(itemData, "system.components.concentration", false);
-        itemData.effects = [];
-        delete itemData._id;
-
-        const workflow = await new MidiQOL.DamageOnlyWorkflow(
-            caster,
-            casterToken,
-            damageRoll.total,
-            damageType,
-            targets,
-            damageRoll,
-            {
-                flavor: `(${CONFIG.DND5E.damageTypes[damageType]})`,
-                itemCardId: "new",
-                itemData,
-                isCritical: false,
-            }
-        );
-    }
-
-    async function cancel(caster) {
-        const concentration = caster.effects.find((i) => i.name ?? i.label === "Concentrating");
-        if (concentration) {
-            await MidiQOL.socket().executeAsGM("removeEffects", { actorUuid: caster.uuid, effects: [concentration.id] });
+    if (!workflow.hitTargets.size) return;
+    let target = workflow.targets.first();
+    async function effectMacroEveryTurn() {
+        let effect = await chrisPremades.helpers.findEffect(actor, "Witch Bolt");
+        if (!effect) return;
+        let target = await fromUuid(effect.flags['mba-premades']?.spell?.witchBolt?.targetUuid);
+        let nearbyToken = await MidiQOL.findNearby(null, token, 30, { includeIncapacitated: false, canSee: true }).filter(i => i.name === target.name);
+        if (!nearbyToken.length) {
+            ui.notifications.info(`Witch Bolt ends (target is outside the spell's range)`);
+            await chrisPremades.helpers.removeCondition(actor, "Concentrating");
+            return;
         }
-        await DAE.unsetFlag(caster, "witchBoltSpell");
+        if (game.combat.current.tokenId != token.document.id) return;
+        let choices = [['Yes!', 'yes'], ['No, stop concentrating!', 'no']];
+        let selection = await chrisPremades.helpers.dialog('Use action to sustain Witch Bolt?', choices);
+        if (!selection) return;
+        if (selection === "no") {
+            await chrisPremades.helpers.removeCondition(actor, 'Concentrating');
+            return;
+        }
+        let color = effect.flags['mba-premades']?.spell?.witchBolt?.color;
+        let animation = "jb2a.impact.012." + color;
+        if (color === "dark_green") animation = "jb2a.impact.012.green02";
+        let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Witch Bolt: Sustained Damage');
+        if (!featureData) {
+            ui.notifications.warn("Missing item in the compendium! (Witch Bolt: Sustained Damage)")
+            return;
+        }
+        delete featureData._id;
+        let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
+        let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([effect.flags['mba-premades']?.spell?.witchBolt?.targetUuid]);
+        await warpgate.wait(100);
+        await MidiQOL.completeItemUse(feature, config, options);
+        await new Sequence()
+
+            .effect()
+            .file(animation)
+            .atLocation(target)
+            .attachTo(target)
+            .scaleToObject(1.8)
+            .delay(750)
+            .fadeIn(500)
+            .repeats(3, 1100)
+
+            .play()
     }
-
-    const lastArg = args[args.length - 1];
-    const damageDice = "1d12";
-    const damageType = "lightning";
-
-    if (args[0].macroPass === "postActiveEffects") {
-        if (args[0].hitTargetUuids.length === 0) return {}; // did not hit anyone
-
-        const effectData = [{
-            label: "WitchBolt (Concentration)",
-            name: "WitchBolt (Concentration)",
-            icon: args[0].item.img,
-            duration: { rounds: 10, startTime: game.time.worldTime },
-            origin: args[0].item.uuid,
-            changes: [
-                {
-                    key: "macro.itemMacro.local",
-                    value: "",
-                    mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM,
-                    priority: 20,
+    async function effectMacroDel() {
+        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Witch Bolt` })
+    }
+    let color = [
+        ['Blue', 'blue'],
+        ['Dark Green', 'dark_green'],
+        ['Dark Red', 'dark_red'],
+        ['Dark Purple', 'dark_purple'],
+        ['Green', 'green'],
+        ['Red', 'red'],
+        ['Yellow', 'yellow']
+    ];
+    let selection = await chrisPremades.helpers.dialog("Choose animation color:", color);
+    if (!selection) selection = "blue";
+    let animation1 = "jb2a.impact.012." + selection;
+    if (selection === "dark_green") animation1 = "jb2a.impact.012.green02";
+    let animation2 = "jb2a.witch_bolt." + selection;
+    let animation3 = "jb2a.static_electricity.03." + selection;
+    if (selection === "dark_green") animation3 = "jb2a.static_electricity.03.green02";
+    let effectData = {
+        'name': workflow.item.name,
+        'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
+        'description': "",
+        'duration': {
+            'seconds': 60
+        },
+        'flags': {
+            'effectmacro': {
+                'onEachTurn': {
+                    'script': chrisPremades.helpers.functionToString(effectMacroEveryTurn)
+                },
+                'onDelete': {
+                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
                 }
-            ],
-            disabled: false,
-            "flags.dae.macroRepeat": "startEveryTurn",
-        }];
-
-        const options = {
-            targets: args[0].hitTargetUuids,
-            sourceUuid: args[0].tokenUuid,
-            distance: args[0].item.system.range.value,
-            userId: game.userId,
-        };
-
-        DAE.setFlag(args[0].actor, "witchBoltSpell", options);
-        await args[0].actor.createEmbeddedDocuments("ActiveEffect", effectData);
-    } else if (args[0] == "off") {
-        const sourceItem = await fromUuid(lastArg.origin);
-        const caster = sourceItem.parent;
-        DAE.unsetFlag(caster, "witchBoltSpell");
-
-    } else if (args[0] == "each") {
-        const sourceItem = await fromUuid(lastArg.origin);
-        const caster = sourceItem.parent;
-        const options = DAE.getFlag(caster, "witchBoltSpell");
-        const isInRange = await game.modules.get("ddb-importer")?.api.effects.checkTargetInRange(options);
-        if (isInRange) {
-            const userIds = Object.entries(caster.ownership).filter((k) => k[1] === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER).map((k) => k[0]);
-            const mes = await ChatMessage.create({
-                content: `<p>${caster.name} может продолжить поддерживать Witch Bolt</p><br>`,
-                type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-                speaker: caster.uuid,
-                whisper: game.users.filter((u) => userIds.includes(u.id) || u.isGM),
-            });
-            new Dialog({
-                title: sourceItem.name,
-                content: "<p>Продолжить поддерживать Witch Bolt? (Action)</p>",
-                buttons: {
-                    continue: {
-                        label: "Yes, deal damage!",
-                        callback: () => sustainedDamage({ options, damageType, damageDice, sourceItem, caster })
-                    },
-                    end: {
-                        label: "No, stop concentrating!",
-                        callback: () => cancel(caster)
+            },
+            'mba-premades': {
+                'spell': {
+                    'witchBolt': {
+                        'color': selection,
+                        'targetUuid': target.document.uuid
                     }
                 }
-            }).render(true);
+            },
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 1,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
+                }
+            }
         }
-    }
+    };
+
+    await new Sequence()
+
+        .effect()
+        .atLocation(token)
+        .file(`jb2a.magic_signs.circle.02.evocation.loop.red`)
+        .scaleToObject(1.5)
+        .rotateIn(180, 600, { ease: "easeOutCubic" })
+        .scaleIn(0, 600, { ease: "easeOutCubic" })
+        .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
+        .belowTokens()
+        .fadeOut(1700)
+        .zIndex(0)
+
+        .effect()
+        .atLocation(token)
+        .file(`jb2a.magic_signs.circle.02.evocation.loop.red`)
+        .scaleToObject(1.5)
+        .rotateIn(180, 600, { ease: "easeOutCubic" })
+        .scaleIn(0, 600, { ease: "easeOutCubic" })
+        .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
+        .belowTokens(true)
+        .filter("ColorMatrix", { saturate: -1, brightness: 2 })
+        .filter("Blur", { blurX: 5, blurY: 10 })
+        .zIndex(1)
+        .duration(1200)
+        .fadeIn(200, { ease: "easeOutCirc", delay: 500 })
+        .fadeOut(300, { ease: "linear" })
+
+        .effect()
+        .file(canvas.scene.background.src)
+        .filter("ColorMatrix", { brightness: 0.7 })
+        .atLocation({ x: (canvas.dimensions.width) / 2, y: (canvas.dimensions.height) / 2 })
+        .size({ width: canvas.scene.width / canvas.grid.size, height: canvas.scene.height / canvas.grid.size }, { gridUnits: true })
+        .spriteOffset({ x: -0 }, { gridUnits: true })
+        .delay(1000)
+        .duration(4500)
+        .fadeIn(1500)
+        .fadeOut(1500)
+        .belowTokens()
+
+        .effect()
+        .file(animation1)
+        .atLocation(token)
+        .attachTo(token)
+        .scaleToObject(1.8)
+        .delay(750)
+        .fadeIn(500)
+        .repeats(3, 1100)
+
+        .effect()
+        .file(animation2)
+        .atLocation(token)
+        .attachTo(token)
+        .stretchTo(target, { attachTo: true })
+        .opacity(0.8)
+        .delay(2500)
+        .fadeIn(1000)
+        .persist()
+        .name(`${token.document.name} Witch Bolt`)
+
+        .effect()
+        .file(animation3)
+        .attachTo(target)
+        .scaleToObject(1.5)
+        .delay(3000)
+        .fadeIn(750)
+        .persist()
+        .name(`${token.document.name} Witch Bolt`)
+
+        .thenDo(function () {
+            chrisPremades.helpers.createEffect(workflow.actor, effectData);
+        })
+
+        .play()
 }

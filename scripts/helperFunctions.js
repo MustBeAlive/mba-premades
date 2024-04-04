@@ -25,7 +25,7 @@ export let mba = {
         ui.notifications.info('Модуль JB2A не включен');
         return false;
     },
-    'over30': function _over30 (targets) {
+    'over30': function _over30(targets) {
         let tokens = Array.from(targets);
         const distanceArray = [];
         for (let i = 0; i < tokens.length; i++) {
@@ -69,7 +69,7 @@ export let mba = {
             ui.notifications.warn('Invalid compendium specified!');
             return false;
         }
-        let packIndex = await gamePack.getIndex({'fields': ['name', 'type', 'folder']});
+        let packIndex = await gamePack.getIndex({ 'fields': ['name', 'type', 'folder'] });
         let match = packIndex.find(item => item.name === name && (!packFolderId || (packFolderId && item.folder === packFolderId)));
         if (match) {
             return (await gamePack.getDocument(match._id))?.toObject();
@@ -80,7 +80,7 @@ export let mba = {
     },
     'dialog': async function _dialog(title, options, content) {
         if (content) content = '<center>' + content + '</center>';
-        let buttons = options.map(([label, value]) => ({label, value}));
+        let buttons = options.map(([label, value]) => ({ label, value }));
         let selected = await warpgate.buttonDialog(
             {
                 buttons,
@@ -139,6 +139,13 @@ export let mba = {
     'getSize': function _getSize(actor, sizeToString) {
     },
     'getCriticalFormula': function _getCriticalFormula(formula) {
-        return new CONFIG.Dice.DamageRoll(formula, {}, {'critical': true, 'powerfulCritical': game.settings.get('dnd5e', 'criticalDamageMaxDice'), 'multiplyNumeric': game.settings.get('dnd5e', 'criticalDamageModifiers')}).formula;
+        return new CONFIG.Dice.DamageRoll(formula, {}, { 'critical': true, 'powerfulCritical': game.settings.get('dnd5e', 'criticalDamageMaxDice'), 'multiplyNumeric': game.settings.get('dnd5e', 'criticalDamageModifiers') }).formula;
+    },
+    'updateWall': async function _updateWall(wall, updates) {
+        if (game.user.isGM) {
+            await wall.update(updates);
+        } else {
+            await socket.executeAsGM('updateWall', wall.uuid, updates);
+        }
     }
 }
