@@ -30,7 +30,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     const style = {
         "fill": "#ffffff",
         "fontFamily": "Helvetica",
-        "fontSize": 48,
+        "fontSize": 40,
         "strokeThickness": 0,
         fontWeight: "bold",
     }

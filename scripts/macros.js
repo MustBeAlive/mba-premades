@@ -138,6 +138,7 @@ import {thunderousSmite} from './macros/spells/level1/thunderousSmite.js';
 import {thunderwave} from './macros/spells/level1/thunderwave.js';
 import {unseenServant} from './macros/spells/level1/unseenServant.js';
 import {viciousMockery} from './macros/spells/cantrip/viciousMockery.js';
+import {vortexWarp} from './macros/spells/level2/vortexWarp.js';
 import {web} from './macros/spells/level2/web.js';
 import {witchBolt} from './macros/spells/level1/witchBolt.js';
 import {wordOfRadiance} from './macros/spells/cantrip/wordOfRadiance.js';
@@ -286,6 +287,7 @@ export let macros = {
     'thunderwave': thunderwave,
     'unseenServant': unseenServant,
     'viciousMockery': viciousMockery,
+    'vortexWarp': vortexWarp,
     'web': web,
     'witchBolt': witchBolt,
     'wordOfRadiance': wordOfRadiance,
