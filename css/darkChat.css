@@ -1,0 +1,45 @@
+/*Chat Changes*/
+body.darkChat :is(.chat-popout, #chat-log) .message:not(.dnd5e-cm-message) {
+    background: unset;
+    background-color: #0e1417;
+}
+body.darkChat :is(.chat-popout, #chat-log) .message.whisper:not(.dnd5e-cm-message) {
+    background: unset;
+    background-color: #1b131e;
+}
+body.darkChat :is(.chat-popout, #chat-log) .message.whisper.blind:not(.dnd5e-cm-message) {
+    background: unset;
+    background-color: #261b2b;
+}
+body.darkChat :is(.chat-popout, #chat-log) .message>*:not(nav),
+body.darkChat :is(.chat-popout, #chat-log) .message img {
+    filter: invert(1);
+}
+body.darkChat .sidebar-tab .chat-message button { filter: hue-rotate(180deg); }
+body.darkChat :is(.chat-popout, #chat-log) .message::before { filter: invert(1); }
+body.darkChat textarea#chat-message,
+body.darkChat #sidebar #chat-controls select {
+    filter: invert(1);
+}
+body.darkChat #sidebar #chat-controls select option, 
+body.darkChat #sidebar #chat-controls select optgroup {
+    background-color: #0e1417;
+    color: var(--color-text-light-highlight);
+}
+body.darkChat :is(.chat-popout, #chat-log) .message>*:not(nav) .critical { filter: hue-rotate(180deg); }
+body.darkChat :is(.chat-popout, #chat-log) .message>*:not(nav) .fumble { filter: hue-rotate(180deg); }
+
+body.darkChat :is(.chat-popout, #chat-log) .message>*:not(nav) .dice-tooltip .dice-rolls .roll.min,
+body.darkChat :is(.chat-popout, #chat-log) .message>*:not(nav) .dice-tooltip .dice-rolls .roll.failure {
+    filter: hue-rotate(180deg);
+}
+body.darkChat :is(.chat-popout, #chat-log) .message>*:not(nav) .dice-tooltip .dice-rolls .roll.max, 
+body.darkChat :is(.chat-popout, #chat-log) .message>*:not(nav) .dice-tooltip .dice-rolls .roll.success {
+    filter: hue-rotate(180deg);
+}
+
+/*Midi-QOL Styling Fixes*/
+body.darkChat .sidebar-tab .chat-message .card-buttons .midi-qol-hits-display { filter: hue-rotate(180deg); }
+
+/*Monk's Token Bar Styling Fixes*/
+body.darkChat .monks-tokenbar .sheet .items-list .item .item-name .item-image { filter: invert(1); }

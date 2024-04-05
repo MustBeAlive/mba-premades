@@ -279,6 +279,9 @@
 	"esmodules": [
 		"scripts/module.js"
 	],
+	"styles": [
+		"/css/darkChat.css"
+	],
 	"url": "#{URL}#",
 	"manifest": "#{MANIFEST}#",
 	"download": "#{DOWNLOAD}#",

@@ -1,5 +1,6 @@
 import {addActions} from './macros/actions/token.js';
 import {cast} from './macros/animations/cast.js';
+import {changeChat} from './macros/ui/changeChat.js';
 import {checkUpdate} from './update.js';
 import {deathSaves} from './macros/mechanics/deathsaves.js';
 import {macros} from './macros.js';
@@ -11,6 +12,7 @@ import {runAsGM, runAsUser} from './runAsGm.js';
 export let socket;
 Hooks.once('init', async function() {
     registerSettings();
+    changeChat(game.settings.get('mba-premades', 'Dark Chat'), 'darkChat');
 });
 Hooks.once('socketlib.ready', async function() {
     socket = socketlib.registerModule('mba-premades');
