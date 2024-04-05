@@ -9,7 +9,7 @@ export async function revivify({ speaker, actor, token, character, item, args, s
     //what module tracks starttime?
     let timeDiff = game.time.worldTime - isDead.duration.startTime;
     if (timeDiff >= 60) {
-        ui.notifications.warn("Target is dead fo at least 60 seconds. Sorry, but it's too late.");
+        ui.notifications.info("Target is dead for at least 60 seconds. Sorry, but it's too late.");
         return;
     }
     new Sequence()

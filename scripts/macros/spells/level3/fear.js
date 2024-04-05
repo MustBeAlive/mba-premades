@@ -1,13 +1,5 @@
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
 	let template = canvas.scene.collections.templates.get(workflow.templateId);
-	const aoeDistance = 30;
-	const captureArea = {
-		x: token.x + (canvas.grid.size * token.document.width) / 2,
-		y: token.y + (canvas.grid.size * token.document.width) / 2,
-		scene: canvas.scene,
-		radius: aoeDistance / canvas.scene.grid.distance * canvas.grid.size
-	};
-	const containedTokens = warpgate.crosshairs.collect(captureArea, 'Token')
 	let targets = Array.from(workflow.targets);
 
 	await new Sequence()
@@ -193,6 +185,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			})
 
 			.play()
+
+		await warpgate.wait(100);
 	}
 }
 
