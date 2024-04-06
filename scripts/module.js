@@ -10,10 +10,12 @@ import {removeV10EffectsBlind} from './macros/mechanics/blindness.js';
 import {removeV10EffectsInvisible} from './macros/mechanics/invisibility.js';
 import {runAsGM, runAsUser} from './runAsGm.js';
 export let socket;
+
 Hooks.once('init', async function() {
     registerSettings();
     changeChat(game.settings.get('mba-premades', 'Dark Chat'), 'darkChat');
 });
+
 Hooks.once('socketlib.ready', async function() {
     socket = socketlib.registerModule('mba-premades');
     socket.register('updateCombatant', runAsGM.updateCombatant);
@@ -26,6 +28,7 @@ Hooks.once('socketlib.ready', async function() {
     socket.register('createActor', runAsGM.createActor);
     socket.register('updateInitiative', runAsGM.updateInitiative);
 });
+
 Hooks.once('ready', async function() {
     if (game.user.isGM) {
         if (game.settings.get('mba-premades', 'Check For Updates')) checkUpdate();
@@ -37,6 +40,7 @@ Hooks.once('ready', async function() {
     if (game.settings.get('mba-premades', 'Blur')) Hooks.on('midi-qol.preItemRoll', macros.blur);
     Hooks.on('createToken', addActions);
 });
+
 globalThis['mbaPremades'] = {
     helpers,
     macros
