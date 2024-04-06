@@ -1,14 +1,15 @@
 // Based on CPR mass cure wounds macro
 export async function prayerOfHealing({speaker, actor, token, character, item, args, scope, workflow}) {
-    if (workflow.targets.size === 0) return;
+    if (!workflow.targets.size) return;
     let targetTokens = [];
     for (let i of workflow.targets) {
         if (i.actor.system.details.type.value != 'undead' && i.actor.system.details.type.value != 'construct') targetTokens.push(i);
     }
-    if (targetTokens.length === 0) return;
+    if (!targetTokens.length) return;
     let diceNumber = workflow.castData.castLevel;
     let damageFormula = diceNumber + 'd8[healing] + ' + chrisPremades.helpers.getSpellMod(workflow.item);
     let damageRoll = await new Roll(damageFormula).roll({'async': true});
+    await MidiQOL.displayDSNForRoll(damageRoll, 'damageRoll');
     damageRoll.toMessage({
         rollMode: 'roll',
         speaker: {'alias': name},

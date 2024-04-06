@@ -1,5 +1,5 @@
-export async function elementalWeapon({speaker, actor, token, character, item, args, scope, workflow}) {
-    if (workflow.targets.size != 1) return;
+export async function elementalWeapon({ speaker, actor, token, character, item, args, scope, workflow }) {
+    if (!workflow.targets.size) return;
     let targetToken = workflow.targets.first();
     let targetActor = targetToken.actor;
     let weapons = targetActor.items.filter(i => i.type === 'weapon' && i.system.properties.mgc != true && i.system.equipped);
@@ -49,21 +49,21 @@ export async function elementalWeapon({speaker, actor, token, character, item, a
     damageParts.push(['+' + bonus + 'd4[' + damageType + ']', damageType]);
     let versatile = duplicate(selection[0].system.damage.versatile);
     if (versatile != '') versatile += ' + ' + bonus + 'd4[' + damageType + ']';
-    async function effectMacro() {
+    async function effectMacroDel() {
         await warpgate.revert(token.document, 'Elemental Weapon');
     }
     let effectData = {
         'name': workflow.item.name,
         'icon': icon,
+        'origin': workflow.item.uuid,
         'description': `Until the spell ends, one weapon of caster's choosing becomes a magic weapon with a +${bonus} bonus to attack rolls and deals an extra ${bonus}d4 ${damageType} damage when it hits.`,
         'duration': {
             'seconds': 3600
         },
-        'origin': workflow.item.uuid,
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacro)
+                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {

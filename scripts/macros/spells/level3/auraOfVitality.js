@@ -1,22 +1,22 @@
 // Original macro by CPR
-export async function auraOfVitality({speaker, actor, token, character, item, args, scope, workflow}) {
+export async function auraOfVitality({ speaker, actor, token, character, item, args, scope, workflow }) {
     let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Aura of Vitality: Heal Creature', false);
     if (!featureData) return;
-    async function effectMacro () {
+    async function effectMacroDel() {
         await warpgate.revert(token.document, 'Aura of Vitality: Heal Creature');
     }
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
         'description': "You are concentrating on Aura of Vitality. Until the spell ends, you can use a bonus action to cause one creature in the aura (including you) to regain 2d6 hit points.",
         'duration': {
             'seconds': 60
         },
-        'origin': workflow.item.uuid,
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacro)
+                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
                 }
             },
             'flags': {

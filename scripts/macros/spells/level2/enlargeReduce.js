@@ -20,51 +20,51 @@ async function enlargeAnimation(token, updates, name, callbacks) {
         .fadeIn(250)
         .fadeOut(250)
         .zIndex(2)
-        
+
         .effect()
         .from(token)
         .atLocation(token)
         .scaleToObject(2)
         .duration(500)
-        .scaleIn(0.25,500)
+        .scaleIn(0.25, 500)
         .fadeIn(250)
         .fadeOut(250)
         .repeats(3, 500, 500)
         .opacity(0.2)
         .zIndex(1)
-        
+
         .animation()
         .on(token)
         .opacity(0)
-        
+
         .effect()
         .from(token)
         .atLocation(token)
-        .loopProperty('sprite', 'position.x', {'from': -40, 'to': 40, 'duration': 75, 'pingPong': true, 'delay': 200})
+        .loopProperty('sprite', 'position.x', { 'from': -40, 'to': 40, 'duration': 75, 'pingPong': true, 'delay': 200 })
         .scaleToObject(scale)
         .duration(2000)
         .waitUntilFinished(-200)
         .zIndex(0)
-        
+
         .thenDo(async () => {
             let options = {
                 'permanent': false,
                 'name': name,
                 'description': name,
-                'updateOpts': {'token': {'animate': false}}
+                'updateOpts': { 'token': { 'animate': false } }
             };
             await warpgate.mutate(token.document, updates, callbacks, options);
         })
-        
+
         .wait(200)
-        
+
         .effect()
         .from(token)
         .atLocation(token)
         .scaleToObject(1)
         .duration(3000)
-        .scaleIn(0.25,700, {'ease': 'easeOutBounce'})
-        
+        .scaleIn(0.25, 700, { 'ease': 'easeOutBounce' })
+
         .effect()
         .file('jb2a.extras.tmfx.outpulse.circle.01.fast')
         .atLocation(token)
@@ -72,17 +72,17 @@ async function enlargeAnimation(token, updates, name, callbacks) {
         .opacity(0.75)
         .scaleToObject(2)
         .zIndex(1)
-        
+
         .effect()
         .file('jb2a.impact.ground_crack.orange.02')
         .atLocation(token)
         .belowTokens()
         .scaleToObject(2)
         .zIndex(0)
-        
+
         .effect()
         .file('jb2a.particles.outward.orange.01.04')
-        .scaleIn(0.25, 500, {'ease': 'easeOutQuint'})
+        .scaleIn(0.25, 500, { 'ease': 'easeOutQuint' })
         .fadeIn(500)
         .fadeOut(1000)
         .atLocation(token)
@@ -90,7 +90,7 @@ async function enlargeAnimation(token, updates, name, callbacks) {
         .duration(3000)
         .scaleToObject(1.5)
         .zIndex(4)
-        
+
         .effect()
         .file('jb2a.static_electricity.03.orange')
         .atLocation(token)
@@ -99,11 +99,11 @@ async function enlargeAnimation(token, updates, name, callbacks) {
         .fadeIn(250)
         .fadeOut(250)
         .waitUntilFinished(-3000)
-        
+
         .animation()
         .on(token)
         .opacity(1)
-        
+
         .play();
 }
 async function reduceAnimation(token, updates, name) {
@@ -136,7 +136,7 @@ async function reduceAnimation(token, updates, name) {
         .atLocation(token)
         .scaleToObject(2)
         .duration(500)
-        .scaleIn(0.25,500)
+        .scaleIn(0.25, 500)
         .fadeIn(250)
         .fadeOut(250)
         .repeats(3, 500, 500)
@@ -150,7 +150,7 @@ async function reduceAnimation(token, updates, name) {
         .effect()
         .from(token)
         .atLocation(token)
-        .loopProperty('sprite', 'rotation', {'from': -10, 'to': 10, 'duration': 75, 'pingPong': true, 'delay': 200})
+        .loopProperty('sprite', 'rotation', { 'from': -10, 'to': 10, 'duration': 75, 'pingPong': true, 'delay': 200 })
         .duration(2000)
         .waitUntilFinished(-200)
         .zIndex(0)
@@ -160,7 +160,7 @@ async function reduceAnimation(token, updates, name) {
                 'permanent': false,
                 'name': name,
                 'description': name,
-                'updateOpts': {'token': {'animate': false}}
+                'updateOpts': { 'token': { 'animate': false } }
             };
             await warpgate.mutate(token.document, updates, {}, options);
         })
@@ -172,7 +172,7 @@ async function reduceAnimation(token, updates, name) {
         .atLocation(token)
         .scaleToObject(scale)
         .duration(3000)
-        .scaleIn(0.25, 700, {'ease': 'easeOutBounce'})
+        .scaleIn(0.25, 700, { 'ease': 'easeOutBounce' })
 
         .effect()
         .file('jb2a.extras.tmfx.outpulse.circle.01.fast')
@@ -190,7 +190,7 @@ async function reduceAnimation(token, updates, name) {
 
         .effect()
         .file('jb2a.particles.outward.orange.01.04')
-        .scaleIn(0.25, 500, {'ease': 'easeOutQuint'})
+        .scaleIn(0.25, 500, { 'ease': 'easeOutQuint' })
         .fadeIn(500)
         .fadeOut(1000)
         .atLocation(token)
@@ -214,7 +214,7 @@ async function reduceAnimation(token, updates, name) {
 
         .play()
 }
-async function item({speaker, actor, token, character, item, args, scope, workflow}) {
+async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.failedSaves.size != 1) return;
     let animate = chrisPremades.helpers.getConfiguration(workflow.item, 'animation') ?? chrisPremades.helpers.jb2aCheck() === 'patreon';
     let selection = await chrisPremades.helpers.dialog(workflow.item.name, [['Enlarge', 'enlarge'], ['Reduce', 'reduce']], 'Enlarge or Reduce?');
@@ -286,7 +286,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         if (targetSize != 'tiny' || targetSize != 'sm') {
             let room = chrisPremades.helpers.checkForRoom(targetToken, 1);
             let direction = chrisPremades.helpers.findDirection(room);
-            switch(direction) {
+            switch (direction) {
                 case 'none':
                     doGrow = false;
                     break;
@@ -474,7 +474,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
     }
 }
 async function end(token, origin) {
-    await warpgate.revert(token.document, 'Enlarge/Reduce', {'updateOpts': {'token': {'animate': true}}});
+    await warpgate.revert(token.document, 'Enlarge/Reduce', { 'updateOpts': { 'token': { 'animate': true } } });
 }
 export let enlargeReduce = {
     'enlargeAnimation': enlargeAnimation,

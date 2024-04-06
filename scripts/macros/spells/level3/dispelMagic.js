@@ -110,6 +110,7 @@ export async function dispelMagic({ speaker, actor, token, character, item, args
         let saveRoll = await chrisPremades.helpers.rollRequest(workflow.token, 'abil', ability);
         if (saveRoll.total >= dispelDC) {
             new Sequence()
+
                 .effect()
                 .file("jb2a.detect_magic.circle.grey")
                 .atLocation(target)
@@ -118,6 +119,7 @@ export async function dispelMagic({ speaker, actor, token, character, item, args
                 .sound("modules/dnd5e-animations/assets/sounds/Spells/Buff/spell-buff-short-8.mp3")
 
                 .play();
+                
             await warpgate.wait(150);
             await chrisPremades.helpers.removeEffect(dispelEffect);
         }

@@ -9,11 +9,11 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
         'description': "<p>For the duration, you can read the thoughts of certain creatures. When you cast the spell and as your action on each turn until the spell ends, you can focus your mind on any one creature that you can see within 30 feet of you. If the creature you choose has an Intelligence of 3 or lower or doesn't speak any language, the creature is unaffected.</p>",
         'duration': {
             'seconds': 60
         },
-        'origin': workflow.item.uuid,
         'flags': {
             'effectmacro': {
                 'onDelete': {

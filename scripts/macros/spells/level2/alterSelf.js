@@ -13,10 +13,10 @@ export async function alterSelf({ speaker, actor, token, character, item, args, 
     switch (selection) {
         case 'aquatic': {
             effectData = {
-                'name': 'Alter Self',
-                'icon': 'assets/library/icons/sorted/spells/level2/alter_self.webp',
-                'description': 'You adapt your body to an aquatic environment, sprouting gills and growing webbing between your fingers. You can breathe underwater and gain a swimming speed equal to your walking speed.',
+                'name': workflow.item.name,
+                'icon': workflow.item.img,
                 'origin': workflow.item.uuid,
+                'description': 'You adapt your body to an aquatic environment, sprouting gills and growing webbing between your fingers. You can breathe underwater and gain a swimming speed equal to your walking speed.',
                 'duration': {
                     'seconds': 3600
                 },
@@ -43,10 +43,10 @@ export async function alterSelf({ speaker, actor, token, character, item, args, 
         }
         case 'change': {
             effectData = {
-                'name': 'Alter Self',
-                'icon': 'assets/library/icons/sorted/spells/level2/alter_self.webp',
-                'description': 'You transform your appearance. You decide what you look like, including your height, weight, facial features, sound of your voice, hair length, coloration, and distinguishing characteristics, if any. You can make yourself appear as a member of another race, though none of your statistics change. You also can\'t appear as a creature of a different size than you, and your basic shape stays the same; if you are bipedal, you can\'t use this spell to become quadrupedal, for instance. At any time for the duration of the spell, you can use your action to change your appearance in this way again.',
+                'name': workflow.item.name,
+                'icon': workflow.item.img,
                 'origin': workflow.item.uuid,
+                'description': 'You transform your appearance. You decide what you look like, including your height, weight, facial features, sound of your voice, hair length, coloration, and distinguishing characteristics, if any. You can make yourself appear as a member of another race, though none of your statistics change. You also can\'t appear as a creature of a different size than you, and your basic shape stays the same; if you are bipedal, you can\'t use this spell to become quadrupedal, for instance. At any time for the duration of the spell, you can use your action to change your appearance in this way again.',
                 'duration': {
                     'seconds': 3600
                 },
@@ -94,21 +94,21 @@ export async function alterSelf({ speaker, actor, token, character, item, args, 
                 }
             }
             featureData.system.damage.parts = damageParts;
-            async function effectMacro() {
+            async function effectMacroDel() {
                 await warpgate.revert(token.document, 'Alter Self: Unarmed Strike');
             }
             effectData = {
-                'label': 'Alter Self',
-                'icon': 'assets/library/icons/sorted/spells/level2/alter_self.webp',
-                'description': 'You grow claws, fangs, spines, horns, or a different natural weapon of your choice. Your unarmed strikes deal 1d6 piercing, slashing or bludgeoning damage, as appropriate to the natural weapon you chose, and you are proficient with your unarmed strikes. Finally, the natural weapon is magic and you have a +1 bonus to the attack and damage rolls you make using it.',
+                'label': workflow.item.name,
+                'icon': workflow.item.img,
                 'origin': workflow.item.uuid,
+                'description': 'You grow claws, fangs, spines, horns, or a different natural weapon of your choice. Your unarmed strikes deal 1d6 piercing, slashing or bludgeoning damage, as appropriate to the natural weapon you chose, and you are proficient with your unarmed strikes. Finally, the natural weapon is magic and you have a +1 bonus to the attack and damage rolls you make using it.',
                 'duration': {
                     'seconds': 3600
                 },
                 'flags': {
                     'effectmacro': {
                         'onDelete': {
-                            'script': chrisPremades.helpers.functionToString(effectMacro)
+                            'script': chrisPremades.helpers.functionToString(effectMacroDel)
                         }
                     },
                     'flags': {

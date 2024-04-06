@@ -32,9 +32,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 break;
             }
         }
-        const effectData = {
+        let effectData = {
             'name': name,
-            'icon': 'assets/library/icons/sorted/spells/level2/Blindness.webp',
+            'icon': workflow.item.img,
             'origin': workflow.item.uuid,
             'description': description,
             'duration': {

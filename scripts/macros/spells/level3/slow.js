@@ -19,7 +19,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             buttons: {
                 ok: {
                     label: "Ok!",
-                    callback: async (html) => {
+                    callback: async () => {
                         return;
                     },
                 },

@@ -27,9 +27,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
           case 9:
                duration = 86400 * 15;
      }
-     const effectData = {
-          'name': "Animal Messenger",
-          'icon': "assets/library/icons/sorted/spells/level2/animal_messenger.webp",
+     let effectData = {
+          'name': workflow.item.name,
+          'icon': workflow.item.img,
+          'origin': workflow.item.uuid,
           'description': "For the next 24 hours, whenever you make an ability check, you can roll a d4 and add the number rolled to the ability check.",
           'duration': {
                'seconds': duration

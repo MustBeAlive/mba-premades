@@ -144,8 +144,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let effectData = {
         'name': "Enwebbed",
         'icon': template.flags['mba-premades']?.template?.icon,
-        'description': "You are stuck in a mass of thick, sticky webbing. You can use your action to make a Strength check. If you succeed, you are no longer restrained.",
         'origin': template.flags['mba-premades']?.template?.itemUuid,
+        'description': "You are stuck in a mass of thick, sticky webbing. You can use your action to make a Strength check. If you succeed, you are no longer restrained.",
         'changes': [
             {
                 'key': 'macro.CE',
@@ -205,8 +205,8 @@ async function trigger(token, trigger) {
     let effectData = {
         'name': "Enwebbed",
         'icon': template.flags['mba-premades']?.template?.icon,
-        'description': "You are stuck in a mass of thick, sticky webbing. You can use your action to make a Strength check. If you succeed, you are no longer restrained.",
         'origin': template.flags['mba-premades']?.template?.itemUuid,
+        'description': "You are stuck in a mass of thick, sticky webbing. You can use your action to make a Strength check. If you succeed, you are no longer restrained.",
         'changes': [
             {
                 'key': 'macro.CE',

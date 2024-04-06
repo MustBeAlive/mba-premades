@@ -1,4 +1,4 @@
-export async function intellectFortress({speaker, actor, token, character, item, args, scope, workflow}) {
+export async function intellectFortress({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel - 2;
     let concEffect = await chrisPremades.helpers.findEffect(workflow.actor, 'Concentrating');
     if (workflow.targets.size > ammount) {
@@ -8,7 +8,7 @@ export async function intellectFortress({speaker, actor, token, character, item,
             await chrisPremades.helpers.removeEffect(concEffect);
             return;
         }
-        let newTargets = selection.inputs.filter(i=>i).slice(0, ammount);
+        let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
         await chrisPremades.helpers.updateTargets(newTargets);
     }
     let targets = Array.from(game.user.targets);
@@ -20,7 +20,7 @@ export async function intellectFortress({speaker, actor, token, character, item,
             distanceArray.push(chrisPremades.helpers.getDistance(target1, target2));
         }
     }
-    const found = distanceArray.some((distance)=>distance > 30);
+    const found = distanceArray.some((distance) => distance > 30);
     if (found === true) {
         ui.notifications.warn('Targets cannot be further than 30 ft. of each other!')
         await chrisPremades.helpers.removeEffect(concEffect);
@@ -28,8 +28,8 @@ export async function intellectFortress({speaker, actor, token, character, item,
     }
     await warpgate.wait(100);
     const effectData = {
-        'name': 'Intellect Fortress',
-        'icon': 'assets/library/icons/sorted/spells/level3/intellect_fortress.webp',
+        'name': workflow.item.name,
+        'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': 'You have advantage on Intelligence, Wisdom, and Charisma saving throws, as well as resistance to psychic damage.',
         'duration': {
@@ -47,7 +47,7 @@ export async function intellectFortress({speaker, actor, token, character, item,
                 'mode': 2,
                 'value': 1,
                 'priority': 20
-            },        {
+            }, {
                 'key': 'flags.midi-qol.advantage.ability.save.wis',
                 'mode': 2,
                 'value': 1,

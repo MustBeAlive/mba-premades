@@ -1,13 +1,13 @@
 import {mba} from '../../helperFunctions.js';
 let animations = {
-    'abj': 'jb2a.magic_signs.circle.02.abjuration.complete.',
-    'con': 'jb2a.magic_signs.circle.02.conjuration.complete.',
-    'div': 'jb2a.magic_signs.circle.02.divination.complete.',
-    'enc': 'jb2a.magic_signs.circle.02.enchantment.complete.',
-    'evo': 'jb2a.magic_signs.circle.02.evocation.complete.',
-    'ill': 'jb2a.magic_signs.circle.02.illusion.complete.',
-    'nec': 'jb2a.magic_signs.circle.02.necromancy.complete.',
-    'trs': 'jb2a.magic_signs.circle.02.transmutation.complete.'
+    'abj': 'jb2a.magic_signs.circle.02.abjuration.loop.',
+    'con': 'jb2a.magic_signs.circle.02.conjuration.loop.',
+    'div': 'jb2a.magic_signs.circle.02.divination.loop.',
+    'enc': 'jb2a.magic_signs.circle.02.enchantment.loop.',
+    'evo': 'jb2a.magic_signs.circle.02.evocation.loop.',
+    'ill': 'jb2a.magic_signs.circle.02.illusion.loop.',
+    'nec': 'jb2a.magic_signs.circle.02.necromancy.loop.',
+    'trs': 'jb2a.magic_signs.circle.02.transmutation.loop.'
 }
 let defaults = {
     'abj': 'blue',
@@ -26,12 +26,34 @@ export async function cast(workflow) {
     let color = mba.jb2aCheck() === 'patreon' ? game.settings.get('mba-premades', school + '_color') : defaults[school];
     let animation = animations[school] + color;
     new Sequence()
+
         .effect()
         .file(animation)
         .atLocation(workflow.token)
-        .belowTokens()
-        .scaleToObject(2)
-        .playbackRate(2)
+		.scaleToObject(1.5)
+		.rotateIn(180, 600, { ease: "easeOutCubic" })
+		.scaleIn(0, 600, { ease: "easeOutCubic" })
+		.loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
+		.belowTokens()
+		.fadeOut(2000)
+		.zIndex(0)
+
+        .effect()
+        .file(animation)
+        .atLocation(workflow.token)
+        .scaleToObject(1.5)
+		.rotateIn(180, 600, { ease: "easeOutCubic" })
+		.scaleIn(0, 600, { ease: "easeOutCubic" })
+		.loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
+		.belowTokens()
+        .fadeIn(200, { ease: "easeOutCirc", delay: 500 })
+		.fadeOut(300, { ease: "linear" })
+        .zIndex(1)
+		.filter("ColorMatrix", { saturate: -1, brightness: 2 })
+		.filter("Blur", { blurX: 5, blurY: 10 })
+		.duration(1200)
+
         .play();
+
     await warpgate.wait(100);
 }

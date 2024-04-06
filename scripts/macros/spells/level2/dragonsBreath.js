@@ -1,11 +1,11 @@
-export async function dragonsBreath({speaker, actor, token, character, item, args, scope, workflow}) {
+export async function dragonsBreath({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Dragon\'s Breath: Attack', false);
     if (!featureData) {
-        ui.notifications.warn('Missing item in the compendium! (Dragon\'s Breath: Attack)');    
+        ui.notifications.warn('Missing item in the compendium! (Dragon\'s Breath: Attack)');
         return;
     }
-    let damageTypes  = [
+    let damageTypes = [
         ['Acid 🧪', 'acid'],
         ['Cold ❄️', 'cold'],
         ['Fire 🔥', 'fire'],
@@ -41,21 +41,21 @@ export async function dragonsBreath({speaker, actor, token, character, item, arg
     featureData.system.damage.parts = damageParts;
     featureData.system.save.dc = chrisPremades.helpers.getSpellDC(workflow.item);
 
-    async function effectMacro () {
+    async function effectMacroDel() {
         await warpgate.revert(token.document, 'Dragon\'s Breath: Attack');
     }
     let effectData = {
-        'label': 'Dragon\'s Breath',
-        'icon': 'assets/library/icons/sorted/spells/level2/dragon_breath.webp',
-        'description': 'You are imbued with power to spew magical energy from your mouth',
+        'label': workflow.item.name,
+        'icon': workflow.item.img,
         'origin': workflow.item.uuid,
+        'description': 'You are imbued with power to spew magical energy from your mouth',
         'duration': {
             'seconds': 60
         },
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacro)
+                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {

@@ -1,8 +1,8 @@
 async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ditem = workflow.damageItem;
     if (ditem.newHP != 0 || ditem.oldHP === 0) return;
-    let targetActor = workflow.targets.first().actor;
-    let maxHP = targetActor.system.attributes?.hp?.max;
+    let target = workflow.targets.first();
+    let maxHP = target.actor.system.attributes?.hp?.max;
     if (!maxHP) return;
     if (ditem.appliedDamage > (maxHP + ditem.oldHP)) return;
     let queueSetup = await chrisPremades.queue.setup(workflow.uuid, 'harm', 389);
@@ -21,9 +21,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ammount = maxHP - 1;
     };
     let effectData = {
-        'name': "Harm",
-        'icon': "assets/library/icons/sorted/spells/level6/harm.webp",
-        'description': "Virulent disease lowered your hit point maximum.",
+        'name': workflow.item.name,
+        'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
+        'description': "Virulent disease lowered your hit points maximum.",
         'duration': {
             'seconds': 3600
         },
@@ -43,7 +44,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                     itemUuid: workflow.item.uuid
                 }
             }
-        } 
+        }
     };
     await chrisPremades.helpers.createEffect(target.actor, effectData);
 }

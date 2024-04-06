@@ -1,8 +1,7 @@
-export async function enhanceAbility({speaker, actor, token, character, item, args, scope, workflow}) {
+export async function enhanceAbility({ speaker, actor, token, character, item, args, scope, workflow }) {
     const target = workflow.targets.first();
-    const source = workflow.actor;
     let effectData;
-    let choices  = [
+    let choices = [
         ['Bull\'s Strength (STR)', 'STR'],
         ['Cat\'s Grace (DEX)', 'DEX'],
         ['Bear\'s Endurance (CON)', 'CON'],
@@ -80,18 +79,19 @@ export async function enhanceAbility({speaker, actor, token, character, item, ar
             break;
         }
         case 'CON': {
-            async function effectMacro() {
+            let damageFormula = '2d6[temphp]';
+            let damageRoll = await new Roll(damageFormula).roll({ 'async': true });
+            await MidiQOL.displayDSNForRoll(damageRoll, 'damageRoll');
+            damageRoll.toMessage({
+                rollMode: 'roll',
+                speaker: { 'alias': name },
+                flavor: 'Enhance Ability: Bear\'s Endurance'
+            });
+            async function effectMacroDel() {
                 if (actor.system.attributes.hp.temp > 0) {
                     actor.update({ "system.attributes.hp.temp": 0 })
                 }
             }
-            let damageFormula = '2d6[temphp]';
-            let damageRoll = await new Roll(damageFormula).roll({'async': true});
-            damageRoll.toMessage({
-            rollMode: 'roll',
-            speaker: {'alias': name},
-            flavor: 'Enhance Ability: Bear\'s Endurance'
-            });
             effectData = {
                 'name': "Enhance Ability: Bear\'s Endurance",
                 'icon': "assets/library/icons/sorted/spells/level2/enhance_ability3.webp",
@@ -103,7 +103,7 @@ export async function enhanceAbility({speaker, actor, token, character, item, ar
                 'flags': {
                     'effectmacro': {
                         'onDelete': {
-                            'script': chrisPremades.helpers.functionToString(effectMacro)
+                            'script': chrisPremades.helpers.functionToString(effectMacroDel)
                         }
                     }
                 },
@@ -125,7 +125,7 @@ export async function enhanceAbility({speaker, actor, token, character, item, ar
                     }
                 }
             };
-            if (target.actor.system.attributes.hp.temp < damageRoll.total) {         
+            if (target.actor.system.attributes.hp.temp < damageRoll.total) {
                 await chrisPremades.helpers.applyDamage([target.actor], damageRoll.total, 'temphp');
             }
             break;

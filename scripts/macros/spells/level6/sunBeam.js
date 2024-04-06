@@ -1,17 +1,17 @@
-async function item({speaker, actor, token, character, item, args, scope, workflow}) {
+async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Sunbeam: Create Beam', false);
     if (!featureData) return;
     featureData.system.save.dc = chrisPremades.helpers.getSpellDC(workflow.item);
-    async function effectMacro () {
+    async function effectMacroDel() {
         await warpgate.revert(token.document, 'Sunbeam: Create Beam');
     }
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
         'duration': {
             'seconds': 60
         },
-        'origin': workflow.item.uuid,
         'changes': [
             {
                 'key': 'ATL.light.bright',
@@ -29,7 +29,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacro)
+                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -59,7 +59,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
     await warpgate.mutate(workflow.token.document, updates, {}, options);
 }
 
-async function check({speaker, actor, token, character, item, args, scope, workflow}) {
+async function check({ speaker, actor, token, character, item, args, scope, workflow }) {
     let effectData = {
         'name': 'Save Disdvantage',
         'icon': 'assets/library/icons/sorted/generic/generic_debuff.webp',
@@ -70,16 +70,14 @@ async function check({speaker, actor, token, character, item, args, scope, workf
         'changes': [
             {
                 'key': 'flags.midi-qol.disadvantage.ability.save.all',
-                'value': '1',
                 'mode': 5,
+                'value': '1',
                 'priority': 120
             }
         ],
         'flags': {
             'dae': {
-                'specialDuration': [
-                    'isSave'
-                ]
+                'specialDuration': ['isSave']
             },
             'chris-premades': {
                 'effect': {
@@ -89,12 +87,9 @@ async function check({speaker, actor, token, character, item, args, scope, workf
         }
     };
     let targets = Array.from(workflow.targets);
-    console.log(targets);
     for (let i = 0; i < targets.length; i++) {
         let target = fromUuidSync(targets[i].document.uuid).object;
-        console.log(target);
         let type = chrisPremades.helpers.raceOrType(target.actor);
-        console.log(type);
         if (type === 'undead' || type === 'ooze') {
             await chrisPremades.helpers.createEffect(target.actor, effectData);
         }

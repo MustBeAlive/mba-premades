@@ -1,10 +1,9 @@
-async function item({speaker, actor, token, character, item, args, scope, workflow}) {
+async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     if (target.actor.system.attributes.hp.value > 100) {
         ui.notifications.warn('Target has more than 100 HP!');
         return;
     }
-
     let hasCharmImmunity = chrisPremades.helpers.checkTrait(target.actor, 'ci', 'charmed');
     if (hasCharmImmunity) {
         ui.notifications.warn('Target is immune to condition: Charmed!');
@@ -30,11 +29,12 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         .delay(1500)
 
         .play();
-        await warpgate.wait(3500);
 
-    const effectData = {
-        'name': "Power Word: Pain",
-        'icon': "assets/library/icons/sorted/spells/level7/power_word_pain.webp",
+    await warpgate.wait(3500);
+    let effectData = {
+        'name': workflow.item.name,
+        'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
         'description': "You are affected by crippling pain. Any speed you have cannot be higher than 10 feet. You also have disadvantage on attack rolls, ability checks, and saving throws, other than Constitution saving throws. Finally, if you try to cast a spell, you must first succeed on a Constitution saving throw, or the casting fails and the spell is wasted. At the end of each of your turns, you can make a Constitution saving throw. On a successful save, the pain ends.",
         'changes': [
             {
@@ -135,7 +135,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             'mba-premades': {
                 'spell': {
                     'powerWordPain': {
-                        'dc': chrisPremades.helpers.getSpellDC(workflow.item),
+                        'saveDC': chrisPremades.helpers.getSpellDC(workflow.item),
                     }
                 }
             },
@@ -151,10 +151,10 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
     await chrisPremades.helpers.createEffect(target.actor, effectData);
 }
 
-async function check({speaker, actor, token, character, item, args, scope, workflow}) {
+async function check({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.item.type != "spell" || workflow.item.name === "Crippling Pain") return;
     let effect = await chrisPremades.helpers.findEffect(actor, "Power Word: Pain");
-    let spellDC = effect.flags['mba-premades']?.spell?.powerWordPain?.dc;
+    let spellDC = effect.flags['mba-premades']?.spell?.powerWordPain?.saveDC;
     let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'con');
     if (saveRoll.total < spellDC) {
         ui.notifications.warn('Spell fails!');

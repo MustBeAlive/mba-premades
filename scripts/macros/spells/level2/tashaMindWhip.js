@@ -1,4 +1,4 @@
-async function item({speaker, actor, token, character, item, args, scope, workflow}) {
+async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel - 1;
     if (workflow.targets.size > ammount) {
         let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
@@ -33,7 +33,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
     if (!originItem) return;
     featureData.system.save.dc = chrisPremades.helpers.getSpellDC(originItem);
     setProperty(featureData, 'chris-premades.spell.castData.school', originItem.system.school);
-    let feature = new CONFIG.Item.documentClass(featureData, {'parent': workflow.actor});
+    let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
     let targetUuids = [];
     for (let i of targets) {
         targetUuids.push(i.document.uuid);
@@ -45,7 +45,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
 }
 
 async function turnStart(actor, token) {
-    let choices  = [
+    let choices = [
         ['Action', 'action'],
         ['Bonus Action', 'bonus'],
         ['Movement', 'move']
@@ -68,9 +68,9 @@ async function turnStart(actor, token) {
             flavor = `Mind Whip: <b>${token.document.name}</b> chose to keep <b>Movement Action</b>`;
         }
     }
-    ChatMessage.create({ 
-        flavor: flavor, 
-        speaker: ChatMessage.getSpeaker({ actor: actor}) 
+    ChatMessage.create({
+        flavor: flavor,
+        speaker: ChatMessage.getSpeaker({ actor: actor })
     });
 }
 

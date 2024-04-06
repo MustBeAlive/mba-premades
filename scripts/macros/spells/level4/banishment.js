@@ -20,23 +20,22 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             buttons: {
                 yes: {
                     label: "Home Plane (Stay)",
-                    callback: async (html) => {
+                    callback: async () => {
                         return;
                     },
                 },
                 no: {
                     label: "Demiplane (Return)",
-                    callback: async (html) => {
+                    callback: async () => {
                         await token.document.update({ hidden: false});
-                    },
-                },
-            },
-            default: "no"
+                    }
+                }
+            }
         }).render(true);
     };
-    const effectData = {
-        'name': 'Banishment',
-        'icon': 'assets/library/icons/sorted/spells/level4/banishment.webp',
+    let effectData = {
+        'name': workflow.item.name,
+        'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'duration': {
             'seconds': 60

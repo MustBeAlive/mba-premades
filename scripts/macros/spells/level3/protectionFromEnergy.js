@@ -41,8 +41,8 @@ export async function protectionFromEnergy({ speaker, actor, token, character, i
     const effectData = {
         'name': name,
         'icon': icon,
-        'description': "You have resistance to " + selection + " damage.",
         'origin': workflow.item.uuid,
+        'description': "You have resistance to " + selection + " damage.",
         'duration': {
             'seconds': 3600
         },

@@ -7,10 +7,10 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
         'duration': {
             'seconds': 60
         },
-        'origin': workflow.item.uuid,
         'flags': {
             'effectmacro': {
                 'onDelete': {

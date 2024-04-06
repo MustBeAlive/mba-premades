@@ -2,7 +2,13 @@ export async function heroesFeast({speaker, actor, token, character, item, args,
     let targets = Array.from(workflow.targets);
     let rollFormula = '2d10';
     let hpRoll = await new Roll(rollFormula).roll({async: true});
-    async function effectMacro() {
+    await MidiQOL.displayDSNForRoll(hpRoll, 'damageRoll');
+    hpRoll.toMessage({
+        rollMode: 'roll',
+        speaker: { 'alias': name },
+        flavor: `<b>Heroes' Feast</b>`
+    });
+    async function effectMacroDel() {
         let maxHP = actor.system.attributes.hp.max;
         let currentHP = actor.system.attributes.hp.value;
         if (currentHP > maxHP) {
@@ -10,8 +16,9 @@ export async function heroesFeast({speaker, actor, token, character, item, args,
         }
     }
     let effectData = {
-        'name': 'Heroes\' Feast',
-        'icon': 'assets/library/icons/sorted/spells/level6/heroes_feast.webp',
+        'name': workflow.item.name,
+        'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
         'description': 'As soon as you are affected by Heroes\' Feast, you are cured of all diseases and poisons. You also become immune to being poisoned and frightened and gain advantage on all Wisdom saving throws. For the next 24 hours, your hit point maximum is increases by 2d10, and you gain the same number of hit points.',
         'duration': {
             'seconds': 86400
@@ -45,7 +52,7 @@ export async function heroesFeast({speaker, actor, token, character, item, args,
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacro)
+                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {

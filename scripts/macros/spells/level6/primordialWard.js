@@ -69,7 +69,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         buttons: {
             yes: {
                 label: "Yes",
-                callback: async (html) => {
+                callback: async () => {
                     await chrisPremades.helpers.removeEffect(effect);
                     let icon;
                     switch (type) {
@@ -131,12 +131,11 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             },
             no: {
                 label: "No",
-                callback: async (html) => {
+                callback: async () => {
                     return;
-                },
-            },
-        },
-        default: "no"
+                }
+            }
+        }
     }).render(true);
 }
 

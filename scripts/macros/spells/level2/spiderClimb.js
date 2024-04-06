@@ -1,7 +1,7 @@
 // Animation by EskieMoh#2969
 export async function spiderClimb({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    async function effectMacro() {
+    async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: "SpiderLeg", object: token })
     }
     let effectData = {
@@ -23,7 +23,7 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacro)
+                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {

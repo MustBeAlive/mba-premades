@@ -1,11 +1,13 @@
-export async function powerWordHeal({speaker, actor, token, character, item, args, scope, workflow}) {
+export async function powerWordHeal({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let type = chrisPremades.helpers.raceOrType(target.actor);
     if (type === 'undead' || type === 'construct') {
         ui.notifications.warn('Power Word: Heal has no effect on undead and construct creatures!');
         return false;
     }
+
     new Sequence()
+
         .effect()
         .file("jb2a.sacred_flame.source.green")
         .atLocation(target)
@@ -24,6 +26,7 @@ export async function powerWordHeal({speaker, actor, token, character, item, arg
         .delay(1500)
 
         .play();
+
     let diff = target.actor.system.attributes.hp.max - target.actor.system.attributes.hp.value;
     await chrisPremades.helpers.applyDamage([target], diff, 'healing');
 
@@ -38,7 +41,7 @@ export async function powerWordHeal({speaker, actor, token, character, item, arg
     let reaction = chrisPremades.helpers.findEffect(target.actor, 'Reaction');
     if (!reaction) {
         let isProne = await chrisPremades.helpers.findEffect(target.actor, 'Prone');
-        if (isProne){
+        if (isProne) {
             async function effectMacro() {
                 let effect = chrisPremades.helpers.findEffect(actor, 'Power Word: Heal');
                 await new Dialog({
@@ -47,16 +50,16 @@ export async function powerWordHeal({speaker, actor, token, character, item, arg
                     buttons: {
                         yes: {
                             label: "Yes",
-                            callback: async (html) => {
+                            callback: async () => {
                                 await chrisPremades.helpers.removeCondition(actor, 'Prone');
                                 await chrisPremades.helpers.addCondition(actor, 'Reaction');
                                 await chrisPremades.helpers.removeEffect(effect);
-                                return;                            
+                                return;
                             },
                         },
                         no: {
                             label: "No",
-                            callback: async (html) => {
+                            callback: async () => {
                                 await chrisPremades.helpers.removeEffect(effect);
                                 return;
                             }

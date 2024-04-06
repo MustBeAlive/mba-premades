@@ -12,8 +12,8 @@ export async function borrowedKnowledge({speaker, actor, token, character, item,
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
-        'description': "For the next hour, you are proficient in one skill of your choosing.",
         'origin': workflow.item.uuid,
+        'description': "For the next hour, you are proficient in one skill of your choosing.",
         'duration': {
             'seconds': 3600
         },
