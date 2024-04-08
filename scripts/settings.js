@@ -1,11 +1,19 @@
-import { cast } from './macros/animations/cast.js';
-import { changeChat } from './macros/ui/changeChat.js';
-import { deathSaves } from './macros/mechanics/deathsaves.js';
-import { macros } from './macros.js';
-import { removeV10EffectsBlind } from './macros/mechanics/blindness.js';
-import { removeV10EffectsInvisible } from './macros/mechanics/invisibility.js';
+import {cast} from './macros/animations/cast.js';
+import {changeChat} from './macros/ui/changeChat.js';
+import {deathSaves} from './macros/mechanics/deathsaves.js';
+import {macros} from './macros.js';
+import {removeV10EffectsBlind} from './macros/mechanics/blindness.js';
+import {removeV10EffectsInvisible} from './macros/mechanics/invisibility.js';
+import {tashaSummon} from './macros/generic/tashaSummon.js';
 let moduleName = 'mba-premades';
 export function registerSettings() {
+    game.settings.register(moduleName, 'LastGM', {
+        'name': 'LastGM',
+        'hint': 'Last GM to join the game.',
+        'scope': 'world',
+        'config': false,
+        'type': String
+    });
     game.settings.register(moduleName, 'Dark Chat', {
         'name': 'Включить темную версию чата',
         'hint': "Включает альтернативную (темную) версию чата.",
@@ -45,6 +53,63 @@ export function registerSettings() {
                 Hooks.on('midi-qol.preItemRoll', macros.blur);
             } else {
                 Hooks.off('midi-qol.preItemRoll', macros.blur);
+            }
+        }
+    });
+    game.settings.register(moduleName, 'Show Names', {
+        'name': 'Show Names',
+        'hint': 'Enabling this will show target names in the target selector dialog (Used for certain features and spells).',
+        'scope': 'world',
+        'config': true,
+        'type': Boolean,
+        'default': true
+    });
+    game.settings.register(moduleName, 'Tasha Actors', {
+        'name': 'Keep Summon Actors Updated',
+        'hint': 'This setting will keep actors from this module updated in the sidebar.',
+        'scope': 'world',
+        'config': true,
+        'type': Boolean,
+        'default': false,
+        'onChange': async value => {
+            if (value && game.user.isGM) await tashaSummon.setupFolder();
+        }
+    });
+    game.settings.register(moduleName, 'Tasha Initiative', {
+        'name': 'Minions use caster\'s initiative',
+        'hint': 'Enabling this will have minions summoned from this module to use the caster\'s initiative instead of rolling their own.  Similar to the summon spells from Tasha\'s Cauldron Of Everything',
+        'scope': 'world',
+        'config': true,
+        'type': Boolean,
+        'default': false
+    });
+    game.settings.register(moduleName, 'Summons Initiative', {
+        'name': 'Auto Update Summons Initiative',
+        'hint': 'Automatically update player controlled warpgate summons\' initaitve to be just after the player\'s',
+        'scope': 'world',
+        'config': true,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('dnd5e.rollInitiative', tashaSummon.updateSummonInitiative);
+            } else {
+                Hooks.off('dnd5e.rollInitiative', tashaSummon.updateSummonInitiative);
+            }
+        }
+    });
+    game.settings.register(moduleName, 'Companions Initiative', {
+        'name': 'Auto Update Companions Initiative',
+        'hint': 'Automatically update player owned NPCs\' initiative to be just after the player\'s',
+        'scope': 'world',
+        'config': true,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('dnd5e.rollInitiative', tashaSummon.updateCompanionInitiative);
+            } else {
+                Hooks.off('dnd5e.rollInitiative', tashaSummon.updateCompanionInitiative);
             }
         }
     });
@@ -121,7 +186,7 @@ export function registerSettings() {
     game.settings.register(moduleName, 'abj_color', {
         'name': 'Abjuration',
         'hint': 'Цвет для заклинаний школы abjuration',
-        'scope': 'client',
+        'scope': 'world',
         'config': true,
         'type': String,
         'default': 'blue',
@@ -137,7 +202,7 @@ export function registerSettings() {
     game.settings.register(moduleName, 'con_color', {
         'name': 'Conjuration',
         'hint': 'Цвет для заклинаний школы conjuration.',
-        'scope': 'client',
+        'scope': 'world',
         'config': true,
         'type': String,
         'default': 'yellow',
@@ -153,7 +218,7 @@ export function registerSettings() {
     game.settings.register(moduleName, 'div_color', {
         'name': 'Divination',
         'hint': 'Цвет для заклинаний школы divination.',
-        'scope': 'client',
+        'scope': 'world',
         'config': true,
         'type': String,
         'default': 'blue',
@@ -169,7 +234,7 @@ export function registerSettings() {
     game.settings.register(moduleName, 'enc_color', {
         'name': 'Enchantment',
         'hint': 'Цвет для заклинаний школы enchantment.',
-        'scope': 'client',
+        'scope': 'world',
         'config': true,
         'type': String,
         'default': 'pink',
@@ -185,7 +250,7 @@ export function registerSettings() {
     game.settings.register(moduleName, 'evo_color', {
         'name': 'Evocation',
         'hint': 'Цвет для заклинаний школы evocation.',
-        'scope': 'client',
+        'scope': 'world',
         'config': true,
         'type': String,
         'default': 'red',
@@ -201,7 +266,7 @@ export function registerSettings() {
     game.settings.register(moduleName, 'ill_color', {
         'name': 'Illusion',
         'hint': 'Цвет для заклинаний школы illusion.',
-        'scope': 'client',
+        'scope': 'world',
         'config': true,
         'type': String,
         'default': 'purple',
@@ -217,7 +282,7 @@ export function registerSettings() {
     game.settings.register(moduleName, 'nec_color', {
         'name': 'Necromancy',
         'hint': 'Цвет для заклинаний школы necromancy.',
-        'scope': 'client',
+        'scope': 'world',
         'config': true,
         'type': String,
         'default': 'green',
@@ -233,7 +298,7 @@ export function registerSettings() {
     game.settings.register(moduleName, 'trs_color', {
         'name': 'Transmutation',
         'hint': 'Цвет для заклинаний школы transmutation.',
-        'scope': 'client',
+        'scope': 'world',
         'config': true,
         'type': String,
         'default': 'yellow',

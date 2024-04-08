@@ -2,8 +2,8 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
     const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
-        'description': "Until the end of your next turn, you have resistance against bludgeoning, piercing, and slashing damage dealt by weapon attacks.",
         'origin': workflow.item.uuid,
+        'description': "Until the end of your next turn, you have resistance against bludgeoning, piercing, and slashing damage dealt by weapon attacks.",
         'changes': [
             {
                 'key': 'flags.midi-qol.onUseMacroName',

@@ -10,7 +10,8 @@ import {registerSettings} from './settings.js';
 import {removeV10EffectsBlind} from './macros/mechanics/blindness.js';
 import {removeV10EffectsInvisible} from './macros/mechanics/invisibility.js';
 import {rollModeChange} from './macros/ui/rollmodeButtons.js';
-import {runAsGM, runAsUser} from './runAsGm.js';
+import {summons} from './macros/generic/summons.js';
+import {tashaSummon} from './macros/generic/tashaSummon.js';
 export let socket;
 
 Hooks.once('init', async function() {
@@ -22,30 +23,28 @@ Hooks.once('init', async function() {
 
 Hooks.once('socketlib.ready', async function() {
     socket = socketlib.registerModule('mba-premades');
-    socket.register('updateCombatant', runAsGM.updateCombatant);
-    socket.register('updateWall', runAsGM.updateWall);
-    socket.register('updateEffect', runAsGM.updateEffect);
-    socket.register('createEffect', runAsGM.createEffect);
-    socket.register('removeEffect', runAsGM.removeEffect);
-    socket.register('rollItem', runAsUser.rollItem);
-    socket.register('createFolder', runAsGM.createFolder);
-    socket.register('createActor', runAsGM.createActor);
-    socket.register('updateInitiative', runAsGM.updateInitiative);
+    socket.register('createCombatant', tashaSummon.createCombatant);
 });
 
 Hooks.once('ready', async function() {
     if (game.user.isGM) {
+        if (game.settings.get('mba-premades', 'Tasha Actors')) await tashaSummon.setupFolder();
+        game.settings.set('mba-premades', 'LastGM', game.user.id);
         if (game.settings.get('mba-premades', 'Check For Updates')) checkUpdate();
     }
-    if (game.settings.get('mba-premades', 'Cast Animations')) Hooks.on('midi-qol.postPreambleComplete', cast);
     if (game.settings.get('mba-premades', 'Blindness Fix')) removeV10EffectsBlind();
     if (game.settings.get('mba-premades', 'Invisibility Fix')) removeV10EffectsInvisible();
+    Hooks.on('createToken', addActions);
+    if (game.settings.get('mba-premades', 'Cast Animations')) Hooks.on('midi-qol.postPreambleComplete', cast);
     if (game.settings.get('mba-premades', 'Auto Death Save')) Hooks.on('updateCombat', deathSaves);
     if (game.settings.get('mba-premades', 'Blur')) Hooks.on('midi-qol.preItemRoll', macros.blur);
-    Hooks.on('createToken', addActions);
+    if (game.settings.get('mba-premades', 'Summons Initiative')) Hooks.on('dnd5e.rollInitiative', tashaSummon.updateSummonInitiative);
+    if (game.settings.get('mba-premades', 'Companions Initiative')) Hooks.on('dnd5e.rollInitiative', tashaSummon.updateCompanionInitiative);
 });
 
 globalThis['mbaPremades'] = {
     helpers,
-    macros
+    macros,
+    summons,
+    tashaSummon
 }

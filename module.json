@@ -289,7 +289,7 @@
 	],
 	"styles": [
 		"/css/darkChat.css",
-		"/css/rollmode-buttons.css"
+		"/css/rollmodeButtons.css"
 	],
 	"url": "#{URL}#",
 	"manifest": "#{MANIFEST}#",
