@@ -2,6 +2,9 @@
 export async function fireBolt({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first()
     if (!workflow.hitTargets.size) {
+        let offsetX = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
+        let offsetY = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
+
         new Sequence()
 
             .effect()
@@ -68,7 +71,7 @@ export async function fireBolt({ speaker, actor, token, character, item, args, s
             .effect()
             .file("animated-spell-effects-cartoon.fire.20")
             .atLocation(token)
-            .stretchTo(target, { offset: { x: 2, y: 2 }, gridUnits: true })
+            .stretchTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
             .waitUntilFinished(-1000)
 
             .play();
@@ -161,7 +164,6 @@ export async function fireBolt({ speaker, actor, token, character, item, args, s
         .mask()
         .fadeOut(2000)
         .duration(5000)
-
 
         .play()
 }

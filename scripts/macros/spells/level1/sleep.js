@@ -3,11 +3,55 @@ export async function sleep({ speaker, actor, token, character, item, args, scop
 	const sleepHp = await workflow.damageTotal;
 	const condition = "Unconscious";
 	console.log(`Sleep Spell => Available HP Pool [${sleepHp}] points`);
-	const targets = await Array.from(workflow.targets)
+	const targets = Array.from(workflow.targets)
 		.filter((i) => i.actor.system.attributes.hp.value != 0 && !i.actor.effects.find((x) => x.data.label === condition))
 		.sort((a, b) => (canvas.tokens.get(a.id).actor.system.attributes.hp.value < canvas.tokens.get(b.id).actor.system.attributes.hp.value ? -1 : 1));
 	let remainingSleepHp = sleepHp;
 	let sleepTarget = [];
+
+	let template = canvas.scene.collections.templates.get(workflow.templateId);
+
+	new Sequence()
+
+		.effect()
+		.file("jb2a.energy_strands.range.multiple.purple.01")
+		.attachTo(token)
+		.stretchTo(template)
+
+		.effect()
+		.file("jb2a.sleep.cloud.01.dark_orangepurple")
+		.atLocation(template)
+		.size(10, { gridUnits: true })
+		.scaleIn(0, 500, { ease: "easeOutQuint" })
+		.delay(1000)
+		.duration(5000)
+		.fadeIn(1000)
+		.fadeOut(1000)
+		.zIndex(3)
+
+		.effect()
+		.file("jb2a.extras.tmfx.border.circle.outpulse.02.normal")
+		.atLocation(template)
+		.size(8, { gridUnits: true })
+		.delay(1000)
+		.duration(5000)
+		.fadeIn(1000)
+		.fadeOut(1000)
+		.opacity(0.75)
+		.zIndex(1)
+
+		.effect()
+		.file("jb2a.particles.outward.purple.02.03")
+		.size(8, { gridUnits: true })
+		.scaleIn(0, 500, { ease: "easeOutQuint" })
+		.delay(1000)
+		.duration(5000)
+		.fadeOut(1000)
+		.atLocation(template)
+		.animateProperty("sprite", "position.y", { from: 0, to: 100, duration: 3000 })
+		.zIndex(5)
+
+		.play();
 
 	for (let target of targets) {
 		const findTarget = await canvas.tokens.get(target.id);
@@ -20,31 +64,22 @@ export async function sleep({ speaker, actor, token, character, item, args, scop
 		const targetImg = findTarget.document.texture.src;
 		if ((immuneType) || (immuneCI) || (sleeping)) {
 			console.log(`Sleep Results => Target: ${findTarget.name} | HP: ${targetHpValue} | Status: Resists`);
-			sleepTarget.push(`<div class="midi-qol-flex-container"><div>Resists</div><div class="midi-qol-target-npc midi-qol-target-name" id="${findTarget.id}"> ${findTarget.name}</div><div><img src="${targetImg}" width="30" height="30" style="border:0px"></div></div>`);
+			sleepTarget.push(`<div class="midi-qol-flex-container"><div>Resisted: </div><div class="midi-qol-target-npc midi-qol-target-name" id="${findTarget.id}"> ${findTarget.name}</div><div><img src="${targetImg}" width="30" height="30" style="border:0px"></div></div>`);
 			continue;
 		}
 		if (remainingSleepHp >= targetHpValue) {
 			remainingSleepHp -= targetHpValue;
 			console.log(`Sleep Results => Target: ${findTarget.name} |  HP: ${targetHpValue} | HP Pool: ${remainingSleepHp} | Status: Slept`);
-			sleepTarget.push(`<div class="midi-qol-flex-container"><div>Slept</div><div class="midi-qol-target-npc midi-qol-target-name" id="${findTarget.id}"> ${findTarget.name}</div><div><img src="${targetImg}" width="30" height="30" style="border:0px"></div></div>`);
+			sleepTarget.push(`<div class="midi-qol-flex-container"><div>Fell asleep: </div><div class="midi-qol-target-npc midi-qol-target-name" id="${findTarget.id}"> ${findTarget.name}</div><div><img src="${targetImg}" width="30" height="30" style="border:0px"></div></div>`);
+			async function effectMacroDel() {
+				await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Sleep` })
+			}
 			const effectData = {
-				'name': "Sleep Spell",
-				'icon': "assets/library/icons/sorted/spells/level1/Sleep.webp",
+				'name': workflow.item.name,
+				'icon': workflow.item.img,
 				'origin': workflow.item.uuid,
 				'duration': {
 					'seconds': 60
-				},
-				'flags': {
-					'dae': {
-						'specialDuration': ["isDamaged"]
-					},
-					'midi-qol': {
-						'castData': {
-							baseLevel: 1,
-							castLevel: workflow.castData.castLevel,
-							itemUuid: workflow.item.uuid
-						}
-					}
 				},
 				'changes': [
 					{
@@ -53,9 +88,44 @@ export async function sleep({ speaker, actor, token, character, item, args, scop
 						'value': "Unconscious",
 						'priority': 20
 					},
-				]
+				],
+				'flags': {
+					'dae': {
+						'specialDuration': ["isDamaged"]
+					},
+					'effectmacro': {
+						'onDelete': {
+							'script': chrisPremades.helpers.functionToString(effectMacroDel)
+						}
+					},
+					'midi-qol': {
+						'castData': {
+							baseLevel: 1,
+							castLevel: workflow.castData.castLevel,
+							itemUuid: workflow.item.uuid
+						}
+					}
+				}
 			};
-			await chrisPremades.helpers.createEffect(findTarget.actor, effectData);
+
+			await new Sequence()
+
+				.effect()
+				.file("jb2a.sleep.symbol.dark_orangepurple")
+				.scaleIn(0, 500, { ease: "easeOutQuint" })
+				.fadeOut(1000)
+				.atLocation(target)
+				.attachTo(target, { followRotation: false, bindAlpha: false })
+				.scaleToObject(1.5 * target.document.texture.scaleX)
+				.persist()
+				.name(`${target.document.name} Sleep`)
+
+				.thenDo(function () {
+					chrisPremades.helpers.createEffect(findTarget.actor, effectData);
+				})
+
+				.play();
+
 			await warpgate.wait(200);
 			continue;
 

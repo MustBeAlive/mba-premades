@@ -31,17 +31,22 @@ import {command} from './macros/spells/level1/command.js';
 import {cordonOfArrows} from './macros/spells/level2/cordonOfArrows.js';
 import {createBonfire} from './macros/spells/cantrip/createBonfire.js';
 import {crownOfMadness} from './macros/spells/level2/crownOfMadness.js';
+import {crownOfStars} from './macros/spells/level7/crownOfStars.js';
+import {cunningAction} from './macros/classFeatures/rogue/cunningAction.js';
 import {cureWounds} from './macros/spells/level1/cureWounds.js';
 import {dancingLights} from './macros/spells/cantrip/dancingLights.js';
+import {dash} from './macros/actions/dash.js';
 import {detectEvilAndGood} from './macros/spells/level1/detectEvilAndGood.js';
 import {detectMagic} from './macros/spells/level1/detectMagic.js';
 import {detectPoisonAndDisease} from './macros/spells/level1/detectPoisonAndDisease.js';
 import {detectThoughts} from './macros/spells/level2/detectThoughts.js';
 import {disease} from './macros/generic/disease.js';
+import {disengage} from './macros/actions/disengage.js';
 import {disguiseSelf} from './macros/spells/level1/disguiseSelf.js';
 import {dispelMagic} from './macros/spells/level3/dispelMagic.js';
 import {dissonantWhispers} from './macros/spells/level1/dissonantWhispers.js';
 import {divineWord} from './macros/spells/level7/divineWord.js';
+import {dodge} from './macros/actions/dodge.js';
 import {dragonsBreath} from './macros/spells/level2/dragonsBreath.js';
 import {earthbind} from './macros/spells/level2/earthbind.js';
 import {elementalBane} from './macros/spells/level4/elementalBane.js';
@@ -63,6 +68,7 @@ import {fleshToStone} from './macros/spells/level6/fleshToStone.js';
 import {fly} from './macros/spells/level3/fly.js';
 import {frostFingers} from './macros/spells/level1/frostFingers.js';
 import {goodberry} from './macros/spells/level1/goodberry.js';
+import {grapple} from './macros/actions/grapple.js';
 import {grease} from './macros/spells/level1/grease.js';
 import {greenFlameBlade} from './macros/spells/cantrip/greenFlameBlade.js';
 import {guidingBolt} from './macros/spells/level1/guidingBolt.js';
@@ -75,6 +81,7 @@ import {healingWord} from './macros/spells/level1/healingWord.js';
 import {heroesFeast} from './macros/spells/level6/heroesFeast.js';
 import {heroism} from './macros/spells/level1/heroism.js';
 import {hex} from './macros/spells/level1/hex.js';
+import {hide} from './macros/actions/hide.js';
 import {holdPerson} from './macros/spells/level2/holdPerson.js';
 import {holyWater} from './macros/items/holyWater.js';
 import {huntersMark} from './macros/spells/level1/huntersMark.js';
@@ -85,6 +92,7 @@ import {intellectFortress} from './macros/spells/level3/intellectFortress.js';
 import {lesserRestoration} from './macros/spells/level2/lesserRestoration.js';
 import {levitate} from './macros/spells/level2/levitate.js';
 import {light} from './macros/spells/cantrip/light.js';
+import {lightningBolt} from './macros/spells/level3/lightningBolt.js';
 import {longstrider} from './macros/spells/level1/longstrider.js';
 import {maelstrom} from './macros/spells/level5/maelstrom.js';
 import {mageHand} from './macros/spells/cantrip/mageHand.js';
@@ -108,6 +116,7 @@ import {produceFlame} from './macros/spells/cantrip/produceFlame.js';
 import {protectionFromEnergy} from './macros/spells/level3/protectionFromEnergy.js';
 import {protectionFromPoison} from './macros/spells/level2/protectionFromPoison.js';
 import {pyrotechnics} from './macros/spells/level2/pyrotechnics.js';
+import {ready} from './macros/actions/ready.js';
 import {regenerate} from './macros/spells/level7/regenerate.js';
 import {removeTemplate} from './macros/generic/removeTemplate.js';
 import {revivify} from './macros/spells/level3/revivify.js';
@@ -118,6 +127,7 @@ import {shadowBlade} from './macros/spells/level2/shadowBlade.js';
 import {shield} from './macros/spells/level1/shield.js';
 import {shillelagh} from './macros/spells/cantrip/shillelagh.js';
 import {shockingGrasp} from './macros/spells/cantrip/shockingGrasp.js';
+import {shove} from './macros/actions/shove.js';
 import {silence} from './macros/spells/level2/silence.js';
 import {skillEmpowerment} from './macros/spells/level5/skillEmpowerment.js';
 import {sleep} from './macros/spells/level1/sleep.js';
@@ -131,6 +141,7 @@ import {stinkingCloud} from './macros/spells/level3/stinkingCloud.js';
 import {suggestion} from './macros/spells/level2/suggestion.js';
 import {sunbeam} from './macros/spells/level6/sunBeam.js';
 import {swordBurst} from './macros/spells/cantrip/swordBurst.js';
+import {tashaCausticBrew} from './macros/spells/level1/tashaCausticBrew.js';
 import {tashaHideousLaughter} from './macros/spells/level1/tashaHideousLaughter.js';
 import {tashaMindWhip} from './macros/spells/level2/tashaMindWhip.js';
 import {telekinesis} from './macros/spells/level5/telekinesis.js';
@@ -181,17 +192,22 @@ export let macros = {
     'cordonOfArrows': cordonOfArrows,
     'createBonfire': createBonfire,
     'crownOfMadness': crownOfMadness,
+    'crownOfStars': crownOfStars,
+    'cunningAction': cunningAction,
     'cureWounds': cureWounds,
     'dancingLights': dancingLights,
+    'dash': dash,
     'detectEvilAndGood': detectEvilAndGood,
     'detectMagic': detectMagic,
     'detectPoisonAndDisease': detectPoisonAndDisease,
     'detectThoughts': detectThoughts,
+    'disengage': disengage,
     'disease': disease,
     'disguiseSelf': disguiseSelf,
     'dispelMagic': dispelMagic,
     'dissonantWhispers': dissonantWhispers,
     'divineWord': divineWord,
+    'dodge': dodge,
     'dragonsBreath': dragonsBreath,
     'earthbind': earthbind,
     'elementalBane': elementalBane,
@@ -213,6 +229,7 @@ export let macros = {
     'fly': fly,
     'frostFingers': frostFingers,
     'goodberry': goodberry,
+    'grapple': grapple,
     'grease': grease,
     'greenFlameBlade': greenFlameBlade,
     'guidingBolt': guidingBolt,
@@ -225,6 +242,7 @@ export let macros = {
     'heroesFeast': heroesFeast,
     'heroism': heroism,
     'hex': hex,
+    'hide': hide,
     'holdPerson': holdPerson,
     'holyWater': holyWater,
     'huntersMark': huntersMark,
@@ -235,6 +253,7 @@ export let macros = {
     'lesserRestoration': lesserRestoration,
     'levitate': levitate,
     'light': light,
+    'lightningBolt': lightningBolt,
     'longstrider': longstrider,
     'maelstrom': maelstrom,
     'mageHand': mageHand,
@@ -258,6 +277,7 @@ export let macros = {
     'protectionFromEnergy': protectionFromEnergy,
     'protectionFromPoison': protectionFromPoison,
     'pyrotechnics': pyrotechnics,
+    'ready': ready,
     'regenerate': regenerate,
     'removeTemplate': removeTemplate,
     'revivify': revivify,
@@ -268,6 +288,7 @@ export let macros = {
     'shield': shield,
     'shillelagh': shillelagh,
     'shockingGrasp': shockingGrasp,
+    'shove': shove,
     'silence': silence,
     'skillEmpowerment': skillEmpowerment,
     'sleep': sleep,
@@ -281,6 +302,7 @@ export let macros = {
     'suggestion': suggestion,
     'sunbeam': sunbeam,
     'swordBurst': swordBurst,
+    'tashaCausticBrew': tashaCausticBrew,
     'tashaHideousLaughter': tashaHideousLaughter,
     'tashaMindWhip': tashaMindWhip,
     'telekinesis': telekinesis,

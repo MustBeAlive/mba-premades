@@ -51,49 +51,54 @@ export async function potionOfHealing({ speaker, actor, token, character, item, 
     }
 
     let potioncolor = scope.color ? scope.color : "red";
-    defaults = {
-        "blue": {
-            "color": "blue",
-            "tintColor": "0x2cf2ee",
-            "hue1": 10,
-            "hue2": -200,
-            "hue3": 0,
-            "saturate": 1
-        },
-        "green": {
-            "color": "green",
-            "tintColor": "0xbbf00",
-            "hue1": -105,
-            "hue2": 35,
-            "hue3": 0,
-            "saturate": 1
-        },
-        "puprle": {
-            "color": "purple",
-            "tintColor": "f50f95",
-            "hue1": 135,
-            "hue2": -95,
-            "hue3": 0,
-            "saturate": 1
-        },
-        "yellow": {
-            "color": "yellow",
-            "tintColor": "0xffbb00",
-            "hue1": 230,
-            "hue2": 10,
-            "hue3": 0,
-            "saturate": 1
-        },
-        "red": {
-            "color": "green",
-            "tintColor": "0xec0927",
-            "hue1": 180,
-            "hue2": -30,
-            "hue3": 275,
-            "saturate": 1
-        },
-    }
-    config = defaults[potioncolor]
+    let defaults = {
+    "blue": {
+        "color": "blue",
+        "particles": "blue",
+        "tintColor": "0x2cf2ee",
+        "hue1": 10,
+        "hue2": -200,
+        "hue3": 0,
+        "saturate": 1
+    },
+    "green": {
+        "color": "green",
+        "particles": "greenyellow",
+        "tintColor": "0xbbf000",
+        "hue1": -105,
+        "hue2": 35,
+        "hue3": 0,
+        "saturate": 1
+    },
+    "purple": {
+        "color": "purple",
+        "particles": "purple",
+        "tintColor": "f50f95",
+        "hue1": 135,
+        "hue2": -95,
+        "hue3": 0,
+        "saturate": 1
+    },
+    "yellow": {
+        "color": "yellow",
+        "particles": "orange",
+        "tintColor": "0xffbb00",
+        "hue1": 230,
+        "hue2": 10,
+        "hue3": 0,
+        "saturate": 1
+    },
+    "red": {
+        "color": "green",
+        "particles": "red",
+        "tintColor": "0xec0927",
+        "hue1": 180,
+        "hue2": -30,
+        "hue3": 275,
+        "saturate": 1
+    },
+}
+    let config = defaults[potioncolor]
     config ??= defaults.red
 
     if (useMaxHealing) {
@@ -162,16 +167,15 @@ export async function potionOfHealing({ speaker, actor, token, character, item, 
             .tint(config.tintColor)
 
             .effect()
-            .file(`jb2a.particles.outward.orange.01.03`)
+            .file(`jb2a.particles.outward.${config.particles}.01.03`)
             .attachTo(target, { offset: { y: 0.1 }, gridUnits: true, followRotation: false })
-            .scale(0.2)
+            .scale(0.5)
             .duration(1000)
             .fadeOut(800)
             .scaleIn(0, 1000, { ease: "easeOutCubic" })
             .animateProperty("sprite", "width", { from: 0, to: 0.25, duration: 500, gridUnits: true, ease: "easeOutBack" })
             .animateProperty("sprite", "height", { from: 0, to: 1.0, duration: 1000, gridUnits: true, ease: "easeOutBack" })
             .animateProperty("sprite", "position.y", { from: 0, to: -0.6, duration: 1000, gridUnits: true })
-            .filter("ColorMatrix", { saturate: 1, hue: config.hue2 })
             .zIndex(0.3)
 
             .wait(1000)

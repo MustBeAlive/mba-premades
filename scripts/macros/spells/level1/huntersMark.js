@@ -108,6 +108,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let sourceEffectData = {
         'name': 'Hunter\'s Mark',
         'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
+        'duration': {
+            'seconds': seconds
+        },
         'changes': [
             {
                 'key': 'flags.mba-premades.spell.huntersMark',
@@ -123,10 +127,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         ],
         'transfer': false,
-        'origin': workflow.item.uuid,
-        'duration': {
-            'seconds': seconds
-        },
         'flags': {
             'effectmacro': {
                 'onDelete': {

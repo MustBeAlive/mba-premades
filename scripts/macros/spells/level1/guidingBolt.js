@@ -37,6 +37,9 @@ export async function guidingBolt({ speaker, actor, token, character, item, args
         }
     };
     if (!workflow.hitTargets.size) {
+        let offsetX = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
+        let offsetY = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
+
         new Sequence()
 
             .effect()
@@ -83,12 +86,13 @@ export async function guidingBolt({ speaker, actor, token, character, item, args
             .effect()
             .file("jb2a.guiding_bolt.01.yellow")
             .attachTo(token)
-            .stretchTo(target, { offset: { x: 2, y: 2 }, gridUnits: true })
+            .stretchTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
             .scaleIn(0, 500, { ease: "easeOutCubic" })
             .zIndex(2)
             .waitUntilFinished(-2000)
 
             .play();
+
         return;
     }
     new Sequence()

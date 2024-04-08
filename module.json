@@ -185,6 +185,13 @@
 			"system": "dnd5e"
 		},
 		{
+			"name": "MBA Class Features",
+			"label": "MBA Class Features",
+			"path": "packs/mba-class-features",
+			"type": "Item",
+			"system": "dnd5e"
+		},
+		{
 			"name": "MBA Features",
 			"label": "MBA Features",
 			"path": "packs/mba-features",
@@ -263,6 +270,7 @@
 			"packs": [
 				"MBA Actions",
 				"MBA Bestiary",
+				"MBA Class Features",
 				"MBA Features",
 				"MBA Items",
 				"MBA Macro",

@@ -1,64 +1,70 @@
+//Animation by EskieMoh#2969
 export async function lightningBolt({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let token = workflow.token;
-    const template = canvas.scene.collections.templates.get(workflow.templateId);
+    let template = canvas.scene.collections.templates.get(workflow.templateId);
+
     new Sequence()
 
-        .thenDo(function () {
-            FXMASTER.filters.setFilters([{ "type": "color", "options": { "color": { "apply": true, "value": "#9eecff" }, "saturation": 2, "contrast": 2, "brightness": 0.45, "gamma": 1, "red": 0.6196078431372549, "green": 0.9254901960784314, "blue": 1 } }]);
-        })
+        .wait(200)
 
         .effect()
-        .file("jb2a.static_electricity.03.blue")
-        .atLocation(token)
-        .scaleToObject(1.5)
-        .repeats(2, 4000, 4000)
+        .file("jb2a.breath_weapons.lightning.line.blue")
+        .attachTo(token, { offset: { x: 0 }, gridUnits: true })
+        .stretchTo(template, { onlyX: true })
+        .spriteOffset({ x: token.document.width / 2.25 }, { gridUnits: true })
 
         .effect()
-        .file("jb2a.magic_signs.circle.02.evocation.loop.blue")
-        .atLocation(token)
-        .fadeIn(500)
-        .fadeOut(500)
-        .scaleToObject(2)
-        .duration(5000)
-        .loopProperty("sprite", "rotation", { from: 0, to: 360, duration: 1000 })
-        .zIndex(2)
+        .name("location")
+        .file("jb2a.breath_weapons.lightning.line.blue")
+        .attachTo(token, { offset: { x: 0 }, gridUnits: true })
+        .stretchTo(template, { onlyX: true })
+        .spriteOffset({ x: token.document.width / 2.25 }, { gridUnits: true })
+        .filter("ColorMatrix", { saturate: -1, brightness: 2, contrast: 1 })
+        .duration(3350)
+        .fadeOut(250)
+        .fadeIn(10, { delay: 2700 })
+        .aboveLighting()
+        .zIndex(1)
 
         .effect()
-        .file("jb2a.static_electricity.01.blue")
+        .file("animated-spell-effects-cartoon.electricity.05")
         .atLocation(token)
-        .fadeIn(500)
-        .fadeOut(500)
-        .scaleToObject(1.35)
-        .duration(5000)
-        .scaleOut(0.1, 2, { ease: "easeOutQuint", delay: -4000 })
-        .zIndex(2)
-        .waitUntilFinished(-3000)
+        .rotateTowards({ x: template.x, y: template.y })
+        .rotate(90)
+        .filter("ColorMatrix", { saturate: -1, brightness: 2, contrast: 1 })
+        .spriteOffset({ x: -token.document.width - (0.25 * token.document.width), y: token.document.width / -4 }, { gridUnits: true })
+        .scaleToObject(token.document.width * 2, { uniform: false })
+        .aboveLighting()
+        .playbackRate(1.6)
+        .delay(2800)
+        .zIndex(0.1)
 
         .effect()
-        .file("jb2a.impact.011.blue")
-        .atLocation(token)
-        .scaleToObject(2)
-        .zIndex(3)
+        .file(canvas.scene.background.src)
+        .filter("ColorMatrix", { brightness: 0.5 })
+        .atLocation({ x: (canvas.dimensions.width) / 2, y: (canvas.dimensions.height) / 2 })
+        .size({ width: canvas.scene.width / canvas.grid.size, height: canvas.scene.height / canvas.grid.size }, { gridUnits: true })
+        .spriteOffset({ x: -0 }, { gridUnits: true })
+        .delay(1500)
+        .duration(5500)
+        .fadeIn(1500)
+        .fadeOut(1500)
+        .belowTokens()
 
         .effect()
-        .file("animated-spell-effects-cartoon.electricity.blast.03")
+        .from(token)
         .atLocation(token)
-        .filter("ColorMatrix", { hue: -20 })
-        .filter("ColorMatrix", { saturate: 1.25 })
-        .scale(1)
-        .stretchTo(template, { onlyX: true, tiling: true, cacheLocation: true })
-        .zIndex(3)
+        .delay(2800)
+        .duration(250)
+        .fadeOut(200)
+        .filter("ColorMatrix", { saturate: -1, brightness: 1, contrast: 1 })
 
-        .effect()
-        .file("animated-spell-effects-cartoon.electricity.curves")
-        .atLocation(token)
-        .scale(0.3)
-        .stretchTo(template, { onlyX: true, tiling: true, cacheLocation: true })
-        .repeats(5, 500, 1000, 1500)
+        .canvasPan()
+        .delay(2800)
+        .shake({ duration: 250, strength: 35, rotation: false })
 
-        .thenDo(function () {
-            FXMASTER.filters.setFilters([{ "type": "color", "options": { "color": { "apply": false, "value": "#9eecff" }, "saturation": 1, "contrast": 1, "brightness": 1, "gamma": 1, "red": 0.6196078431372549, "green": 0.9254901960784314, "blue": 1 } }]);
-        })
-        
-        .play();
+        .canvasPan()
+        .delay(1500)
+        .shake({ duration: 4500, strength: 1, rotation: false })
+
+        .play()
 }
