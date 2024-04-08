@@ -2,18 +2,22 @@ import {addActions} from './macros/actions/token.js';
 import {cast} from './macros/animations/cast.js';
 import {changeChat} from './macros/ui/changeChat.js';
 import {checkUpdate} from './update.js';
+import {createRollModeButtons} from './macros/ui/rollmodeButtons.js';
 import {deathSaves} from './macros/mechanics/deathsaves.js';
 import {macros} from './macros.js';
 import {mba as helpers} from './helperFunctions.js';
 import {registerSettings} from './settings.js';
 import {removeV10EffectsBlind} from './macros/mechanics/blindness.js';
 import {removeV10EffectsInvisible} from './macros/mechanics/invisibility.js';
+import {rollModeChange} from './macros/ui/rollmodeButtons.js';
 import {runAsGM, runAsUser} from './runAsGm.js';
 export let socket;
 
 Hooks.once('init', async function() {
     registerSettings();
     changeChat(game.settings.get('mba-premades', 'Dark Chat'), 'darkChat');
+    ChatLog._setRollMode = rollModeChange;
+    if (game.settings.get('mba-premades', 'Rollmode Buttons')) Hooks.on('renderChatLog', createRollModeButtons);
 });
 
 Hooks.once('socketlib.ready', async function() {

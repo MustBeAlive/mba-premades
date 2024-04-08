@@ -1,9 +1,9 @@
-import {cast} from './macros/animations/cast.js';
-import {changeChat} from './macros/ui/changeChat.js';
-import {deathSaves} from './macros/mechanics/deathsaves.js';
-import {macros} from './macros.js';
-import {removeV10EffectsBlind} from './macros/mechanics/blindness.js';
-import {removeV10EffectsInvisible} from './macros/mechanics/invisibility.js';
+import { cast } from './macros/animations/cast.js';
+import { changeChat } from './macros/ui/changeChat.js';
+import { deathSaves } from './macros/mechanics/deathsaves.js';
+import { macros } from './macros.js';
+import { removeV10EffectsBlind } from './macros/mechanics/blindness.js';
+import { removeV10EffectsInvisible } from './macros/mechanics/invisibility.js';
 let moduleName = 'mba-premades';
 export function registerSettings() {
     game.settings.register(moduleName, 'Dark Chat', {
@@ -16,6 +16,14 @@ export function registerSettings() {
         'onChange': value => {
             changeChat(value, 'darkChat');
         }
+    });
+    game.settings.register(moduleName, 'Rollmode Buttons', {
+        'name': 'Включить альтернативный селектор режимов броска',
+        'hint': "Включить альтернативный селектор режимов броска (кнопки вместо выпадающего списка.",
+        'scope': 'world',
+        'config': true,
+        'type': Boolean,
+        'default': false,
     });
     game.settings.register(moduleName, 'Check For Updates', {
         'name': "Проверять обновления",

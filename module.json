@@ -288,7 +288,8 @@
 		"scripts/module.js"
 	],
 	"styles": [
-		"/css/darkChat.css"
+		"/css/darkChat.css",
+		"/css/rollmode-buttons.css"
 	],
 	"url": "#{URL}#",
 	"manifest": "#{MANIFEST}#",

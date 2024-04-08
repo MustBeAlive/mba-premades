@@ -9,6 +9,7 @@ import {auraOfVitality} from './macros/spells/level3/auraOfVitality.js';
 import {bane} from './macros/spells/level1/bane.js';
 import {banishingSmite} from './macros/spells/level5/banishingSmite.js';
 import {banishment} from './macros/spells/level4/banishment.js';
+import {bardicInspiration} from './macros/classFeatures/bard/bardicInspiration.js';
 import {beastBond} from './macros/spells/level1/beastBond.js';
 import {bestowCurse} from './macros/spells/level3/bestowCurse.js';
 import {bladeWard} from './macros/spells/cantrip/bladeWard.js';
@@ -170,6 +171,7 @@ export let macros = {
     'bane': bane,
     'banishingSmite': banishingSmite,
     'banishment': banishment,
+    'bardicInspiration': bardicInspiration,
     'beastBond': beastBond,
     'bestowCurse': bestowCurse,
     'bladeWard': bladeWard,
