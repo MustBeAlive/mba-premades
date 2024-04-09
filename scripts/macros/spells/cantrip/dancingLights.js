@@ -24,6 +24,5 @@ export async function dancingLights({speaker, actor, token, character, item, arg
             }
         }
     let animation = chrisPremades.helpers.getConfiguration(workflow.item, 'animation-') ?? 'celestial';
-    if (chrisPremades.helpers.jb2aCheck() != 'patreon' || !chrisPremades.helpers.aseCheck()) animation = 'none';
-    await chrisPremades.summons.spawn(sourceActors, updates, 60, workflow.item, undefined, undefined, 120, workflow.token, animation);
+    await mbaPremades.summons.spawn(sourceActors, updates, 60, workflow.item, undefined, undefined, 120, workflow.token, animation);
 }
