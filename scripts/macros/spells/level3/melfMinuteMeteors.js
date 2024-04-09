@@ -11,10 +11,10 @@ export async function melfMinuteMeteors({ speaker, actor, token, character, item
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
         'duration': {
             'seconds': 600
         },
-        'origin': workflow.item.uuid,
         'flags': {
             'effectmacro': {
                 'onDelete': {

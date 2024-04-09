@@ -30,5 +30,16 @@ body.darkChat :is(.chat-popout, #chat-log) .message>*:not(nav) .dice-tooltip .di
 body.darkChat :is(.chat-popout, #chat-log) .message>*:not(nav) .dice-tooltip .dice-rolls .roll.max, 
 body.darkChat :is(.chat-popout, #chat-log) .message>*:not(nav) .dice-tooltip .dice-rolls .roll.success { filter: hue-rotate(180deg); }
 
+body.darkChat .dice-roll .dice-total.success { 
+    filter: hue-rotate(180deg); 
+    background: #00ff00;
+    border: 1px solid #c7d0c0;
+}
+body.darkChat .dice-roll .dice-total.failure { 
+    filter: hue-rotate(180deg); 
+    background: #ffc1c1;
+    border: 1px solid #c7d0c0;
+}
+
 /*Monk's Token Bar Styling Fixes*/
 body.darkChat .monks-tokenbar .sheet .item .item-name .item-image { filter: invert(1); }

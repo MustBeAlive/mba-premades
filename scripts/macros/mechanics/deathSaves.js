@@ -17,4 +17,8 @@ export async function deathSaves(combat, update, options, userId) {
             }
         );
     }
+    if (actor.system.attributes.hp.value <= 0 && actor.isOwner && actor.system.attributes.death.failure === 3) {
+        await chrisPremades.helpers.removeCondition(actor, "Unconscious");
+        await chrisPremades.helpers.addCondition(actor, "Dead", true);
+    }
 }

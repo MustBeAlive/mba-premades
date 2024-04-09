@@ -6,27 +6,30 @@ export async function revivify({ speaker, actor, token, character, item, args, s
         ui.notifications.warn("Target is not dead!");
         return;
     }
-    //what module tracks starttime?
+    let gentleRepose = await chrisPremades.helpers.findEffect(target.actor, "Gentle Repose");
+    let timeLimit = 60;
+    if (gentleRepose) timeLimit = 864060;
     let timeDiff = game.time.worldTime - isDead.duration.startTime;
-    if (timeDiff >= 60) {
+    if (timeDiff >= timeLimit) {
         ui.notifications.info("Target is dead for at least 60 seconds. Sorry, but it's too late.");
         return;
     }
+    
     new Sequence()
-
+    
         .effect()
         .file("jb2a.extras.tmfx.inpulse.circle.01.normal")
         .atLocation(target)
         .scaleToObject(1)
-
+    
         .effect()
         .file("jb2a.misty_step.02.yellow")
         .atLocation(target)
         .scaleToObject(1)
         .scaleOut(1, 3500, { ease: "easeOutCubic" })
-
+    
         .wait(1400)
-
+    
         .effect()
         .file("jb2a.healing_generic.burst.tealyellow")
         .atLocation(target)
@@ -37,7 +40,7 @@ export async function revivify({ speaker, actor, token, character, item, args, s
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .duration(1200)
         .attachTo(target, { bindAlpha: false })
-
+    
         .effect()
         .from(target)
         .atLocation(target)
@@ -48,7 +51,7 @@ export async function revivify({ speaker, actor, token, character, item, args, s
         .fadeOut(5000)
         .duration(6000)
         .attachTo(target)
-
+    
         .effect()
         .file("jb2a.fireflies.few.02.yellow")
         .atLocation(target)
@@ -57,7 +60,7 @@ export async function revivify({ speaker, actor, token, character, item, args, s
         .fadeIn(1000)
         .fadeOut(500)
         .attachTo(target)
-
+    
         .effect()
         .file("jb2a.extras.tmfx.outflow.circle.02")
         .atLocation(target)
@@ -69,7 +72,7 @@ export async function revivify({ speaker, actor, token, character, item, args, s
         .fadeIn(1000)
         .belowTokens()
         .attachTo(target)
-
+    
         .effect()
         .file("jb2a.particles.outward.blue.01.03")
         .atLocation(target)
@@ -82,11 +85,55 @@ export async function revivify({ speaker, actor, token, character, item, args, s
         .fadeIn(1000)
         .belowTokens()
         .attachTo(target)
-
-        .thenDo(function () {
-            chrisPremades.helpers.removeCondition(target.actor, 'Dead');
-            chrisPremades.helpers.applyDamage([target], 1, 'healing');
-        })
-
+    
         .play()
+    
+    let updates;
+    let options;
+    if (target.actor.type === "npc") {
+        updates = {
+            'actor': {
+                'system': {
+                    'attributes': {
+                        'hp': {
+                            'value': 1
+                        }
+                    }
+                }
+            }
+        };
+        options = {
+            'permanent': true,
+            'name': "Revivify",
+            'description': "Revivify"
+        };
+        await warpgate.wait(1500);
+        if (gentleRepose) await chrisPremades.helpers.removeEffect(gentleRepose);
+        await warpgate.mutate(target.document, updates, options);
+        return
+    }
+    updates = {
+        'actor': {
+            'system': {
+                'attributes': {
+                    'death': {
+                        'failure': 0,
+                        'success': 0
+                    },
+                    'hp': {
+                        'value': 1
+                    }
+                }
+            }
+        }
+    };
+    options = {
+        'permanent': true,
+        'name': "Revivify",
+        'description': "Revivify"
+    };
+    await warpgate.wait(1500);
+    if (gentleRepose) await chrisPremades.helpers.removeEffect(gentleRepose);
+    await chrisPremades.helpers.removeCondition(target.actor, 'Dead');
+    await warpgate.mutate(target.document, updates, options);
 }
