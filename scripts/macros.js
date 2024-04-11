@@ -36,6 +36,7 @@ import {crownOfStars} from './macros/spells/level7/crownOfStars.js';
 import {cunningAction} from './macros/classFeatures/rogue/cunningAction.js';
 import {cureWounds} from './macros/spells/level1/cureWounds.js';
 import {dancingLights} from './macros/spells/cantrip/dancingLights.js';
+import {dancingMonkeyFruit} from './macros/items/dancingMonkeyFruit.js';
 import {dash} from './macros/actions/dash.js';
 import {detectEvilAndGood} from './macros/spells/level1/detectEvilAndGood.js';
 import {detectMagic} from './macros/spells/level1/detectMagic.js';
@@ -105,6 +106,7 @@ import {massHealingWord} from './macros/spells/level3/massHealingWord.js';
 import {maximilianEarthenGrasp} from './macros/spells/level2/maximilianEarthenGrasp.js';
 import {melfMinuteMeteors} from './macros/spells/level3/melfMinuteMeteors.js';
 import {ottoIrresistibleDance} from './macros/spells/level6/ottoIrresistibleDance.js';
+import {panpipesOfTheSewers} from './macros/items/panpipesOfTheSewers.js';
 import {potionOfHealing} from './macros/items/potionOfHealing.js';
 import {powerWordHeal} from './macros/spells/level9/powerWordHeal.js';
 import {powerWordKill} from './macros/spells/level9/powerWordKill.js';
@@ -198,6 +200,7 @@ export let macros = {
     'cunningAction': cunningAction,
     'cureWounds': cureWounds,
     'dancingLights': dancingLights,
+    'dancingMonkeyFruit': dancingMonkeyFruit,
     'dash': dash,
     'detectEvilAndGood': detectEvilAndGood,
     'detectMagic': detectMagic,
@@ -267,6 +270,7 @@ export let macros = {
     'maximilianEarthenGrasp': maximilianEarthenGrasp,
     'melfMinuteMeteors': melfMinuteMeteors,
     'ottoIrresistibleDance': ottoIrresistibleDance,
+    'panpipesOfTheSewers': panpipesOfTheSewers,
     'potionOfHealing': potionOfHealing,
     'powerWordHeal': powerWordHeal,
     'powerWordKill': powerWordKill,
