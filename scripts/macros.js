@@ -38,6 +38,7 @@ import {cureWounds} from './macros/spells/level1/cureWounds.js';
 import {dancingLights} from './macros/spells/cantrip/dancingLights.js';
 import {dancingMonkeyFruit} from './macros/items/dancingMonkeyFruit.js';
 import {dash} from './macros/actions/dash.js';
+import {decanterOfEndlessWater} from './macros/items/decanterOfEndlessWater.js';
 import {detectEvilAndGood} from './macros/spells/level1/detectEvilAndGood.js';
 import {detectMagic} from './macros/spells/level1/detectMagic.js';
 import {detectPoisonAndDisease} from './macros/spells/level1/detectPoisonAndDisease.js';
@@ -202,6 +203,7 @@ export let macros = {
     'dancingLights': dancingLights,
     'dancingMonkeyFruit': dancingMonkeyFruit,
     'dash': dash,
+    'decanterOfEndlessWater': decanterOfEndlessWater,
     'detectEvilAndGood': detectEvilAndGood,
     'detectMagic': detectMagic,
     'detectPoisonAndDisease': detectPoisonAndDisease,
