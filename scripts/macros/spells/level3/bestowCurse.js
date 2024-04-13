@@ -123,7 +123,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			break;
 		case 'Turn':
 			let saveDC = chrisPremades.helpers.getSpellDC(workflow.item);
-			featureData.effects[0].changes[0].value = 'turn=start, saveAbility=wis, saveMagic=true, saveRemove=false, saveDC=' + saveDC + ', name="Bestow Curse: Turn Start"'
+			featureData.effects[0].changes[0].value = 'turn=start, saveAbility=wis, saveMagic=true, saveRemove=false, saveDC=' + saveDC + ', name="Bestow Curse: Turn Start", killAnim= true'
 			break;
 	}
 	let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
@@ -161,6 +161,48 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 	}
 	chrisPremades.queue.remove(workflow.item.uuid);
 
+	let target = workflow.targets.first();
+
+	new Sequence()
+	
+		.effect()
+		.file("jb2a.dodecahedron.skull.below.dark_greenpurple")
+		.attachTo(target)
+		.fadeIn(800)
+		.fadeOut(500)
+		.scaleToObject(2.2 * target.document.texture.scaleX)
+		.filter("ColorMatrix", {hue: 185})
+	
+		.effect()
+		.file("jb2a.template_circle.aura.01.loop.large.orangepurple")
+		.delay(1100)
+		.attachTo(target)
+		.fadeIn(500)
+		.fadeOut(500)
+		.scaleToObject(2.2 * target.document.texture.scaleX)
+		.playbackRate(0.8)
+		.filter("ColorMatrix", {hue: 185})
+	
+		.effect()
+		.file("jb2a.energy_strands.complete.dark_green.01")
+		.delay(1100)
+		.fadeIn(500)
+		.fadeOut(500)
+		.attachTo(target)
+		.opacity(0.8)
+		.scaleToObject(2 * target.document.texture.scaleX)
+		.repeats(4, 800)
+	
+		.effect()
+		.file("animated-spell-effects-cartoon.misc.fiery eyes.02")
+		.delay(1100)
+		.attachTo(target)
+		.scaleToObject(1.5 * target.document.texture.scaleX)
+		.fadeIn(500)
+		.fadeOut(500)
+		.repeats(3, 1300)
+	
+		.play()
 }
 
 async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -172,10 +214,41 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
 	let bonusDamageFormula = '1d8[necrotic]';
 	//await chrisPremades.helpers.addToDamageRoll(workflow, bonusDamageFormula);
 	if (workflow.isCritical) bonusDamageFormula = chrisPremades.helpers.getCriticalFormula(bonusDamageFormula);
-    let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
-    let damageRoll = await new Roll(damageFormula).roll({async: true});
-    await workflow.setDamageRoll(damageRoll);
+	let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
+	let damageRoll = await new Roll(damageFormula).roll({ async: true });
+	await workflow.setDamageRoll(damageRoll);
 	chrisPremades.queue.remove(workflow.item.uuid);
+
+	let target = workflow.targets.first();
+	new Sequence()
+
+		.effect()
+		.file("jb2a.template_circle.aura.01.loop.large.orangepurple")
+		.attachTo(target)
+		.fadeIn(500)
+		.fadeOut(500)
+		.scaleToObject(2.2 * target.document.texture.scaleX)
+		.playbackRate(0.8)
+		.filter("ColorMatrix", {hue: 185})
+
+		.effect()
+		.file("jb2a.energy_strands.complete.dark_green.01")
+		.fadeIn(500)
+		.fadeOut(500)
+		.attachTo(target)
+		.opacity(0.8)
+		.scaleToObject(2 * target.document.texture.scaleX)
+		.repeats(4, 800)
+
+		.effect()
+		.file("animated-spell-effects-cartoon.misc.fiery eyes.02")
+		.attachTo(target)
+		.scaleToObject(1.5 * target.document.texture.scaleX)
+		.fadeIn(500)
+		.fadeOut(500)
+		.repeats(3, 1300)
+
+		.play()
 }
 
 async function damageApplication({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -226,6 +299,7 @@ async function damageApplication({ speaker, actor, token, character, item, args,
 		targetDamage.newHP -= damageTotal;
 	}
 	chrisPremades.queue.remove(workflow.item.uuid);
+
 }
 
 async function attack({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -238,6 +312,37 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
 	workflow.disadvantage = true;
 	workflow.attackAdvAttribution.add('DIS: Bestow Curse');
 	chrisPremades.queue.remove(workflow.item.uuid);
+
+	let target = workflow.targets.first();
+	new Sequence()
+
+		.effect()
+		.file("jb2a.template_circle.aura.01.loop.large.orangepurple")
+		.attachTo(token)
+		.fadeIn(500)
+		.fadeOut(500)
+		.scaleToObject(2.2 * token.document.texture.scaleX)
+		.playbackRate(0.8)
+		.filter("ColorMatrix", {hue: 185})
+
+		.effect()
+		.file("jb2a.energy_strands.complete.dark_green.01")
+		.fadeIn(500)
+		.fadeOut(500)
+		.attachTo(token)
+		.opacity(0.8)
+		.scaleToObject(2 * token.document.texture.scaleX)
+		.repeats(4, 800)
+
+		.effect()
+		.file("animated-spell-effects-cartoon.misc.fiery eyes.02")
+		.attachTo(token)
+		.scaleToObject(1.5 * token.document.texture.scaleX)
+		.fadeIn(500)
+		.fadeOut(500)
+		.repeats(3, 1300)
+
+		.play()
 }
 
 async function remove(effect, origin, token) {
@@ -245,7 +350,7 @@ async function remove(effect, origin, token) {
 	if (!curseFlags) return;
 	await warpgate.wait(200);
 	if (curseFlags.type === 'Damage') {
-        let damageEffect = origin.actor.effects.find(eff => eff.name === 'Bestow Curse: Damage' && eff.changes?.[2]?.value === token.id);
+		let damageEffect = origin.actor.effects.find(eff => eff.name === 'Bestow Curse: Damage' && eff.changes?.[2]?.value === token.id);
 		if (damageEffect) await chrisPremades.helpers.removeEffect(damageEffect);
 	}
 	if (curseFlags.level < 5) {

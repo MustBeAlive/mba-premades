@@ -1,5 +1,6 @@
 import {absorbElements} from './macros/spells/level1/absorbElements.js';
 import {acidSplash} from './macros/spells/cantrip/acidSplash.js';
+import {aganazzarScorcher} from './macros/spells/level2/aganazzarScorcher.js';
 import {aid} from './macros/spells/level2/aid.js';
 import {alterSelf} from './macros/spells/level2/alterSelf.js';
 import {animalFriendship} from './macros/spells/level1/animalFriendship.js';
@@ -29,6 +30,7 @@ import {chromaticOrb} from './macros/spells/level1/chromaticOrb.js';
 import {colorSpray} from './macros/spells/level1/colorSpray.js';
 import {confusion} from './macros/spells/level4/confusion.js';
 import {command} from './macros/spells/level1/command.js';
+import {comprehendLanguages} from './macros/spells/level1/comprehendLanguages.js';
 import {cordonOfArrows} from './macros/spells/level2/cordonOfArrows.js';
 import {createBonfire} from './macros/spells/cantrip/createBonfire.js';
 import {crownOfMadness} from './macros/spells/level2/crownOfMadness.js';
@@ -106,6 +108,7 @@ import {massCureWounds} from './macros/spells/level5/massCureWounds.js';
 import {massHealingWord} from './macros/spells/level3/massHealingWord.js';
 import {maximilianEarthenGrasp} from './macros/spells/level2/maximilianEarthenGrasp.js';
 import {melfMinuteMeteors} from './macros/spells/level3/melfMinuteMeteors.js';
+import {mending} from './macros/spells/cantrip/mending.js';
 import {ottoIrresistibleDance} from './macros/spells/level6/ottoIrresistibleDance.js';
 import {panpipesOfTheSewers} from './macros/items/panpipesOfTheSewers.js';
 import {potionOfHealing} from './macros/items/potionOfHealing.js';
@@ -152,9 +155,11 @@ import {telekinesis} from './macros/spells/level5/telekinesis.js';
 import {tenserFloatingDisk} from './macros/spells/level1/tenserFloatingDisk.js';
 import {thunderousSmite} from './macros/spells/level1/thunderousSmite.js';
 import {thunderwave} from './macros/spells/level1/thunderwave.js';
+import {tongues} from './macros/spells/level3/tongues.js';
 import {unseenServant} from './macros/spells/level1/unseenServant.js';
 import {viciousMockery} from './macros/spells/cantrip/viciousMockery.js';
 import {vortexWarp} from './macros/spells/level2/vortexWarp.js';
+import {waterBreathing} from './macros/spells/level3/waterBreathing.js';
 import {web} from './macros/spells/level2/web.js';
 import {witchBolt} from './macros/spells/level1/witchBolt.js';
 import {wordOfRadiance} from './macros/spells/cantrip/wordOfRadiance.js';
@@ -165,6 +170,7 @@ import {zephyrStrike} from './macros/spells/level1/zephyrStrike.js';
 export let macros = {
     'absorbElements': absorbElements,
     'acidSplash': acidSplash,
+    'aganazzarScorcher': aganazzarScorcher,
     'aid': aid,
     'alterSelf': alterSelf,
     'animalFriendship': animalFriendship,
@@ -194,6 +200,7 @@ export let macros = {
     'colorSpray': colorSpray,
     'confusion': confusion,
     'command': command,
+    'comprehendLanguages': comprehendLanguages,
     'cordonOfArrows': cordonOfArrows,
     'createBonfire': createBonfire,
     'crownOfMadness': crownOfMadness,
@@ -271,6 +278,7 @@ export let macros = {
     'massHealingWord': massHealingWord,
     'maximilianEarthenGrasp': maximilianEarthenGrasp,
     'melfMinuteMeteors': melfMinuteMeteors,
+    'mending': mending,
     'ottoIrresistibleDance': ottoIrresistibleDance,
     'panpipesOfTheSewers': panpipesOfTheSewers,
     'potionOfHealing': potionOfHealing,
@@ -317,9 +325,11 @@ export let macros = {
     'tenserFloatingDisk': tenserFloatingDisk,
     'thunderousSmite': thunderousSmite,
     'thunderwave': thunderwave,
+    'tongues': tongues,
     'unseenServant': unseenServant,
     'viciousMockery': viciousMockery,
     'vortexWarp': vortexWarp,
+    'waterBreathing': waterBreathing,
     'web': web,
     'witchBolt': witchBolt,
     'wordOfRadiance': wordOfRadiance,
