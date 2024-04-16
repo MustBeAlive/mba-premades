@@ -178,13 +178,6 @@
 			"system": "dnd5e"
 		},
 		{
-			"name": "MBA Bestiary",
-			"label": "MBA Bestiary",
-			"path": "packs/mba-bestiary",
-			"type": "Actor",
-			"system": "dnd5e"
-		},
-		{
 			"name": "MBA Class Features",
 			"label": "MBA Class Features",
 			"path": "packs/mba-class-features",
@@ -210,20 +203,6 @@
 			"label": "MBA Macro",
 			"path": "packs/mba-macro",
 			"type": "Macro",
-			"system": "dnd5e"
-		},
-		{
-			"name": "MBA Monster Features",
-			"label": "MBA Monster Features",
-			"path": "packs/mba-monster-features",
-			"type": "Item",
-			"system": "dnd5e"
-		},
-		{
-			"name": "MBA Monster Summons",
-			"label": "MBA Monster Summons",
-			"path": "packs/mba-monster-summons",
-			"type": "Actor",
 			"system": "dnd5e"
 		},
 		{
@@ -269,13 +248,10 @@
 			"color": "#005c8a",
 			"packs": [
 				"MBA Actions",
-				"MBA Bestiary",
 				"MBA Class Features",
 				"MBA Features",
 				"MBA Items",
 				"MBA Macro",
-				"MBA Monster Features",
-				"MBA Monster Summons",
 				"MBA Music",
 				"MBA Spells",
 				"MBA Spell Features",

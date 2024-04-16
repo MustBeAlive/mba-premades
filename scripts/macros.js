@@ -8,7 +8,6 @@ import {animalMessenger} from './macros/spells/level2/animalMessenger.js';
 import {armsOfHadar} from './macros/spells/level1/armsOfHadar.js';
 import {augury} from './macros/spells/level2/augury.js';
 import {auraOfVitality} from './macros/spells/level3/auraOfVitality.js';
-import {autoProne} from './macros/monsterFeatures/autoProne.js';
 import {bane} from './macros/spells/level1/bane.js';
 import {banishingSmite} from './macros/spells/level5/banishingSmite.js';
 import {banishment} from './macros/spells/level4/banishment.js';
@@ -104,7 +103,6 @@ import {identify} from './macros/spells/level1/identify.js';
 import {infestation} from './macros/spells/cantrip/infestation.js';
 import {inflictWounds} from './macros/spells/level1/inflictWounds.js';
 import {intellectFortress} from './macros/spells/level3/intellectFortress.js';
-import {kamadan} from './macros/monsterFeatures/kamadan/sleepBreath.js';
 import {lesserRestoration} from './macros/spells/level2/lesserRestoration.js';
 import {levitate} from './macros/spells/level2/levitate.js';
 import {light} from './macros/spells/cantrip/light.js';
@@ -177,7 +175,6 @@ import {unseenServant} from './macros/spells/level1/unseenServant.js';
 import {viciousMockery} from './macros/spells/cantrip/viciousMockery.js';
 import {vortexWarp} from './macros/spells/level2/vortexWarp.js';
 import {waterBreathing} from './macros/spells/level3/waterBreathing.js';
-import {waterWeird} from './macros/monsterFeatures/waterWeird/autoGrapple.js';
 import {web} from './macros/spells/level2/web.js';
 import {witchBolt} from './macros/spells/level1/witchBolt.js';
 import {wordOfRadiance} from './macros/spells/cantrip/wordOfRadiance.js';
@@ -196,7 +193,6 @@ export let macros = {
     'armsOfHadar': armsOfHadar,
     'augury': augury,
     'auraOfVitality': auraOfVitality,
-    'autoProne': autoProne,
     'bane': bane,
     'banishingSmite': banishingSmite,
     'banishment': banishment,
@@ -292,7 +288,6 @@ export let macros = {
     'infestation': infestation,
     'inflictWounds': inflictWounds,
     'intellectFortress': intellectFortress,
-    'kamadan': kamadan,
     'lesserRestoration': lesserRestoration,
     'levitate': levitate,
     'light': light,
@@ -365,7 +360,6 @@ export let macros = {
     'viciousMockery': viciousMockery,
     'vortexWarp': vortexWarp,
     'waterBreathing': waterBreathing,
-    'waterWeird': waterWeird,
     'web': web,
     'witchBolt': witchBolt,
     'wordOfRadiance': wordOfRadiance,
