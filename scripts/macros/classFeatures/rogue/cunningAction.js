@@ -6,7 +6,6 @@ export async function cunningAction({ speaker, actor, token, character, item, ar
         .file("jb2a.sneak_attack.dark_purple")
         .atLocation(token)
 
-
         .play()
 
     let choices = [

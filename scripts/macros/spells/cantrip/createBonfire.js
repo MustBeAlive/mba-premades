@@ -84,9 +84,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .attachTo(template, { bindAlpha: false })
         .belowTokens()
-        .persist()
-        .name('Bonfire')
         .zIndex(0.3)
+        .persist()
+        .name('Create Bonfire')
 
         .animation()
         .on(template)
@@ -159,7 +159,7 @@ async function enter(template, token) {
 }
 
 async function del() {
-    await Sequencer.EffectManager.endEffects({ name: "Bonfire" })
+    await Sequencer.EffectManager.endEffects({ name: "Create Bonfire" })
 }
 
 export let createBonfire = {

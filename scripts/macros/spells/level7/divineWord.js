@@ -18,9 +18,9 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             };
             const effectData = {
                 'name': 'Banishment',
-                'description': "For the next 24 hours, you are banished to your plane of origin.",
-                'icon': 'assets/library/icons/sorted/spells/level4/banishment.webp',
+                'icon': 'modules/mba-premades/icons/spells/level4/banishment.webp',
                 'origin': workflow.item.uuid,
+                'description': "For the next 24 hours, you are banished to your plane of origin.",
                 'duration': {
                     'seconds': 86400
                 },
@@ -49,8 +49,8 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         if (currentHP > 50) return;
         else if (currentHP > 40 && currentHP <= 50) {
             const effectData = {
-                'name': "Divine Word",
-                'icon': "assets/library/icons/sorted/spells/level7/divine_word.webp",
+                'name': workflow.item.name,
+                'icon': workflow.item.img,
                 'origin': workflow.item.uuid,
                 'description': "You heard a divine word, imbued with the power that shaped the world at the dawn of creation and are deafened for the next minute.",
                 'duration': {
@@ -78,8 +78,8 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         }
         else if (currentHP > 30 && currentHP <= 40) {
             const effectData = {
-                'name': "Divine Word",
-                'icon': "assets/library/icons/sorted/spells/level7/divine_word.webp",
+                'name': workflow.item.name,
+                'icon': workflow.item.img,
                 'origin': workflow.item.uuid,
                 'description': "You heard a divine word, imbued with the power that shaped the world at the dawn of creation and are blinded and deafened for the next 10 minutes.",
                 'duration': {
@@ -113,8 +113,8 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         }
         else if (currentHP > 20 && currentHP <= 30) {
             const effectData = {
-                'name': "Divine Word",
-                'icon': "assets/library/icons/sorted/spells/level7/divine_word.webp",
+                'name': workflow.item.name,
+                'icon': workflow.item.img,
                 'origin': workflow.item.uuid,
                 'description': "You heard a divine word, imbued with the power that shaped the world at the dawn of creation and are blinded, deafened and stunned for the next hour.",
                 'duration': {

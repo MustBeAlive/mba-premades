@@ -79,6 +79,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .atLocation(token)
         .attachTo(token)
         .scaleToObject(2)
+        .fadeOut(500)
         .persist()
         .name(`${token.document.name} Thunderous Smite`)
 

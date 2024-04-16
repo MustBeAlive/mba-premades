@@ -64,7 +64,7 @@ export async function lesserRestoration({ speaker, actor, token, character, item
         let effect = curable[i];
         let name = effect.flags['mba-premades']?.name;
         let description = effect.flags['mba-premades']?.description[0].toString();
-        let icon = "assets/library/icons/sorted/conditions/nauseated.png";
+        let icon = "modules/mba-premades/icons/conditions/nauseated.webp";
         selection.push([name, description, icon]);
     }
     function generateEnergyBox(type) {

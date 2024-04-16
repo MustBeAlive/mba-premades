@@ -63,6 +63,7 @@ export async function waterBreathing({ speaker, actor, token, character, item, a
             .file("jb2a.markers.bubble.02.loop.blue.0")
             .scale(0.4)
             .fadeIn(300)
+            .fadeOut(1000)
             .opacity(0.6)
             .attachTo(target)
             .mask(target)

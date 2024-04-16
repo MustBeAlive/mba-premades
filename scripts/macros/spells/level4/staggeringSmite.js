@@ -77,8 +77,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .atLocation(token)
         .attachTo(token)
         .scaleToObject(2)
-        .persist()
         .filter("ColorMatrix", { hue: 30 })
+        .fadeOut(500)
+        .persist()
         .name(`${token.document.name} Staggering Smite`)
 
         .play();
@@ -155,8 +156,9 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
             .attachTo(target)
             .scaleToObject(2)
             .scaleIn(0, 2000, { ease: "easeOutCubic" })
-            .persist()
+            .fadeOut(500)
             .filter("ColorMatrix", { hue: 30 })
+            .persist()
             .name(`${target.document.name} Staggering Smite`)
 
             .play();

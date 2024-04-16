@@ -36,12 +36,9 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         await chrisPremades.helpers.removeEffect(effect);
     }
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `Speak With Dead` });
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Speak with Dead` });
 
         new Sequence()
-            .animation()
-            .on(token)
-            .opacity(1)
 
             .effect()
             .from(token)
@@ -54,6 +51,11 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
             .thenDo(function () {
                 chrisPremades.helpers.addCondition(actor, 'Dead', true)
             })
+
+            .animation()
+            .on(token)
+            .opacity(1)
+
             .play();
     }
     let effectData = {
@@ -81,11 +83,10 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
             }
         }
     };
-    //Magic Circle Effect
+
     new Sequence()
 
         .effect()
-        .name("Speak With Dead")
         .atLocation(target)
         .file(`jb2a.magic_signs.circle.02.necromancy.loop.blue`)
         .scaleToObject(1.25)
@@ -96,6 +97,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .fadeOut(2000)
         .zIndex(0)
         .persist()
+        .name(`${target.document.name} Speak with Dead`)
 
         .effect()
         .atLocation(target)
@@ -122,7 +124,6 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .zIndex(1)
 
         .effect()
-        .name("Speak With Dead")
         .atLocation(target, { offset: { x: 0.5, y: 0.5 }, gridUnits: true })
         .file("jb2a.flames.01.blue")
         .belowTokens()
@@ -130,10 +131,11 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .scaleToObject(0.5)
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .randomizeMirrorX()
+        .fadeOut(500)
         .persist()
+        .name(`${target.document.name} Speak with Dead`)
 
         .effect()
-        .name("Speak With Dead")
         .delay(250)
         .atLocation(target, { offset: { x: 0.5, y: 0.5 - 0.35 }, gridUnits: true })
         .file("animated-spell-effects-cartoon.smoke.97")
@@ -141,10 +143,12 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .opacity(0.4)
         .tint("#6ff087")
         .fadeIn(500)
+        .fadeOut(500)
         .zIndex(2)
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .randomizeMirrorX()
         .persist()
+        .name(`${target.document.name} Speak with Dead`)
 
         //Bottom Left Flame
         .effect()
@@ -155,7 +159,6 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .zIndex(1)
 
         .effect()
-        .name("Speak With Dead")
         .atLocation(target, { offset: { x: -0.5, y: 0.5 }, gridUnits: true })
         .file("jb2a.flames.01.blue")
         .belowTokens()
@@ -163,10 +166,11 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .scaleToObject(0.5)
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .randomizeMirrorX()
+        .fadeOut(500)
         .persist()
+        .name(`${target.document.name} Speak with Dead`)
 
         .effect()
-        .name("Speak With Dead")
         .delay(250)
         .atLocation(target, { offset: { x: -0.5, y: 0.5 - 0.35 }, gridUnits: true })
         .file("animated-spell-effects-cartoon.smoke.97")
@@ -174,10 +178,12 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .opacity(0.4)
         .tint("#6ff087")
         .fadeIn(500)
+        .fadeOut(500)
         .zIndex(2)
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .randomizeMirrorX()
         .persist()
+        .name(`${target.document.name} Speak with Dead`)
 
         //Top Left Flame
         .effect()
@@ -188,7 +194,6 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .zIndex(1)
 
         .effect()
-        .name("Speak With Dead")
         .atLocation(target, { offset: { x: -0.5, y: -0.5 }, gridUnits: true })
         .file("jb2a.flames.01.blue")
         .belowTokens()
@@ -196,10 +201,11 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .scaleToObject(0.5)
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .randomizeMirrorX()
+        .fadeOut(500)
         .persist()
+        .name(`${target.document.name} Speak with Dead`)
 
         .effect()
-        .name("Speak With Dead")
         .delay(250)
         .atLocation(target, { offset: { x: -0.5, y: -0.5 - 0.35 }, gridUnits: true })
         .file("animated-spell-effects-cartoon.smoke.97")
@@ -207,10 +213,12 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .opacity(0.4)
         .tint("#6ff087")
         .fadeIn(500)
+        .fadeOut(500)
         .zIndex(1)
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .randomizeMirrorX()
         .persist()
+        .name(`${target.document.name} Speak with Dead`)
 
         //Top Right Flame
         .effect()
@@ -221,7 +229,6 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .zIndex(1)
 
         .effect()
-        .name("Speak With Dead")
         .atLocation(target, { offset: { x: 0.5, y: -0.5 }, gridUnits: true })
         .file("jb2a.flames.01.blue")
         .belowTokens()
@@ -229,10 +236,11 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .scaleToObject(0.5)
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .randomizeMirrorX()
+        .fadeOut(500)
         .persist()
+        .name(`${target.document.name} Speak with Dead`)
 
         .effect()
-        .name("Speak With Dead")
         .delay(250)
         .atLocation(target, { offset: { x: 0.5, y: -0.5 - 0.35 }, gridUnits: true })
         .file("animated-spell-effects-cartoon.smoke.97")
@@ -240,10 +248,12 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .opacity(0.4)
         .tint("#6ff087")
         .fadeIn(500)
+        .fadeOut(500)
         .zIndex(1)
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .randomizeMirrorX()
         .persist()
+        .name(`${target.document.name} Speak with Dead`)
 
         .play()
 
@@ -290,20 +300,20 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .opacity(0)
 
         .effect()
-        .name("Speak With Dead")
         .file("jb2a.token_border.circle.static.blue.012")
         .attachTo(target, { bindAlpha: false, followRotation: false })
         .scaleToObject(1.85, { considerTokenScale: true })
         .fadeIn(4000)
+        .fadeOut(500)
         .opacity(0.5)
         .filter("ColorMatrix", { hue: -65 })
         .zIndex(1.1)
         .animateProperty("spriteContainer", "position.y", { from: 0, to: -0.2, duration: 2000, delay: 2000, gridUnits: true, ease: "easeInSine" })
         .loopProperty("spriteContainer", "position.y", { from: 0, to: 0.05, duration: 2500, delay: 4000, gridUnits: true, ease: "easeInOutQuad", pingPong: true })
         .persist()
+        .name(`${target.document.name} Speak with Dead`)
 
         .effect()
-        .name("Speak With Dead")
         .delay(100)
         .from(target)
         .attachTo(target, { bindAlpha: false, followRotation: false })
@@ -313,52 +323,51 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .filter("ColorMatrix", { brightness: -1 })
         .filter("Blur", { blurX: 5, blurY: 10 })
         .zIndex(1.1)
+        .fadeOut(500)
         .persist()
+        .name(`${target.document.name} Speak with Dead`)
 
         .effect()
-        .name("Speak With Dead")
         .delay(2000)
         .file("jb2a.spirit_guardians.blue.spirits")
         .attachTo(target, { offset: { y: 0 }, gridUnits: true, bindAlpha: false, followRotation: false })
         .scaleToObject(1.35, { considerTokenScale: true })
-        .persist()
         .filter("ColorMatrix", { hue: -65 })
         .opacity(0.65)
         .fadeIn(1000)
+        .fadeOut(500)
         .zIndex(0.1)
+        .persist()
+        .name(`${target.document.name} Speak with Dead`)
 
         .effect()
-        .name("Speak With Dead")
         .delay(3000)
         .file("jb2a.magic_signs.rune.necromancy.complete.blue")
         .attachTo(target, { offset: { y: -0.77 * target.document.width }, gridUnits: true, bindAlpha: false, followRotation: false })
         .scaleToObject(0.4, { considerTokenScale: true })
-        .persist()
         .filter("ColorMatrix", { hue: -65 })
         .opacity(1)
         .loopProperty("spriteContainer", "position.y", { from: 0, to: 0.05, duration: 2500, delay: 1000, gridUnits: true, ease: "easeInOutQuad", pingPong: true })
         .zIndex(2)
+        .fadeOut(500)
+        .persist()
+        .name(`${target.document.name} Speak with Dead`)
 
         .effect()
-        .name("Speak With Dead")
         .delay(3000)
         .file("jb2a.magic_signs.rune.necromancy.complete.blue")
         .attachTo(target, { offset: { y: -0.55 * target.document.width }, gridUnits: true, bindAlpha: false, followRotation: false })
         .scaleToObject(0.4, { considerTokenScale: true })
-        .persist()
         .opacity(0.5)
         .belowTokens()
         .filter("ColorMatrix", { brightness: -1 })
         .filter("Blur", { blurX: 5, blurY: 10 })
         .zIndex(2)
-
-        .thenDo(function () {
-            chrisPremades.helpers.removeCondition(target.actor, 'Dead');
-            chrisPremades.helpers.createEffect(target.actor, effectData);
-        })
+        .fadeOut(500)
+        .persist()
+        .name(`${target.document.name} Speak with Dead`)
 
         .effect()
-        .name("Speak With Dead")
         .delay(100)
         .from(target)
         .attachTo(target, { bindAlpha: false, followRotation: false })
@@ -367,9 +376,17 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .animateProperty("sprite", "rotation", { from: 0, to: 15, duration: 1000, delay: 2500, ease: "easeInOutBack" })
         .animateProperty("sprite", "rotation", { from: 0, to: -15, duration: 1000, delay: 3000, ease: "easeInOutBack" })
         .loopProperty("spriteContainer", "position.y", { from: 0, to: 0.05, duration: 2500, delay: 4000, gridUnits: true, ease: "easeInOutQuad", pingPong: true })
-        .persist()
         .zIndex(0.2)
-        .waitUntilFinished()
+        .fadeOut(500)
+        .persist()
+        .name(`${target.document.name} Speak with Dead`)
+
+        .wait(4000)
+
+        .thenDo(function () {
+            chrisPremades.helpers.removeCondition(target.actor, 'Dead');
+            chrisPremades.helpers.createEffect(target.actor, effectData);
+        })
 
         .play()
 }

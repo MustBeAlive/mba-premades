@@ -151,7 +151,7 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
     new Sequence()
 
         .effect()
-        .file("jb2a.markers.circle_of_stars.orangepurple")
+        .file("jb2a.markers.circle_of_stars.blue")
         .atLocation(token)
         .delay(200)
         .duration(7500)
@@ -162,7 +162,7 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
         .zIndex(1)
 
         .effect()
-        .file("jb2a.sneak_attack.dark_purple")
+        .file("jb2a.sneak_attack.blue")
         .atLocation(token)
         .delay(200)
         .startTime(450)
@@ -178,16 +178,16 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
 
         .effect()
         .file(tokenPath)
-        .name(`${token.document.name} Disguise Self`)
         .atLocation(token)
         .scaleToObject(0.95)
-        .persist()
         .attachTo(token, { bindAlpha: false })
         .fadeOut(2000, { ease: "easeOutCubic" })
         .scaleOut(0.5, 3000, { ease: "easeOutCubic" })
+        .persist()
+        .name(`${token.document.name} Disguise Self`)
 
         .effect()
-        .file("jb2a.sleep.cloud.01.dark_purple")
+        .file("jb2a.sleep.cloud.01.blue")
         .atLocation(token)
         .delay(200)
         .opacity(0.5)
@@ -202,17 +202,17 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
         })
 
         .effect()
-        .file("jb2a.particles.outward.purple.02.03")
-        .name(`${token.document.name} Disguise Self`)
+        .file("jb2a.particles.outward.blue.02.03")
         .atLocation(token)
         .delay(200)
         .scaleToObject(1.5)
         .zIndex(2)
         .scaleIn(0, 200, { ease: "easeOutCubic" })
         .attachTo(token, { bindAlpha: false })
-        .persist()
         .fadeIn(760)
         .fadeOut(2500)
+        .persist()
+        .name(`${token.document.name} Disguise Self`)
 
         .play();
 }

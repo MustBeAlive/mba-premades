@@ -76,7 +76,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .scaleIn(0, 5000, { ease: "easeOutCubic" })
         .size(2.2, { gridUnits: true })
         .persist()
-        .name('Grease')
+        .name(`Grease`)
 
         .play()
 }
@@ -152,7 +152,7 @@ async function enter(template, token) {
 }
 
 async function del() {
-    await Sequencer.EffectManager.endEffects({ name: "Grease" })
+    await Sequencer.EffectManager.endEffects({ name: `Grease` })
 }
 
 export let grease = {

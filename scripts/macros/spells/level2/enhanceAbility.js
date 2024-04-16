@@ -17,7 +17,7 @@ export async function enhanceAbility({ speaker, actor, token, character, item, a
         case 'STR': {
             effectData = {
                 'name': "Enhance Ability: Bull\'s Strength",
-                'icon': "assets/library/icons/sorted/spells/level2/enhance_ability1.webp",
+                'icon': "modules/mba-premades/icons/spells/level2/enhance_ability1.webp",
                 'origin': workflow.item.uuid,
                 'description': "You have advantage on Strength checks and your carrying capacity doubles",
                 'duration': {
@@ -52,7 +52,7 @@ export async function enhanceAbility({ speaker, actor, token, character, item, a
         case 'DEX': {
             effectData = {
                 'name': "Enhance Ability: Cat\'s Grace",
-                'icon': "assets/library/icons/sorted/spells/level2/enhance_ability2.webp",
+                'icon': "modules/mba-premades/icons/spells/level2/enhance_ability2.webp",
                 'origin': workflow.item.uuid,
                 'description': "You have advantage on Dexterity checks and you don't take damage from falling 20 feet or less if you are not incapacitated",
                 'duration': {
@@ -94,7 +94,7 @@ export async function enhanceAbility({ speaker, actor, token, character, item, a
             }
             effectData = {
                 'name': "Enhance Ability: Bear\'s Endurance",
-                'icon': "assets/library/icons/sorted/spells/level2/enhance_ability3.webp",
+                'icon': "modules/mba-premades/icons/spells/level2/enhance_ability3.webp",
                 'origin': workflow.item.uuid,
                 'description': "You have advantage on Constitution checks and you gain 2d6 temporary hit points, which are lost when the spell ends",
                 'duration': {
@@ -133,7 +133,7 @@ export async function enhanceAbility({ speaker, actor, token, character, item, a
         case 'INT': {
             effectData = {
                 'name': "Enhance Ability: Fox\'s Cunning",
-                'icon': "assets/library/icons/sorted/spells/level2/enhance_ability4.webp",
+                'icon': "modules/mba-premades/icons/spells/level2/enhance_ability4.webp",
                 'origin': workflow.item.uuid,
                 'description': "You have advantage on Intelligence checks",
                 'duration': {
@@ -162,7 +162,7 @@ export async function enhanceAbility({ speaker, actor, token, character, item, a
         case 'WIS': {
             effectData = {
                 'name': "Enhance Ability: Owl\'s Wisdom",
-                'icon': "assets/library/icons/sorted/spells/level2/enhance_ability5.webp",
+                'icon': "modules/mba-premades/icons/spells/level2/enhance_ability5.webp",
                 'origin': workflow.item.uuid,
                 'description': "You have advantage on Wisdom checks",
                 'duration': {
@@ -191,7 +191,7 @@ export async function enhanceAbility({ speaker, actor, token, character, item, a
         case 'CHA': {
             effectData = {
                 'name': "Enhance Ability: Eagle\'s Splendor",
-                'icon': "assets/library/icons/sorted/spells/level2/enhance_ability6.webp",
+                'icon': "modules/mba-premades/icons/spells/level2/enhance_ability6.webp",
                 'origin': workflow.item.uuid,
                 'description': "You have advantage on Charisma checks",
                 'duration': {

@@ -32,7 +32,7 @@ export async function magicStone({speaker, actor, token, character, item, args, 
                 Item: {
                     "Throw Magic Stone": { 
                         "type": "spell",
-                        "img": "assets/library/icons/sorted/spells/cantrip/magic_stone_throw.webp",
+                        "img": "modules/mba-premades/icons/spells/cantrip/magic_stone_throw.webp",
                         
                         "system": {
                             "attackBonus": `- @mod + ${modEval.total}`,

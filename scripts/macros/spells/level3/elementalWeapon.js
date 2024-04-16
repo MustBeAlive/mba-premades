@@ -19,23 +19,23 @@ export async function elementalWeapon({ speaker, actor, token, character, item, 
     let icon;
     switch (damageType) {
         case 'acid': {
-            icon = "assets/library/icons/sorted/spells/level3/elemental_weapon_acid.webp";
+            icon = "modules/mba-premades/icons/spells/level3/elemental_weapon_acid.webp";
             break;
         }
         case 'cold': {
-            icon = "assets/library/icons/sorted/spells/level3/elemental_weapon_cold.webp";
+            icon = "modules/mba-premades/icons/spells/level3/elemental_weapon_cold.webp";
             break;
         }
         case 'fire': {
-            icon = "assets/library/icons/sorted/spells/level3/elemental_weapon_fire.webp";
+            icon = "modules/mba-premades/icons/spells/level3/elemental_weapon_fire.webp";
             break;
         }
         case 'lightning': {
-            icon = "assets/library/icons/sorted/spells/level3/elemental_weapon_lightning.webp";
+            icon = "modules/mba-premades/icons/spells/level3/elemental_weapon_lightning.webp";
             break;
         }
         case 'thunder': {
-            icon = "assets/library/icons/sorted/spells/level3/elemental_weapon_thunder.webp";
+            icon = "modules/mba-premades/icons/spells/level3/elemental_weapon_thunder.webp";
         }
     }
     let castLevel = workflow.castData.castLevel;

@@ -2,13 +2,13 @@
 export async function guidingBolt({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `GuidingBolt`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${target.document.name} Guiding Bolt`, object: token })
     }
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
-        'description': "Next attack roll made against you before the end of caster's next turn has advantage.",
         'origin': workflow.item.uuid,
+        'description': "Next attack roll made against you before the end of caster's next turn has advantage.",
         'changes': [
             {
                 'key': 'flags.midi-qol.grants.advantage.attack.all',
@@ -156,8 +156,7 @@ export async function guidingBolt({ speaker, actor, token, character, item, args
         .belowTokens()
         .zIndex(1)
         .persist()
-        .name(`GuidingBolt`)
-        .private()
+        .name(`${target.document.name} Guiding Bolt`)
 
         .effect()
         .from(target)
@@ -177,10 +176,9 @@ export async function guidingBolt({ speaker, actor, token, character, item, args
         .scaleToObject(target.document.texture.scaleX)
         .tint(0xfbd328)
         .zIndex(1)
-        .persist()
-        .name(`GuidingBolt`)
         .mask()
-        .private()
+        .persist()
+        .name(`${target.document.name} Guiding Bolt`)
 
         .thenDo(function () {
             chrisPremades.helpers.createEffect(target.actor, effectData);
@@ -190,15 +188,15 @@ export async function guidingBolt({ speaker, actor, token, character, item, args
         .file("jb2a.particles.outward.orange.02.03")
         .attachTo(target)
         .fadeIn(1000)
+        .fadeOut(500)
         .scaleToObject(target.document.texture.scaleX * 1.5)
         .scaleIn(0, 500, { ease: "easeOutCirc" })
         .zIndex(1)
         .filter("ColorMatrix", { hue: -5, saturate: -0.2, brightness: 1.2 })
-        .persist()
         .randomRotation()
-        .name(`GuidingBolt`)
         .mask(target)
-        .waitUntilFinished()
+        .persist()
+        .name(`${target.document.name} Guiding Bolt`)
 
         .play();
 }

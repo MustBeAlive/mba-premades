@@ -214,7 +214,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     }
     let effectData = {
         'name': "Telekinesis: Restrained",
-        'icon': "assets/library/icons/sorted/spells/level5/telekinesis.webp",
+        'icon': "modules/mba-premades/icons/spells/level5/telekinesis.webp",
         'description': "You are restrained by telekinetic power.",
         'origin': effect.flags['midi-qol'].castData.itemUuid,
         'changes': [

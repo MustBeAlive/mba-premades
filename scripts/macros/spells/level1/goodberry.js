@@ -139,7 +139,7 @@ export async function goodberry({speaker, actor, token, character, item, args, s
     const newItemData = {
         name: `${workflow.item.name} (${batchId})`,
         type: "consumable",
-        img: "icons/consumables/food/berries-ration-round-red.webp",
+        img: "modules/mba-premades/icons/spells/level1/goodberry.webp",
         system: {
         description: {
             value: game.i18n.localize(i18nGoodberry.description),

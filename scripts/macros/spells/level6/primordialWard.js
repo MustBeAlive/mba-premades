@@ -74,23 +74,23 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                     let icon;
                     switch (type) {
                         case "acid": {
-                            icon = "assets/library/icons/sorted/spells/level6/primordial_ward_acid.webp";
+                            icon = "modules/mba-premades/icons/spells/level6/primordial_ward_acid.webp";
                             break;
                         }
                         case "cold": {
-                            icon = "assets/library/icons/sorted/spells/level6/primordial_ward_cold.webp";
+                            icon = "modules/mba-premades/icons/spells/level6/primordial_ward_cold.webp";
                             break;
                         }
                         case "fire": {
-                            icon = "assets/library/icons/sorted/spells/level6/primordial_ward_fire.webp";
+                            icon = "modules/mba-premades/icons/spells/level6/primordial_ward_fire.webp";
                             break;
                         }
                         case "lightning": {
-                            icon = "assets/library/icons/sorted/spells/level6/primordial_ward_lightning.webp";
+                            icon = "modules/mba-premades/icons/spells/level6/primordial_ward_lightning.webp";
                             break;
                         }
                         case "thunder": {
-                            icon = "assets/library/icons/sorted/spells/level6/primordial_ward_thunder.webp";
+                            icon = "modules/mba-premades/icons/spells/level6/primordial_ward_thunder.webp";
                             break;
                         }
                     };

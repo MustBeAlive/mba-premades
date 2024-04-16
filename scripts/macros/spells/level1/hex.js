@@ -19,22 +19,22 @@ async function hexItem({ speaker, actor, token, character, item, args, scope, wo
     let icon;
     switch (selection) {
         case 'str':
-            icon = "assets/library/icons/sorted/spells/level1/hex_strength.webp";
+            icon = "modules/mba-premades/icons/spells/level1/hex_strength.webp";
             break;
         case 'dex':
-            icon = "assets/library/icons/sorted/spells/level1/hex_dexterity.webp";
+            icon = "modules/mba-premades/icons/spells/level1/hex_dexterity.webp";
             break;
         case 'con':
-            icon = "assets/library/icons/sorted/spells/level1/hex_constitution.webp";
+            icon = "modules/mba-premades/icons/spells/level1/hex_constitution.webp";
             break;
         case 'int':
-            icon = "assets/library/icons/sorted/spells/level1/hex_intelligence.webp";
+            icon = "modules/mba-premades/icons/spells/level1/hex_intelligence.webp";
             break;
         case 'wis':
-            icon = "assets/library/icons/sorted/spells/level1/hex_wisdom.webp";
+            icon = "modules/mba-premades/icons/spells/level1/hex_wisdom.webp";
             break;
         case 'cha':
-            icon = "assets/library/icons/sorted/spells/level1/hex_charisma.webp";
+            icon = "modules/mba-premades/icons/spells/level1/hex_charisma.webp";
             break;
     }
     let seconds;

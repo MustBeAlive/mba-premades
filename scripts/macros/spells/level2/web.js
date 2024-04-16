@@ -103,7 +103,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .size(4.3, { gridUnits: true })
         .persist()
-        .name('Web')
+        .name(`Web`)
 
         .effect()
         .file('jb2a.web.01')
@@ -115,7 +115,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .size(4.3, { gridUnits: true })
         .persist()
-        .name('Web')
+        .name(`Web`)
 
         .play();
 }
@@ -247,7 +247,7 @@ async function enter(template, token) {
 }
 
 async function del() {
-    await Sequencer.EffectManager.endEffects({ name: "Web" })
+    await Sequencer.EffectManager.endEffects({ name: `Web` })
 }
 
 export let web = {

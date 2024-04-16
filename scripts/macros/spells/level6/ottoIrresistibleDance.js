@@ -3,12 +3,12 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     let target = workflow.targets.first();
     let hasCharmImmunity = chrisPremades.helpers.checkTrait(target.actor, 'ci', 'charmed');
     if (!hasCharmImmunity) return;
-    let immuneData = {  
+    let immuneData = {
         'name': 'Save Immunity',
-        'icon': 'assets/library/icons/sorted/generic/generic_buff.webp',
+        'icon': 'modules/mba-premades/icons/generic/generic_buff.webp',
         'description': "You succeed on the next save you make",
         'duration': {
-            'turns': 1  
+            'turns': 1
         },
         'changes': [
             {
@@ -37,17 +37,21 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
-    async function effectMacro() {
-        if (Tagger.hasTags(token, "Dancing")) {
-            await Tagger.removeTags(token, "Dancing")
-            await Sequencer.EffectManager.endEffects({ name: "Dance", object: token })
-        }
+    async function effectMacroDel() {
+        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Irresistible Dance`, object: token })
+        await new Sequence()
+
+            .animation()
+            .on(token)
+            .opacity(1)
+
+            .play();
     }
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
-        'description': "<p>You are affected by Otto's Irresistable Dance and begin a comic dance in place: shuffling, tapping your feet and capering for the spell duration.</p><p>On your turn, you must use all of your movement to dance without leaving your space and have disadvantage on Dexterity saving throws and attack rolls.</p><p>While you are affected by this spell, other creatures have advantage on attack rolls against you.</p><p>As an action, you can make a Wisdom saving throw in attempt to regain control of yourself. On a successful save, the spell ends.</p>",
         'origin': workflow.item.uuid,
+        'description': "<p>You are affected by Otto's Irresistable Dance and begin a comic dance in place: shuffling, tapping your feet and capering for the spell duration.</p><p>On your turn, you must use all of your movement to dance without leaving your space and have disadvantage on Dexterity saving throws and attack rolls.</p><p>While you are affected by this spell, other creatures have advantage on attack rolls against you.</p><p>As an action, you can make a Wisdom saving throw in attempt to regain control of yourself. On a successful save, the spell ends.</p>",
         'duration': {
             'seconds': 60
         },
@@ -86,7 +90,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacro)
+                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -98,17 +102,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    let facing;
-    let mirrorFace;
-    if (Tagger.hasTags(target, "RFace") && target.document.mirrorX == false || !Tagger.hasTags(target, "RFace") && target.document.mirrorX == true) {
-        facing = -1;
-        mirrorFace = false;
-    } else {
-        facing = 1;
-        mirrorFace = true;
-    };
 
     await new Sequence()
+
         .effect()
         .atLocation(token)
         .file(`jb2a.magic_signs.circle.02.enchantment.loop.yellow`)
@@ -201,25 +197,23 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .play();
 
-    await Tagger.addTags(target, "Dancing");
     await chrisPremades.helpers.createEffect(target.actor, effectData);
     new Sequence()
 
         .effect()
-        .name("Dance")
         .file("jb2a.butterflies.few.yellow")
         .attachTo(target, { local: true, bindAlpha: false })
         .scaleToObject(2)
         .opacity(1)
-        .persist()
         .zIndex(0)
+        .persist()
+        .name(`${target.document.name} Irresistible Dance`)
 
         .animation()
         .on(target)
         .opacity(0)
 
         .effect()
-        .name("Dance")
         .file("https://i.imgur.com/SQWSf10.png")
         .attachTo(target, { offset: { x: 0.4 * token.document.width, y: -0.45 * token.document.width }, gridUnits: true, local: true, bindAlpha: false })
         .loopProperty("sprite", "rotation", { from: 0, to: 5, duration: 250, ease: "easeOutCubic" })
@@ -227,9 +221,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .scaleToObject(0.34)
         .private()
         .persist()
+        .name(`${target.document.name} Irresistible Dance`)
 
         .effect()
-        .name("Dance")
         .file("https://i.imgur.com/iWuBQ10.png")
         .attachTo(target, { offset: { x: 0.55 * token.document.width, y: 0 }, gridUnits: true, local: true, bindAlpha: false })
         .loopProperty("sprite", "rotation", { from: 0, to: -20, duration: 250, ease: "easeOutCubic" })
@@ -237,28 +231,19 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .scaleToObject(0.34)
         .private()
         .persist()
+        .name(`${target.document.name} Irresistible Dance`)
 
         .effect()
-        .name("Dance")
         .from(target)
         .scaleToObject(1, { considerTokenScale: true })
         .attachTo(target, { bindAlpha: false })
         .loopProperty("sprite", "position.y", { from: 0, to: 0.11, duration: 150, gridUnits: true, pingPong: true, ease: "easeOutQuad" })
         .loopProperty("sprite", "rotation", { from: -33, to: 33, duration: 900, ease: "easeOutCubic", pingPong: true })
-        .rotate(-15 * facing)
+        .rotate(-15)
         .loopProperty("sprite", "width", { from: 0, to: 0.015, duration: 900, gridUnits: true, pingPong: true, ease: "easeOutQuad" })
         .loopProperty("sprite", "height", { from: 0, to: 0.015, duration: 900, gridUnits: true, pingPong: true, ease: "easeOutQuad" })
         .persist()
-        .waitUntilFinished(-200)
-
-        .thenDo(function () {
-            Tagger.removeTags(target, "Dancing")
-            Sequencer.EffectManager.endEffects({ name: "Dance", object: target });
-        })
-
-        .animation()
-        .on(target)
-        .opacity(1)
+        .name(`${target.document.name} Irresistible Dance`)
 
         .play()
 }

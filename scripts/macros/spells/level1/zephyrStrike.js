@@ -8,7 +8,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     let damageBonus = '1d8[force]';
     const effectData = {
         'name': 'Zephyr Strike: Advantage',
-        'icon': 'assets/library/icons/sorted/generic/generic_buff.webp',
+        'icon': 'modules/mba-premades/icons/generic/generic_buff.webp',
         'duration': {
             'turns': 1
         },
@@ -55,7 +55,7 @@ async function del(actor) {
         'duration': {
             'turns': 1,
         },
-        'icon': "assets/library/icons/sorted/spells/level1/zephyr_strike_move.webp",
+        'icon': "modules/mba-premades/icons/spells/level1/zephyr_strike_move.webp",
         'changes': [
             {
                 'key': "system.attributes.movement.walk",

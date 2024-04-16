@@ -554,7 +554,7 @@ async function creator({ speaker, actor, token, character, item, args, scope, wo
                         await chrisPremades.helpers.applyDamage(token, cackleFeverDamageRoll.total, 'psychic');
                         let effectData = {
                             'name': "Uncontrollable Cackling",
-                            'icon': "assets/library/icons/sorted/spells/level1/tasha_hideous_laughter.webp",
+                            'icon': "modules/mba-premades/icons/spells/level1/tasha_hideous_laughter.webp",
                             'duration': {
                                 'seconds': 60
                             },
@@ -601,7 +601,7 @@ async function creator({ speaker, actor, token, character, item, args, scope, wo
                         await chrisPremades.helpers.applyDamage(token, cackleFeverDamageRoll.total, 'psychic');
                         let effectData = {
                             'name': "Uncontrollable Cackling",
-                            'icon': "assets/library/icons/sorted/spells/level1/tasha_hideous_laughter.webp",
+                            'icon': "modules/mba-premades/icons/spells/level1/tasha_hideous_laughter.webp",
                             'duration': {
                                 'seconds': 60
                             },
@@ -1758,7 +1758,7 @@ async function cackleFeverDamaged({ speaker, actor, token, character, item, args
     workflow.damageItem.hpDamage += damageTotal;
     let effectData = {
         'name': "Uncontrollable Cackling",
-        'icon': "assets/library/icons/sorted/spells/level1/tasha_hideous_laughter.webp",
+        'icon': "modules/mba-premades/icons/spells/level1/tasha_hideous_laughter.webp",
         'duration': {
             'seconds': 60
         },

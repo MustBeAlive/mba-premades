@@ -128,7 +128,7 @@ async function trigger(token, trigger) {
     }
     const effectData = {
         'name': "Nauseated",
-        'icon': "assets/library/icons/sorted/conditions/nauseated.png",
+        'icon': "modules/mba-premades/icons/conditions/nauseated.webp",
         'description': "You are nauseated by Stinking Cloud and must spend your action retching and reeling.",
         'flags': {
             'effectmacro': {

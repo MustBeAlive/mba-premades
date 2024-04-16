@@ -88,6 +88,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .attachTo(token)
         .scaleToObject(2)
         .filter("ColorMatrix", { saturate: -1, brightness: 0.8 })
+        .fadeOut(500)
         .persist()
         .name(`${token.document.name} Blinding Smite`)
 
@@ -168,6 +169,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
             .scaleToObject(2)
             .scaleIn(0, 2000, { ease: "easeOutCubic" })
             .filter("ColorMatrix", { saturate: -1, brightness: 0.8 })
+            .fadeOut(500)
             .persist()
             .name(`${target.document.name} Blinding Smite`)
 

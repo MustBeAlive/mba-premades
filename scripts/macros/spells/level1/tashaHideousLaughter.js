@@ -159,13 +159,13 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     new Sequence()
 
         .effect()
-        .name(`${target.document.name} Hideous Laughter`)
         .file("jb2a.butterflies.few.yellow")
         .attachTo(target, { local: true, bindAlpha: false })
         .scaleToObject(2)
         .opacity(1)
-        .persist()
         .zIndex(0)
+        .persist()
+        .name(`${target.document.name} Hideous Laughter`)
 
         .thenDo(function () {
             chrisPremades.helpers.createEffect(target.actor, effectData);
@@ -177,7 +177,6 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .opacity(0)
 
         .effect()
-        .name(`${target.document.name} Hideous Laughter`)
         .file("https://i.imgur.com/SQWSf10.png")
         .attachTo(target, { offset: { x: 0.4 * token.document.width, y: -0.45 * token.document.width }, gridUnits: true, local: true, bindAlpha: false })
         .loopProperty("sprite", "rotation", { from: 0, to: 15, duration: 1200, ease: "easeOutCubic" })
@@ -185,9 +184,9 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .scaleToObject(0.34)
         .private()
         .persist()
+        .name(`${target.document.name} Hideous Laughter`)
 
         .effect()
-        .name(`${target.document.name} Hideous Laughter`)
         .file("https://i.imgur.com/iWuBQ10.png")
         .attachTo(target, { offset: { x: 0.55 * token.document.width, y: 0 }, gridUnits: true, local: true, bindAlpha: false })
         .loopProperty("sprite", "rotation", { from: 0, to: -20, duration: 1200, ease: "easeOutCubic" })
@@ -195,9 +194,9 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .scaleToObject(0.34)
         .private()
         .persist()
+        .name(`${target.document.name} Hideous Laughter`)
 
         .effect()
-        .name(`${target.document.name} Hideous Laughter`)
         .from(target)
         .scaleToObject(1, { considerTokenScale: true })
         .attachTo(target, { bindAlpha: false })
@@ -207,6 +206,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .loopProperty("sprite", "width", { from: 0, to: 0.015, duration: 300, gridUnits: true, pingPong: true, ease: "easeOutQuad" })
         .loopProperty("sprite", "height", { from: 0, to: 0.015, duration: 300, gridUnits: true, pingPong: true, ease: "easeOutQuad" })
         .persist()
+        .name(`${target.document.name} Hideous Laughter`)
         .waitUntilFinished(-200)
 
         .animation()
@@ -219,7 +219,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 async function damaged({ speaker, actor, token, character, item, args, scope, workflow }) {
     let saveAdvantage = {
         'name': 'Save Advantage',
-        'icon': 'assets/library/icons/sorted/generic/generic_buff.webp',
+        'icon': 'modules/mba-premades/icons/generic/generic_buff.webp',
         'description': "You have advantage on the next save you make",
         'duration': {
             'turns': 1

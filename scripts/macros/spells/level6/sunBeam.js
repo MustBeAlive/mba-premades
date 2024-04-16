@@ -62,7 +62,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 async function check({ speaker, actor, token, character, item, args, scope, workflow }) {
     let effectData = {
         'name': 'Save Disdvantage',
-        'icon': 'assets/library/icons/sorted/generic/generic_debuff.webp',
+        'icon': 'modules/mba-premades/icons/generic/generic_debuff.webp',
         'description': "You have disadvantage on the next save you make",
         'duration': {
             'turns': 1

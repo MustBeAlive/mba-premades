@@ -176,7 +176,7 @@ export async function crownOfMadness({ speaker, actor, token, character, item, a
 		.scaleIn(0, 1500, { ease: "easeOutCubic" })
 		.scaleToObject(2)
 		.filter("ColorMatrix", { hue: 40 })
-		.private()
+		.fadeOut(1000)
 		.persist()
 		.name(`${target.document.name} Crown of Madness`)
 

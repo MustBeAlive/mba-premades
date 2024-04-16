@@ -185,6 +185,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			.delay(500)
 			.center()
 			.fadeIn(1000)
+			.fadeOut(1000)
 			.playbackRate(1)
 			.attachTo(target)
 			.filter("ColorMatrix", { hue: 130 })
@@ -200,7 +201,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 	for (let i of targets) {
 		let immuneData = {
 			'name': 'Save Immunity',
-			'icon': 'assets/library/icons/sorted/generic/generic_buff.webp',
+			'icon': 'modules/mba-premades/icons/generic/generic_buff.webp',
 			'description': "You succeed on the next save you make",
 			'duration': {
 				'turns': 1

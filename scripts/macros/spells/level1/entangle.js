@@ -220,6 +220,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .scaleIn(0, 5000, { ease: "easeOutCubic" })
             .size(1.5, { gridUnits: true })
             .mask(i)
+            .fadeOut(500)
             .persist()
             .name(`${i.document.name} Entangle`)
 

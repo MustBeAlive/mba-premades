@@ -226,7 +226,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         }
         let effectData = {
             'name': 'Enlarge',
-            'icon': 'assets/library/icons/sorted/spells/level2/enlarge_reduce1.webp',
+            'icon': 'modules/mba-premades/icons/spells/level2/enlarge_reduce1.webp',
             'origin': workflow.item.uuid,
             'duration': {
                 'seconds': 60
@@ -366,7 +366,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         }
         let effectData = {
             'name': 'Reduce',
-            'icon': 'assets/library/icons/sorted/spells/level2/enlarge_reduce2.webp',
+            'icon': 'modules/mba-premades/icons/spells/level2/enlarge_reduce2.webp',
             'origin': workflow.item.uuid,
             'duration': {
                 'seconds': 60

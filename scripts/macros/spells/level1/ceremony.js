@@ -157,7 +157,7 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
                 if (!nearbyPartner.length) return;
                 const effectData = {
                     'name': "Ceremony: AC bonus",
-                    'icon': "assets/library/icons/sorted/spells/level1/ceremony.webp", // temp icon, find something better or recolor original
+                    'icon': "modules/mba-premades/icons/spells/level1/ceremony.webp", // temp icon, find something better or recolor original
                     'duration': {
                         turns: 1,
                     },
@@ -183,7 +183,7 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
             }
             const effectData1 = {
                 'name': "Ceremony: Wedding",
-                'icon': "assets/library/icons/sorted/spells/level1/ceremony.webp",
+                'icon': "modules/mba-premades/icons/spells/level1/ceremony.webp",
                 'description': "For the next 7 days, you have a +2 bonus to AC while you are within 30 feet of your partner.",
                 'duration': {
                     'seconds': 604800
@@ -205,7 +205,7 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
             };
             const effectData2 = {
                 'name': "Ceremony: Wedding",
-                'icon': "assets/library/icons/sorted/spells/level1/ceremony.webp",
+                'icon': "modules/mba-premades/icons/spells/level1/ceremony.webp",
                 'description': "For the next 7 days, you have a +2 bonus to AC while you are within 30 feet of your partner.",
                 'duration': {
                     'seconds': 604800

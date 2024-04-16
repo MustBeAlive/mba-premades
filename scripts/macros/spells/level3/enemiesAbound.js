@@ -11,10 +11,10 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         return;
     }
     let effectData = {
-        'name': "Enemies Abound",
-        'icon': "assets/library/icons/sorted/spells/level3/enemies_abound.webp",
-        'description': "You lose the ability to distinguish friend from foe, regarding all creatures you can see as enemies until the spell ends. Each time you take damage, you can repeat the saving throw, ending the effect on a success. Whenever you choose another creature as a target while affected by this spell, you must choose the target at random from among the creatures you can see within range of the attack, spell, or other ability you are using. If an enemy provokes an opportunity attack from you, you must make that attack if you are able to.",
+        'name': workflow.item.name,
+        'icon': workflow.item.img,
         'origin': workflow.item.uuid,
+        'description': "You lose the ability to distinguish friend from foe, regarding all creatures you can see as enemies until the spell ends. Each time you take damage, you can repeat the saving throw, ending the effect on a success. Whenever you choose another creature as a target while affected by this spell, you must choose the target at random from among the creatures you can see within range of the attack, spell, or other ability you are using. If an enemy provokes an opportunity attack from you, you must make that attack if you are able to.",
         'duration': {
             'seconds': 60
         },

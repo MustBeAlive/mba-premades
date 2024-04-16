@@ -1,10 +1,10 @@
-import {cast} from './macros/animations/cast.js';
-import {changeChat} from './macros/ui/changeChat.js';
-import {deathSaves} from './macros/mechanics/deathsaves.js';
-import {macros} from './macros.js';
-import {removeV10EffectsBlind} from './macros/mechanics/blindness.js';
-import {removeV10EffectsInvisible} from './macros/mechanics/invisibility.js';
-import {tashaSummon} from './macros/generic/tashaSummon.js';
+import { cast } from './macros/animations/cast.js';
+import { changeChat } from './macros/ui/changeChat.js';
+import { deathSaves } from './macros/mechanics/deathsaves.js';
+import { macros } from './macros.js';
+import { removeV10EffectsBlind } from './macros/mechanics/blindness.js';
+import { removeV10EffectsInvisible } from './macros/mechanics/invisibility.js';
+import { tashaSummon } from './macros/generic/tashaSummon.js';
 let moduleName = 'mba-premades';
 export function registerSettings() {
     game.settings.register(moduleName, 'LastGM', {
@@ -53,6 +53,36 @@ export function registerSettings() {
                 Hooks.on('midi-qol.preItemRoll', macros.blur);
             } else {
                 Hooks.off('midi-qol.preItemRoll', macros.blur);
+            }
+        }
+    });
+    game.settings.register(moduleName, 'Mirror Image', {
+        'name': 'Mirror Image Automation',
+        'hint': 'Включает автоматизацию заклинания Mirror Image через Midi-QoL hooks.',
+        'scope': 'world',
+        'config': true,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.AttackRollComplete', macros.mirrorImage.hook);
+            } else {
+                Hooks.off('midi-qol.AttackRollComplete', macros.mirrorImage.hook);
+            }
+        }
+    });
+    game.settings.register(moduleName, 'Sanctuary', {
+        'name': 'Sanctuary Automation',
+        'hint': 'Включает автоматизацию заклинания Sanctuary через Midi-QoL hooks.',
+        'scope': 'world',
+        'config': true,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preItemRoll', macros.sanctuary.hook);
+            } else {
+                Hooks.off('midi-qol.preItemRoll', macros.sanctuary.hook);
             }
         }
     });

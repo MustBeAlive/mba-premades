@@ -50,6 +50,8 @@ export async function grapple({ speaker, actor, token, character, item, args, sc
         .file("jb2a.markers.chain.standard.complete.02.grey")
         .attachTo(target)
         .scaleToObject(2 * target.document.texture.scaleX)
+        .fadeIn(500)
+        .fadeOut(1000)
         .opacity(0.8)
     
         .play()

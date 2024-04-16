@@ -1,4 +1,3 @@
-// Animation by EskieMoh#2969
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel - 2;
     if (workflow.targets.size <= ammount) return;
@@ -10,8 +9,9 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let targets = Array.from(workflow.targets);
-    async function effectMacro() {
-        await Sequencer.EffectManager.endEffects({ name: "Fly", object: token })
+    async function effectMacroDel() {
+        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Fly`, object: token })
+
         new Sequence()
 
             .animation()
@@ -23,8 +23,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
-        'description': "You have flying speed of 60 feet for the duration. When the spell ends, you instantly fall if you are still aloft, unless you can stop the fall.",
         'origin': workflow.item.uuid,
+        'description': "You have flying speed of 60 feet for the duration. When the spell ends, you instantly fall if you are still aloft, unless you can stop the fall.",
         'duration': {
             'seconds': 600
         },
@@ -39,7 +39,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacro)
+                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -51,37 +51,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    for (let i = 0; i < targets.length; i++) {
-        let target = fromUuidSync(targets[i].document.uuid).object;
-
+    for (let target of targets) {
         await new Sequence()
-
-            .effect()
-            .atLocation(token)
-            .file(`jb2a.magic_signs.circle.02.conjuration.loop.yellow`)
-            .scaleToObject(1.5)
-            .rotateIn(180, 600, { ease: "easeOutCubic" })
-            .scaleIn(0, 600, { ease: "easeOutCubic" })
-            .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-            .belowTokens()
-            .fadeOut(400)
-            .duration(1400)
-
-            .effect()
-            .atLocation(token)
-            .file(`jb2a.magic_signs.circle.02.conjuration.loop.yellow`)
-            .scaleToObject(1.5)
-            .rotateIn(180, 600, { ease: "easeOutCubic" })
-            .scaleIn(0, 600, { ease: "easeOutCubic" })
-            .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-            .belowTokens(true)
-            .filter("ColorMatrix", { saturate: -1, brightness: 2 })
-            .filter("Blur", { blurX: 5, blurY: 10 })
-            .zIndex(1)
-            .duration(1200)
-            .fadeIn(200, { ease: "easeOutCirc", delay: 500 })
-            .fadeOut(300, { ease: "linear" })
-            .waitUntilFinished()
 
             .effect()
             .file("animated-spell-effects-cartoon.energy.pulse.yellow")
@@ -105,7 +76,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
             .effect()
             .from(target)
-            .name("Fly")
             .attachTo(target, { bindAlpha: false, followRotation: true, locale: false })
             .scaleToObject(1, { considerTokenScale: true })
             .opacity(1)
@@ -114,11 +84,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .loopProperty("sprite", "position.y", { from: 0, to: -50, duration: 2500, pingPong: true, delay: 1000 })
             .filter("Glow", { color: 0xFFd129, distance: 10, outerStrength: 4, innerStrength: 0 })
             .zIndex(2)
+            .fadeOut(500)
             .persist()
+            .name(`${target.document.name} Fly`)
 
             .effect()
             .file("jb2a.particles.outward.orange.02.04")
-            .name("Fly")
             .scaleToObject(1.35, { considerTokenScale: true })
             .attachTo(target, { bindAlpha: false })
             .opacity(1)
@@ -127,11 +98,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .loopProperty("sprite", "position.y", { from: 0, to: -50, duration: 2500, pingPong: true, delay: 1000 })
             .fadeIn(1000)
             .zIndex(2.2)
+            .fadeOut(500)
             .persist()
+            .name(`${target.document.name} Fly`)
 
             .effect()
             .from(target)
-            .name("Fly")
             .atLocation(target)
             .scaleToObject(0.9)
             .duration(1000)
@@ -141,7 +113,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .filter("Blur", { blurX: 5, blurY: 10 })
             .attachTo(target, { bindAlpha: false })
             .zIndex(1)
+            .fadeOut(500)
             .persist()
+            .name(`${target.document.name} Fly`)
 
             .play();
 

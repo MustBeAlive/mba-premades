@@ -88,7 +88,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         }
         const effectData = {
             'name': 'Elemental Bane',
-            'icon': 'assets/library/icons/sorted/spells/level4/elemental_bane.webp',
+            'icon': workflow.item.img,
             'origin': concEffect.origin,
             'duration': {
                 'seconds': 60

@@ -174,6 +174,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			.delay(500)
 			.center()
 			.fadeIn(1000)
+			.fadeOut(1000)
 			.playbackRate(1)
 			.attachTo(target)
 			.filter("ColorMatrix", { hue: 130 })

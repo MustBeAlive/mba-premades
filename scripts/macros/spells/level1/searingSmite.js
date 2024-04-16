@@ -88,6 +88,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .atLocation(token)
         .attachTo(token)
         .scaleToObject(2)
+        .fadeOut(500)
         .persist()
         .name(`${token.document.name} Searing Smite`)
 
@@ -187,6 +188,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .attachTo(target)
         .scaleToObject(2)
         .scaleIn(0, 2000, { ease: "easeOutCubic" })
+        .fadeOut(500)
         .persist()
         .name(`${target.document.name} Searing Smite`)
 

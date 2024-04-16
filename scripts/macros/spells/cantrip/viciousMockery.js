@@ -5,7 +5,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     if (!isDeafened) return;
     let effectData = {
         'name': 'Save Immunity',
-        'icon': 'assets/library/icons/sorted/generic/generic_buff.webp',
+        'icon': 'modules/mba-premades/icons/generic/generic_buff.webp',
         'description': "You succeed on the next save you make",
         'duration': {
             'turns': 1

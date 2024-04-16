@@ -90,7 +90,7 @@ export async function prismaticSpray({speaker, actor, token, character, item, ar
                 };
                 let restrainData = {
                     'name': "Prismatic Spray: Indigo",
-                    'icon': "assets/library/icons/sorted/spells/level7/prismatic_spray.webp",
+                    'icon': workflow.item.img,
                     'origin': workflow.item.uuid,
                     'description': "",
                     'changes': [
@@ -177,7 +177,7 @@ export async function prismaticSpray({speaker, actor, token, character, item, ar
                 };
                 let blindData = {
                     'name': "Prismatic Spray: Violet",
-                    'icon': "assets/library/icons/sorted/spells/level7/prismatic_spray.webp",
+                    'icon': workflow.item.img,
                     'origin': workflow.item.uuid,
                     'description': "",
                     'changes': [

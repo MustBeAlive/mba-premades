@@ -59,7 +59,7 @@ async function save({speaker, actor, token, character, item, args, scope, workfl
     if (!effect) return;
     let immuneData = {  
         'name': 'Save Immunity',
-        'icon': 'assets/library/icons/sorted/generic/generic_buff.webp',
+        'icon': 'modules/mba-premades/icons/generic/generic_buff.webp',
         'description': "You succeed on the next save you make",
         'duration': {
             'turns': 1  
@@ -93,7 +93,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
     if (!workflow.failedSaves.size) {
         let effectData = {
             'name': 'Eyebite: Immunity',
-            'icon': 'assets/library/icons/sorted/spells/level6/eyebite_immune.webp',
+            'icon': 'modules/mba-premades/icons/spells/level6/eyebite_immune.webp',
             'duration': {
                 seconds: 60
             },
@@ -114,7 +114,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
     async function effectMacroImm() {
         let effectData = {
             'name': 'Eyebite: Immunity',
-            'icon': 'assets/library/icons/sorted/spells/level6/eyebite_immune.webp',
+            'icon': 'modules/mba-premades/icons/spells/level6/eyebite_immune.webp',
             'duration': {
                 seconds: 60
             },
@@ -131,7 +131,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         case 'sleep': {
             let effectData = {
                 'name': "Eyebite: Asleep",
-                'icon': "assets/library/icons/sorted/spells/level6/eyebite_asleep.webp",
+                'icon': "modules/mba-premades/icons/spells/level6/eyebite_asleep.webp",
                 'description': "You fall unconscious. You wake up if you take any damage or if another creature uses its action to shake you awake.",
                 'duration': {
                     'seconds': 60
@@ -189,7 +189,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             };
             let effectData = {
                 'name': "Eyebite: Panicked",
-                'icon': "assets/library/icons/sorted/spells/level6/eyebite_panicked.webp",
+                'icon': "modules/mba-premades/icons/spells/level6/eyebite_panicked.webp",
                 'description': "You are frightened. On each of your turns you must take the Dash action and move away from the caster of the Eyebite spell by the safest and shortest available route, unless there is nowhere to move. If you move to a place at least <b>60 feet</b> away from the caster of the Eyebite spell where it <b>can no longer see you</b>, this effect ends.",
                 'duration': {
                     'seconds': 60
@@ -236,7 +236,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         case 'sick': {
             let effectData = {
                 'name': "Eyebite: Sickened",
-                'icon': "assets/library/icons/sorted/spells/level6/eyebite_sickened.webp",
+                'icon': "modules/mba-premades/icons/spells/level6/eyebite_sickened.webp",
                 'description': "You have disadvantage on all attack rolls and ability checks. At the end of each of your turns, you can make another Wisdom saving throw. If it succeeds, the effect ends.",
                 'duration': {
                     'seconds': 60

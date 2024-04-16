@@ -28,10 +28,10 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         }).render(true);
     };
     let effectData = {
-        'name': "Slow",
-        'icon': "assets/library/icons/sorted/spells/level3/slow.webp",
-        'description': "You are slowed. You can't use reactions. On your turn, you can use either an Action or a Bonus Action, not both. Regardless of your abilities or magic items, you can't make more than one melee or ranged attack during your turn.",
+        'name': workflow.item.name,
+        'icon': workflow.item.img,
         'origin': workflow.item.uuid,
+        'description': "You are slowed. You can't use reactions. On your turn, you can use either an Action or a Bonus Action, not both. Regardless of your abilities or magic items, you can't make more than one melee or ranged attack during your turn.",
         'duration': {
             'seconds': 60
         },

@@ -91,6 +91,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .attachTo(token)
         .scaleToObject(2)
         .filter("ColorMatrix", { hue: 340 })
+        .fadeOut(500)
         .persist()
         .name(`${token.document.name} Banishing Smite`)
 

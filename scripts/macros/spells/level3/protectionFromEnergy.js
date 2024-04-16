@@ -14,27 +14,27 @@ export async function protectionFromEnergy({ speaker, actor, token, character, i
     switch (selection) {
         case 'acid': {
             name = "Protection from Energy: Acid";
-            icon = "assets/library/icons/sorted/spells/level3/protection_from_energy_acid.webp";
+            icon = "modules/mba-premades/icons/spells/level3/protection_from_energy_acid.webp";
             break;
         }
         case 'cold': {
             name = "Protection from Energy: Cold";
-            icon = "assets/library/icons/sorted/spells/level3/protection_from_energy_cold.webp";
+            icon = "modules/mba-premades/icons/spells/level3/protection_from_energy_cold.webp";
             break;
         }
         case 'fire': {
             name = "Protection from Energy: Fire";
-            icon = "assets/library/icons/sorted/spells/level3/protection_from_energy_fire.webp";
+            icon = "modules/mba-premades/icons/spells/level3/protection_from_energy_fire.webp";
             break;
         }
         case 'lightning': {
             name = "Protection from Energy: Lightning";
-            icon = "assets/library/icons/sorted/spells/level3/protection_from_energy_lightning.webp";
+            icon = "modules/mba-premades/icons/spells/level3/protection_from_energy_lightning.webp";
             break;
         }
         case 'thunder': {
             name = "Protection from Energy: Thunder";
-            icon = "assets/library/icons/sorted/spells/level3/protection_from_energy_thunder.webp";
+            icon = "modules/mba-premades/icons/spells/level3/protection_from_energy_thunder.webp";
             break;
         }
     }

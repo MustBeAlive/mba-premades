@@ -99,7 +99,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .mask(target)
             .zIndex(0.1)
             .persist()
-            .private()
             .name(`${target.document.name} Caustic Brew`)
 
             .effect()
@@ -114,7 +113,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .fadeOut(500)
             .zIndex(0.2)
             .persist()
-            .private()
             .name(`${target.document.name} Caustic Brew`)
 
             .effect()
@@ -132,7 +130,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .mask(target)
             .zIndex(0.1)
             .persist()
-            .private()
             .name(`${target.document.name} Caustic Brew`)
 
             .effect()
@@ -147,7 +144,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .fadeOut(500)
             .zIndex(0.2)
             .persist()
-            .private()
             .name(`${target.document.name} Caustic Brew`)
 
             .effect()
@@ -165,7 +161,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .mask(target)
             .zIndex(0.1)
             .persist()
-            .private()
             .name(`${target.document.name} Caustic Brew`)
 
             .effect()
