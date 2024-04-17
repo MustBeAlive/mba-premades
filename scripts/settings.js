@@ -56,6 +56,21 @@ export function registerSettings() {
             }
         }
     });
+    game.settings.register(moduleName, 'Death Ward', {
+        'name': 'Death Ward Automation',
+        'hint': 'Включает автоматизацию заклинания Death Ward через Midi-Qol hooks.',
+        'scope': 'world',
+        'config': true,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preTargetDamageApplication', macros.deathWard.hook);
+            } else {
+                Hooks.off('midi-qol.preTargetDamageApplication', macros.deathWard.hook);
+            }
+        }
+    });
     game.settings.register(moduleName, 'Mirror Image', {
         'name': 'Mirror Image Automation',
         'hint': 'Включает автоматизацию заклинания Mirror Image через Midi-QoL hooks.',
