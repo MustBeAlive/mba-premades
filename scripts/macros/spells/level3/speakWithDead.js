@@ -11,6 +11,12 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         ui.notifications.warn("Unable to speak with target! (Target is undead)");
         return;
     }
+    let options = [["Yes, proceed", "yes"], ["No, deny Speak with Dead", "no"]];
+    let selection = await chrisPremades.helpers.remoteDialog(workflow.item.name, options, game.users.activeGM.id, `Is <b>${target.document.name}</b> eligible to use Speak with Dead on?`);
+    if (!selection || selection === "no") {
+        ui.notifications.info("GM has denied your request. Sorry!");
+        return;
+    }
     async function effectMacroCreate() {
         let effect = await chrisPremades.helpers.findEffect(actor, 'Speak with Dead');
         if (!effect) return;

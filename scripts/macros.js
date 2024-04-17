@@ -172,6 +172,7 @@ import {tenserFloatingDisk} from './macros/spells/level1/tenserFloatingDisk.js';
 import {thunderousSmite} from './macros/spells/level1/thunderousSmite.js';
 import {thunderwave} from './macros/spells/level1/thunderwave.js';
 import {tongues} from './macros/spells/level3/tongues.js';
+import {turnUndead} from './macros/classFeatures/cleric/turnUndead.js';
 import {unseenServant} from './macros/spells/level1/unseenServant.js';
 import {viciousMockery} from './macros/spells/cantrip/viciousMockery.js';
 import {vortexWarp} from './macros/spells/level2/vortexWarp.js';
@@ -358,6 +359,7 @@ export let macros = {
     'thunderousSmite': thunderousSmite,
     'thunderwave': thunderwave,
     'tongues': tongues,
+    'turnUndead': turnUndead,
     'unseenServant': unseenServant,
     'viciousMockery': viciousMockery,
     'vortexWarp': vortexWarp,
