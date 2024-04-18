@@ -58,7 +58,7 @@ import {dissonantWhispers} from './macros/spells/level1/dissonantWhispers.js';
 import {divineWord} from './macros/spells/level7/divineWord.js';
 import {dodge} from './macros/actions/dodge.js';
 import {dragonsBreath} from './macros/spells/level2/dragonsBreath.js';
-import {drawCard} from './macros/mechanics/drawCard.js';
+import {drawCard} from './macros/generic/drawCard.js';
 import {earthbind} from './macros/spells/level2/earthbind.js';
 import {elementalBane} from './macros/spells/level4/elementalBane.js';
 import {elementalWeapon} from './macros/spells/level3/elementalWeapon.js';
@@ -100,6 +100,7 @@ import {hex} from './macros/spells/level1/hex.js';
 import {hide} from './macros/actions/hide.js';
 import {holdPerson} from './macros/spells/level2/holdPerson.js';
 import {holyWater} from './macros/items/holyWater.js';
+import {hoodedLantern} from './macros/items/hoodedLantern.js';
 import {huntersMark} from './macros/spells/level1/huntersMark.js';
 import {iceKnife} from './macros/spells/level1/iceKnife.js';
 import {identify} from './macros/spells/level1/identify.js';
@@ -125,6 +126,7 @@ import {melfMinuteMeteors} from './macros/spells/level3/melfMinuteMeteors.js';
 import {mending} from './macros/spells/cantrip/mending.js';
 import {mirrorImage} from './macros/spells/level2/mirrorImage.js';
 import {mistyStep} from './macros/spells/level2/mistyStep.js';
+import {oilFlask} from './macros/items/oilFlask.js';
 import {ottoIrresistibleDance} from './macros/spells/level6/ottoIrresistibleDance.js';
 import {panpipesOfTheSewers} from './macros/items/panpipesOfTheSewers.js';
 import {potionOfHealing} from './macros/items/potionOfHealing.js';
@@ -175,6 +177,7 @@ import {tenserFloatingDisk} from './macros/spells/level1/tenserFloatingDisk.js';
 import {thunderousSmite} from './macros/spells/level1/thunderousSmite.js';
 import {thunderwave} from './macros/spells/level1/thunderwave.js';
 import {tongues} from './macros/spells/level3/tongues.js';
+import {torch} from './macros/items/torch.js';
 import {turnUndead} from './macros/classFeatures/cleric/turnUndead.js';
 import {unseenServant} from './macros/spells/level1/unseenServant.js';
 import {viciousMockery} from './macros/spells/cantrip/viciousMockery.js';
@@ -290,6 +293,7 @@ export let macros = {
     'hide': hide,
     'holdPerson': holdPerson,
     'holyWater': holyWater,
+    'hoodedLantern': hoodedLantern,
     'huntersMark': huntersMark,
     'iceKnife': iceKnife,
     'identify': identify,
@@ -315,6 +319,7 @@ export let macros = {
     'mending': mending,
     'mirrorImage': mirrorImage,
     'mistyStep': mistyStep,
+    'oilFlask': oilFlask,
     'ottoIrresistibleDance': ottoIrresistibleDance,
     'panpipesOfTheSewers': panpipesOfTheSewers,
     'potionOfHealing': potionOfHealing,
@@ -365,6 +370,7 @@ export let macros = {
     'thunderousSmite': thunderousSmite,
     'thunderwave': thunderwave,
     'tongues': tongues,
+    'torch': torch,
     'turnUndead': turnUndead,
     'unseenServant': unseenServant,
     'viciousMockery': viciousMockery,

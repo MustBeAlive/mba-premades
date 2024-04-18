@@ -255,6 +255,9 @@ export async function pyrotechnics({speaker, actor, token, character, item, args
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
+        'duration': {
+            'turns': 1
+        },
         'changes': [
             {
                 'key': 'flags.dae.deleteUuid',
@@ -263,9 +266,6 @@ export async function pyrotechnics({speaker, actor, token, character, item, args
                 'value': template.uuid
             }
         ],
-        'duration': {
-            'turns': 1
-        }
     };
     await chrisPremades.helpers.createEffect(workflow.actor, templateEffectData);
 

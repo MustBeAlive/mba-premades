@@ -192,6 +192,13 @@
 			"system": "dnd5e"
 		},
 		{
+			"name": "MBA Item Features",
+			"label": "MBA Item Features",
+			"path": "packs/mba-item-features",
+			"type": "Item",
+			"system": "dnd5e"
+		},
+		{
 			"name": "MBA Items",
 			"label": "MBA Items",
 			"path": "packs/mba-items",
@@ -251,6 +258,7 @@
 				"MBA Class Features",
 				"MBA Features",
 				"MBA Items",
+				"MBA Item Features",
 				"MBA Macro",
 				"MBA Music",
 				"MBA Spells",
