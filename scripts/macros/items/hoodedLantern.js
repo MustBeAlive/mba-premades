@@ -292,7 +292,6 @@ async function light({ speaker, actor, token, character, item, args, scope, work
             }
         }
     };
-    let oilItem = workflow.actor.items.filter(i => i.name === "Oil Flask")[0];
     new Sequence()
 
         .effect()
@@ -313,14 +312,27 @@ async function light({ speaker, actor, token, character, item, args, scope, work
 
         .thenDo(function () {
             chrisPremades.helpers.createEffect(workflow.actor, effectData);
-            if (oilItem.system.quantity > 1) {
-                oilItem.update({ "system.quantity": oilItem.system.quantity - 1 });
-            } else {
-                workflow.actor.deleteEmbeddedDocuments("Item", [oilItem.id]);
-            }
         })
 
         .play()
+
+    let oilFlaskItem = workflow.actor.items.filter(i => i.name === "Oil Flask")[0];
+    if (oilFlaskItem.system.quantity > 1) {
+        oilFlaskItem.update({ "system.quantity": oilFlaskItem.system.quantity - 1 });
+    } else {
+        workflow.actor.deleteEmbeddedDocuments("Item", [oilFlaskItem.id]);
+    }
+    let emptyFlaskItem = workflow.actor.items.filter(i => i.name === "Empty Flask");
+    if (!emptyFlaskItem.length) {
+        const itemData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
+        if (!itemData) {
+            ui.notifications.warn("Unable to find item in compenidum! (Empty Flask)");
+            return
+        }
+        await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
+    } else {
+        emptyFlaskItem[0].update({ "system.quantity": emptyFlaskItem[0].system.quantity + 1 });
+    }
 }
 
 export let hoodedLantern = {
