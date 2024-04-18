@@ -1,4 +1,5 @@
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
+    const target = workflow.targets.first();
     let choices = [
         ["Splash oil on somebody (5 ft.)", "splash"],
         ["Throw flask at someone (20 ft.)", "shatter"],
@@ -40,7 +41,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     if (selection === "splash") {
         let target = workflow.targets.first();
         if (!target) {
-            ui.notifiactions.warn("No target selected!");
+            ui.notifications.warn("No target selected!");
             return;
         }
         let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Item Features', 'Oil Flask: Splash Oil', false);
@@ -49,10 +50,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             return
         }
         let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
-        let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([target.uuid]);
+        let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([target.document.uuid]);
         await game.messages.get(workflow.itemCardId).delete();
         let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
+        if (!featureWorkflow) return;
         if (featureWorkflow.hitTargets.size) {
+            mbaPremades.macros.oilFlask.animation({ speaker, actor, token, character, item, args, scope, workflow });
+            await warpgate.wait(1500);
             await chrisPremades.helpers.createEffect(target.actor, effectData);
         } else {
             let offsetX = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
@@ -75,9 +79,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         }
     }
     if (selection === "shatter") {
-        let target = workflow.targets.first();
         if (!target) {
-            ui.notifiactions.warn("No target selected!");
+            ui.notifications.warn("No target selected!");
             return;
         }
         let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Item Features', 'Oil Flask: Throw Flask', false);
@@ -86,10 +89,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             return
         }
         let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
-        let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([target.uuid]);
+        let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([target.document.uuid]);
         await game.messages.get(workflow.itemCardId).delete();
         let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
+        if (!featureWorkflow) return;
         if (featureWorkflow.hitTargets.size) {
+            mbaPremades.macros.oilFlask.animation({ speaker, actor, token, character, item, args, scope, workflow });
+            await warpgate.wait(1500);
             await chrisPremades.helpers.createEffect(target.actor, effectData);
         } else {
             let offsetX = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
@@ -142,6 +148,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .attachTo(token)
             .stretchTo(template)
             .waitUntilFinished(-300)
+
+            .effect()
+            .file("jb2a.impact.006.yellow")
+            .attachTo(template)
+            .scaleToObject(2)
+            .filter("ColorMatrix", { saturate: 0.5, brightness: -1 })
 
             .effect()
             .delay(100)
@@ -301,7 +313,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     workflow.damageItem.hpDamage += damageTotal;
     new Sequence()
 
-        .wait(1600)
+        .wait(2000)
 
         .effect()
         .file("jb2a.impact.fire.01.orange.0")
@@ -322,11 +334,9 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .mask()
         .playbackRate(0.9)
 
-        /*
         .thenDo(function () {
             chrisPremades.helpers.removeEffect(effect);
         })
-        */
 
         .play()
 }
