@@ -21,6 +21,7 @@ import {blindnessDeafness} from './macros/spells/level2/blindnessDeafness.js';
 import {blur} from './macros/spells/level2/blur.js';
 import {borrowedKnowledge} from './macros/spells/level2/borrowedKnowledge.js';
 import {brandingSmite} from './macros/spells/level2/brandingSmite.js';
+import {bullseyeLantern} from './macros/items/bullseyeLantern.js';
 import {burningHands} from './macros/spells/level1/burningHands.js';
 import {causeFear} from './macros/spells/level1/causeFear.js';
 import {ceremony} from './macros/spells/level1/ceremony.js';
@@ -214,6 +215,7 @@ export let macros = {
     'blur': blur,
     'borrowedKnowledge': borrowedKnowledge,
     'brandingSmite': brandingSmite,
+    'bullseyeLantern': bullseyeLantern,
     'burningHands': burningHands,
     'causeFear': causeFear,
     'ceremony': ceremony,
