@@ -41,6 +41,7 @@ import {cunningAction} from './macros/classFeatures/rogue/cunningAction.js';
 import {cureWounds} from './macros/spells/level1/cureWounds.js';
 import {dancingLights} from './macros/spells/cantrip/dancingLights.js';
 import {dancingMonkeyFruit} from './macros/items/dancingMonkeyFruit.js';
+import {darkness} from './macros/spells/level2/darkness.js';
 import {dash} from './macros/actions/dash.js';
 import {deathWard} from './macros/spells/level3/deathWard.js';
 import {decanterOfEndlessWater} from './macros/items/decanterOfEndlessWater.js';
@@ -66,6 +67,7 @@ import {enlargeReduce} from './macros/spells/level2/enlargeReduce.js';
 import {ensnaringStrike} from './macros/spells/level1/ensnaringStrike.js';
 import {entangle} from './macros/spells/level1/entangle.js';
 import {eyebite} from './macros/spells/level6/eyebite.js';
+import {faerieFire} from './macros/spells/level1/faerieFire.js';
 import {falseLife} from './macros/spells/level1/falseLife.js';
 import {featherFall} from './macros/spells/level1/featherFall.js';
 import {fear} from './macros/spells/level3/fear.js';
@@ -110,6 +112,7 @@ import {light} from './macros/spells/cantrip/light.js';
 import {lightningBolt} from './macros/spells/level3/lightningBolt.js';
 import {longstrider} from './macros/spells/level1/longstrider.js';
 import {maelstrom} from './macros/spells/level5/maelstrom.js';
+import {mageArmor} from './macros/spells/level1/mageArmor.js';
 import {mageHand} from './macros/spells/cantrip/mageHand.js';
 import {magicMissile} from './macros/spells/level1/magicMissile.js';
 import {magicStone} from './macros/spells/cantrip/magicStone.js';
@@ -228,6 +231,7 @@ export let macros = {
     'cureWounds': cureWounds,
     'dancingLights': dancingLights,
     'dancingMonkeyFruit': dancingMonkeyFruit,
+    'darkness': darkness,
     'dash': dash,
     'deathWard': deathWard,
     'decanterOfEndlessWater': decanterOfEndlessWater,
@@ -253,6 +257,7 @@ export let macros = {
     'ensnaringStrike': ensnaringStrike,
     'entangle': entangle,
     'eyebite': eyebite,
+    'faerieFire': faerieFire,
     'falseLife': falseLife,
     'featherFall': featherFall,
     'fear': fear,
@@ -297,6 +302,7 @@ export let macros = {
     'lightningBolt': lightningBolt,
     'longstrider': longstrider,
     'maelstrom': maelstrom,
+    'mageArmor': mageArmor,
     'mageHand': mageHand,
     'magicMissile': magicMissile,
     'magicStone': magicStone,

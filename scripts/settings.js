@@ -56,6 +56,21 @@ export function registerSettings() {
             }
         }
     });
+    game.settings.register(moduleName, 'Darkness', {
+        'name': 'Darkness Automation',
+        'hint': 'Включает автоматизацию заклинания Darkness через Midi-Qol hooks.',
+        'scope': 'world',
+        'config': true,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preAttackRoll', macros.darkness.hook);
+            } else {
+                Hooks.off('midi-qol.preAttackRoll', macros.darkness.hook);
+            }
+        }
+    });
     game.settings.register(moduleName, 'Death Ward', {
         'name': 'Death Ward Automation',
         'hint': 'Включает автоматизацию заклинания Death Ward через Midi-Qol hooks.',

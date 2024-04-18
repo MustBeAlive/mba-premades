@@ -2,31 +2,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     let template = canvas.scene.collections.templates.get(workflow.templateId);
     new Sequence()
 
-        .effect()
-        .atLocation(token)
-        .file(`jb2a.magic_signs.circle.02.conjuration.loop.green`)
-        .scaleToObject(1.5)
-        .rotateIn(180, 600, { ease: "easeOutCubic" })
-        .scaleIn(0, 600, { ease: "easeOutCubic" })
-        .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-        .belowTokens()
-        .fadeOut(2000)
-        .zIndex(0)
-
-        .effect()
-        .atLocation(token)
-        .file(`jb2a.magic_signs.circle.02.conjuration.complete.green`)
-        .scaleToObject(2)
-        .rotateIn(180, 600, { ease: "easeOutCubic" })
-        .scaleIn(0, 600, { ease: "easeOutCubic" })
-        .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-        .belowTokens(true)
-        .filter("ColorMatrix", { saturate: -1, brightness: 2 })
-        .filter("Blur", { blurX: 5, blurY: 10 })
-        .zIndex(1)
-        .duration(1200)
-        .fadeIn(200, { ease: "easeOutCirc", delay: 500 })
-        .fadeOut(300, { ease: "linear" })
+        .wait(1000)
 
         .effect()
         .atLocation(template)
@@ -57,11 +33,11 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .file("jb2a.fog_cloud.02.green02")
         .atLocation(template)
         .fadeIn(5000)
+        .fadeOut(1500)
         .opacity(0.7)
         .zIndex(1)
         .randomRotation()
         .scaleOut(0, 1500, { ease: "linear" })
-        .fadeOut(1000)
         .scaleIn(0, 5000, { ease: "easeOutCubic" })
         .size(8.8, { gridUnits: true })
         .persist()
@@ -119,9 +95,6 @@ async function trigger(token, trigger) {
             buttons: {
                 ok: {
                     label: "Ok 😔",
-                    callback: async (html) => {
-                        return;
-                    }
                 }
             }
         }).render(true);
