@@ -2,6 +2,7 @@ import {addActions} from './macros/actions/token.js';
 import {cast} from './macros/animations/cast.js';
 import {changeChat} from './macros/ui/changeChat.js';
 import {checkUpdate} from './update.js';
+import {corpseHide} from './macros/generic/corpseHide.js';
 import {createRollModeButtons} from './macros/ui/rollmodeButtons.js';
 import {deathSaves} from './macros/mechanics/deathsaves.js';
 import {macros} from './macros.js';
@@ -37,6 +38,7 @@ Hooks.once('ready', async function() {
     Hooks.on('createToken', addActions);
     if (game.settings.get('mba-premades', 'Cast Animations')) Hooks.on('midi-qol.postPreambleComplete', cast);
     if (game.settings.get('mba-premades', 'Auto Death Save')) Hooks.on('updateCombat', deathSaves);
+    if (game.settings.get('mba-premades', 'Corpse Hider')) Hooks.on('updateCombat', corpseHide);
     if (game.settings.get('mba-premades', 'Blur')) Hooks.on('midi-qol.preItemRoll', macros.blur);
     if (game.settings.get('mba-premades', 'Darkness')) Hooks.on('midi-qol.preAttackRoll', macros.darkness.hook);
     if (game.settings.get('mba-premades', 'Death Ward')) Hooks.on('midi-qol.preTargetDamageApplication', macros.deathWard.hook);

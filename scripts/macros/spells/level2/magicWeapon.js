@@ -1,8 +1,7 @@
-export async function magicWeapon({speaker, actor, token, character, item, args, scope, workflow}) {
+export async function magicWeapon({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.targets.size != 1) return;
-    let targetToken = workflow.targets.first();
-    let targetActor = targetToken.actor;
-    let weapons = targetActor.items.filter(i => i.type === 'weapon' && i.system.properties.mgc != true && i.system.equipped);
+    let target = workflow.targets.first();
+    let weapons = target.actor.items.filter(i => i.type === 'weapon' && i.system.properties.mgc != true && i.system.equipped);
     if (!weapons.length) {
         ui.notifications.warn('Target has no valid non-magical equipped weapons!');
         return;
@@ -26,21 +25,21 @@ export async function magicWeapon({speaker, actor, token, character, item, args,
     damageParts.push(['+' + bonus + '[' + damageType + ']', damageType]);
     let versatile = duplicate(selection[0].system.damage.versatile);
     if (versatile != '') versatile += '+' + bonus + '[' + damageType + ']';
-    async function effectMacro() {
+    async function effectMacroDel() {
         await warpgate.revert(token.document, 'Magic Weapon');
     }
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
         'description': `Until the spell ends, one weapon of caster's choosing becomes a magic weapon with a +${bonus} bonus to attack rolls and damage rolls.`,
         'duration': {
             'seconds': 3600
         },
-        'origin': workflow.item.uuid,
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacro)
+                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -78,5 +77,5 @@ export async function magicWeapon({speaker, actor, token, character, item, args,
         'name': 'Magic Weapon',
         'description': 'Magic Weapon'
     };
-    await warpgate.mutate(targetToken.document, updates, {}, options);
+    await warpgate.mutate(target.document, updates, {}, options);
 }

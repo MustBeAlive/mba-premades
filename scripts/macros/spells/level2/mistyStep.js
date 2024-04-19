@@ -1,5 +1,6 @@
 export async function mistyStep({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let choices = [
+    let randomColor = false;
+    let colors = [
         ["Blue", "blue"],
         ["Black", "dark_black"],
         ["Dark Green", "dark_green"],
@@ -12,10 +13,16 @@ export async function mistyStep({ speaker, actor, token, character, item, args, 
         ["Red", "red"],
         ["Yellow", "yellow"]
     ];
-    let selection = await chrisPremades.helpers.dialog("Select color:", choices);
-    if (!selection) return;
-    let animation1 = "jb2a.misty_step.01." + selection;
-    let animation2 = "jb2a.misty_step.02." + selection;
+    let animRoll1 = await new Roll('1d11').roll({ 'async': true });
+    let animRoll2 = await new Roll('1d11').roll({ 'async': true });
+    let animation1 = "jb2a.misty_step.01." + colors[(animRoll1.total - 1)][1];
+    let animation2 = "jb2a.misty_step.02." + colors[(animRoll2.total - 1)][1];
+    if (randomColor === false) {
+        let selection = await chrisPremades.helpers.dialog("Select color:", colors);
+        if (!selection) return;
+        animation1 = "jb2a.misty_step.01." + selection;
+        animation2 = "jb2a.misty_step.02." + selection;
+    }
     let maxRange = 30;
     let icon = workflow.token.document.texture.src;
     let interval = workflow.token.document.width % 2 === 0 ? 1 : -1;

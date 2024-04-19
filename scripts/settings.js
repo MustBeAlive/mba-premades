@@ -1,11 +1,14 @@
 import { cast } from './macros/animations/cast.js';
 import { changeChat } from './macros/ui/changeChat.js';
+import { corpseHide } from './macros/generic/corpseHide.js';
 import { deathSaves } from './macros/mechanics/deathsaves.js';
 import { macros } from './macros.js';
 import { removeV10EffectsBlind } from './macros/mechanics/blindness.js';
 import { removeV10EffectsInvisible } from './macros/mechanics/invisibility.js';
 import { tashaSummon } from './macros/generic/tashaSummon.js';
+
 let moduleName = 'mba-premades';
+
 export function registerSettings() {
     game.settings.register(moduleName, 'LastGM', {
         'name': 'LastGM',
@@ -225,6 +228,21 @@ export function registerSettings() {
                 Hooks.on("updateCombat", deathSaves());
             } else {
                 Hooks.off("updateCombat", deathSaves());
+            }
+        }
+    });
+    game.settings.register(moduleName, 'Corpse Hider', {
+        'name': 'Corpse Hider',
+        'hint': 'Включает автоматическое скрытие трупов для игроков, срабатывает на смене хода в бою.',
+        'scope': 'world',
+        'config': true,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on("updateCombat", corpseHide());
+            } else {
+                Hooks.off("updateCombat", corpseHide());
             }
         }
     });
