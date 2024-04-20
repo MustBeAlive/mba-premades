@@ -102,8 +102,8 @@ export async function witchBolt({ speaker, actor, token, character, item, args, 
     await new Sequence()
 
         .effect()
-        .atLocation(token)
         .file(`jb2a.magic_signs.circle.02.evocation.loop.red`)
+        .atLocation(token)
         .scaleToObject(1.5)
         .rotateIn(180, 600, { ease: "easeOutCubic" })
         .scaleIn(0, 600, { ease: "easeOutCubic" })
@@ -113,8 +113,8 @@ export async function witchBolt({ speaker, actor, token, character, item, args, 
         .zIndex(0)
 
         .effect()
-        .atLocation(token)
         .file(`jb2a.magic_signs.circle.02.evocation.loop.red`)
+        .atLocation(token)
         .scaleToObject(1.5)
         .rotateIn(180, 600, { ease: "easeOutCubic" })
         .scaleIn(0, 600, { ease: "easeOutCubic" })

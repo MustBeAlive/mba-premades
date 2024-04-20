@@ -3,6 +3,7 @@ export async function deathSaves(combat, update, options, userId) {
     let currentTokenId = combat.current.tokenId;
     let token = canvas.tokens.get(currentTokenId);
     let actor = token.actor;
+    if (actor.type === "npc") return;
     if (actor.system.attributes.hp.value <= 0 && actor.isOwner && actor.system.attributes.death.success < 3 && actor.system.attributes.death.failure < 3) {
         game.MonksTokenBar.requestRoll(
             [{ "token": token.id }],

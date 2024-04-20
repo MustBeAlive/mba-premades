@@ -127,9 +127,11 @@ import {melfMinuteMeteors} from './macros/spells/level3/melfMinuteMeteors.js';
 import {mending} from './macros/spells/cantrip/mending.js';
 import {mirrorImage} from './macros/spells/level2/mirrorImage.js';
 import {mistyStep} from './macros/spells/level2/mistyStep.js';
+import {net} from './macros/items/weapons/net.js';
 import {oilFlask} from './macros/items/oilFlask.js';
 import {ottoIrresistibleDance} from './macros/spells/level6/ottoIrresistibleDance.js';
 import {panpipesOfTheSewers} from './macros/items/panpipesOfTheSewers.js';
+import {phantasmalForce} from './macros/spells/level2/phantasmalForce.js';
 import {potionOfHealing} from './macros/items/potionOfHealing.js';
 import {powerWordHeal} from './macros/spells/level9/powerWordHeal.js';
 import {powerWordKill} from './macros/spells/level9/powerWordKill.js';
@@ -321,9 +323,11 @@ export let macros = {
     'mending': mending,
     'mirrorImage': mirrorImage,
     'mistyStep': mistyStep,
+    'net': net,
     'oilFlask': oilFlask,
     'ottoIrresistibleDance': ottoIrresistibleDance,
     'panpipesOfTheSewers': panpipesOfTheSewers,
+    'phantasmalForce': phantasmalForce,
     'potionOfHealing': potionOfHealing,
     'powerWordHeal': powerWordHeal,
     'powerWordKill': powerWordKill,

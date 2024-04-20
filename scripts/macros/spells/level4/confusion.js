@@ -51,7 +51,7 @@ export async function confusion({ speaker, actor, token, character, item, args, 
                 content: `<p>Roll result: <b>${confusionRoll.total}</b></p><p>Direction roll: <b>${directionRoll.total}</b></p><p><b>${token.document.name}</b> uses all its movement to move in ${directionContent} direction</p>`,
                 speaker: { actor: token.actor }
             });
-            /*
+            /* Auto Token Move Block, uncomment to make it work
             const walkSpeedFeet = token.actor.system.attributes.movement.walk;
             const gridDistance = canvas.dimensions.distance; // Feet per grid cell
             const pixelsPerFoot = canvas.scene.grid.size / gridDistance;
@@ -208,8 +208,14 @@ export async function confusion({ speaker, actor, token, character, item, args, 
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
-        'description': "",
         'origin': workflow.item.uuid,
+        'description': `
+            <p>You are affected by delusions, which provoke uncontrolled action. You can't take reactions and must roll a d10 at the start of each of your turns to determine your behaviour:</p>
+            <p><b>1:</b> You use all of your movement to move in a random direction, which will be determined by a d8 roll. You don't take any other actions this turn.</p>
+            <p><b>2-6:</b> You don't move or take actions this turn.</p>
+            <p><b>7-8:</b> You must use your action to make a melee attack against a randomly determined target within your reach. If there is no targets within your reach, you do nothing this turn.</p>
+            <p><b>9-10</b> You can act normally.</p>
+        `,
         'duration': {
             'seconds': 60
         },

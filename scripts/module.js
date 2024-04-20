@@ -2,7 +2,7 @@ import {addActions} from './macros/actions/token.js';
 import {cast} from './macros/animations/cast.js';
 import {changeChat} from './macros/ui/changeChat.js';
 import {checkUpdate} from './update.js';
-import {corpseHide} from './macros/generic/corpseHide.js';
+import {corpseHide} from './macros/mechanics/corpseHide.js';
 import {createRollModeButtons} from './macros/ui/rollmodeButtons.js';
 import {deathSaves} from './macros/mechanics/deathsaves.js';
 import {macros} from './macros.js';
