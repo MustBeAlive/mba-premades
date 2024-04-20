@@ -1,0 +1,2518 @@
+{
+  "name": "Custom Convenient Effects",
+  "img": "modules/dfreds-convenient-effects/images/magic-palm.svg",
+  "type": "consumable",
+  "system": {
+    "description": {
+      "value": "",
+      "chat": "",
+      "unidentified": ""
+    },
+    "source": {
+      "custom": ""
+    },
+    "quantity": 1,
+    "weight": 0,
+    "price": {
+      "value": 0,
+      "denomination": "gp"
+    },
+    "attunement": 0,
+    "equipped": false,
+    "rarity": "",
+    "identified": true,
+    "activation": {
+      "type": "",
+      "cost": null,
+      "condition": ""
+    },
+    "duration": {
+      "value": "",
+      "units": ""
+    },
+    "cover": null,
+    "crewed": false,
+    "target": {
+      "value": null,
+      "width": null,
+      "units": "",
+      "type": "",
+      "prompt": true
+    },
+    "range": {
+      "value": null,
+      "long": null,
+      "units": ""
+    },
+    "uses": {
+      "value": null,
+      "max": "",
+      "per": null,
+      "recovery": "",
+      "autoDestroy": false,
+      "prompt": true
+    },
+    "consume": {
+      "type": "",
+      "target": null,
+      "amount": null,
+      "scale": false
+    },
+    "ability": null,
+    "actionType": null,
+    "attackBonus": "",
+    "chatFlavor": "",
+    "critical": {
+      "threshold": null,
+      "damage": ""
+    },
+    "damage": {
+      "parts": [],
+      "versatile": ""
+    },
+    "formula": "",
+    "save": {
+      "ability": "",
+      "dc": null,
+      "scaling": "spell"
+    },
+    "consumableType": "potion",
+    "properties": {}
+  },
+  "effects": [
+    {
+      "changes": [
+        {
+          "key": "system.bonuses.msak.attack",
+          "mode": 0,
+          "value": "+2",
+          "priority": 0
+        },
+        {
+          "key": "system.bonuses.mwak.attack",
+          "mode": 0,
+          "value": "+2",
+          "priority": 0
+        },
+        {
+          "key": "flags.adv-reminder.message.attack.mwak",
+          "mode": 2,
+          "value": "<b>Flanking: +2 bonus</b>",
+          "priority": 20
+        },
+        {
+          "key": "flags.adv-reminder.message.attack.msak",
+          "mode": 2,
+          "value": "<b>Flanking: +2 bonus</b>",
+          "priority": 20
+        }
+      ],
+      "description": "<ul><li><p>Flanking grants +2 bonus on melee attack rolls</p></li><li><p><span style=\"font-family:Signika\">Фланкирование предоставляет +2 бонус на все атаки в ближнем бою.</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": [
+            "turnStartSource",
+            "combatEnd"
+          ]
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "icons/skills/melee/strike-sword-gray.webp",
+      "name": "Flanking",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Flanking"
+      ],
+      "_id": "2Nb3f2Sxet7EZf4P"
+    },
+    {
+      "changes": [
+        {
+          "key": "system.attributes.exhaustion",
+          "mode": 5,
+          "value": "1",
+          "priority": 50
+        },
+        {
+          "key": "system.bonuses.All-Attacks",
+          "mode": 2,
+          "value": "-1",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.save",
+          "mode": 2,
+          "value": "-1",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.check",
+          "mode": 2,
+          "value": "-1",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.spell.dc",
+          "mode": 2,
+          "value": "-1",
+          "priority": 20
+        }
+      ],
+      "description": "<ul><li><p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/exhausted1.webp",
+      "name": "Exhaustion 1",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Exhaustion 1"
+      ],
+      "_id": "c3zh23mrz2Nrkzf7"
+    },
+    {
+      "changes": [
+        {
+          "key": "system.attributes.exhaustion",
+          "mode": 5,
+          "value": "2",
+          "priority": 50
+        },
+        {
+          "key": "system.bonuses.All-Attacks",
+          "mode": 2,
+          "value": "-2",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.check",
+          "mode": 2,
+          "value": "-2",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.save",
+          "mode": 2,
+          "value": "-2",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.spell.dc",
+          "mode": 2,
+          "value": "-2",
+          "priority": 20
+        }
+      ],
+      "description": "<ul><li><p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/exhausted2.webp",
+      "name": "Exhaustion 2",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Exhaustion 2"
+      ],
+      "_id": "sSfaR0d14W7pXW06"
+    },
+    {
+      "changes": [
+        {
+          "key": "system.attributes.exhaustion",
+          "mode": 5,
+          "value": "3",
+          "priority": 50
+        },
+        {
+          "key": "system.bonuses.All-Attacks",
+          "mode": 2,
+          "value": "-3",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.check",
+          "mode": 2,
+          "value": "-3",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.save",
+          "mode": 2,
+          "value": "-3",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.spell.dc",
+          "mode": 2,
+          "value": "-3",
+          "priority": 20
+        }
+      ],
+      "description": "<ul><li><p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/exhausted3.webp",
+      "name": "Exhaustion 3",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Exhaustion 3"
+      ],
+      "_id": "Nr4m7dCHRtM6w8o0"
+    },
+    {
+      "changes": [
+        {
+          "key": "system.attributes.exhaustion",
+          "mode": 5,
+          "value": "4",
+          "priority": 50
+        },
+        {
+          "key": "system.bonuses.All-Attacks",
+          "mode": 2,
+          "value": "-4",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.check",
+          "mode": 2,
+          "value": "-4",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.save",
+          "mode": 2,
+          "value": "-4",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.spell.dc",
+          "mode": 2,
+          "value": "-4",
+          "priority": 20
+        }
+      ],
+      "description": "<ul><li><p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/exhausted4.webp",
+      "name": "Exhaustion 4",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Exhaustion 4"
+      ],
+      "_id": "cLQzyWRQ6sJIY8DV"
+    },
+    {
+      "changes": [
+        {
+          "key": "system.attributes.exhaustion",
+          "mode": 5,
+          "value": "5",
+          "priority": 50
+        },
+        {
+          "key": "system.bonuses.All-Attacks",
+          "mode": 2,
+          "value": "-5",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.check",
+          "mode": 2,
+          "value": "-5",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.save",
+          "mode": 2,
+          "value": "-5",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.spell.dc",
+          "mode": 2,
+          "value": "-5",
+          "priority": 20
+        }
+      ],
+      "description": "<ul><li><p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/exhausted5.webp",
+      "name": "Exhaustion 5",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Exhaustion 5"
+      ],
+      "_id": "AhAl81X9UwL0FRt3"
+    },
+    {
+      "changes": [],
+      "description": "<ul><li><p>You can spend GM Inspiration Token on any roll to give yourself advantage in that particular roll</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Жетон вдохновения от ГМа — его можно потратить на один любой бросок, чтобы получить в нем преимущество</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "icons/commodities/currency/coin-engraved-sun-smile-copper.webp",
+      "name": "GM Inspiration",
+      "origin": "Item.cKMxYphpel9Wq6jI",
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: GM Inspiration"
+      ],
+      "_id": "Bt4dkIK9ANSu8t5d"
+    },
+    {
+      "changes": [
+        {
+          "key": "flags.midi-qol.disadvantage.ability.save.dex",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.disadvantage.attack.all",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.grants.advantage.attack.all",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "system.attributes.movement.all",
+          "mode": 0,
+          "value": "0",
+          "priority": 25
+        },
+        {
+          "key": "flags.midi-qol.fail.spell.somatic",
+          "mode": 2,
+          "value": "1",
+          "priority": 20
+        }
+      ],
+      "description": "<ul><li><p>A restrained creature's speed becomes 0, and it can't benefit from any bonus to its speed.</p></li><li><p>Attack rolls against the creature have advantage, and the creature's attack rolls have disadvantage.</p></li><li><p>The creature has disadvantage on Dexterity saving throws.</p></li><li><p>Restrained creature cannot use somatic spell components.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Скорость опутанного существа равна 0, и оно не получает выгоды ни от каких бонусов к скорости.</span></p></li><li><p><span style=\"font-family:Signika\">Броски атаки по такому существу совершаются с преимуществом, а его броски атаки — с помехой.</span></p></li><li><p><span style=\"font-family:Signika\">Существо совершает с помехой спасброски Ловкости.</span></p></li><li><p><span style=\"font-family:Signika\">Опутанное существо не может использовать заклинания, имеющие Соматический (S) компонент.</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        },
+        "effectmacro": {}
+      },
+      "icon": "modules/mba-premades/icons/conditions/restrained.webp",
+      "name": "Restrained",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Restrained",
+        "restrain"
+      ],
+      "_id": "h2LeAUIRNwFdOoEV"
+    },
+    {
+      "changes": [
+        {
+          "key": "flags.midi-qol.disadvantage.attack.all",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.grants.advantage.attack.all",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        }
+      ],
+      "description": "<ul><li><p>A blinded creature can't see and automatically fails any ability check that requires sight.</p></li><li><p>Attack rolls against the creature have advantage, and the creature's attack rolls have disadvantage.</p><p></p></li><li><p><span style=\"font-family:Signika\">Ослеплённое существо ничего не видит и автоматически проваливает все проверки характеристик, связанные со зрением.</span></p></li><li><p><span style=\"font-family:Signika\">Броски атаки по такому существу совершаются с преимуществом, а его броски атаки совершаются с помехой.</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/blinded.webp",
+      "name": "Blinded",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Blinded",
+        "blind"
+      ],
+      "_id": "XBqpslBQz726tRMn"
+    },
+    {
+      "changes": [],
+      "description": "<ul><li><p>A charmed creature can't attack the charmer or target the charmer with harmful abilities or magical effects.</p></li><li><p>The charmer has advantage on any ability check to interact socially with the creature.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Очарованное существо не может атаковать того, кто его очаровал, а также делать его целью умения или магического эффекта, причиняющего вред.</span></p></li><li><p><span style=\"font-family:Signika\">Искуситель совершает с преимуществом все проверки характеристик при социальном взаимодействии с очарованным существом.</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/charmed.webp",
+      "name": "Charmed",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Charmed"
+      ],
+      "_id": "kDxIlyyNCkxToBSN"
+    },
+    {
+      "changes": [],
+      "description": "<ul><li><p>A deafened creature can't hear and automatically fails any ability check that requires hearing.</p></li><li><p><span style=\"font-family:Signika\">Оглохшее существо ничего не слышит и автоматически проваливает все проверки характеристик, связанные со слухом.</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/deafened.webp",
+      "name": "Deafened",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Deafened",
+        "deaf"
+      ],
+      "_id": "bzFIoegDGARi0sKT"
+    },
+    {
+      "changes": [
+        {
+          "key": "flags.midi-qol.disadvantage.attack.all",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.disadvantage.ability.check.all",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        }
+      ],
+      "description": "<ul><li><p>A frightened creature has disadvantage on ability checks and attack rolls while the source of its fear is within line of sight.</p></li><li><p>The creature can't willingly move closer to the source of its fear.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Испуганное существо совершает с помехой проверки характеристик и броски атаки, пока источник его страха находится в пределах его линии обзора.</span></p></li><li><p><span style=\"font-family:Signika\">Существо не способно добровольно приблизиться к источнику своего страха.</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/frightened.webp",
+      "name": "Frightened",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Frightened",
+        "fear"
+      ],
+      "_id": "LbTcXPssou6eREPm"
+    },
+    {
+      "changes": [
+        {
+          "key": "system.attributes.movement.all",
+          "mode": 0,
+          "value": "0",
+          "priority": 25
+        }
+      ],
+      "description": "<ul><li><p>A grappled creature's speed becomes 0, and it can't benefit from any bonus to its speed.</p></li><li><p>The condition ends if the grappler is incapacitated.</p></li><li><p>The condition also ends if an effect removes the grappled creature from the reach of the grappler or grappling effect.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Скорость схваченного существа равна 0, и оно не получает выгоды ни от каких бонусов к скорости.</span></p></li><li><p><span style=\"font-family:Signika\">Состояние оканчивается, если схвативший становится недееспособным.</span></p></li><li><p><span style=\"font-family:Signika\">Это состояние также оканчивается, если какой-либо эффект выводит схваченное существо из зоны досягаемости того, кто его удерживает, или из зоны удерживающего эффекта. Например, когда существо отбрасывается заклинанием Волна Грома (Thunderwave).</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        },
+        "effectmacro": {}
+      },
+      "icon": "modules/mba-premades/icons/conditions/grappled.webp",
+      "name": "Grappled",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Grappled"
+      ],
+      "_id": "MFBWLJCVLSBkHjLy"
+    },
+    {
+      "changes": [
+        {
+          "key": "flags.midi-qol.disadvantage.attack.all",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.disadvantage.ability.check.all",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        }
+      ],
+      "description": "<ul><li><p>A poisoned creature has disadvantage on attack rolls and ability checks.</p></li><li><p><span style=\"font-family:Signika\">Отравленное существо совершает с помехой броски атаки и проверки характеристик.</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        },
+        "effectmacro": {}
+      },
+      "icon": "modules/mba-premades/icons/conditions/poisoned.webp",
+      "name": "Poisoned",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Poisoned",
+        "poison"
+      ],
+      "_id": "iC3gIzAnk2V4IMQ6"
+    },
+    {
+      "changes": [
+        {
+          "key": "flags.midi-qol.fail.ability.save.dex",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.fail.ability.save.str",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.grants.advantage.attack.all",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        }
+      ],
+      "description": "<ul><li><p>A stunned creature is incapacitated (see the condition), can't move, and can speak only falteringly.</p></li><li><p>The creature automatically fails Strength and Dexterity saving throws.</p></li><li><p>Attack rolls against the creature have advantage.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Ошеломлённое существо недееспособно, не способно перемещаться и говорит, запинаясь.</span></p></li><li><p><span style=\"font-family:Signika\">Существо автоматически проваливает спасброски Силы и Ловкости.</span></p></li><li><p><span style=\"font-family:Signika\">Броски атаки по существу совершаются с преимуществом.</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/stunned.webp",
+      "name": "Stunned",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Stunned",
+        "stun"
+      ],
+      "_id": "jsSev4jciPVVEDSM"
+    },
+    {
+      "changes": [
+        {
+          "key": "flags.midi-qol.advantage.attack.all",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.grants.disadvantage.attack.all",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        }
+      ],
+      "description": "<ul><li><p>An invisible creature is impossible to see without the aid of magic or a special sense. For the purpose of hiding, the creature is heavily obscured. The creature's location can be detected by any noise it makes or any tracks it leaves.</p></li><li><p>Attack rolls against the creature have disadvantage, and the creature's attack rolls have advantage.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Невидимое существо невозможно увидеть без помощи магии или особого чувства. С точки зрения скрытности существо считается сильно заслонённым. Местонахождение существа можно определить по шуму, который оно издаёт, или по оставленным им следам.</span></p></li><li><p><span style=\"font-family:Signika\">Броски атаки по невидимому существу совершаются с помехой, а его броски атаки — с преимуществом.</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/invisible.webp",
+      "name": "Invisible",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Invisible",
+        "invisible"
+      ],
+      "_id": "8XZDSb1saWyBgvlj"
+    },
+    {
+      "changes": [
+        {
+          "key": "flags.midi-qol.grants.advantage.attack.mwak",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.grants.advantage.attack.msak",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.grants.disadvantage.attack.rwak",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.grants.disadvantage.attack.rsak",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.disadvantage.attack.all",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "system.attributes.movement.all",
+          "mode": 0,
+          "value": "*0.5",
+          "priority": 25
+        }
+      ],
+      "description": "<ul><li><p>A prone creature's only movement option is to crawl, unless it stands up and thereby ends the condition.</p></li><li><p>The creature has disadvantage on attack rolls.</p></li><li><p>An attack roll against the creature has advantage if the attacker is within 5 feet of the creature. Otherwise, the attack roll has disadvantage.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Сбитое с ног существо способно перемещаться только ползком, пока не встанет, прервав тем самым это состояние.</span></p></li><li><p><span style=\"font-family:Signika\">Существо совершает с помехой броски атаки.</span></p></li><li><p><span style=\"font-family:Signika\">Броски атаки по существу совершаются с преимуществом, если нападающий находится в пределах 5 футов от него. В противном случае броски атаки совершаются с помехой.</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        },
+        "effectmacro": {}
+      },
+      "icon": "modules/mba-premades/icons/conditions/prone.webp",
+      "name": "Prone",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Prone",
+        "prone"
+      ],
+      "_id": "A6L85a6ERiFO3gEk"
+    },
+    {
+      "changes": [
+        {
+          "key": "flags.midi-qol.fail.ability.save.dex",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.fail.ability.save.str",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.grants.advantage.attack.all",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.grants.critical.range",
+          "mode": 5,
+          "value": "5",
+          "priority": 50
+        },
+        {
+          "key": "system.attributes.movement.all",
+          "mode": 0,
+          "value": "0",
+          "priority": 25
+        }
+      ],
+      "description": "<ul><li><p>An unconscious creature is incapacitated (See the condition) can't move or speak, and is unaware of its surroundings.</p></li><li><p>The creature drops whatever its holding and falls prone (See the condition).</p></li><li><p>The creature automatically fails Strength and Dexterity saving throws.</p></li><li><p>Attack rolls against the creature have advantage.</p></li><li><p>Any attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Находящееся без сознания существо недееспособно, не способно перемещаться и говорить, а также не осознаёт своё окружение.</span></p></li><li><p><span style=\"font-family:Signika\">Существо роняет всё, что держит, и падает ничком.</span></p></li><li><p><span style=\"font-family:Signika\">Существо автоматически проваливает спасброски Силы и Ловкости. Броски атаки по существу совершаются с преимуществом.</span></p></li><li><p><span style=\"font-family:Signika\">Любая атака, попавшая по такому существу, считается критическим попаданием, если нападающий находится в пределах 5 футов от него.</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        },
+        "effectmacro": {}
+      },
+      "icon": "modules/mba-premades/icons/conditions/unconscious.webp",
+      "name": "Unconscious",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Unconscious",
+        "unconscious"
+      ],
+      "_id": "WWGmllN0jLKN6Yp3"
+    },
+    {
+      "changes": [],
+      "description": "<ul><li><p>An incapacitated creature can't take actions or reactions</p></li><li><p>An incapacitated creature fails all checks against being grappled or shoved</p></li><li><p>An incapacitated creature automatically loses concentration</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Недееспособное существо не может совершать действия и реакции.</span></p></li><li><p><span style=\"font-family:Signika\">Недееспособные существа автоматически проваливают проверки для сопротивления захвату или толчку.</span></p></li><li><p><span style=\"font-family:Signika\">Существо теряет концентрацию на заклинании, если становится недееспособным.</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/incapacitated.webp",
+      "name": "Incapacitated",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Incapacitated"
+      ],
+      "_id": "6F410BB90lLyHYjd"
+    },
+    {
+      "changes": [
+        {
+          "key": "flags.midi-qol.fail.ability.save.dex",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.fail.ability.save.str",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.grants.advantage.attack.all",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.grants.critical.range",
+          "mode": 5,
+          "value": "5",
+          "priority": 50
+        },
+        {
+          "key": "system.attributes.movement.all",
+          "mode": 0,
+          "value": "0",
+          "priority": 25
+        }
+      ],
+      "description": "<ul><li><p>A paralyzed creature is incapacitated (see the condition) and can't move or speak.</p></li><li><p>The creature automatically fails Strength and Dexterity saving throws.</p></li><li><p>Attack rolls against the creature have advantage.</p></li><li><p>Any attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Парализованное существо недееспособно (incapacitated) и не способно перемещаться и говорить.</span></p></li><li><p><span style=\"font-family:Signika\">Существо автоматически проваливает спасброски Силы и Ловкости.</span></p></li><li><p><span style=\"font-family:Signika\">Броски атаки по парализованному существу совершаются с преимуществом.</span></p></li><li><p><span style=\"font-family:Signika\">Любая атака, попавшая по такому существу, считается критическим попаданием, если нападающий находится в пределах 5 футов от существа.</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/paralyzed.webp",
+      "name": "Paralyzed",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Paralyzed",
+        "paralysis"
+      ],
+      "_id": "rhQ6Jx6Kr88x7x4T"
+    },
+    {
+      "changes": [
+        {
+          "key": "flags.midi-qol.grants.advantage.attack.all",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.fail.ability.save.dex",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.fail.ability.save.str",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "system.traits.di.value",
+          "mode": 0,
+          "value": "poison",
+          "priority": 20
+        },
+        {
+          "key": "system.traits.dr.all",
+          "mode": 0,
+          "value": "physical",
+          "priority": 0
+        },
+        {
+          "key": "system.traits.dr.all",
+          "mode": 0,
+          "value": "magical",
+          "priority": 0
+        },
+        {
+          "key": "system.attributes.movement.all",
+          "mode": 0,
+          "value": "0",
+          "priority": 25
+        }
+      ],
+      "description": "<ul><li><p>A petrified creature is transformed, along with any nonmagical object it is wearing or carrying, into a solid inanimate substance (usually stone). Its weight increases by a factor of ten, and it ceases aging.</p></li><li><p>The creature is incapacitated (see the condition), can't move or speak, and is unaware of its surroundings.</p></li><li><p>Attack rolls against the creature have advantage.</p></li><li><p>The creature automatically fails Strength and Dexterity saving throws.</p></li><li><p>The creature has resistance to all damage.</p></li><li><p>The creature is immune to poison and disease, although a poison or disease already in its system is suspended, not neutralized. Remove all movement, grant advantage to all who attack, and add damage resistance to all magical and physical attacks</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Окаменевшее существо, а также все немагические предметы, которые оно несёт или носит, трансформируется в твёрдое инертное вещество (как правило, в камень). Его вес увеличивается в 10 раз, и оно перестаёт стареть.</span></p></li><li><p><span style=\"font-family:Signika\">Существо недееспособно (incapacitated), не способно двигаться и говорить, а также не осознаёт своё окружение.</span></p></li><li><p><span style=\"font-family:Signika\">Броски атаки по существу совершаются с преимуществом.</span></p></li><li><p><span style=\"font-family:Signika\">Существо автоматически проваливает спасброски Силы и Ловкости.</span></p></li><li><p><span style=\"font-family:Signika\">Существо получает сопротивление ко всем видам урона.</span></p></li><li><p><span style=\"font-family:Signika\">Существо получает иммунитет к ядам и болезням. Если яд или болезнь уже действовали на существо, их действие приостанавливается, но не исчезает.</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        },
+        "effectmacro": {}
+      },
+      "icon": "modules/mba-premades/icons/conditions/petrified.webp",
+      "name": "Petrified",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Petrified"
+      ],
+      "_id": "HEenREq0A5EupbFx"
+    },
+    {
+      "changes": [],
+      "description": "<ul><li><p>Some Spells require you to maintain Concentration in order to keep their magic active. If you lose Concentration, such a spell ends.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Некоторые заклинания требуют поддержания Концентрации, чтобы их магия продолжала действовать. Если вы теряете концентрацию, такое заклинание заканчивается.</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/dfreds-convenient-effects/images/concentrating.svg",
+      "name": "Concentrating",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Concentrating"
+      ],
+      "_id": "SdgdCUhzQJSq80UR"
+    },
+    {
+      "changes": [],
+      "description": "<ul><li><p>Character has no reaction left in this turn</p></li><li><p><span style=\"font-family:Signika\">Персонаж больше не может использовать реакцию в этом раунде</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "dae": {
+          "specialDuration": [
+            "turnStart",
+            "shortRest",
+            "longRest"
+          ],
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none"
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/dfreds-convenient-effects/images/reaction.svg",
+      "name": "Reaction",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Reaction"
+      ],
+      "_id": "DIsZaL1LlgHaB7LB"
+    },
+    {
+      "changes": [
+        {
+          "key": "system.attributes.movement.all",
+          "mode": 0,
+          "value": "-20",
+          "priority": 25
+        },
+        {
+          "key": "flags.midi-qol.disadvantage.attack.all",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.disadvantage.ability.save.str",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.disadvantage.ability.save.dex",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        },
+        {
+          "key": "flags.midi-qol.disadvantage.ability.save.con",
+          "mode": 0,
+          "value": "1",
+          "priority": 0
+        }
+      ],
+      "description": "<ul><li><p>Lowers movement by 20 ft., disadvantage on all attack rolls, and disadvantage on strength, dexterity, and constitution saves</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Снижает скорость передвижения на 20 фт. Помеха на броски атаки, так же, как и на спасброски силы, ловкости и телосложения.</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/encumbered_heavy.webp",
+      "name": "Heavily Encumbered",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Heavily Encumbered"
+      ],
+      "_id": "kI1TOQtwlzQWvXJC"
+    },
+    {
+      "changes": [],
+      "description": "",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/sleeping.webp",
+      "name": "Sleeping",
+      "origin": "Item.cKMxYphpel9Wq6jI",
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Sleeping"
+      ],
+      "_id": "xpqhP8NIBkZQ6455"
+    },
+    {
+      "changes": [
+        {
+          "key": "system.attributes.movement.all",
+          "mode": 0,
+          "value": "-10",
+          "priority": 25
+        }
+      ],
+      "description": "<ul><li><p>Lowers movement by 10 ft.</p></li><li><p><span style=\"font-family:Signika\">Снижает скорость передвижения на 10 фт.</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/encumbered.webp",
+      "name": "Encumbered",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Encumbered"
+      ],
+      "_id": "Eh0goawQVijnLtEo"
+    },
+    {
+      "changes": [],
+      "description": "<p>If you're surprised, you can't move or take an action on your first turn of the combat, and you can't take a reaction until that turn ends. A member of a group can be surprised even if the other members aren't.<br /><br />Тот, кто оказывается захвачен врасплох, не может перемещаться и совершать действия в первом ходу сражения, и, пока это состояние не окончится, не можете совершать реакции.<br /><br /></p>",
+      "disabled": false,
+      "duration": {
+        "rounds": 1,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": [
+            "None"
+          ]
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/surprised.webp",
+      "name": "Surprised",
+      "origin": "Item.cKMxYphpel9Wq6jI",
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Surprised"
+      ],
+      "_id": "dm4lsltqxdj1G5J5"
+    },
+    {
+      "changes": [
+        {
+          "key": "system.traits.dr.value",
+          "mode": 0,
+          "value": "fire",
+          "priority": 20
+        },
+        {
+          "key": "flags.midi-qol.disadvantage.attack.rwak",
+          "mode": 0,
+          "value": "!['lightcrossbow','handcrossbow','heavycrossbow','net'].includes(item.baseItem) && !item.properties.thr",
+          "priority": 20
+        },
+        {
+          "key": "flags.midi-qol.disadvantage.attack.mwak",
+          "mode": 0,
+          "value": "!['dagger','javelin','shortsword','spear','trident'].includes(item.baseItem) && !attributes.movement.swim",
+          "priority": 20
+        },
+        {
+          "key": "flags.midi-qol.fail.attack.rwak",
+          "mode": 0,
+          "value": "MidiQOL.getDistance(workflow.token,workflow.targets.first()) > item.range.value",
+          "priority": 20
+        },
+        {
+          "key": "macro.tokenMagic",
+          "mode": 0,
+          "value": "distortion",
+          "priority": 20
+        }
+      ],
+      "description": "",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "icons/magic/water/bubbles-air-water-blue.webp",
+      "name": "Submerged",
+      "origin": "Item.cKMxYphpel9Wq6jI",
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Submerged"
+      ],
+      "_id": "usvKCNEb9BEXAzce"
+    },
+    {
+      "changes": [
+        {
+          "key": "system.attributes.exhaustion",
+          "mode": 5,
+          "value": "6",
+          "priority": 50
+        },
+        {
+          "key": "system.bonuses.All-Attacks",
+          "mode": 2,
+          "value": "-6",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.check",
+          "mode": 2,
+          "value": "-6",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.save",
+          "mode": 2,
+          "value": "-6",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.spell.dc",
+          "mode": 2,
+          "value": "-6",
+          "priority": 20
+        }
+      ],
+      "description": "<ul><li><p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/exhausted6.webp",
+      "name": "Exhaustion 6",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Exhaustion 6"
+      ],
+      "_id": "yHBVM519B7jc0TJ0"
+    },
+    {
+      "changes": [],
+      "description": "<p>The end.</p>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/dead.webp",
+      "name": "Dead",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Dead",
+        "dead"
+      ],
+      "_id": "u7jksS9wm6OowUJj"
+    }
+  ],
+  "folder": null,
+  "flags": {
+    "exportSource": {
+      "world": "testingworld",
+      "system": "dnd5e",
+      "coreVersion": "11.315",
+      "systemVersion": "2.4.1"
+    }
+  },
+  "_stats": {
+    "systemId": "dnd5e",
+    "systemVersion": "2.4.1",
+    "coreVersion": "11.315",
+    "createdTime": 1698551381684,
+    "modifiedTime": 1713553702140,
+    "lastModifiedBy": "AaGlXPdfBCo8JJO1"
+  }
+}
