@@ -27,7 +27,7 @@ export async function net({ speaker, actor, token, character, item, args, scope,
             {
                 'key': 'macro.CE',
                 'mode': 0,
-                'value': 'Restraineddw',
+                'value': 'Restrained',
                 'priority': 20
             }
         ],

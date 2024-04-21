@@ -1,6 +1,14 @@
+//animation is terrible, rework
 export async function phantasmalForce({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
+    let type = await chrisPremades.helpers.raceOrType(target.actor);
+    if (type === "undead" || type === "construct") {
+        await warpgate.wait(100);
+        ui.notifications.warn("Target cannot be affected by Phantasmal Force! (undead/construct)");
+        await chrisPremades.helpers.removeCondition(workflow.actor, "Concentrating");
+        return;
+    }
     async function effectMacroStartSource() {
         let effect = await chrisPremades.helpers.findEffect(actor, "Phantasmal Force");
         if (!effect) return;
@@ -21,7 +29,10 @@ export async function phantasmalForce({ speaker, actor, token, character, item, 
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Phantasmal Force` });
     }
     async function effectMacroDelTarget() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Phantasmal Force` });
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Phantasmal Force` });
+        let targets = game.canvas.scene.tokens.filter(i => chrisPremades.helpers.findEffect(i.actor, "Phantasmal Force"));
+        if (!targets.length) return;
+        await chrisPremades.helpers.removeCondition(targets[0].actor, "Concentrating");
     }
     const effectDataSource = {
         'name': workflow.item.name,
@@ -69,6 +80,13 @@ export async function phantasmalForce({ speaker, actor, token, character, item, 
             'effectmacro': {
                 'onDelete': {
                     'script': chrisPremades.helpers.functionToString(effectMacroDelTarget)
+                }
+            },
+            'mba-premades': {
+                'spell': {
+                    'phantasmalForce': {
+                        'originUuid': target.document.uuid
+                    }
                 }
             }
         }
@@ -122,7 +140,7 @@ export async function phantasmalForce({ speaker, actor, token, character, item, 
 
         .play()
 
-
+    await warpgate.wait(4200);
     await chrisPremades.helpers.createEffect(target.actor, effectDataTarget);
     await chrisPremades.helpers.createEffect(workflow.actor, effectDataSource);
 }

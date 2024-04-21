@@ -1,7 +1,9 @@
 import {absorbElements} from './macros/spells/level1/absorbElements.js';
 import {acidSplash} from './macros/spells/cantrip/acidSplash.js';
+import {acidVial} from './macros/items/acidVial.js';
 import {aganazzarScorcher} from './macros/spells/level2/aganazzarScorcher.js';
 import {aid} from './macros/spells/level2/aid.js';
+import {alchemistFire} from './macros/items/alchemistFire.js';
 import {alterSelf} from './macros/spells/level2/alterSelf.js';
 import {animalFriendship} from './macros/spells/level1/animalFriendship.js';
 import {animalMessenger} from './macros/spells/level2/animalMessenger.js';
@@ -12,6 +14,7 @@ import {bane} from './macros/spells/level1/bane.js';
 import {banishingSmite} from './macros/spells/level5/banishingSmite.js';
 import {banishment} from './macros/spells/level4/banishment.js';
 import {bardicInspiration} from './macros/classFeatures/bard/bardicInspiration.js';
+import {basicPoison} from './macros/items/basicPoison.js';
 import {beastBond} from './macros/spells/level1/beastBond.js';
 import {bestowCurse} from './macros/spells/level3/bestowCurse.js';
 import {bladeWard} from './macros/spells/cantrip/bladeWard.js';
@@ -36,6 +39,8 @@ import {command} from './macros/spells/level1/command.js';
 import {comprehendLanguages} from './macros/spells/level1/comprehendLanguages.js';
 import {cordonOfArrows} from './macros/spells/level2/cordonOfArrows.js';
 import {createBonfire} from './macros/spells/cantrip/createBonfire.js';
+import {createFoodAndWater} from './macros/spells/level3/createFoodAndWater.js';
+import {crowbar} from './macros/items/crowbar.js';
 import {crownOfMadness} from './macros/spells/level2/crownOfMadness.js';
 import {crownOfStars} from './macros/spells/level7/crownOfStars.js';
 import {cunningAction} from './macros/classFeatures/rogue/cunningAction.js';
@@ -85,6 +90,7 @@ import {gentleRepose} from './macros/spells/level2/gentleRepose.js';
 import {goodberry} from './macros/spells/level1/goodberry.js';
 import {grapple} from './macros/actions/grapple.js';
 import {grease} from './macros/spells/level1/grease.js';
+import {greaterInvisibility} from './macros/spells/level4/greaterInvisibility.js';
 import {greenFlameBlade} from './macros/spells/cantrip/greenFlameBlade.js';
 import {guidingBolt} from './macros/spells/level1/guidingBolt.js';
 import {gust} from './macros/spells/cantrip/gust.js';
@@ -108,6 +114,7 @@ import {identify} from './macros/spells/level1/identify.js';
 import {infestation} from './macros/spells/cantrip/infestation.js';
 import {inflictWounds} from './macros/spells/level1/inflictWounds.js';
 import {intellectFortress} from './macros/spells/level3/intellectFortress.js';
+import {invisibility} from './macros/spells/level2/invisibility.js';
 import {lesserRestoration} from './macros/spells/level2/lesserRestoration.js';
 import {levitate} from './macros/spells/level2/levitate.js';
 import {light} from './macros/spells/cantrip/light.js';
@@ -133,6 +140,7 @@ import {ottoIrresistibleDance} from './macros/spells/level6/ottoIrresistibleDanc
 import {panpipesOfTheSewers} from './macros/items/panpipesOfTheSewers.js';
 import {phantasmalForce} from './macros/spells/level2/phantasmalForce.js';
 import {potionOfHealing} from './macros/items/potionOfHealing.js';
+import {potionOfResistance} from './macros/items/potionOfResistance.js';
 import {powerWordHeal} from './macros/spells/level9/powerWordHeal.js';
 import {powerWordKill} from './macros/spells/level9/powerWordKill.js';
 import {powerWordPain} from './macros/spells/level7/powerWordPain.js';
@@ -196,8 +204,10 @@ import {zephyrStrike} from './macros/spells/level1/zephyrStrike.js';
 export let macros = {
     'absorbElements': absorbElements,
     'acidSplash': acidSplash,
+    'acidVial': acidVial,
     'aganazzarScorcher': aganazzarScorcher,
     'aid': aid,
+    'alchemistFire': alchemistFire,
     'alterSelf': alterSelf,
     'animalFriendship': animalFriendship,
     'animalMessenger': animalMessenger,
@@ -208,6 +218,7 @@ export let macros = {
     'banishingSmite': banishingSmite,
     'banishment': banishment,
     'bardicInspiration': bardicInspiration,
+    'basicPoison': basicPoison,
     'beastBond': beastBond,
     'bestowCurse': bestowCurse,
     'bladeWard': bladeWard,
@@ -232,6 +243,8 @@ export let macros = {
     'comprehendLanguages': comprehendLanguages,
     'cordonOfArrows': cordonOfArrows,
     'createBonfire': createBonfire,
+    'createFoodAndWater': createFoodAndWater,
+    'crowbar': crowbar,
     'crownOfMadness': crownOfMadness,
     'crownOfStars': crownOfStars,
     'cunningAction': cunningAction,
@@ -281,6 +294,7 @@ export let macros = {
     'goodberry': goodberry,
     'grapple': grapple,
     'grease': grease,
+    'greaterInvisibility': greaterInvisibility,
     'greenFlameBlade': greenFlameBlade,
     'guidingBolt': guidingBolt,
     'gust': gust,
@@ -304,6 +318,7 @@ export let macros = {
     'infestation': infestation,
     'inflictWounds': inflictWounds,
     'intellectFortress': intellectFortress,
+    'invisibility': invisibility,
     'lesserRestoration': lesserRestoration,
     'levitate': levitate,
     'light': light,
@@ -329,6 +344,7 @@ export let macros = {
     'panpipesOfTheSewers': panpipesOfTheSewers,
     'phantasmalForce': phantasmalForce,
     'potionOfHealing': potionOfHealing,
+    'potionOfResistance': potionOfResistance,
     'powerWordHeal': powerWordHeal,
     'powerWordKill': powerWordKill,
     'powerWordPain': powerWordPain,

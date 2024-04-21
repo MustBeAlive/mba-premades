@@ -1,5 +1,6 @@
+//think of a way to implement template case
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-    const target = workflow.targets.first();
+    
     let choices = [
         ["Splash oil on somebody (5 ft.)", "splash"],
         ["Throw flask at someone (20 ft.)", "shatter"],
@@ -8,36 +9,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     ];
     let selection = await chrisPremades.helpers.dialog("What would you like to do?", choices);
     if (!selection || selection === "cancel") return;
-    async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Oil Flask` });
-    }
-    const effectData = {
-        'name': "Covered in Oil",
-        'icon': "modules/mba-premades/icons/conditions/muddy.webp",
-        'origin': workflow.item.uuid,
-        'description': `
-            <p>You are covered in oil.</p>
-            <p>If you take any fire damage before the oil dries (after 1 minute), you will take an additional 5 fire damage from the burning oil.</p>
-        `,
-        'duration': {
-            'seconds': 60
-        },
-        'changes': [
-            {
-                'key': 'flags.midi-qol.onUseMacroName',
-                'mode': 0,
-                'value': 'function.mbaPremades.macros.oilFlask.damage,preTargetDamageApplication',
-                'priority': 20
-            }
-        ],
-        'flags': {
-            'effectmacro': {
-                'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
-                }
-            }
-        }
-    };
     if (selection === "splash") {
         let target = workflow.targets.first();
         if (!target) {
@@ -46,7 +17,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         }
         let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Item Features', 'Oil Flask: Splash Oil', false);
         if (!featureData) {
-            ui.notifications.warn('Can\'t find item in compenidum! (Oil Flask: Splash Oil)');
+            ui.notifications.warn("Can't find item in compenidum! (Oil Flask: Splash Oil)");
             return
         }
         let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
@@ -54,38 +25,16 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         await game.messages.get(workflow.itemCardId).delete();
         let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
         if (!featureWorkflow) return;
-        if (featureWorkflow.hitTargets.size) {
-            mbaPremades.macros.oilFlask.animation({ speaker, actor, token, character, item, args, scope, workflow });
-            await warpgate.wait(1500);
-            await chrisPremades.helpers.createEffect(target.actor, effectData);
-        } else {
-            let offsetX = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
-            let offsetY = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
-            new Sequence()
-
-                .effect()
-                .file("jb2a.throwable.throw.flask.01.black")
-                .attachTo(token)
-                .stretchTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
-                .waitUntilFinished(-300)
-
-                .effect()
-                .file("jb2a.impact.006.yellow")
-                .attachTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
-                .scaleToObject(2 * target.document.texture.scaleX)
-                .filter("ColorMatrix", { saturate: 0.5, brightness: -1 })
-
-                .play()
-        }
     }
     if (selection === "shatter") {
+        let target = workflow.targets.first();
         if (!target) {
             ui.notifications.warn("No target selected!");
             return;
         }
         let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Item Features', 'Oil Flask: Throw Flask', false);
         if (!featureData) {
-            ui.notifications.warn('Can\'t find item in compenidum! (Oil Flask: Throw Flask)');
+            ui.notifications.warn("Can't find item in compenidum! (Oil Flask: Throw Flask)");
             return
         }
         let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
@@ -93,29 +42,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         await game.messages.get(workflow.itemCardId).delete();
         let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
         if (!featureWorkflow) return;
-        if (featureWorkflow.hitTargets.size) {
-            mbaPremades.macros.oilFlask.animation({ speaker, actor, token, character, item, args, scope, workflow });
-            await warpgate.wait(1500);
-            await chrisPremades.helpers.createEffect(target.actor, effectData);
-        } else {
-            let offsetX = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
-            let offsetY = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
-            new Sequence()
-
-                .effect()
-                .file("jb2a.throwable.throw.flask.01.black")
-                .attachTo(token)
-                .stretchTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
-                .waitUntilFinished(-300)
-
-                .effect()
-                .file("jb2a.impact.006.yellow")
-                .attachTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
-                .scaleToObject(2 * target.document.texture.scaleX)
-                .filter("ColorMatrix", { saturate: 0.5, brightness: -1 })
-
-                .play()
-        }
     }
     if (selection === "pour") {
         let templateData = {
@@ -147,13 +73,18 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .file("jb2a.throwable.throw.flask.01.black")
             .attachTo(token)
             .stretchTo(template)
-            .waitUntilFinished(-300)
+            .waitUntilFinished(-250)
 
             .effect()
-            .file("jb2a.impact.006.yellow")
+            .file("jb2a.explosion.top_fracture.flask.01")
             .attachTo(template)
-            .scaleToObject(2)
-            .filter("ColorMatrix", { saturate: 0.5, brightness: -1 })
+            .scaleToObject(1.4)
+
+            .effect()
+            .file("jb2a.impact.green.9")
+            .attachTo(template)
+            .scaleToObject(1.5)
+            .filter("ColorMatrix", { saturate: -1, brightness: -0.8 })
 
             .effect()
             .delay(100)
@@ -203,14 +134,15 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         };
         await chrisPremades.helpers.createEffect(workflow.actor, templateEffectData);
     }
-    let oilFlaskItem = workflow.actor.items.filter(i => i.name === "Oil Flask")[0];
-    if (oilFlaskItem.system.quantity > 1) {
-        oilFlaskItem.update({ "system.quantity": oilFlaskItem.system.quantity - 1 });
+
+    let flaskItem = workflow.actor.items.filter(i => i.name === workflow.item.name)[0];
+    if (flaskItem.system.quantity > 1) {
+        flaskItem.update({ "system.quantity": flaskItem.system.quantity - 1 });
     } else {
-        workflow.actor.deleteEmbeddedDocuments("Item", [oilFlaskItem.id]);
+        workflow.actor.deleteEmbeddedDocuments("Item", [flaskItem.id]);
     }
-    let emptyFlaskItem = workflow.actor.items.filter(i => i.name === "Empty Flask");
-    if (!emptyFlaskItem.length) {
+    let emptyFlaskItem = workflow.actor.items.filter(i => i.name === "Empty Flask")[0];
+    if (!emptyFlaskItem) {
         const itemData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
         if (!itemData) {
             ui.notifications.warn("Unable to find item in compenidum! (Empty Flask)");
@@ -218,25 +150,86 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         }
         await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
     } else {
-        emptyFlaskItem[0].update({ "system.quantity": emptyFlaskItem[0].system.quantity + 1 });
+        emptyFlaskItem.update({ "system.quantity": emptyFlaskItem.system.quantity + 1 });
     }
 }
 
-async function animation({ speaker, actor, token, character, item, args, scope, workflow }) {
+async function attack({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
+    if (!workflow.hitTargets.size) {
+        let offsetX = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
+        if (offsetX === 0) offsetX = 1;
+        let offsetY = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
+        if (offsetY === 0) offsetY = 1;
+        new Sequence()
+
+            .effect()
+            .file("jb2a.throwable.throw.flask.01.black")
+            .attachTo(token)
+            .stretchTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
+            .waitUntilFinished(-250)
+
+            .effect()
+            .file("jb2a.explosion.top_fracture.flask.01")
+            .attachTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
+            .scale(1.4)
+
+            .play()
+
+        return;
+    }
+    async function effectMacroDel() {
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Oil Flask` });
+    }
+    const effectData = {
+        'name': "Covered in Oil",
+        'icon': "modules/mba-premades/icons/conditions/muddy.webp",
+        'origin': workflow.item.uuid,
+        'description': `
+            <p>You are covered in oil.</p>
+            <p>If you take any fire damage before the oil dries (after 1 minute), you will take an additional 5 fire damage from the burning oil.</p>
+        `,
+        'duration': {
+            'seconds': 60
+        },
+        'changes': [
+            {
+                'key': 'flags.midi-qol.onUseMacroName',
+                'mode': 0,
+                'value': 'function.mbaPremades.macros.oilFlask.damage,preTargetDamageApplication',
+                'priority': 20
+            }
+        ],
+        'flags': {
+            'effectmacro': {
+                'onDelete': {
+                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                }
+            }
+        }
+    };
     new Sequence()
 
         .effect()
         .file("jb2a.throwable.throw.flask.01.black")
         .attachTo(token)
         .stretchTo(target)
-        .waitUntilFinished(-300)
+        .waitUntilFinished(-250)
 
         .effect()
-        .file("jb2a.impact.006.yellow")
+        .file("jb2a.explosion.top_fracture.flask.01")
         .attachTo(target)
-        .scaleToObject(2 * target.document.texture.scaleX)
-        .filter("ColorMatrix", { saturate: 0.5, brightness: -1 })
+        .scale(1.4)
+
+        .thenDo(function () {
+            chrisPremades.helpers.createEffect(target.actor, effectData);
+        })
+
+        .effect()
+        .file("jb2a.impact.green.9")
+        .attachTo(target)
+        .scaleToObject(1.5 * target.document.texture.scaleX)
+        .filter("ColorMatrix", { saturate: -1, brightness: -0.8 })
 
         .effect()
         .file("jb2a.grease.dark_grey.loop")
@@ -247,7 +240,7 @@ async function animation({ speaker, actor, token, character, item, args, scope, 
         .filter("ColorMatrix", { brightness: -0.5 })
         .fadeIn(300)
         .fadeOut(500)
-        .scaleIn(0, 1500, { ease: "easeOutCubic" })
+        .scaleIn(0, 500, { ease: "easeOutCubic" })
         .scaleOut(0, 1500, { ease: "easeOutCubic" })
         .zIndex(0.1)
         .mask(target)
@@ -263,7 +256,7 @@ async function animation({ speaker, actor, token, character, item, args, scope, 
         .filter("ColorMatrix", { brightness: -0.5 })
         .fadeIn(300)
         .fadeOut(500)
-        .scaleIn(0, 1500, { ease: "easeOutCubic" })
+        .scaleIn(0, 500, { ease: "easeOutCubic" })
         .scaleOut(0, 1500, { ease: "easeOutCubic" })
         .zIndex(0.1)
         .mask(target)
@@ -279,7 +272,7 @@ async function animation({ speaker, actor, token, character, item, args, scope, 
         .filter("ColorMatrix", { brightness: -0.5 })
         .fadeIn(300)
         .fadeOut(500)
-        .scaleIn(0, 1500, { ease: "easeOutCubic" })
+        .scaleIn(0, 500, { ease: "easeOutCubic" })
         .scaleOut(0, 1500, { ease: "easeOutCubic" })
         .zIndex(0.1)
         .mask(target)
@@ -296,7 +289,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     if (!typeCheck) return;
     let damageFormula = '5[fire]';
     let damageRoll = await new Roll(damageFormula).roll({ 'async': true });
-    damageRoll.toMessage({
+    await damageRoll.toMessage({
         rollMode: 'roll',
         speaker: { 'alias': name },
         flavor: 'Oil Flask: Burning Oil'
@@ -311,9 +304,10 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     workflow.damageItem.totalDamage += damageTotal;
     workflow.damageItem.appliedDamage += damageTotal;
     workflow.damageItem.hpDamage += damageTotal;
+
     new Sequence()
 
-        .wait(2000)
+        .wait(1700)
 
         .effect()
         .file("jb2a.impact.fire.01.orange.0")
@@ -343,6 +337,6 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
 
 export let oilFlask = {
     'item': item,
-    'animation': animation,
+    'attack': attack,
     'damage': damage
 }

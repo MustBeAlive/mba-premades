@@ -1,4 +1,4 @@
-//To do: better holy water implementation; icons for Wedding case
+//To do: animations
 export async function ceremony({ speaker, actor, token, character, item, args, scope, workflow }) {
     const target = workflow.targets.first();
     let choices = [
@@ -19,37 +19,23 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
             await chrisPremades.helpers.rollRequest(workflow.token, 'skill', 'ins');
             break;
         }
-        //update when 3.0+
         case 'Water': {
-            let haveVial = actor.items
-                .filter(item => item.type === 'backpack')
-                .filter(item => item.name === "Vial")
-                .filter(item => item.system.equipped === true);
-            if (haveVial.length != 1) {
-                ui.notifications.warn('Не экипирован подходящий сосуд с водой! (Нужен "Vial")');
-                return;
-            }
-            let holyWater = actor.items.find(i => i.name === "Holy Water (Vial)");
-            if (holyWater) {
-                let holyWaterNewAmmount = holyWater.system.quantity + 1;
-                await holyWater.update({ "system.quantity": holyWaterNewAmmount })
+            let waterFlask = workflow.actor.items.filter(i => i.name === "Water Flask")[0];
+            if (waterFlask.system.quantity > 1) {
+                waterFlask.update({ "system.quantity": waterFlask.system.quantity - 1 });
             } else {
-                let holyWaterData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Items', 'Holy Water (Vial)', false);
-                let updates = {
-                    'embedded': {
-                        'Item': {
-                            [holyWaterData.name]: holyWaterData
-                        }
-                    }
-                }
-                await warpgate.mutate(token.document, updates);
+                workflow.actor.deleteEmbeddedDocuments("Item", [waterFlask.id]);
             }
-
-            let vial = actor.items.find(i => i.name === "Vial");
-            let vialNewAmmount = vial.system.quantity - 1;
-            await vial.update({ "system.quantity": vialNewAmmount })
-            if (vial.system.quantity < 1) {
-                await vial.delete();
+            let holyWater = workflow.actor.items.filter(i => i.name === "Holy Water")[0];
+            if (!holyWater) {
+                const itemData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Items', 'Holy Water', false);
+                if (!itemData) {
+                    ui.notifications.warn("Unable to find item in compenidum! (Holy Water)");
+                    return
+                }
+                await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
+            } else {
+                holyWater.update({ "system.quantity": emptyFlaskItem.system.quantity + 1 });
             }
             break;
         }
@@ -57,7 +43,8 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
             const effectData = {
                 'name': "Ceremony: Coming of Age",
                 'icon': workflow.item.img,
-                'description': "For the next 24 hours, whenever you make an ability check, you can roll a d4 and add the number rolled to the ability check.",
+                'origin': workflow.item.uuid,
+                'description': "Whenever you make an ability check, you can roll a d4 and add the number rolled to the ability check.",
                 'duration': {
                     'seconds': 86400
                 },
@@ -86,7 +73,8 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
             const effectData = {
                 'name': "Ceremony: Dedication",
                 'icon': workflow.item.img,
-                'description': "For the next 24 hours, whenever you make a saving throw, you can roll a d4 and add the number rolled to the save.",
+                'origin': workflow.item.uuid,
+                'description': "Whenever you make a saving throw, you can roll a d4 and add the number rolled to the save.",
                 'duration': {
                     'seconds': 86400
                 },
@@ -115,6 +103,7 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
             const effectData = {
                 'name': "Ceremony: Funeral Rite",
                 'icon': workflow.item.img,
+                'origin': workflow.item.uuid,
                 'description': "For the next 7 days you can't become undead",
                 'duration': {
                     'seconds': 604800
@@ -138,8 +127,7 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
                 ui.notifications.warn('Wrong ammount of targets!');
                 return;
             }
-            for (let i = 0; i < targets.length; i++) {
-                let target = targets[i];
+            for (let target of targets) {
                 let type = chrisPremades.helpers.raceOrType(target.actor);
                 if (type != 'humanoid') {
                     ui.notifications.warn('One of the targets is not human!');
@@ -157,7 +145,7 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
                 if (!nearbyPartner.length) return;
                 const effectData = {
                     'name': "Ceremony: AC bonus",
-                    'icon': "modules/mba-premades/icons/spells/level1/ceremony.webp", // temp icon, find something better or recolor original
+                    'icon': "modules/mba-premades/icons/spells/level1/ceremony3.webp",
                     'duration': {
                         turns: 1,
                     },
@@ -183,7 +171,7 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
             }
             const effectData1 = {
                 'name': "Ceremony: Wedding",
-                'icon': "modules/mba-premades/icons/spells/level1/ceremony.webp",
+                'icon': "modules/mba-premades/icons/spells/level1/ceremony2.webp",
                 'description': "For the next 7 days, you have a +2 bonus to AC while you are within 30 feet of your partner.",
                 'duration': {
                     'seconds': 604800
@@ -205,7 +193,7 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
             };
             const effectData2 = {
                 'name': "Ceremony: Wedding",
-                'icon': "modules/mba-premades/icons/spells/level1/ceremony.webp",
+                'icon': "modules/mba-premades/icons/spells/level1/ceremony2.webp",
                 'description': "For the next 7 days, you have a +2 bonus to AC while you are within 30 feet of your partner.",
                 'duration': {
                     'seconds': 604800

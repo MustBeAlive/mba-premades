@@ -1,18 +1,140 @@
-export async function holyWater({speaker, actor, token, character, item, args, scope, workflow}) {
-    if (!workflow.hitTargets.size) return;
-    let target = workflow.targets.first();
-    let type = chrisPremades.helpers.raceOrType(target.actor);
-    if (type != 'fiend' && type != 'undead') {
-        ui.notifications.warn('Target is not fiend or undead!');
+async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
+    const target = workflow.targets.first();
+    if (!target) {
+        ui.notifications.warn("No target selected!");
         return;
-    };
-    let damageFormula = '2d6[radiant]';
-    let damageRoll = await new Roll(damageFormula).roll({'async': true});
-    await MidiQOL.displayDSNForRoll(damageRoll, 'damageRoll');
-    damageRoll.toMessage({
-        rollMode: 'roll',
-        speaker: { 'alias': name },
-        flavor: `<b>Holy Water</b>`
-    });
-    await chrisPremades.helpers.applyWorkflowDamage(workflow.token, damageRoll, 'radiant', [target], workflow.item.name, workflow.itemCardId);
+    }
+    let choices = [
+        ["Splash Holy Water on somebody (5 ft.)", "splash"],
+        ["Throw flask of Holy Water at someone (20 ft.)", "shatter"],
+        ["Cancel", "cancel"]
+    ];
+    let selection = await chrisPremades.helpers.dialog("What would you like to do?", choices);
+    if (!selection || selection === "cancel") return;
+    let featureData;
+    if (selection === "splash") {
+        featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Item Features', 'Holy Water: Splash Water', false);
+        if (!featureData) {
+            ui.notifications.warn("Unable to find item in compenidum! (Holy Water: Splash Water)");
+            return
+        }
+    }
+    if (selection === "shatter") {
+        featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Item Features', 'Holy Water: Throw Flask', false);
+        if (!featureData) {
+            ui.notifications.warn("Unable to find item in compenidum! (Holy Water: Throw Flask)");
+            return
+        }
+    }
+    let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
+    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([target.document.uuid]);
+    await game.messages.get(workflow.itemCardId).delete();
+    let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
+    if (!featureWorkflow) return;
+
+    let flaskItem = workflow.actor.items.filter(i => i.name === workflow.item.name)[0];
+    if (flaskItem.system.quantity > 1) {
+        flaskItem.update({ "system.quantity": flaskItem.system.quantity - 1 });
+    } else {
+        workflow.actor.deleteEmbeddedDocuments("Item", [flaskItem.id]);
+    }
+    let emptyFlaskItem = workflow.actor.items.filter(i => i.name === "Empty Flask")[0];
+    if (!emptyFlaskItem) {
+        const itemData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
+        if (!itemData) {
+            ui.notifications.warn("Unable to find item in compenidum! (Empty Flask)");
+            return
+        }
+        await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
+    } else {
+        emptyFlaskItem.update({ "system.quantity": emptyFlaskItem.system.quantity + 1 });
+    }
+}
+
+async function attack({ speaker, actor, token, character, item, args, scope, workflow }) {
+    let target = workflow.targets.first();
+    if (!workflow.hitTargets.size) {
+        let offsetX = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
+        if (offsetX === 0) offsetX = 1;
+        let offsetY = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
+        if (offsetY === 0) offsetY = 1;
+
+        new Sequence()
+
+            .effect()
+            .file("jb2a.throwable.throw.flask.01.white")
+            .attachTo(token)
+            .stretchTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
+            .waitUntilFinished(-250)
+
+            .effect()
+            .file("jb2a.explosion.top_fracture.flask.03")
+            .attachTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
+            .scale(1.4)
+
+            .play()
+
+        return;
+    }
+    let type = await chrisPremades.helpers.raceOrType(target.actor).toLowerCase();
+    if (type === "undead" || type === 'fiend') {
+        let damageRoll = await new Roll('2d6[radiant]').roll({ 'async': true });
+        await damageRoll.toMessage({
+            rollMode: 'roll',
+            speaker: { 'alias': name },
+            flavor: 'Holy Water'
+        });
+        new Sequence()
+
+            .effect()
+            .file("jb2a.throwable.throw.flask.01.white")
+            .attachTo(token)
+            .stretchTo(target)
+            .waitUntilFinished(-250)
+
+            .effect()
+            .file("jb2a.explosion.top_fracture.flask.01")
+            .attachTo(target)
+            .scale(1.4)
+
+            .effect()
+            .file("jb2a.divine_smite.target.yellowwhite")
+            .atLocation(target)
+            .rotateTowards(token)
+            .scaleToObject(3)
+            .spriteOffset({ x: -1.5 * token.document.width, y: -0 * token.document.width }, { gridUnits: true })
+            .mirrorY()
+            .rotate(90)
+            .zIndex(2)
+            .startTime(400)
+
+            .thenDo(function () {
+                chrisPremades.helpers.applyDamage(target, damageRoll.total, 'radiant')
+            })
+
+            .play()
+
+        return;
+    }
+    ui.notifications.info("Unfortunately, target is neither fiend nor undead.")
+
+    new Sequence()
+
+        .effect()
+        .file("jb2a.throwable.throw.flask.01.white")
+        .attachTo(token)
+        .stretchTo(target)
+        .waitUntilFinished(-250)
+
+        .effect()
+        .file("jb2a.explosion.top_fracture.flask.01")
+        .attachTo(target)
+        .scale(1.4)
+
+        .play()
+}
+
+export let holyWater = {
+    'item': item,
+    'attack': attack
 }

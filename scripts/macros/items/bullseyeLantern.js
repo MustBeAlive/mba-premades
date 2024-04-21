@@ -138,7 +138,7 @@ async function light({ speaker, actor, token, character, item, args, scope, work
     } else {
         workflow.actor.deleteEmbeddedDocuments("Item", [oilFlaskItem.id]);
     }
-    let emptyFlaskItem = workflow.actor.items.filter(i => i.name === "Empty Flask");
+    let emptyFlaskItem = workflow.actor.items.filter(i => i.name === "Empty Flask")[0];
     if (!emptyFlaskItem.length) {
         const itemData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
         if (!itemData) {
@@ -147,7 +147,7 @@ async function light({ speaker, actor, token, character, item, args, scope, work
         }
         await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
     } else {
-        emptyFlaskItem[0].update({ "system.quantity": emptyFlaskItem[0].system.quantity + 1 });
+        emptyFlaskItem.update({ "system.quantity": emptyFlaskItem.system.quantity + 1 });
     }
 }
 

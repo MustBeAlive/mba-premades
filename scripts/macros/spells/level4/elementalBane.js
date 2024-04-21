@@ -129,7 +129,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                     }
                 }
             }
-        }
+        };
         await chrisPremades.helpers.createEffect(target.actor, effectData);
     }
 }
