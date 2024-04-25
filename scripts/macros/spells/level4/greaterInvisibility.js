@@ -44,7 +44,7 @@ export async function greaterInvisibility({ speaker, actor, token, character, it
         .effect()
         .delay(1000)
         .file("animated-spell-effects-cartoon.misc.weird.01")
-        .attachTo(target)
+        .atLocation(target)
         .scaleToObject(2 * target.document.texture.scaleX)
         .opacity(0.8)
         .filter("ColorMatrix", { hue: 100 })

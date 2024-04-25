@@ -1,6 +1,5 @@
 //think of a way to implement template case
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-    
     let choices = [
         ["Splash oil on somebody (5 ft.)", "splash"],
         ["Throw flask at someone (20 ft.)", "shatter"],

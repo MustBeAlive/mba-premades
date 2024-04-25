@@ -31,7 +31,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     await game.messages.get(workflow.itemCardId).delete();
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow) return;
-    
+
     let vialItem = workflow.actor.items.filter(i => i.name === workflow.item.name)[0];
     if (vialItem.system.quantity > 1) {
         vialItem.update({ "system.quantity": vialItem.system.quantity - 1 });
@@ -101,9 +101,13 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
         })
 
         .effect()
-        .file("jb2a.impact.green.9")
-        .attachTo(target)
-        .scaleToObject(1.5 * target.document.texture.scaleX)
+        .file("jb2a.liquid.splash.bright_green")
+        .atLocation(target, { offset: { x: 0 }, gridUnits: true })
+        .opacity(1)
+        .randomRotation()
+        .size(1, { gridUnits: true })
+        .filter("ColorMatrix", { saturate: 0, hue: -35 })
+        .zIndex(3)
 
         .effect()
         .file("jb2a.grease.dark_grey.loop")

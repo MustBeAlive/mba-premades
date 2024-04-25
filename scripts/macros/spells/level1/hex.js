@@ -69,6 +69,10 @@ async function hexItem({ speaker, actor, token, character, item, args, scope, wo
             }
         ],
         'flags': {
+            'mba-premades': {
+                'isCurse': true,
+                'greaterRestoration': true
+            },
             'midi-qol': {
                 'castData': {
                     baseLevel: 1,

@@ -173,6 +173,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 		.loopProperty("sprite", "position.y", { from: 0, to: -30, duration: 5000, pingPong: true })
 		.filter("Glow", { color: 0xFFd129, distance: 10, outerStrength: 4, innerStrength: 0 })
 		.zIndex(2)
+		.fadeOut(500)
 		.persist()
 		.name(`${target.document.name} Levitate`)
 
@@ -185,6 +186,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 		.loopProperty("sprite", "position.y", { from: 0, to: -30, duration: 5000, pingPong: true })
 		.fadeIn(1000)
 		.zIndex(2.2)
+		.fadeOut(500)
 		.persist()
 		.name(`${target.document.name} Levitate`)
 
@@ -199,6 +201,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 		.filter("Blur", { blurX: 5, blurY: 10 })
 		.attachTo(target, { bindAlpha: false })
 		.zIndex(1)
+		.fadeOut(500)
 		.persist()
 		.name(`${target.document.name} Levitate`)
 

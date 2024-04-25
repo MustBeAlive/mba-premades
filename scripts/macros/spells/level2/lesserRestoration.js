@@ -11,25 +11,44 @@ export async function lesserRestoration({ speaker, actor, token, character, item
             ['Poisoned', 'poisoned'],
             ['Level of Exhaustion', 'exhaustion']
         ];
+        let effect;
         let selection2 = await chrisPremades.helpers.dialog('Which condition do you wish to remove?', choices2);
-        if (!selection2) {
-            return;
-        }
+        if (!selection2) return;
         switch (selection2) {
             case 'blindness': {
-                await chrisPremades.helpers.removeCondition(target.actor, 'Blinded');
+                effect = await chrisPremades.helpers.findEffect(target.actor, "Blinded");
+                if (!effect) {
+                    ui.notifications.warn("Target is not blinded!");
+                    return;
+                }
+                await chrisPremades.helpers.removeEffect(effect);
                 break;
             }
             case 'deafness': {
-                await chrisPremades.helpers.removeCondition(target.actor, 'Deafened');
+                effect = await chrisPremades.helpers.findEffect(target.actor, "Deafened");
+                if (!effect) {
+                    ui.notifications.warn("Target is not deafened!");
+                    return;
+                }
+                await chrisPremades.helpers.removeEffect(effect);
                 break;
             }
             case 'paralyzed': {
-                await chrisPremades.helpers.removeCondition(target.actor, 'Paralyzed');
+                effect = await chrisPremades.helpers.findEffect(target.actor, "Paralyzed");
+                if (!effect) {
+                    ui.notifications.warn("Target is not paralyzed!");
+                    return;
+                }
+                await chrisPremades.helpers.removeEffect(effect);
                 break;
             }
             case 'poisoned': {
-                await chrisPremades.helpers.removeCondition(target.actor, 'Poisoned');
+                effect = await chrisPremades.helpers.findEffect(target.actor, "Poisoned");
+                if (!effect) {
+                    ui.notifications.warn("Target is not poisoned!");
+                    return;
+                }
+                await chrisPremades.helpers.removeEffect(effect);
                 break;
             }
             case 'exhaustion': {
@@ -41,43 +60,44 @@ export async function lesserRestoration({ speaker, actor, token, character, item
                 let level = +exhaustion[0].name.slice(-1);
                 if (level === 1) {
                     await chrisPremades.helpers.removeCondition(target.actor, "Exhaustion 1");
-                    return;
+                    break;
                 }
                 level -= 1;
                 await chrisPremades.helpers.addCondition(target.actor, "Exhaustion " + level);
+                break
             }
         }
-        return;
     }
-    let curable = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true).filter(e => e.flags['mba-premades']?.lesserRestoration === true);
-    if (!curable.length) {
-        let uncurable = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true).filter(e => !e.flags['mba-premades']?.lesserRestoration === true);
-        if (!uncurable.length) {
-            ui.notifications.info('Target is not affected by any disease!');
+    if (selection1 === "disease") {
+        let curable = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true).filter(e => e.flags['mba-premades']?.lesserRestoration === true);
+        if (!curable.length) {
+            let uncurable = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true).filter(e => !e.flags['mba-premades']?.lesserRestoration === true);
+            if (!uncurable.length) {
+                ui.notifications.info('Target is not affected by any disease!');
+                return;
+            }
+            ui.notifications.info('Targeted creature is affected by a disease which can not be cured with Lesser Restoration!');
             return;
         }
-        ui.notifications.info('Targeted creature is affected by a disease which can not be cured with Lesser Restoration!');
-        return;
-    }
-    let selection = []
-    for (let i = 0; i < curable.length; i++) {
-        let effect = curable[i];
-        let name = effect.flags['mba-premades']?.name;
-        let description = effect.flags['mba-premades']?.description[0].toString();
-        let icon = "modules/mba-premades/icons/conditions/nauseated.webp";
-        selection.push([name, description, icon]);
-    }
-    function generateEnergyBox(type) {
-        return `
+        let selection = []
+        for (let i = 0; i < curable.length; i++) {
+            let effect = curable[i];
+            let name = effect.flags['mba-premades']?.name;
+            let description = effect.flags['mba-premades']?.description[0].toString();
+            let icon = "modules/mba-premades/icons/conditions/nauseated.webp";
+            selection.push([name, description, icon]);
+        }
+        function generateEnergyBox(type) {
+            return `
                 <label class="radio-label">
                 <input type="radio" name="type" value="${selection[type]}" />
                 <img src="${selection[type].slice(2)}" style="border: 0px; width: 50px; height: 50px"/>
                 ${selection[type].slice(0, -2)}
                 </label>
             `;
-    }
-    const effectSelection = Object.keys(selection).map((type) => generateEnergyBox(type)).join("\n");
-    const content = `
+        }
+        const effectSelection = Object.keys(selection).map((type) => generateEnergyBox(type)).join("\n");
+        const content = `
             <style>
                 .lesserRestoration 
                     .form-group {
@@ -118,33 +138,106 @@ export async function lesserRestoration({ speaker, actor, token, character, item
                 </div>
             </form>
         `;
-    const diseaseEffect = await new Promise((resolve) => {
-        new Dialog({
-            title: "Choose which disease to remove:",
-            content,
-            buttons: {
-                ok: {
-                    label: "Ok",
-                    callback: async (html) => {
-                        const element = html.find("input[type='radio'][name='type']:checked").val();
-                        resolve(element);
+        const diseaseEffect = await new Promise((resolve) => {
+            new Dialog({
+                title: "Choose which disease to remove:",
+                content,
+                buttons: {
+                    ok: {
+                        label: "Ok",
+                        callback: async (html) => {
+                            const element = html.find("input[type='radio'][name='type']:checked").val();
+                            resolve(element);
+                        },
                     },
-                },
-                cancel: {
-                    label: "Cancel",
-                    callback: async (html) => {
-                        return;
+                    cancel: {
+                        label: "Cancel",
+                        callback: async (html) => {
+                            return;
+                        }
                     }
                 }
-            }
-        }).render(true);
-    });
-    let diseaseFlagName = diseaseEffect.split(",")[0];
-    let diseaseToRemoveName;
-    for (let i = 0; i < curable.length; i++) {
-        let effect = curable[i];
-        if (effect.flags['mba-premades']?.name === diseaseFlagName) diseaseToRemoveName = effect.name;
+            }).render(true);
+        });
+        let diseaseFlagName = diseaseEffect.split(",")[0];
+        let diseaseToRemoveName;
+        for (let i = 0; i < curable.length; i++) {
+            let effect = curable[i];
+            if (effect.flags['mba-premades']?.name === diseaseFlagName) diseaseToRemoveName = effect.name;
+        }
+        let diseaseToRemove = await chrisPremades.helpers.findEffect(target.actor, diseaseToRemoveName);
+        await chrisPremades.helpers.removeEffect(diseaseToRemove);
     }
-    let diseaseToRemove = await chrisPremades.helpers.findEffect(target.actor, diseaseToRemoveName);
-    await chrisPremades.helpers.removeEffect(diseaseToRemove);
+    new Sequence()
+
+        .effect()
+        .file("jb2a.extras.tmfx.inpulse.circle.01.normal")
+        .atLocation(target)
+        .scaleToObject(1)
+
+        .effect()
+        .file("jb2a.misty_step.02.green")
+        .atLocation(target)
+        .scaleToObject(1)
+        .scaleOut(1, 3500, { ease: "easeOutCubic" })
+
+        .wait(1400)
+
+        .effect()
+        .file("jb2a.healing_generic.burst.bluewhite")
+        .atLocation(target)
+        .scaleToObject(1.5)
+        .filter("ColorMatrix", { hue: 275 })
+        .fadeOut(1000, { ease: "easeInExpo" })
+        .belowTokens()
+        .scaleIn(0, 500, { ease: "easeOutCubic" })
+        .duration(1200)
+        .attachTo(target, { bindAlpha: false })
+
+        .effect()
+        .from(target)
+        .atLocation(target)
+        .filter("ColorMatrix", { saturate: -1, brightness: 10 })
+        .filter("Blur", { blurX: 5, blurY: 10 })
+        .fadeIn(100)
+        .opacity(1)
+        .fadeOut(5000)
+        .duration(6000)
+        .attachTo(target)
+
+        .effect()
+        .file("jb2a.fireflies.few.02.green")
+        .atLocation(target)
+        .scaleToObject(2)
+        .duration(10000)
+        .fadeIn(1000)
+        .fadeOut(500)
+        .attachTo(target)
+
+        .effect()
+        .file("jb2a.extras.tmfx.outflow.circle.02")
+        .atLocation(target)
+        .fadeIn(200)
+        .opacity(0.25)
+        .duration(10000)
+        .scaleToObject(2)
+        .fadeOut(500)
+        .fadeIn(1000)
+        .belowTokens()
+        .attachTo(target)
+
+        .effect()
+        .file("jb2a.particles.outward.greenyellow.01.03")
+        .atLocation(target)
+        .filter("ColorMatrix", { saturate: -1, brightness: 2 })
+        .fadeIn(200, { ease: "easeInExpo" })
+        .duration(10000)
+        .opacity(0.25)
+        .scaleToObject(2)
+        .fadeOut(500)
+        .fadeIn(1000)
+        .belowTokens()
+        .attachTo(target)
+
+        .play()
 }

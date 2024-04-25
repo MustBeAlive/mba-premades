@@ -278,7 +278,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 }
 
 async function dialogue(token, actor, effect, origin) {
-    let selection = await chrisPremades.helpers.dialog('Drop heated object?', [['Yes (no save)', 'yes'], ['No/Unable (save)', 'no']]);
+    let selection = await chrisPremades.helpers.dialog('Do you wish to drop heated object?', [['Yes (no save)', 'yes'], ['No/Unable (save)', 'no']]);
     if (selection === "yes") {
         await effect.delete();
         return;

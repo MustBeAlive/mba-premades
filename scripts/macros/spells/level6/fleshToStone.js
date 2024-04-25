@@ -74,7 +74,6 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
 
                     .effect()
                     .from(token)
-                    .name("Flesh to Stone")
                     .atLocation(token)
                     .mask(token)
                     .opacity(0.4)
@@ -85,10 +84,10 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
                     .duration(5000)
                     .zIndex(1)
                     .persist()
+                    .name("Flesh to Stone")
 
                     .effect()
                     .file("https://i.imgur.com/4P2tITB.png")
-                    .name("Flesh to Stone")
                     .atLocation(token)
                     .mask(token)
                     .opacity(1)
@@ -98,6 +97,7 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
                     .duration(5000)
                     .attachTo(token)
                     .persist()
+                    .name("Flesh to Stone")
 
                     .play()
             }
@@ -148,7 +148,6 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
 
                 .effect()
                 .from(token)
-                .name("Flesh to Stone")
                 .atLocation(token)
                 .mask(token)
                 .opacity(0.4)
@@ -159,10 +158,10 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
                 .duration(5000)
                 .zIndex(1)
                 .persist()
+                .name("Flesh to Stone")
 
                 .effect()
                 .file("https://i.imgur.com/4P2tITB.png")
-                .name("Flesh to Stone")
                 .atLocation(token)
                 .mask(token)
                 .opacity(1)
@@ -172,6 +171,7 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
                 .duration(5000)
                 .attachTo(token)
                 .persist()
+                .name("Flesh to Stone")
 
                 .play()
         }

@@ -186,6 +186,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             .playbackRate(0.8)
             .opacity(0.8)
             .private()
+            .fadeOut(500)
             .persist()
             .name(`${target.document.name} Hold Person`)
 

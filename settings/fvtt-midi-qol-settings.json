@@ -129,7 +129,7 @@
       "nearbyAllyRanged": 0,
       "nearbyFoe": 6,
       "optionalCritRule": -1,
-      "removeHiddenInvis": true,
+      "removeHiddenInvis": false,
       "wallsBlockRange": "none",
       "mergeCardMulti": false,
       "challengModeArmor": false,

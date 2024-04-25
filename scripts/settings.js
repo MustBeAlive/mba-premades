@@ -1,11 +1,11 @@
-import {cast} from './macros/animations/cast.js';
-import {changeChat} from './macros/ui/changeChat.js';
-import {corpseHide} from './macros/mechanics/corpseHide.js';
-import {deathSaves} from './macros/mechanics/deathSaves.js';
-import {macros} from './macros.js';
-import {removeV10EffectsBlind} from './macros/mechanics/blindness.js';
-import {removeV10EffectsInvisible} from './macros/mechanics/invisibility.js';
-import {tashaSummon} from './macros/generic/tashaSummon.js';
+import { cast } from './macros/animations/cast.js';
+import { changeChat } from './macros/ui/changeChat.js';
+import { corpseHide } from './macros/mechanics/corpseHide.js';
+import { deathSaves } from './macros/mechanics/deathSaves.js';
+import { macros } from './macros.js';
+import { removeV10EffectsBlind } from './macros/mechanics/blindness.js';
+import { removeV10EffectsInvisible } from './macros/mechanics/invisibility.js';
+import { tashaSummon } from './macros/generic/tashaSummon.js';
 
 let moduleName = 'mba-premades';
 
@@ -53,9 +53,24 @@ export function registerSettings() {
         'default': false,
         'onChange': value => {
             if (value) {
-                Hooks.on('midi-qol.preItemRoll', macros.blur);
+                Hooks.on('midi-qol.preAttackRoll', macros.blur.hook);
             } else {
-                Hooks.off('midi-qol.preItemRoll', macros.blur);
+                Hooks.off('midi-qol.preAttackRoll', macros.blur.hook);
+            }
+        }
+    });
+    game.settings.register(moduleName, 'Fog Cloud', {
+        'name': 'Fog Cloud Automation',
+        'hint': 'Включает автоматизацию заклинания Fog Cloud через Midi-Qol hooks.',
+        'scope': 'world',
+        'config': true,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preAttackRoll', macros.fogCloud.hook);
+            } else {
+                Hooks.off('midi-qol.preAttackRoll', macros.fogCloud.hook);
             }
         }
     });
@@ -101,6 +116,21 @@ export function registerSettings() {
                 Hooks.on('midi-qol.AttackRollComplete', macros.mirrorImage.hook);
             } else {
                 Hooks.off('midi-qol.AttackRollComplete', macros.mirrorImage.hook);
+            }
+        }
+    });
+    game.settings.register(moduleName, 'Relentless Endurance', {
+        'name': 'Relentless Endurance Automation',
+        'hint': 'Включает автоматизацию спобности орков Relentless Endurance через Midi-QoL hooks.',
+        'scope': 'world',
+        'config': true,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preTargetDamageApplication', macros.relentlessEndurance);
+            } else {
+                Hooks.off('midi-qol.preTargetDamageApplication', macros.relentlessEndurance);
             }
         }
     });

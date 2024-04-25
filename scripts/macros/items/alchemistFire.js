@@ -25,7 +25,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': 'damageType=fire, damageRoll=1d4, damageBeforeSave=true, name=Burning, killAnim=true',
+                'value': 'turn=start, damageType=fire, damageRoll=1d4, damageBeforeSave=true, name=Burning, killAnim=true',
                 'priority': 20
             }
         ],
@@ -135,47 +135,15 @@ async function animation({ speaker, actor, token, character, item, args, scope, 
         .playbackRate(0.9)
 
         .effect()
-        .file("animated-spell-effects-cartoon.fire.114")
-        .attachTo(target, { offset: { x: 0.25 * target.document.width, y: 0.2 * target.document.width }, gridUnits: true, followRotation: false })
-        .scaleToObject(1)
+        .file("jb2a.flames.orange.03.1x1.0")
+        .delay(300)
+        .attachTo(target, { offset: { x: 0, y: -0.15 }, gridUnits: true })
+        .scaleToObject(1.4)
+        .belowTokens(false)
         .opacity(0.8)
-        .fadeIn(300)
-        .fadeOut(500)
-        .scaleIn(0, 500, { ease: "easeOutCubic" })
-        .scaleOut(0, 1500, { ease: "easeOutCubic" })
-        .zIndex(0.1)
-        .playbackRate(0.85)
-        .mask(target)
-        .persist()
-        .name(`${target.document.name} Alchemist Fire`)
-
-        .effect()
-        .file("animated-spell-effects-cartoon.fire.114")
-        .attachTo(target, { offset: { x: -0.3 * target.document.width, y: 0 * target.document.width }, gridUnits: true, followRotation: false })
-        .scaleToObject(1)
-        .opacity(0.8)
-        .fadeIn(300)
-        .fadeOut(500)
-        .scaleIn(0, 500, { ease: "easeOutCubic" })
-        .scaleOut(0, 1500, { ease: "easeOutCubic" })
-        .zIndex(0.1)
-        .playbackRate(0.85)
-        .mask(target)
-        .persist()
-        .name(`${target.document.name} Alchemist Fire`)
-
-        .effect()
-        .file("animated-spell-effects-cartoon.fire.114")
-        .attachTo(target, { offset: { x: 0.15 * target.document.width, y: -0.35 * target.document.width }, gridUnits: true, followRotation: false })
-        .scaleToObject(1)
-        .opacity(0.8)
-        .fadeIn(300)
-        .fadeOut(500)
-        .scaleIn(0, 500, { ease: "easeOutCubic" })
-        .scaleOut(0, 1500, { ease: "easeOutCubic" })
-        .zIndex(0.1)
-        .playbackRate(0.85)
-        .mask(target)
+        .fadeIn(500)
+        .fadeOut(1000)
+        .mask()
         .persist()
         .name(`${target.document.name} Alchemist Fire`)
 

@@ -98,6 +98,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .tint("#d0c2ff")
         .loopProperty("alphaFilter", "alpha", { from: 0.75, to: 0.5, duration: 2000, pingPong: true })
         .zIndex(4)
+        .fadeOut(500)
         .persist()
         .name(`${token.document.name} Mirror Image 1`)
 
@@ -114,6 +115,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .tint("#d0c2ff")
         .loopProperty("alphaFilter", "alpha", { from: 0.75, to: 0.5, duration: 2000, pingPong: true })
         .zIndex(4)
+        .fadeOut(500)
         .persist()
         .name(`${token.document.name} Mirror Image 2`)
 
@@ -131,6 +133,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .loopProperty("alphaFilter", "alpha", { from: 0.75, to: 0.5, duration: 2000, pingPong: true })
         .delay(100)
         .zIndex(4)
+        .fadeOut(500)
         .persist()
         .name(`${token.document.name} Mirror Image 3`)
 

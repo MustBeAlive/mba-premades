@@ -1,8 +1,6 @@
 export async function potionOfHealing({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first()
-    let typeMatch = workflow.item.name.match(/\(([^)]+)\)/);
-    if (!typeMatch) return null;
-    let potionType = typeMatch[1].toLowerCase();
+    let potionType = workflow.item.name.substring(workflow.item.name.indexOf(" ") + 1).split(" ")[1].toLowerCase();
     let healingFormula;
     switch (potionType) {
         case "normal":

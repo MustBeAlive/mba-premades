@@ -323,7 +323,7 @@ async function light({ speaker, actor, token, character, item, args, scope, work
         workflow.actor.deleteEmbeddedDocuments("Item", [oilFlaskItem.id]);
     }
     let emptyFlaskItem = workflow.actor.items.filter(i => i.name === "Empty Flask")[0];
-    if (!emptyFlaskItem.length) {
+    if (!emptyFlaskItem) {
         const itemData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
         if (!itemData) {
             ui.notifications.warn("Unable to find item in compenidum! (Empty Flask)");

@@ -29,7 +29,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     new Sequence()
 
         .effect()
-        .atLocation(template)
+        .attachTo(template)
         .file(`jb2a.magic_signs.circle.02.evocation.complete.red`)
         .size(6, { gridUnits: true })
         .fadeIn(600)
@@ -41,7 +41,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jaamod.smoke.poison_cloud")
-        .atLocation(template)
+        .attachTo(template)
         .scaleIn(0, 1500, { ease: "easeOutCubic" })
         .scaleOut(0, 1500, { ease: "linear" })
         .fadeIn(200)
@@ -55,7 +55,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .delay(2500)
         .file("jb2a.darkness.black")
-        .atLocation(template)
+        .attachTo(template)
         .fadeIn(3000)
         .fadeOut(1500)
         .opacity(0.7)
@@ -114,17 +114,17 @@ async function hook(workflow) {
     if (!queueSetup) return;
     if (sourceCanSeeTarget && !targetCanSeeSource) {
         workflow.advantage = true;
-        workflow.advReminderAttackAdvAttribution.add("ADV:Darkness (target can't see you)");
+        workflow.advReminderAttackAdvAttribution.add("ADV:Darkness (target is unable to see you)");
     }
     if (!sourceCanSeeTarget && targetCanSeeSource) {
         workflow.disadvantage = true;
         workflow.flankingAdvantage = false;
-        workflow.advReminderAttackAdvAttribution.add("DIS:Darkness (you can't see target)");
+        workflow.advReminderAttackAdvAttribution.add("DIS:Darkness (you are unable to see target)");
     }
     if (!sourceCanSeeTarget && !targetCanSeeSource) {
         //workflow.advantage = true; Homeruled, uncomment to fix
         workflow.disadvantage = true;
-        workflow.advReminderAttackAdvAttribution.add("DIS:Darkness (you and target can't see eachother)");
+        workflow.advReminderAttackAdvAttribution.add("DIS:Darkness (you and target are unable to see eachother)");
     }
     chrisPremades.queue.remove(workflow.item.uuid);
 }
