@@ -1,6 +1,7 @@
 //Animation by EskieMoh#2969
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
 	let template = canvas.scene.collections.templates.get(workflow.templateId);
+
 	new Sequence()
 
 		.wait(1000)
@@ -82,7 +83,6 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 		.belowTokens()
 		.randomRotation()
 		.zIndex(2)
-		.private()
 		.name(`Entangle`)
 
 		.effect()
@@ -144,8 +144,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 	let effectData = {
 		'name': "Entangled",
 		'icon': workflow.item.img,
-		'description': "You are restrained by a mass of thick, entangling plants. You can use your action to make a Strength check. If you succeed, you are no longer restrained.",
 		'origin': workflow.item.uuid,
+		'description': "You are restrained by a mass of thick, entangling plants. You can use your action to make a Strength check. If you succeed, you are no longer restrained.",
 		'changes': [
 			{
 				'key': 'macro.CE',

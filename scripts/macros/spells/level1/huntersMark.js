@@ -59,8 +59,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.hunters_mark.loop.01.green")
         .attachTo(target)
-        .scaleToObject(0.75)
-        .scaleIn(0, 250, { ease: "easeOutCubic" })
+        .scaleToObject(1)
+        .scaleIn(0, 500, { ease: "easeOutCubic" })
         .zIndex(0.1)
         .fadeOut(500)
 

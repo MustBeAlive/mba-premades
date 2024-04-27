@@ -1,4 +1,5 @@
 import {addActions} from './macros/actions/token.js';
+import {addDAEFlags} from './integrations/dae.js';
 import {cast} from './macros/animations/cast.js';
 import {changeChat} from './macros/ui/changeChat.js';
 import {checkUpdate} from './update.js';
@@ -48,6 +49,10 @@ Hooks.once('ready', async function() {
     if (game.settings.get('mba-premades', 'Sanctuary')) Hooks.on('midi-qol.preItemRoll', macros.sanctuary.hook);
     if (game.settings.get('mba-premades', 'Summons Initiative')) Hooks.on('dnd5e.rollInitiative', tashaSummon.updateSummonInitiative);
     if (game.settings.get('mba-premades', 'Companions Initiative')) Hooks.on('dnd5e.rollInitiative', tashaSummon.updateCompanionInitiative);
+    if (game.modules.get('dae')?.active) addDAEFlags();
+    Hooks.on("dnd5e.preRollHitDie", macros.diseases.diseaseHitDie);
+    //Hooks.on("dnd5e.preLongRest", macros.diseases.diseaseLongRest1);
+    //Hooks.on("dnd5e.restCompleted", macros.diseases.diseaseLongRest2);
 });
 
 globalThis['mbaPremades'] = {

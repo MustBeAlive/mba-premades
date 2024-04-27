@@ -89,7 +89,7 @@ export async function enhanceAbility({ speaker, actor, token, character, item, a
             });
             async function effectMacroDel() {
                 if (actor.system.attributes.hp.temp > 0) {
-                    actor.update({ "system.attributes.hp.temp": 0 })
+                    await actor.update({ "system.attributes.hp.temp": 0 })
                 }
             }
             effectData = {
@@ -100,13 +100,6 @@ export async function enhanceAbility({ speaker, actor, token, character, item, a
                 'duration': {
                     'seconds': 3600
                 },
-                'flags': {
-                    'effectmacro': {
-                        'onDelete': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroDel)
-                        }
-                    }
-                },
                 'changes': [
                     {
                         'key': 'flags.midi-qol.advantage.ability.check.con',
@@ -116,6 +109,11 @@ export async function enhanceAbility({ speaker, actor, token, character, item, a
                     }
                 ],
                 'flags': {
+                    'effectmacro': {
+                        'onDelete': {
+                            'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                        }
+                    },
                     'midi-qol': {
                         'castData': {
                             baseLevel: 2,

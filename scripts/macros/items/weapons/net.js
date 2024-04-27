@@ -21,7 +21,7 @@ export async function net({ speaker, actor, token, character, item, args, scope,
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': `actionSave=true, rollType=check, saveAbility=str, saveDC=10, saveMagic=false, name=Net: Action Save, killAnim=true`,
+                'value': `actionSave=true, rollType=check, saveAbility=str, saveDC=10, saveMagic=false, name=Net: Action Save (DC10), killAnim=true`,
                 'priority': 20
             },
             {

@@ -1,5 +1,5 @@
-2024/04/24-22:03:31.411 36dc Recovering log #1340
-2024/04/24-22:03:31.411 36dc Level-0 table #1342: started
-2024/04/24-22:03:31.437 36dc Level-0 table #1342: 504 bytes OK
-2024/04/24-22:03:31.478 36dc Delete type=0 #1340
-2024/04/24-22:03:31.478 36dc Delete type=3 #1339
+2024/04/27-01:51:33.876 3fb0 Recovering log #9
+2024/04/27-01:51:33.876 3fb0 Level-0 table #11: started
+2024/04/27-01:51:33.886 3fb0 Level-0 table #11: 1319 bytes OK
+2024/04/27-01:51:33.920 3fb0 Delete type=0 #9
+2024/04/27-01:51:33.920 3fb0 Delete type=3 #8

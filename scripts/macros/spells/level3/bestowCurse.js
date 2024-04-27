@@ -139,6 +139,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			'origin': workflow.item.uuid,
 			'flags': {
 				'mba-premades': {
+					'isCurse': true,
+					'greaterRestoration': true,
 					'spell': {
 						'bestowCurse': {
 							'level': castLevel,
@@ -164,15 +166,15 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 	let target = workflow.targets.first();
 
 	new Sequence()
-	
+
 		.effect()
 		.file("jb2a.dodecahedron.skull.below.dark_greenpurple")
 		.attachTo(target)
 		.fadeIn(800)
 		.fadeOut(500)
 		.scaleToObject(2.2 * target.document.texture.scaleX)
-		.filter("ColorMatrix", {hue: 185})
-	
+		.filter("ColorMatrix", { hue: 185 })
+
 		.effect()
 		.file("jb2a.template_circle.aura.01.loop.large.orangepurple")
 		.delay(1100)
@@ -181,8 +183,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 		.fadeOut(500)
 		.scaleToObject(2.2 * target.document.texture.scaleX)
 		.playbackRate(0.8)
-		.filter("ColorMatrix", {hue: 185})
-	
+		.filter("ColorMatrix", { hue: 185 })
+
 		.effect()
 		.file("jb2a.energy_strands.complete.dark_green.01")
 		.delay(1100)
@@ -192,7 +194,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 		.opacity(0.8)
 		.scaleToObject(2 * target.document.texture.scaleX)
 		.repeats(4, 800)
-	
+
 		.effect()
 		.file("animated-spell-effects-cartoon.misc.fiery eyes.02")
 		.delay(1100)
@@ -201,7 +203,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 		.fadeIn(500)
 		.fadeOut(500)
 		.repeats(3, 1300)
-	
+
 		.play()
 }
 
@@ -229,7 +231,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
 		.fadeOut(500)
 		.scaleToObject(2.2 * target.document.texture.scaleX)
 		.playbackRate(0.8)
-		.filter("ColorMatrix", {hue: 185})
+		.filter("ColorMatrix", { hue: 185 })
 
 		.effect()
 		.file("jb2a.energy_strands.complete.dark_green.01")
@@ -323,7 +325,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
 		.fadeOut(500)
 		.scaleToObject(2.2 * token.document.texture.scaleX)
 		.playbackRate(0.8)
-		.filter("ColorMatrix", {hue: 185})
+		.filter("ColorMatrix", { hue: 185 })
 
 		.effect()
 		.file("jb2a.energy_strands.complete.dark_green.01")

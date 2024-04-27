@@ -1,6 +1,6 @@
 //Animation by EskieMoh#2969;
 //Does not account for kills/zombie spawn — to do;
-export async function fingerOfDeath({speaker, actor, token, character, item, args, scope, workflow}) {
+export async function fingerOfDeath({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let darkMap = true
     new Sequence()

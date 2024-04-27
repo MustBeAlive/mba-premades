@@ -102,6 +102,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     }
     await chrisPremades.helpers.createEffect(workflow.targets.first().actor, effectData);
 }
+
 async function attack({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.targets.size || workflow.isFumble) return;
     let effect = await chrisPremades.helpers.findEffect(workflow.actor, "Bardic Inspiration");
@@ -140,6 +141,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     }
     chrisPremades.queue.remove(workflow.item.uuid);
 }
+
 async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.targets.size || workflow.item.type != 'spell') return;
     if ((workflow.item.system.actionType === 'rsak' || workflow.item.system.actionType === 'msak') && !workflow.hitTargets.size) return;
@@ -208,6 +210,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     }
     chrisPremades.queue.remove(workflow.item.uuid);
 }
+
 export let bardicInspiration = {
     'item': item,
     'attack': attack,

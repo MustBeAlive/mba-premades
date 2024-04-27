@@ -11,6 +11,6 @@ export async function chillTouch({speaker, actor, token, character, item, args, 
     let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'chillTouch', 50);
     if (!queueSetup) return;
     workflow.disadvantage = true;
-    workflow.attackAdvAttribution.add('Disadvantage: Chill Touch');
+    workflow.advReminderAttackAdvAttribution.add('DIS: Chill Touch');
     chrisPremades.queue.remove(workflow.item.uuid);
 }

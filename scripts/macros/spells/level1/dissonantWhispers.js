@@ -1,7 +1,6 @@
 async function cast({speaker, actor, token, character, item, args, scope, workflow}) {
     let target = workflow.targets.first();
-    let deafened = await chrisPremades.helpers.findEffect(target.actor, 'Deafened');
-    if (!deafened) return;
+    if (!chrisPremades.helpers.findEffect(target.actor, 'Deafened')) return;
     ChatMessage.create({ flavor: target.document.name + ' is deafened and automatically succeeds on the save', speaker: ChatMessage.getSpeaker({ actor: workflow.actor}) });
     let immuneData = {  
         'name': 'Save Immunity',
@@ -20,9 +19,7 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
         ],
         'flags': {
             'dae': {
-                'specialDuration': [
-                    'isSave'
-                ]
+                'specialDuration': ['isSave']
             },
             'chris-premades': {
                 'effect': {
@@ -61,6 +58,14 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         'duration': {
             'rounds': 1
         },
+        'changes': [
+            {
+                'key': 'macro.CE',
+                'mode': 0,
+                'value': "Reaction",
+                'priority': 20
+            }
+        ],
         'flags': {
             'effectmacro': {
                 'onCreate': {
@@ -77,15 +82,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                     itemUuid: workflow.item.uuid
                 }
             }
-        },
-        'changes': [
-            {
-                'key': 'macro.CE',
-                'mode': 0,
-                'value': "Reaction",
-                'priority': 20
-            }
-        ]
+        }
     };
     await chrisPremades.helpers.createEffect(target.actor, effectData);
 }

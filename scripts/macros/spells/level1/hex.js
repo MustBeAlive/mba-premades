@@ -317,6 +317,10 @@ async function hexMoveItem({ speaker, actor, token, character, item, args, scope
             }
         ],
         'flags': {
+            'mba-premades': {
+                'isCurse': true,
+                'greaterRestoration': true
+            },
             'midi-qol': {
                 'castData': {
                     baseLevel: 1,

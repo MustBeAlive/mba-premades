@@ -13,23 +13,24 @@ export async function gust({ speaker, actor, token, character, item, args, scope
                 ui.notifications.warn('No target selected!')
                 return;
             }
-            let size = chrisPremades.helpers.getSize(target.actor);
-            if (size > 2) {
+            if (chrisPremades.helpers.getSize(target.actor) > 2) {
                 ui.notifications.warn('Gust can only push medium or smaller creatures!');
                 return;
             }
             let spellDC = chrisPremades.helpers.getSpellDC(workflow.item);
             let saveRoll = await chrisPremades.helpers.rollRequest(target, 'save', 'str');
-            if (saveRoll.total < spellDC) {
-                new Sequence()
-                    .effect()
-                    .file("jb2a.whirlwind.bluegrey")
-                    .atLocation(target)
-                    .scaleToObject(1)
-                    .play()
+            if (saveRoll.total >= spellDC) return
 
-                await chrisPremades.helpers.pushToken(workflow.token, target, 5);
-            }
+            new Sequence()
+
+                .effect()
+                .file("jb2a.whirlwind.bluegrey")
+                .atLocation(target)
+                .scaleToObject(1)
+
+                .play()
+
+            await chrisPremades.helpers.pushToken(workflow.token, target, 5);
             break;
         }
         case 'blast': {
@@ -68,10 +69,12 @@ export async function gust({ speaker, actor, token, character, item, args, scope
         }
         case 'effect': {
             new Sequence()
+
                 .effect()
                 .file("jb2a.whirlwind.bluegrey")
                 .atLocation(token)
                 .scaleToObject(1)
+
                 .play()
         }
     }

@@ -59,7 +59,7 @@ import {detectEvilAndGood} from './macros/spells/level1/detectEvilAndGood.js';
 import {detectMagic} from './macros/spells/level1/detectMagic.js';
 import {detectPoisonAndDisease} from './macros/spells/level1/detectPoisonAndDisease.js';
 import {detectThoughts} from './macros/spells/level2/detectThoughts.js';
-import {disease} from './macros/generic/disease.js';
+import {diseases} from './macros/generic/diseases.js';
 import {disengage} from './macros/actions/disengage.js';
 import {disguiseSelf} from './macros/spells/level1/disguiseSelf.js';
 import {dispelMagic} from './macros/spells/level3/dispelMagic.js';
@@ -114,6 +114,7 @@ import {hide} from './macros/actions/hide.js';
 import {holdPerson} from './macros/spells/level2/holdPerson.js';
 import {holyWater} from './macros/items/holyWater.js';
 import {hoodedLantern} from './macros/items/hoodedLantern.js';
+import {hungerOfHadar} from './macros/spells/level3/hungerOfHadar.js';
 import {huntersMark} from './macros/spells/level1/huntersMark.js';
 import {iceKnife} from './macros/spells/level1/iceKnife.js';
 import {iceStorm} from './macros/spells/level4/iceStorm.js';
@@ -164,6 +165,7 @@ import {pyrotechnics} from './macros/spells/level2/pyrotechnics.js';
 import {ready} from './macros/actions/ready.js';
 import {regenerate} from './macros/spells/level7/regenerate.js';
 import {relentlessEndurance} from './macros/raceFeatures/orc/relentlessEndurance.js';
+import {removeCurse} from './macros/spells/level3/removeCurse.js';
 import {removeTemplate} from './macros/generic/removeTemplate.js';
 import {revivify} from './macros/spells/level3/revivify.js';
 import {sanctuary} from './macros/spells/level1/sanctuary.js';
@@ -183,8 +185,11 @@ import {sleep} from './macros/spells/level1/sleep.js';
 import {slow} from './macros/spells/level3/slow.js';
 import {sneakAttack} from './macros/classFeatures/rogue/sneakAttack.js';
 import {spareTheDying} from './macros/spells/cantrip/spareTheDying.js';
+import {speakWithAnimals} from './macros/spells/level1/speakWithAnimals.js';
 import {speakWithDead} from './macros/spells/level3/speakWithDead.js';
+import {speakWithPlants} from './macros/spells/level3/speakWithPlants.js';
 import {spiderClimb} from './macros/spells/level2/spiderClimb.js';
+import {spiritGuardians} from './macros/spells/level3/spiritGuarduans.js';
 import {spiritualWeapon} from './macros/spells/level2/spiritualWeapon.js';
 import {sprayOfCards} from './macros/spells/level2/sprayOfCards.js';
 import {staggeringSmite} from './macros/spells/level4/staggeringSmite.js';
@@ -275,8 +280,8 @@ export let macros = {
     'detectMagic': detectMagic,
     'detectPoisonAndDisease': detectPoisonAndDisease,
     'detectThoughts': detectThoughts,
+    'diseases': diseases,
     'disengage': disengage,
-    'disease': disease,
     'disguiseSelf': disguiseSelf,
     'dispelMagic': dispelMagic,
     'dissonantWhispers': dissonantWhispers,
@@ -330,6 +335,7 @@ export let macros = {
     'holdPerson': holdPerson,
     'holyWater': holyWater,
     'hoodedLantern': hoodedLantern,
+    'hungerOfHadar': hungerOfHadar,
     'huntersMark': huntersMark,
     'iceKnife': iceKnife,
     'iceStorm': iceStorm,
@@ -380,6 +386,7 @@ export let macros = {
     'ready': ready,
     'regenerate': regenerate,
     'relentlessEndurance': relentlessEndurance,
+    'removeCurse': removeCurse,
     'removeTemplate': removeTemplate,
     'revivify': revivify,
     'sanctuary': sanctuary,
@@ -399,8 +406,11 @@ export let macros = {
     'slow': slow,
     'sneakAttack': sneakAttack,
     'spareTheDying': spareTheDying,
+    'speakWithAnimals': speakWithAnimals,
     'speakWithDead': speakWithDead,
+    'speakWithPlants': speakWithPlants,
     'spiderClimb': spiderClimb,
+    'spiritGuardians': spiritGuardians,
     'spiritualWeapon': spiritualWeapon,
     'sprayOfCards': sprayOfCards,
     'staggeringSmite': staggeringSmite,

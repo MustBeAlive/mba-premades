@@ -1,3 +1,17 @@
+async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
+     let target = workflow.targets.first();
+     let effect = await chrisPremades.helpers.findEffect(target.actor, 'Animal Messenger');
+     if (!effect) return;
+     if (chrisPremades.helpers.raceOrType(target.actor) != 'beast') {
+          ui.notifications.warn('Animal Messenger can only affect beasts!');
+          return;
+     }
+     if (chrisPremades.helpers.getSize(target.actor) != 0) {
+          ui.notifications.warn('Animal Messenger can only affect tiny creatures!');
+          return;
+     }
+}
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
      let target = workflow.targets.first();
      let castLevel = workflow.castData.castLevel;
@@ -31,7 +45,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
           'name': workflow.item.name,
           'icon': workflow.item.img,
           'origin': workflow.item.uuid,
-          'description': "For the next 24 hours, whenever you make an ability check, you can roll a d4 and add the number rolled to the ability check.",
+          'description': `
+               <p>Animal Messenger of <b>${workflow.token.document.name}</b></p>
+          `,
           'duration': {
                'seconds': duration
           },
@@ -45,28 +61,79 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                }
           }
      };
-     await chrisPremades.helpers.createEffect(target.actor, effectData);
-}
 
-async function check({ speaker, actor, token, character, item, args, scope, workflow }) {
-     let target = workflow.targets.first();
-     let effect = await chrisPremades.helpers.findEffect(target.actor, 'Animal Messenger');
-     if (!effect) return;
-     let type = chrisPremades.helpers.raceOrType(target.actor);
-     if (type != 'beast') {
-          ui.notifications.warn('Animal Messenger can only affect beasts!');
-          await chrisPremades.helpers.removeEffect(effect);
-          return;
-     }
-     let size = chrisPremades.helpers.getSize(target.actor)
-     if (size != 0) {
-          ui.notifications.warn('Animal Messenger can only affect tiny creatures!');
-          await chrisPremades.helpers.removeEffect(effect);
-          return;
-     }
+     new Sequence()
+
+          .wait(500)
+
+          .effect()
+          .file('jb2a.swirling_leaves.complete.01.green.0')
+          .atLocation(target)
+          .scaleToObject(2.25)
+          .scaleIn(0, 4000, { 'ease': 'easeOutBack' })
+          .endTime(4500)
+          .fadeOut(750, { 'ease': 'easeOutQuint' })
+          .zIndex(6)
+
+          .wait(1000)
+
+          .effect()
+          .file('jb2a.sacred_flame.target.green')
+          .atLocation(target)
+          .scaleToObject(2)
+          .scaleIn(0, 4000, { 'ease': 'easeOutBack' })
+          .endTime(2500)
+          .fadeOut(500)
+          .zIndex(5)
+          .waitUntilFinished(-1000)
+
+          .effect()
+          .file('jb2a.plant_growth.04.ring.4x4.complete.greenwhite')
+          .atLocation(target)
+          .opacity(1)
+          .belowTokens()
+          .randomRotation()
+          .scaleToObject(1.5)
+          .zIndex(1.1)
+
+          .wait(200)
+
+          .effect()
+          .file('jb2a.magic_signs.circle.02.conjuration.loop.green')
+          .atLocation(target)
+          .scaleIn(0, 500, { 'ease': 'easeOutCubic' })
+          .belowTokens()
+          .scaleToObject(1.25)
+          .duration(1200)
+          .fadeIn(200, { 'ease': 'easeOutCirc', 'delay': 200 })
+          .fadeOut(300, { 'ease': 'linear' })
+          .filter('ColorMatrix', { 'saturate': -1, 'brightness': 2 })
+          .filter('Blur', { 'blurX': 5, 'blurY': 10 })
+          .zIndex(0.1)
+
+          .effect()
+          .file('jb2a.magic_signs.circle.02.conjuration.loop.green')
+          .atLocation(target)
+          .scaleIn(0, 500, { 'ease': 'easeOutCubic' })
+          .belowTokens()
+          .scaleToObject(1.25)
+          .fadeOut(5000, { 'ease': 'easeOutQuint' })
+          .duration(10000)
+
+          .effect()
+          .file('jb2a.swirling_leaves.outburst.01.greenorange')
+          .atLocation(target)
+          .opacity(1)
+          .scaleToObject(2)
+          .zIndex(1)
+
+          .play();
+
+     await warpgate.wait(4000);
+     await chrisPremades.helpers.createEffect(target.actor, effectData);
 }
 
 export let animalMessenger = {
      'item': item,
-     'check': check
+     'cast': cast
 }

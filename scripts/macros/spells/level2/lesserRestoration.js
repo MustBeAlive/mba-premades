@@ -43,12 +43,116 @@ export async function lesserRestoration({ speaker, actor, token, character, item
                 break;
             }
             case 'poisoned': {
-                effect = await chrisPremades.helpers.findEffect(target.actor, "Poisoned");
-                if (!effect) {
+                let effectsFirst = target.actor.effects.filter(i => i.name.includes("Poison"));
+                if (!effectsFirst) {
                     ui.notifications.warn("Target is not poisoned!");
                     return;
                 }
-                await chrisPremades.helpers.removeEffect(effect);
+                if (effectsFirst.length < 2) {
+                    let poison = await chrisPremades.helpers.findEffect(target.actor, effectsFirst[0].name);
+                    if (!poison) {
+                        ui.notifications.warn(`Unable to find Poison: ${effectsFirst[0].name}`);
+                        return;
+                    }
+                    await chrisPremades.helpers.removeEffect(poison);
+                } else {
+                    let effects = effectsFirst.filter(i => i.name != "Poisoned");
+                    if (effects.length < 2) {
+                        let poison = await chrisPremades.helpers.findEffect(target.actor, effects[0].name);
+                        if (!poison) {
+                            ui.notifications.warn(`Unable to find Poison: ${effects[0].name}`);
+                            return;
+                        }
+                        await chrisPremades.helpers.removeEffect(poison);
+                    } else {
+                        let selection = [];
+                        for (let i = 0; i < effects.length; i++) {
+                            let effect = effects[i];
+                            let name = effect.name;
+                            let icon = effect.icon;
+                            selection.push([name, icon]);
+                        };
+                        function generateEnergyBox(type) {
+                            return `
+                            <label class="radio-label">
+                            <input type="radio" name="type" value="${selection[type]}" />
+                            <img src="${selection[type].slice(1)}" style="border: 0px; width: 50px; height: 50px"/>
+                            ${selection[type].slice(0, -1)}
+                            </label>
+                        `;
+                        }
+                        const effectSelection = Object.keys(selection).map((type) => generateEnergyBox(type)).join("\n");
+                        const content = `
+                        <style>
+                            .dispelMagic 
+                                .form-group {
+                                    display: flex;
+                                    flex-wrap: wrap;
+                                    width: 100%;
+                                    align-items: flex-start;
+                                }
+                            .dispelMagic 
+                                .radio-label {
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                text-align: center;
+                                justify-items: center;
+                                flex: 1 0 20%;
+                                line-height: normal;
+                                }
+                            .dispelMagic 
+                                .radio-label input {
+                                display: none;
+                            }
+                            .dispelMagic img {
+                                border: 0px;
+                                width: 50px;
+                                height: 50px;
+                                flex: 0 0 50px;
+                                cursor: pointer;
+                            }
+                            /* CHECKED STYLES */
+                            .dispelMagic [type="radio"]:checked + img {
+                                outline: 2px solid #005c8a;
+                            }
+                        </style>
+                        <form class="dispelMagic">
+                            <div class="form-group" id="types">
+                                ${effectSelection}
+                            </div>
+                        </form>
+                    `;
+                        const effectToRemove = await new Promise((resolve) => {
+                            new Dialog({
+                                title: "Choose poison to remove:",
+                                content,
+                                buttons: {
+                                    ok: {
+                                        label: "Ok",
+                                        callback: async (html) => {
+                                            const element = html.find("input[type='radio'][name='type']:checked").val();
+                                            resolve(element);
+                                        },
+                                    },
+                                    cancel: {
+                                        label: "Cancel",
+                                        callback: async (html) => {
+                                            return;
+                                        }
+                                    }
+                                }
+                            }).render(true);
+                        });
+                        let effectToRemoveName = effectToRemove.split(",")[0];
+                        let removeEffect = await chrisPremades.helpers.findEffect(target.actor, effectToRemoveName);
+                        if (!removeEffect) {
+                            ui.notifications.warn("Something went wrong, unable to find the effect!");
+                            return;
+                        }
+                        await chrisPremades.helpers.removeEffect(removeEffect);
+                    }
+                }
                 break;
             }
             case 'exhaustion': {
@@ -63,7 +167,7 @@ export async function lesserRestoration({ speaker, actor, token, character, item
                     break;
                 }
                 level -= 1;
-                await chrisPremades.helpers.addCondition(target.actor, "Exhaustion " + level);
+                await chrisPremades.helpers.addCondition(target.actor, `Exhaustion ${level}`);
                 break
             }
         }
@@ -129,7 +233,7 @@ export async function lesserRestoration({ speaker, actor, token, character, item
                 }
                 /* CHECKED STYLES */
                 .lesserRestoration [type="radio"]:checked + img {
-                    outline: 2px solid #f00;
+                    outline: 2px solid #005c8a;
                 }
             </style>
             <form class="lesserRestoration">
@@ -168,6 +272,7 @@ export async function lesserRestoration({ speaker, actor, token, character, item
         let diseaseToRemove = await chrisPremades.helpers.findEffect(target.actor, diseaseToRemoveName);
         await chrisPremades.helpers.removeEffect(diseaseToRemove);
     }
+
     new Sequence()
 
         .effect()

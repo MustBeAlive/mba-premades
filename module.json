@@ -32,6 +32,14 @@
 		],
 		"requires": [
 			{
+				"id": "about-time",
+				"type": "module",
+				"manifest": "https://gitlab.com/tposney/about-time/raw/master/package/module.json",
+				"compatibility": {
+					"verified": "11.0.1"
+				}
+			},
+			{
 				"id": "ActiveAuras",
 				"type": "module",
 				"manifest": "https://github.com/kandashi/Active-Auras",
@@ -88,14 +96,6 @@
 				}
 			},
 			{
-				"id": "dnd5e-animations",
-				"type": "module",
-				"manifest": "https://github.com/MrVauxs/dnd5e-animations",
-				"compatibility": {
-					"verified": "1.6.2"
-				}
-			},
-			{
 				"id": "dfreds-convenient-effects",
 				"type": "module",
 				"manifest": "https://github.com/DFreds/dfreds-convenient-effects",
@@ -120,11 +120,35 @@
 				}
 			},
 			{
+				"id": "fxmaster",
+				"type": "module",
+				"manifest": "https://github.com/ghost-fvtt/fxmaster/releases/latest/download/module.json",
+				"compatibility": {
+					"verified": "4.0.2"
+				}
+			},
+			{
+				"id": "animated-spell-effects-cartoon",
+				"type": "module",
+				"manifest": "https://github.com/jackkerouac/animated-spell-effects-cartoon/releases/download/latest/module.json",
+				"compatibility": {
+					"verified": "0.4.5"
+				}
+			},
+			{
+				"id": "jaamod",
+				"type": "module",
+				"manifest": "https://raw.githubusercontent.com/jinkergm/JAA/master/module.json",
+				"compatibility": {
+					"verified": "0.91"
+				}
+			},
+			{
 				"id": "jb2a_patreon",
 				"type": "module",
 				"manifest": "https://www.patreon.com/JB2A",
 				"compatibility": {
-					"verified": "0.6.6"
+					"verified": "0.6.7"
 				}
 			},
 			{
@@ -157,6 +181,14 @@
 				"manifest": "https://github.com/krbz999/templatemacro",
 				"compatibility": {
 					"verified": "11.0.1"
+				}
+			},
+			{
+				"id": "walledtemplates",
+				"type": "module",
+				"manifest": "https://github.com/caewok/fvtt-walled-templates/releases/latest/download/module.json",
+				"compatibility": {
+					"verified": "0.7.3"
 				}
 			},
 			{

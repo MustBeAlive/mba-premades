@@ -137,11 +137,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
     if (workflow.targets.size === 0) return;
     let effectDataResistance = {
-        'label': 'Turn Undead Advantage',
+        'label': 'Turn Undead: Advantage',
         'icon': 'modules/mba-premades/icons/generic/generic_buff.webp',
-        'duration': {
-            'turns': 1
-        },
         'changes': [
             {
                 'key': 'flags.midi-qol.advantage.ability.save.wis',
@@ -153,20 +150,16 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'dae': {
                 'transfer': false,
-                'specialDuration': [
-                    'isSave'
-                ],
+                'showIcon': true,
+                'specialDuration': ['isSave'],
                 'stackable': 'multi',
                 'macroRepeat': 'none'
             }
         }
     };
     let effectDataImmunity = {
-        'label': 'Turn Undead Immunity',
+        'label': 'Turn Undead: Immunity',
         'icon': 'modules/mba-premades/icons/generic/generic_buff.webp',
-        'duration': {
-            'turns': 1
-        },
         'changes': [
             {
                 'key': 'flags.midi-qol.min.ability.save.wis',
@@ -178,9 +171,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'dae': {
                 'transfer': false,
-                'specialDuration': [
-                    'isSave'
-                ],
+                'showIcon': true,
+                'specialDuration': ['isSave'],
                 'stackable': 'multi',
                 'macroRepeat': 'none'
             }
@@ -221,7 +213,9 @@ async function save({ speaker, actor, token, character, item, args, scope, workf
         if (!CR) continue;
         if (CR > destroyLevel) continue;
         destroyTokens.push(i);
+
         new Sequence()
+
             .effect()
             .file('jb2a.divine_smite.target.blueyellow')
             .atLocation(i)
