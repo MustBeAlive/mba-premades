@@ -1,0 +1,37 @@
+export async function thaumaturgy({ speaker, actor, token, character, item, args, scope, workflow }) {
+    new Sequence()
+
+        .effect()
+        .file("jb2a.markers.music.pink")
+        .attachTo(token)
+        .scaleToObject(1.2 * token.document.texture.scaleX)
+        .filter("ColorMatrix", { hue: 100 })
+        .fadeIn(1000)
+        .fadeOut(1000)
+        .duration(7000)
+
+        .effect()
+        .file("jb2a.impact_themed.music_note.pink")
+        .delay(1000)
+        .attachTo(token)
+        .scaleToObject(2.5 * token.document.texture.scaleX)
+        .filter("ColorMatrix", { hue: 100 })
+        .playbackRate(0.8)
+        .belowTokens()
+        .randomRotation()
+        .repeats(5, 1200)
+
+        .effect()
+        .file("jb2a.template_circle.symbol.out_flow.music_note.blue")
+        .delay(1500)
+        .attachTo(token)
+        .scaleToObject(2.8 * token.document.texture.scaleX)
+        .playbackRate(0.9)
+        .fadeIn(1000)
+        .fadeOut(1000)
+        .duration(5500)
+        .filter("ColorMatrix", { hue: 220 })
+        .belowTokens()
+
+        .play()
+}

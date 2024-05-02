@@ -2,10 +2,6 @@
 export async function powerWordKill({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let currentHP = target.actor.system.attributes.hp.value;
-    if (currentHP > 100) {
-        ui.notifications.warn('Target HP is higher than 100!');
-        return;
-    }
 
     new Sequence()
 
@@ -27,6 +23,11 @@ export async function powerWordKill({ speaker, actor, token, character, item, ar
         .delay(1500)
 
         .play();
+
+    if (currentHP > 100) {
+        ui.notifications.warn('Target HP is higher than 100!');
+        return;
+    }
 
     await warpgate.wait(3500);
     if (target.actor.type === "npc") {

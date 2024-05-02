@@ -1,132 +1,106 @@
-// Original macro by MISC (Bradeck/Coolhand/SagaTympana)
-export async function magicStone({speaker, actor, token, character, item, args, scope, workflow}) {
-    const mutName = 'Magic Stones';
-    const mutDescription = `Accept magic stones ?`;
-    if (args[0].macroPass === 'postActiveEffects') {
+import { mba } from "../../../helperFunctions.js";
 
-        const num = await warpgate.buttonDialog({
-            buttons: [{ label: '1', value: 1 }, {label: '2', value: 2}, {label: '3', value: 3}], title: 'Choose ammount of stones:'})
-        if(num === false) return;
-        
-        if(workflow.targets.size !== 1) return ui.notifications.warn("Too many targets selected!");
-
-        let tokentarget = workflow.targets.first();
-        let target = tokentarget.document;
-        let stoneData = item.toObject();
-        
-        const modEval = await new Roll('@mod', item.getRollData()).evaluate({async:true});
-        
-        const newItemMacro = `
-            let uses = workflow.item.system.uses.value;
-            
-            if (uses === 0) {
-                await warpgate.revert(token.document,"${mutName}");
-            }
-            `;
-        
-        
-        const updates = {
-
-            embedded: {
-                //create Throw Stone part of this spell
-                Item: {
-                    "Throw Magic Stone": { 
-                        "type": "spell",
-                        "img": "modules/mba-premades/icons/spells/cantrip/magic_stone_throw.webp",
-                        
-                        "system": {
-                            "attackBonus": `- @mod + ${modEval.total}`,
-                            "level": 0,
-                            "damage":{
-                                "parts":[
-                                [`1d6 + ${modEval.total}`
-                                , 'bludgeoning']
-                                ]
-                            },
-                            "preparation": {
-                                "mode":"always",
-                                "prepared":"true"    
-                            
-                            },
-                            "uses":{
-                                "value": num,
-                                "max": num,
-                                "per": "charges"
-                            },
-                            "activation":{
-                                "type": "action",
-                                "cost": 1,
-                            },
-                            "target":{
-                                "value": 1,
-                                "type":"creature"
-                            },
-                            "description": {
-                                "value": `Stone imbued with magic. You can use one of the pebbles to make ranged weapon attack (60ft.) You use caster's spellcasting ability modifier for that attack roll. On a hit, target takes bludgeoning damage equal to 1d6 + caster's spellcasting ability modifier. Whether the attack hits or misses, the spell then ends on the stone. `
-                            },
-                            
-                            "actionType": "rsak"
-                        },  
-                
-                        "flags": {
-                            "favtab": {
-                                "isFavorite": true
-                            },
-                        },
-                        //Here we assign the macro used by Throw Stones
-                        'flags.midi-qol.onUseMacroName': 'ItemMacro',
-                        'flags.itemacro.macro.data.name': "Attack",
-                        'flags.itemacro.macro.data.type': "script",
-                        'flags.itemacro.macro.data.scope': "global",
-                        'flags.itemacro.macro.data.command': newItemMacro
-                    },
-                },
+async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
+    let target = workflow.targets.first();
+    let choices = [["One Stone", 1], ["Two Stones", 2], ["Three Stones", 3]];
+    let ammount = await mba.dialog("Choose ammount of stones:", choices);
+    if (!ammount) return;
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Magic Stone: Throw Stone', false);
+    if (!featureData) return;
+    const modEval = await new Roll('@mod', item.getRollData()).evaluate({ async: true });
+    console.log(modEval);
+    featureData.system.attackBonus = `- @mod + ${modEval.total}`;
+    featureData.system.damage.parts[0][0] = `1d6 + ${modEval.total}[bludgeoning]`;
+    featureData.system.uses.max = ammount;
+    featureData.system.uses.value = ammount;
+    async function effectMacroDel() {
+        await warpgate.revert(token.document, "Magic Stone");
+    };
+    const effectData = {
+        'name': workflow.item.name,
+        'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
+        'description': `
+            <p>You have ${ammount} pebbles imbued with magic.</p>
+            <p>You can use one of the pebbles to make ranged weapon attack (60ft.) You use caster's spellcasting ability modifier for that attack roll.</p>
+            <p>On a hit, target takes bludgeoning damage equal to 1d6 + caster's spellcasting ability modifier.</p>
+            <p>Whether the attack hits or misses, the spell then ends on the stone.</p>
+        `,
+        'duration': {
+            'seconds': 60
+        },
+        'flags': {
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDel)
+                }
             },
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 0,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
+                }
+            }
         }
+    };
+    const updates = {
+        'embedded': {
+            'Item': {
+                [featureData.name]: featureData
+            },
+            'ActiveEffect': {
+                [effectData.name]: effectData
+            }
+        }
+    };
+    let options = {
+        'permanent': false,
+        'name': 'Magic Stone',
+        'description': 'Magic Stone'
+    };
+    let effect = await mba.findEffect(target.actor, "Magic Stone");
+    if (effect) await mba.removeEffect(effect);
+    await warpgate.mutate(target.document, updates, {}, options);
+}
 
-        await warpgate.mutate(target, updates, {}, { name: mutName, description: mutDescription });
-        await actor.setFlag('world', 'magicStonesTarget', target.id);
+async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
+    let target = workflow.targets.first();
+    new Sequence()
 
-        new Sequence()
-        
         .effect()
-        .name("Casting")
-        .atLocation(token)
-        .file(`jb2a.magic_signs.circle.02.enchantment.loop.dark_purple`)
-        .scaleToObject(1.25)
-        .rotateIn(180, 600, {ease: "easeOutCubic"})
-        .scaleIn(0, 600, {ease: "easeOutCubic"})
-        .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000})
-        .belowTokens()
-        .fadeOut(2000)
-        .zIndex(0)
-        
+        .file("jb2a.slingshot")
+        .attachTo(token)
+        .stretchTo(target)
+        .missed(workflow.hitTargets.size === 0)
+        .waitUntilFinished(-1000)
+
         .effect()
-        .atLocation(tokentarget)
-        .file(`jb2a.magic_signs.circle.02.enchantment.loop.dark_purple`)
-        .scaleToObject(1.25)
-        .rotateIn(180, 600, {ease: "easeOutCubic"})
-        .scaleIn(0, 600, {ease: "easeOutCubic"})
-        .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000})
-        .belowTokens(true)
-        .filter("ColorMatrix", {saturate:-1, brightness:2})
-        .filter("Blur", { blurX: 5, blurY: 10 })
-        .zIndex(1)
-        .duration(1200)
-        .fadeIn(200, {ease: "easeOutCirc", delay: 500})
-        .fadeOut(300, {ease: "linear"})
-        
-        
-        .repeats(5, 200, 200)
-        .fadeOut(500)
-        
+        .file("jb2a.impact.boulder.02")
+        .attachTo(target)
+        .scaleToObject(1.6 * target.document.texture.scaleX)
+        .playIf(() => {
+            return workflow.hitTargets.size != 0
+        })
+
         .play()
-    }
 
+    let effect = await mba.findEffect(workflow.actor, "Magic Stone");
+    if (!effect) return;
+    let [feature] = workflow.actor.items.filter(i => i.name === "Magic Stone: Throw Stone");
+    if (feature.system.uses.value === 0) await mba.removeEffect(effect);
+    let updates = {
+        'description': `
+            <p>You have ${feature.system.uses.value} pebbles imbued with magic.</p>
+            <p>You can use one of the pebbles to make ranged weapon attack (60ft.) You use caster's spellcasting ability modifier for that attack roll.</p>
+            <p>On a hit, target takes bludgeoning damage equal to 1d6 + caster's spellcasting ability modifier.</p>
+            <p>Whether the attack hits or misses, the spell then ends on the stone.</p>
+        `
+    };
+    await mba.updateEffect(effect, updates);
+}
 
-    if(args[0]==='off') {
-        const getTarget = canvas.scene.tokens.get(actor.getFlag('world', 'magicStonesTarget'));
-        await warpgate.revert(getTarget, mutName);
-        await actor.unsetFlag('world', 'magicStonesTarget');
-    }
+export let magicStone = {
+    'cast': cast,
+    'item': item
 }

@@ -1,5 +1,4 @@
 export async function inflictWounds({ speaker, actor, token, character, item, args, scope, workflow }) {
-    if (!workflow.hitTargets.size) return;
     let target = workflow.targets.first()
 
     new Sequence()
@@ -14,16 +13,21 @@ export async function inflictWounds({ speaker, actor, token, character, item, ar
         .delay(800)
         .atLocation(target)
         .scaleToObject(2 * target.document.texture.scaleX)
+        .playIf(() => {
+            return workflow.hitTargets.size
+        })
 
         .effect()
-        .file("animated-spell-effects-cartoon.misc.blood splatter")
-        .delay(950)
-        .atLocation(target)
-        .scaleToObject(2.5 * target.document.texture.scaleX)
-        .duration(3500)
-        .noLoop(true)
-        .fadeOut(500)
+        .file("jaamod.sequencer_fx_master.blood_splat.red.2")
+        .delay(100)
+        .attachTo(target)
+        .scaleToObject(1.7)
+        .duration(5000)
+        .fadeOut(1000)
         .belowTokens()
+        .playIf(() => {
+            return workflow.hitTargets.size
+        })
 
         .play()
 }

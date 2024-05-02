@@ -1,4 +1,6 @@
-// Based on multiple CPR Summon Macro
+import {mba} from "../../../helperFunctions.js";
+import {summons} from "../../generic/summons.js";
+
 export async function dancingLights({speaker, actor, token, character, item, args, scope, workflow}) {
     let DLBlueTeal = game.actors.getName('DL - BlueTeal');
     let DLBlueYellow = game.actors.getName('DL - BlueYellow');
@@ -11,18 +13,19 @@ export async function dancingLights({speaker, actor, token, character, item, arg
         ui.notifications.warn('Missing actors in the side panel!');
         return;
     }
-    let totalSummons = 4;
-    let sourceActors = await chrisPremades.helpers.selectDocuments('Choose color: (Max ' + totalSummons + ')', [DLBlueTeal, DLBlueYellow, DLGreen, DLPink, DLPurpleGreen, DLRed, DLYellow]);
+    let tokenName = `${workflow.token.document.name} Dancing Light`;
+    let sourceActors = await mba.selectDocuments('Choose color: (Max: 4)', [DLBlueTeal, DLBlueYellow, DLGreen, DLPink, DLPurpleGreen, DLRed, DLYellow]);
         if (!sourceActors) return;
-        if (sourceActors.length > totalSummons) {
+        if (sourceActors.length > 4) {
             ui.notifications.info('Too much actors selected!');
             return;
         }
         let updates =  {
             'token': {
+                'name': tokenName,
                 'disposition': workflow.token.document.disposition 
             }
         }
-    let animation = chrisPremades.helpers.getConfiguration(workflow.item, 'animation-') ?? 'celestial';
-    await mbaPremades.summons.spawn(sourceActors, updates, 60, workflow.item, undefined, undefined, 120, workflow.token, animation);
+    let animation = 'celestial';
+    await summons.spawn(sourceActors, updates, 60, workflow.item, undefined, undefined, 120, workflow.token, animation);
 }

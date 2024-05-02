@@ -1,7 +1,7 @@
 export async function regenerate({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacro() {
-        await game.Gametime.doEvery({ seconds: 6 }, async () => {
+        await game.Gametime.doEvery({ second: 6 }, async () => {
             if (actor.system.attributes.hp.value < actor.system.attributes.hp.max) {
                 await chrisPremades.helpers.applyDamage([token], 1, 'healing');
             }

@@ -23,7 +23,17 @@ async function animation(target, token, attackType) {
         .opacity(1)
         .randomRotation(true)
         .filter('ColorMatrix', { 'saturate': 1 })
-        .belowTokens(true);
+        .belowTokens(true)
+
+        .effect()
+        .file("jaamod.sequencer_fx_master.blood_splat.red.2")
+        .delay(100)
+        .attachTo(target)
+        .scaleIn(0, 500, { 'ease': 'easeOutCubic' })
+        .scaleToObject(1.65 * target.document.texture.scaleX)
+        .duration(2500)
+        .fadeOut(1000)
+        .belowTokens();
 
     switch (attackType) {
         case 'slashing':

@@ -1,3 +1,5 @@
+import {socket} from "./module.js";
+import {summonEffects} from "./macros/animations/summonEffects.js";
 export let mba = {
     'addCondition': async function _addCondition(actor, name, overlay, origin) {
         await game.dfreds.effectInterface.addEffect(
@@ -55,8 +57,16 @@ export let mba = {
         };
         await actor.createEmbeddedDocuments('Item', [itemData]);
     },
+    'addToDamageRoll': async function _addToDamageRoll(workflow, bonusDamageFormula, ignoreCrit = false) {
+        bonusDamageFormula = String(bonusDamageFormula);
+        if (workflow.isCritical && !ignoreCrit) bonusDamageFormula = mba.getCriticalFormula(bonusDamageFormula);
+        let bonusDamageRoll = await new CONFIG.Dice.DamageRoll(bonusDamageFormula, workflow.actor.getRollData()).evaluate();
+        setProperty(bonusDamageRoll, 'options.type', bonusDamageRoll.terms[0].flavor);
+        workflow.damageRolls.push(bonusDamageRoll);
+        await workflow.setDamageRolls(workflow.damageRolls);
+    },
     'addToRoll': async function _addToRoll(roll, addonFormula) {
-        let addonFormulaRoll = await new Roll('0 + ' + addonFormula).evaluate({async: true});
+        let addonFormulaRoll = await new Roll('0 + ' + addonFormula).evaluate({ async: true });
         game.dice3d?.showForRoll(addonFormulaRoll);
         for (let i = 1; i < addonFormulaRoll.terms.length; i++) {
             roll.terms.push(addonFormulaRoll.terms[i]);
@@ -72,9 +82,9 @@ export let mba = {
             while (crosshairs.inFlight) {
                 await warpgate.wait(100);
                 ray = new Ray(token.center, crosshairs);
-                distance = canvas.grid.measureDistances([{ray}], {'gridSpaces': true})[0];
-                if (token.checkCollision(ray.B, {'origin': ray.A, 'type': 'move', 'mode': 'any'}) || distance > maxRange) {
-                    crosshairs.icon = 'icons/svg/hazard.svg';
+                distance = canvas.grid.measureDistances([{ ray }], { 'gridSpaces': true })[0];
+                if (token.checkCollision(ray.B, { 'origin': ray.A, 'type': 'move', 'mode': 'any' }) || distance > maxRange) {
+                    crosshairs.icon = 'modules/mba-premades/icons/conditions/incapacitated.webp';
                 } else {
                     crosshairs.icon = icon;
                 }
@@ -115,7 +125,7 @@ export let mba = {
         );
     },
     'applyWorkflowDamage': async function _applyWorkflowDamage(sourceToken, damageRoll, damageType, targets, flavor, itemCardId) {
-        new MidiQOL.DamageOnlyWorkflow(sourceToken.actor, sourceToken, damageRoll.total, damageType, targets, damageRoll, {'flavor': flavor, 'itemCardId': itemCardId});
+        new MidiQOL.DamageOnlyWorkflow(sourceToken.actor, sourceToken, damageRoll.total, damageType, targets, damageRoll, { 'flavor': flavor, 'itemCardId': itemCardId });
     },
     'aseCheck': function _aseCheck() {
         let cartoon = game.modules.get('animated-spell-effects-cartoon')?.active;
@@ -141,7 +151,7 @@ export let mba = {
         }
     },
     'checkForRoom': function _checkForRoom(token, distance) {
-        let point = {'x': token.center.x, 'y': token.center.y};
+        let point = { 'x': token.center.x, 'y': token.center.y };
         let padding = token.w / 2 - canvas.grid.size / 2;
         let pixelDistance = distance * canvas.grid.size + padding;
         function check(direction) {
@@ -160,7 +170,7 @@ export let mba = {
                     newPoint.x -= pixelDistance;
                     break;
             }
-            return token.checkCollision(newPoint, {'origin': point, 'type': 'move', 'mode': 'any'});
+            return token.checkCollision(newPoint, { 'origin': point, 'type': 'move', 'mode': 'any' });
         }
         return {
             'n': check('n'),
@@ -168,6 +178,22 @@ export let mba = {
             's': check('s'),
             'w': check('w')
         };
+    },
+    'checkLight': function _checkLight(token) {
+        if (token.document.parent.globalLight) return 'bright';
+        let c = Object.values(token.center);
+        let lights = canvas.effects.lightSources.filter(src => !(src instanceof GlobalLightSource) && src.shape.contains(...c));
+        if (!lights.length) return 'dark';
+        let inBright = lights.some(light => {
+            let {'data': {x, y}, ratio} = light;
+            let bright = ClockwiseSweepPolygon.create({'x': x, 'y': y}, {
+                'type': 'light',
+                'boundaryShapes': [new PIXI.Circle(x, y, ratio * light.shape.config.radius)]
+            });
+            return bright.contains(...c);
+        });
+        if (inBright) return 'bright';
+        return 'dim';
     },
     'checkTrait': function _checkTrait(actor, type, trait) {
         return actor.system.traits[type].value.has(trait);
@@ -194,7 +220,14 @@ export let mba = {
         if (!returnTokens) return template;
         await warpgate.wait(200);
         let tokens = await game.modules.get('templatemacro').api.findContained(template).map(t => template.parent.tokens.get(t));
-        return {'template': template, 'tokens': tokens};
+        return { 'template': template, 'tokens': tokens };
+    },
+    'damageRoll': async function _damageRoll(workflow, damageFormula, options = {}, ignoreCrit = false) {
+        if (workflow.isCritical && !ignoreCrit) damageFormula = mba.getCriticalFormula(damageFormula);
+        return await new CONFIG.Dice.DamageRoll(damageFormula, workflow.actor.getRollData(), options).evaluate();
+    },
+    'damageRolls': async function _damageRolls(workflow, damageFormulas = []) {
+        return Promise.all(damageFormulas.map(i => mba.damageRoll(workflow, i)));
     },
     'decimalToFraction': function _decimalToFraction(decimal) {
         if (!decimal) return 0;
@@ -203,7 +236,7 @@ export let mba = {
     },
     'dialog': async function _dialog(title, options, content) {
         if (content) content = '<center>' + content + '</center>';
-        let buttons = options.map(([label, value]) => ({label, value}));
+        let buttons = options.map(([label, value]) => ({ label, value }));
         let selected = await warpgate.buttonDialog(
             {
                 buttons,
@@ -242,7 +275,7 @@ export let mba = {
             default:
                 dispositionValue = null;
         }
-        let options = {'includeIncapacitated': includeIncapacitated, 'includeToken': includeToken};
+        let options = { 'includeIncapacitated': includeIncapacitated, 'includeToken': includeToken };
         return MidiQOL.findNearby(dispositionValue, tokenDoc, range, options).filter(i => !i.document.hidden);
     },
     'firstOwner': function _firstOwner(document) {
@@ -293,7 +326,7 @@ export let mba = {
                     for (y1 = t2StartY; y1 < t2.document.height; y1++) {
                         let dest = new PIXI.Point(...canvas.grid.getCenter(Math.round(t2.document.x + (canvas.dimensions.size * x1)), Math.round(t2.document.y + (canvas.dimensions.size * y1))));
                         let r = new Ray(origin, dest);
-                        segments.push({'ray': r});
+                        segments.push({ 'ray': r });
                     }
                 }
             }
@@ -333,7 +366,7 @@ export let mba = {
                 else return Math.max(nx, ny) * grid.distance;
             });
         }
-        rdistance = segments.map(ray => midiMeasureDistances([ray], {'gridSpaces': true }));
+        rdistance = segments.map(ray => midiMeasureDistances([ray], { 'gridSpaces': true }));
         distance = Math.min(...rdistance);
         let heightDifference = 0;
         let t1ElevationRange = Math.max(t1.document.height, t1.document.width) * (canvas?.dimensions?.distance ?? 5);
@@ -356,7 +389,7 @@ export let mba = {
         return distance;
     },
     'getCriticalFormula': function _getCriticalFormula(formula) {
-        return new CONFIG.Dice.DamageRoll(formula, {}, {'critical': true, 'powerfulCritical': game.settings.get('dnd5e', 'criticalDamageMaxDice'), 'multiplyNumeric': game.settings.get('dnd5e', 'criticalDamageModifiers')}).formula;
+        return new CONFIG.Dice.DamageRoll(formula, {}, { 'critical': true, 'powerfulCritical': game.settings.get('dnd5e', 'criticalDamageMaxDice'), 'multiplyNumeric': game.settings.get('dnd5e', 'criticalDamageModifiers') }).formula;
     },
     'getDistance': function _getDistance(sourceToken, targetToken, wallsBlock) {
         return MidiQOL.computeDistance(sourceToken, targetToken, wallsBlock);
@@ -364,15 +397,18 @@ export let mba = {
     'getEffectCastLevel': function _getEffectCastLevel(effect) {
         return effect.flags['midi-qol']?.castData?.castLevel;
     },
+    'getEffects': function _getEffects(actor) {
+        return Array.from(actor.allApplicableEffects());
+    },
     'getGridBetweenTokens': function _getGridBetweenTokens(sourceToken, targetToken, distance) {
         let knockBackFactor = distance / canvas.dimensions.distance;
         let ray = new Ray(sourceToken.center, targetToken.center);
         let extra = 1;
         if (Math.abs(ray.slope) === 1) extra = 1.41;
-        if (ray.distance === 0) return {'x': sourceToken.x, 'y': sourceToken.y};
+        if (ray.distance === 0) return { 'x': sourceToken.x, 'y': sourceToken.y };
         let newCenter = ray.project(1 + ((canvas.dimensions.size * extra * knockBackFactor) / ray.distance));
         let cornerPosition = canvas.grid.getTopLeft(newCenter.x, newCenter.y, 1);
-        return {'x': cornerPosition[0], 'y': cornerPosition[1]};
+        return { 'x': cornerPosition[0], 'y': cornerPosition[1] };
     },
     'getItem': function _getItem(actor, name) {
         return actor.items.find(i => i.flags['mba-premades']?.info?.name === name);
@@ -383,7 +419,7 @@ export let mba = {
             ui.notifications.warn('Invalid compendium specified!');
             return false;
         }
-        let packIndex = await gamePack.getIndex({'fields': ['name', 'type', 'folder']});
+        let packIndex = await gamePack.getIndex({ 'fields': ['name', 'type', 'folder'] });
         let match = packIndex.find(item => item.name === name && (!packFolderId || (packFolderId && item.folder === packFolderId)));
         if (match) {
             return (await gamePack.getDocument(match._id))?.toObject();
@@ -392,26 +428,15 @@ export let mba = {
             return undefined;
         }
     },
-    'getItemDescription': function _getItemDescription(key, name) {
-        let journalEntry = game.journal.getName(key);
-        if (!journalEntry) {
-            ui.notifications.error('Item descriptions journal entry not found!');
-            return;
-        }
-        let page = journalEntry.pages.getName(name);
-        if (!page) {
-            ui.notifications.warn('Item description not found in journal!');
-            return;
-        }
-        let description = page.text.content;
-        return description;
-    },
     'getRollDamageTypes': function _getRollDamageTypes(damageRoll) {
         let types = new Set();
         for (let i of damageRoll.terms) {
             if (i.flavor != '') types.add(i.flavor.toLowerCase());
         }
         return types;
+    },
+    'getRollsDamageTypes': function _getRollsDamageTypes(damageRolls) {
+        return new Set(damageRolls.map(i => i.options.type));
     },
     'getSize': function _getSize(actor, sizeToString) {
         let sizeValue;
@@ -453,7 +478,7 @@ export let mba = {
         let scaling = item.system.save.scaling;
         if (scaling === 'spell') {
             spellDC = item.actor.system.attributes.spelldc;
-        } else  if (scaling != 'flat') {
+        } else if (scaling != 'flat') {
             spellDC = item.actor.system.abilities[scaling].dc;
         } else {
             spellDC = item.system.save.dc;
@@ -478,10 +503,10 @@ export let mba = {
         let lastMessage = game.messages.find(m => m.flags?.['mba-premades']?.gmDialogMessage);
         let message = '<hr>Waiting for GM dialogue selection...';
         if (lastMessage) {
-            await lastMessage.update({'content': message});
+            await lastMessage.update({ 'content': message });
         } else {
             ChatMessage.create({
-                'speaker': {'alias': name},
+                'speaker': { 'alias': name },
                 'content': message,
                 'whisper': game.users.filter(u => u.isGM).map(u => u.id),
                 'blind': false,
@@ -498,6 +523,22 @@ export let mba = {
     },
     'inCombat': function _inCombat() {
         return !(game.combat === null || game.combat === undefined || game.combat?.started === false);
+    },
+    'increaseExhaustion': async function _increaseExhaustion(actor, originUuid) {
+        let effect = actor.effects.find(eff => eff.name.includes('Exhaustion'));
+        if (!effect) {
+            await mba.addCondition(actor, 'Exhaustion 1', false, originUuid);
+            return;
+        }
+        let level = Number(effect.name.substring(11));
+        if (isNaN(level)) return;
+        if (level >= 5) {
+            await mba.addCondition(actor, 'Dead', true, originUuid);
+            return;
+        }
+        let conditionName = effect.name.substring(0, 11) + (level + 1);
+        await mba.removeEffect(effect);
+        await mba.addCondition(actor, conditionName, false, originUuid);
     },
     'itemDuration': function _itemDuration(item) {
         return DAE.convertDuration(item.system.duration, mba.inCombat());
@@ -536,18 +577,18 @@ export let mba = {
             }
         }
         let newInputs = duplicate(inputs);
-        if (header) newInputs.unshift({'label': header, 'type': 'header'});
-        if (info) newInputs.unshift({'label': info, 'type': 'info'});
-        let options = {'title': title};
+        if (header) newInputs.unshift({ 'label': header, 'type': 'header' });
+        if (info) newInputs.unshift({ 'label': info, 'type': 'info' });
+        let options = { 'title': title };
         options = mergeObject(options, extraOptions);
         if (useSpecialRender) options.render = render;
-        let selection = await warpgate.menu({'inputs': newInputs, 'buttons': buttons}, options);
+        let selection = await warpgate.menu({ 'inputs': newInputs, 'buttons': buttons }, options);
         if (header) selection?.inputs?.shift();
         if (info) selection?.inputs?.shift();
         return selection;
     },
     'nth': function _nth(number) {
-        return number + (['st','nd','rd'][((number+90)%100-10)%10-1]||'th');
+        return number + (['st', 'nd', 'rd'][((number + 90) % 100 - 10) % 10 - 1] || 'th');
     },
     'numberDialog': async function _numberDialog(title, buttons, options) {
         let inputs = [];
@@ -577,30 +618,28 @@ export let mba = {
         return false;
     },
     'placeTemplate': async function _placeTemplate(templateData, returnTokens) {
-        let templateDoc = new CONFIG.MeasuredTemplate.documentClass(templateData, {'parent': canvas.scene});
+        let templateDoc = new CONFIG.MeasuredTemplate.documentClass(templateData, { 'parent': canvas.scene });
         let template = new game.dnd5e.canvas.AbilityTemplate(templateDoc);
         let finalTemplate = false;
         try {
             [finalTemplate] = await template.drawPreview();
-        } catch {};
+        } catch { };
         if (!returnTokens) return finalTemplate;
-        if (!finalTemplate) return {'template': null, 'tokens': []};
+        if (!finalTemplate) return { 'template': null, 'tokens': [] };
         await warpgate.wait(100);
         let tokens = await game.modules.get('templatemacro').api.findContained(finalTemplate).map(t => finalTemplate.parent.tokens.get(t));
-        return {'template': finalTemplate, 'tokens': tokens};
+        return { 'template': finalTemplate, 'tokens': tokens };
     },
-    'pushToken': async function _pushToken(sourceToken, targetToken, distance) {
+    'pushTokenAlongRay': async function _pushTokenAlongRay(targetToken, ray, distance) {
         let knockBackFactor;
-        let ray;
         let newCenter;
         let hitsWall = true;
+        if (ray.distance === 0) {
+            ui.notifications.info('Target is unable to be moved!');
+            return;
+        }
         while (hitsWall) {
             knockBackFactor = distance / canvas.dimensions.distance;
-            ray = new Ray(sourceToken.center, targetToken.center);
-            if (ray.distance === 0) {
-                ui.notifications.info('Target is unable to be moved!');
-                return;
-            }
             newCenter = ray.project(1 + ((canvas.dimensions.size * knockBackFactor) / ray.distance));
             hitsWall = targetToken.checkCollision(newCenter, {'origin': ray.A, 'type': 'move', 'mode': 'any'});
             if (hitsWall) {
@@ -624,6 +663,10 @@ export let mba = {
             'description': 'Move Token'
         };
         await warpgate.mutate(targetToken.document, targetUpdate, {}, options);
+    },
+    'pushToken': async function _pushToken(sourceToken, targetToken, distance) {
+        let ray = new Ray(sourceToken.center, targetToken.center);
+        await this.pushTokenAlongRay(targetToken, ray, distance);
     },
     'raceOrType': function _raceOrType(entity) {
         return MidiQOL.typeOrRace(entity);
@@ -780,7 +823,7 @@ export let mba = {
                 }
             }
             let height = (Object.keys(buttons).length * 56 + 46);
-            if (Object.keys(buttons).length > 14 ) height = 850;
+            if (Object.keys(buttons).length > 14) height = 850;
             dialog = new Dialog(
                 {
                     title: title,
@@ -799,7 +842,7 @@ export let mba = {
     },
     'selectDocuments': async function selectDocuments(title, documents, useUuids) {
         return await new Promise(async (resolve) => {
-            let buttons = {cancel: {'label': `Cancel`, callback: () => resolve(false)}, 'confirm': {'label': `Confirm`, callback: (html) => getDocuments(html, documents)}},
+            let buttons = { cancel: { 'label': `Cancel`, callback: () => resolve(false) }, 'confirm': { 'label': `Confirm`, callback: (html) => getDocuments(html, documents) } },
                 dialog;
             let content = `<form>`;
             content += `<datalist id = 'defaultNumbers'>`;
@@ -808,7 +851,7 @@ export let mba = {
             }
             content += `</datalist>`;
             for (let i = 0; documents.length > i; i++) {
-                content += 
+                content +=
                     `<div class = 'form-group'>
                         <input type='number' id='${i}' name='${documents[i].name}' placeholder='0' list='defaultNumbers' style='max-width: 50px; margin-left: 10px'/>
                         <label> 
@@ -820,7 +863,7 @@ export let mba = {
             }
             content += `</form>`;
             let height = (documents.length * 53 + 83);
-            if (documents.length > 14 ) height = 850;
+            if (documents.length > 14) height = 850;
             dialog = new Dialog(
                 {
                     title: title,
@@ -903,7 +946,7 @@ export let mba = {
                     'options': selectOptions,
                     'value': value
                 });
-            } else return {'buttons': false};
+            } else return { 'buttons': false };
         }
         if (fixTargets) {
             generatedInputs.push({
@@ -925,7 +968,7 @@ export let mba = {
                     t.style.flexFlow = 'row-reverse';
                     t.style.alignItems = 'center';
                     t.style.justifyContent = 'flex-end';
-                    if (type === 'one') t.addEventListener('click', function () {t.getElementsByTagName('input')[0].checked = true});
+                    if (type === 'one') t.addEventListener('click', function () { t.getElementsByTagName('input')[0].checked = true });
                 }
             }
             let ths = html[0].getElementsByTagName('th');
@@ -962,12 +1005,12 @@ export let mba = {
             'title': title,
             'render': dialogRender
         };
-        let selection = await warpgate.menu({'inputs': generatedInputs, 'buttons': buttons}, config);
-        if (!selection.buttons) return {'buttons': false};
+        let selection = await warpgate.menu({ 'inputs': generatedInputs, 'buttons': buttons }, config);
+        if (!selection.buttons) return { 'buttons': false };
         if (description) selection.inputs?.shift();
         if (type != 'number' && type != 'select') {
             for (let i = 0; i < (!fixTargets ? selection.inputs.length : selection.inputs.length - 1); i++) {
-                if (selection.inputs[i]) selection.inputs[i] =  generatedInputs[description ? i + 1 : i].value;
+                if (selection.inputs[i]) selection.inputs[i] = generatedInputs[description ? i + 1 : i].value;
             }
         }
         return selection;
@@ -980,7 +1023,7 @@ export let mba = {
         if (mba.inCombat() && !reset) turn = game.combat.round + '-' + game.combat.turn;
         await originItem.setFlag('mba-premades', type + '.' + name + '.turn', turn);
     },
-    'sizeStringValue': function _sizeStringValue(sizeString){
+    'sizeStringValue': function _sizeStringValue(sizeString) {
         let sizeValue;
         switch (sizeString.toLowerCase()) {
             case 'tiny':
@@ -1041,9 +1084,9 @@ export let mba = {
                 while (crosshairs.inFlight) {
                     await warpgate.wait(100);
                     ray = new Ray(summonerToken.center, crosshairs);
-                    distance = canvas.grid.measureDistances([{ray}], {'gridSpaces': true})[0];
-                    if (summonerToken.checkCollision(ray.B, {'origin': ray.A, 'type': 'move', 'mode': 'any'}) || distance > range) {
-                        crosshairs.icon = 'icons/svg/hazard.svg';
+                    distance = canvas.grid.measureDistances([{ ray }], { 'gridSpaces': true })[0];
+                    if (summonerToken.checkCollision(ray.B, { 'origin': ray.A, 'type': 'move', 'mode': 'any' }) || distance > range) {
+                        crosshairs.icon = 'modules/mba-premades/icons/conditions/incapacitated.webp';
                     } else {
                         crosshairs.icon = tokenDocument.texture.src;
                     }
@@ -1084,6 +1127,13 @@ export let mba = {
             await combatant.update(updates);
         } else {
             await socket.executeAsGM('updateCombatant', combatant.id, updates);
+        }
+    },
+    'updateDoc': async function _updateDoc(doc, updates) {
+        if (game.user.isGM) {
+            await doc.update(updates);
+        } else {
+            await socket.executeAsGM('updateWall', doc.uuid, updates);
         }
     },
     'updateEffect': async function _updateEffect(effect, updates) {

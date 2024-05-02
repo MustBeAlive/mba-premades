@@ -3,7 +3,9 @@ export async function fireBolt({ speaker, actor, token, character, item, args, s
     let target = workflow.targets.first()
     if (!workflow.hitTargets.size) {
         let offsetX = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
+        if (offsetX === 0) offsetX = 1;
         let offsetY = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
+        if (offsetY === 0) offsetY = 1;
 
         new Sequence()
 

@@ -1,4 +1,21 @@
-async function cast({speaker, actor, token, character, item, args, scope, workflow}) {
+import { mba } from "../../../helperFunctions.js";
+
+async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
+    async function effectMacroDel() {
+        new Sequence()
+
+            .effect()
+            .file("jb2a.shield.01.outro_explode.yellow")
+            .attachTo(token)
+            .scaleToObject(1.7 * token.document.texture.scaleX)
+            .waitUntilFinished(-500)
+
+            .thenDo(function () {
+                Sequencer.EffectManager.endEffects({ name: `${token.document.name} Blade Ward`, object: token })
+            })
+
+            .play()
+    };
     const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
@@ -17,6 +34,11 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
                 'showIcon': true,
                 'specialDuration': ['turnEndSource']
             },
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDel)
+                }
+            },
             'midi-qol': {
                 'castData': {
                     baseLevel: 0,
@@ -25,11 +47,38 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
                 }
             }
         }
-    }
-    await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+    };
+    new Sequence()
+
+        .wait(500)
+
+        .effect()
+        .file("jb2a.shield.01.intro.yellow")
+        .attachTo(token)
+        .scaleToObject(1.7 * token.document.texture.scaleX)
+        .opacity(0.8)
+        .playbackRate(0.8)
+
+        .effect()
+        .file("jb2a.shield.01.loop.yellow")
+        .delay(600)
+        .fadeIn(500)
+        .attachTo(token)
+        .scaleToObject(1.7 * token.document.texture.scaleX)
+        .opacity(0.8)
+        .playbackRate(0.8)
+        .fadeOut(500)
+        .persist()
+        .name(`${token.document.name} Blade Ward`)
+
+        .thenDo(function () {
+            mba.createEffect(workflow.actor, effectData)
+        })
+
+        .play()
 }
 
-async function item({speaker, actor, token, character, item, args, scope, workflow}) {
+async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.item.type != "weapon") return;
     if (workflow.item.system.actionType != 'mwak' && workflow.item.system.actionType != 'rwak') return;
     let type = workflow.item.system.damage.parts[0][1];

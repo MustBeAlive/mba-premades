@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let choices = [
         ['Blue', 'blue'],
@@ -5,8 +7,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ['Orange', 'orange'],
         ['Purple', 'purple']
     ];
-    let selection = await chrisPremades.helpers.dialog('Choose Bonfire color:', choices);
-    if (!selection) return;
+    let selection = await mba.dialog('Choose Bonfire color:', choices);
+    if (!selection) selection = "orange";
 
     let animation1 = "jb2a.impact.005." + selection;
     let animation2 = "jb2a.ground_cracks." + selection + ".02";
@@ -103,7 +105,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 'template': {
                     'name': 'createBonfire',
                     'castLevel': workflow.castData.castLevel,
-                    'saveDC': chrisPremades.helpers.getSpellDC(workflow.item),
+                    'saveDC': mba.getSpellDC(workflow.item),
                     'macroName': 'createBonfire',
                     'templateUuid': template.uuid,
                     'turn': 'end',
@@ -118,7 +120,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 async function trigger(token, trigger) {
     let template = await fromUuid(trigger.templateUuid);
     if (!template) return;
-    if (chrisPremades.helpers.inCombat()) {
+    if (mba.inCombat()) {
         let turn = game.combat.round + '-' + game.combat.turn;
         let lastTurn = template.flags['mba-premades']?.spell?.createBonfire?.[token.id]?.turn;
         if (turn === lastTurn) return;
@@ -128,7 +130,7 @@ async function trigger(token, trigger) {
     if (!originUuid) return;
     let originItem = await fromUuid(originUuid);
     if (!originItem) return;
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Create Bonfire: Damage', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Create Bonfire: Damage', false);
     if (!featureData) return;
     featureData.system.save.dc = trigger.saveDC;
     featureData.system.damage.parts[0][0] = trigger.dice + "d8[fire]";
@@ -139,7 +141,7 @@ async function trigger(token, trigger) {
 }
 
 async function end(template, token) {
-    if (chrisPremades.helpers.inCombat()) {
+    if (mba.inCombat()) {
         let prev = game.combat.turn;
         if (prev != 0) prev = game.combat.turn - 1;
         else if (prev === 0) prev = game.combat.turns.length - 1;

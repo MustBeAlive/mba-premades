@@ -1,12 +1,14 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function acidSplash({ speaker, actor, token, character, item, args, scope, workflow }) {
     let targets = Array.from(workflow.targets);
     if (targets.length === 2) {
-        let distance = chrisPremades.helpers.getDistance(targets[0], targets[1]);
+        let distance = mba.getDistance(targets[0], targets[1]);
         if (distance > 5) {
             ui.notifications.warn('Targets are not within 5 ft. of each other!');
             return false;
         }
-    }
+    };
     for (let target of targets) {
         new Sequence()
 

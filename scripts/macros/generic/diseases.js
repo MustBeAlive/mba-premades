@@ -2,6 +2,7 @@ import { arcaneBlight } from "./diseases/arcaneBlight.js";
 import { blindingSickness } from "./diseases/blindingSickness.js";
 import { blueMistFever } from "./diseases/blueMistFever.js";
 import { bluerot } from "./diseases/bluerot.js";
+import { cackleFever, cackleFeverDamaged, cackleFeverTrigger } from "./diseases/cackleFever.js";
 import { filthFever } from "./diseases/filthFever.js";
 import { fleshRot } from "./diseases/fleshRot.js";
 import { seizure } from "./diseases/seizure.js";
@@ -51,6 +52,9 @@ export let diseases = {
     'blindingSickness': blindingSickness,
     'blueMistFever': blueMistFever,
     'bluerot': bluerot,
+    'cackleFever': cackleFever,
+    'cackleFeverDamaged': cackleFeverDamaged,
+    'cackleFeverTrigger': cackleFeverTrigger,
     'diseaseHitDie': diseaseHitDie,
     'diseaseLongRest1': diseaseLongRest1,
     'diseaseLongRest2': diseaseLongRest2,

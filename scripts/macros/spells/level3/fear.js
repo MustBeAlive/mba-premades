@@ -94,7 +94,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 	async function effectMacroTurnStart() {
 		await new Dialog({
 			title: "Fear",
-			content: "<p>You are frightened. On each of your turns you must take the <b>Dash Action</b> and move away from the caster of the Fear spell by the safest available route, unless there is nowhere to move.</p><p>If you <b>end your turn in a location where the caster of the Fear spell can no longer see you</b>, you can make a Wisdom Saving Throw. On a successful save, the spell ends.</p>",
+			content: `
+				<p>You are frightened. On each of your turns you must take the <b>Dash Action</b> and move away from the caster of the Fear spell by the safest available route, unless there is nowhere to move.</p>
+				<p>If you <b>end your turn in a location where the caster of the Fear spell can no longer see you</b>, you can make a Wisdom Saving Throw. On a successful save, the spell ends.</p>`
+			,
 			buttons: {
 				ok: {
 					label: "Ok!",
@@ -105,8 +108,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 	async function effectMacroTurnEnd() {
 		let effect = chrisPremades.helpers.findEffect(actor, 'Fear');
 		let casterName = effect.flags['mba-premades']?.spell?.fear?.casterName;
-		let casterCanSee = await MidiQOL.findNearby(null, token, 200, { includeIncapacitated: false, canSee: true }).filter(i => i.name === casterName);
-		if (casterCanSee.length) return;
+		let [casterCanSee] = await MidiQOL.findNearby(null, token, 200, { includeIncapacitated: false, canSee: true }).filter(i => i.name === casterName);
+		if (casterCanSee) return;
 		let spellDC = effect.flags['mba-premades']?.spell?.fear.saveDC;
 		let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'wis');
 		if (saveRoll.total < spellDC) return;
@@ -118,8 +121,11 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 	let effectData = {
 		'name': workflow.item.name,
 		'icon': workflow.item.img,
-		'description': "You are frightened. On each of your turns you must take the Dash Action and move away from the caster of the Fear spell by the safest available route, unless there is nowhere to move. If you end your turn in a location where the caster of the Fear spell can no longer see you, you can make a Wisdom Saving Throw. On a successful save, the spell ends.",
 		'origin': workflow.item.uuid,
+		'description': `
+			<p>You are frightened. On each of your turns you must take the Dash Action and move away from the caster of the Fear spell by the safest available route, unless there is nowhere to move.</p>
+			<p>If you end your turn in a location where the caster of the Fear spell can no longer see you, you can make a Wisdom Saving Throw. On a successful save, the spell ends.</p>
+		`,
 		'duration': {
 			'seconds': 60
 		},
@@ -160,10 +166,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			}
 		}
 	};
-	for (let i = 0; i < targets.length; i++) {
-		let target = fromUuidSync(targets[i].document.uuid).object;
-		let hasFearImmunity = chrisPremades.helpers.checkTrait(workflow.targets.first().actor, 'ci', 'frightened');
-		if (hasFearImmunity) return;
+	for (let target of targets) {
+		if (chrisPremades.helpers.checkTrait(target.actor, 'ci', 'frightened')) return;
 
 		new Sequence()
 

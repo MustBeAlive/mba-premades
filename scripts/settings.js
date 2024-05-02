@@ -1,11 +1,12 @@
-import { cast } from './macros/animations/cast.js';
-import { changeChat } from './macros/ui/changeChat.js';
-import { corpseHide } from './macros/mechanics/corpseHide.js';
-import { deathSaves } from './macros/mechanics/deathSaves.js';
-import { macros } from './macros.js';
-import { removeV10EffectsBlind } from './macros/mechanics/blindness.js';
-import { removeV10EffectsInvisible } from './macros/mechanics/invisibility.js';
-import { tashaSummon } from './macros/generic/tashaSummon.js';
+import {addMenuSetting, mbaSettingsAnimations, mbaSettingsClassFeats, mbaSettingsFeats, mbaSettingsGeneral, mbaSettingsInterface, mbaSettingsMechanics, mbaSettingsRaceFeats, mbaSettingsSpells, mbaSettingsSummons} from './settingsMenu.js';
+import {cast} from './macros/animations/cast.js';
+import {changeChat} from './macros/ui/changeChat.js';
+import {corpseHide} from './macros/mechanics/corpseHide.js';
+import {deathSaves} from './macros/mechanics/deathSaves.js';
+import {macros} from './macros.js';
+import {removeV10EffectsBlind} from './macros/mechanics/blindness.js';
+import {removeV10EffectsInvisible} from './macros/mechanics/invisibility.js';
+import {tashaSummon} from './macros/generic/tashaSummon.js';
 
 let moduleName = 'mba-premades';
 
@@ -18,37 +19,40 @@ export function registerSettings() {
         'type': String
     });
     game.settings.register(moduleName, 'Dark Chat', {
-        'name': 'Включить темную версию чата',
+        'name': 'Dark Chat',
         'hint': "Включает альтернативную (темную) версию чата.",
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': Boolean,
         'default': false,
         'onChange': value => {
             changeChat(value, 'darkChat');
         }
     });
+    addMenuSetting("Dark Chat", "User Interface")
     game.settings.register(moduleName, 'Rollmode Buttons', {
-        'name': 'Включить альтернативный селектор режимов броска',
-        'hint': "Включить альтернативный селектор режимов броска (кнопки вместо выпадающего списка.",
+        'name': 'Rollmode Buttons',
+        'hint': "Включает альтернативный селектор режимов броска (кнопки вместо выпадающего списка).",
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': Boolean,
         'default': false,
     });
+    addMenuSetting("Rollmode Buttons", "User Interface")
     game.settings.register(moduleName, 'Check For Updates', {
         'name': "Проверять обновления",
         'hint': "Показывать сообщение при входе в мир если доступно обновление модуля",
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': Boolean,
         'default': false
     });
+    addMenuSetting('Check For Updates', 'General');
     game.settings.register(moduleName, 'Blur', {
         'name': 'Blur Automation',
         'hint': 'Включает автоматизацию заклинания Blur через Midi-Qol hooks.',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': Boolean,
         'default': false,
         'onChange': value => {
@@ -59,11 +63,28 @@ export function registerSettings() {
             }
         }
     });
+    addMenuSetting('Blur', 'Spells');
+    game.settings.register(moduleName, 'Booming Blade', {
+        'name': 'Booming Blade',
+        'hint': 'Включает автоматизацию заклинания Booming Blade через Midi-Qol hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('updateToken', macros.boomingBlade.moved);
+            } else {
+                Hooks.off('updateToken', macros.boomingBlade.moved);
+            }
+        }
+    });
+    addMenuSetting('Booming Blade', 'Spells');
     game.settings.register(moduleName, 'Fog Cloud', {
-        'name': 'Fog Cloud Automation',
+        'name': 'Fog Cloud',
         'hint': 'Включает автоматизацию заклинания Fog Cloud через Midi-Qol hooks.',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': Boolean,
         'default': false,
         'onChange': value => {
@@ -74,11 +95,12 @@ export function registerSettings() {
             }
         }
     });
+    addMenuSetting('Fog Cloud', 'Spells');
     game.settings.register(moduleName, 'Darkness', {
-        'name': 'Darkness Automation',
+        'name': 'Darkness',
         'hint': 'Включает автоматизацию заклинания Darkness через Midi-Qol hooks.',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': Boolean,
         'default': false,
         'onChange': value => {
@@ -89,11 +111,12 @@ export function registerSettings() {
             }
         }
     });
+    addMenuSetting('Darkness', 'Spells');
     game.settings.register(moduleName, 'Death Ward', {
-        'name': 'Death Ward Automation',
+        'name': 'Death Ward',
         'hint': 'Включает автоматизацию заклинания Death Ward через Midi-Qol hooks.',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': Boolean,
         'default': false,
         'onChange': value => {
@@ -104,11 +127,12 @@ export function registerSettings() {
             }
         }
     });
+    addMenuSetting('Death Ward', 'Spells');
     game.settings.register(moduleName, 'Mirror Image', {
-        'name': 'Mirror Image Automation',
+        'name': 'Mirror Image',
         'hint': 'Включает автоматизацию заклинания Mirror Image через Midi-QoL hooks.',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': Boolean,
         'default': false,
         'onChange': value => {
@@ -119,11 +143,12 @@ export function registerSettings() {
             }
         }
     });
+    addMenuSetting('Mirror Image', 'Spells');
     game.settings.register(moduleName, 'Relentless Endurance', {
-        'name': 'Relentless Endurance Automation',
+        'name': 'Relentless Endurance',
         'hint': 'Включает автоматизацию спобности орков Relentless Endurance через Midi-QoL hooks.',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': Boolean,
         'default': false,
         'onChange': value => {
@@ -134,11 +159,12 @@ export function registerSettings() {
             }
         }
     });
+    addMenuSetting('Relentless Endurance', 'Race Features');
     game.settings.register(moduleName, 'Sanctuary', {
-        'name': 'Sanctuary Automation',
+        'name': 'Sanctuary',
         'hint': 'Включает автоматизацию заклинания Sanctuary через Midi-QoL hooks.',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': Boolean,
         'default': false,
         'onChange': value => {
@@ -149,38 +175,58 @@ export function registerSettings() {
             }
         }
     });
-    game.settings.register(moduleName, 'Show Names', {
-        'name': 'Show Names',
-        'hint': 'Enabling this will show target names in the target selector dialog (Used for certain features and spells).',
+    addMenuSetting('Sanctuary', 'Spells');
+    game.settings.register(moduleName, 'True Strike', {
+        'name': 'True Strike',
+        'hint': 'Включает автоматизацию заклинания True Strike через Midi-Qol hooks.',
         'scope': 'world',
-        'config': true,
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preAttackRoll', macros.trueStrike.hook);
+            } else {
+                Hooks.off('midi-qol.preAttackRoll', macros.trueStrike.hook);
+            }
+        }
+    });
+    addMenuSetting('True Strike', 'Spells');
+    game.settings.register(moduleName, 'Show Names', {
+        'name': 'Показывать имена',
+        'hint': 'Эта настройка включает показ имен токенов (вроде бы токенов) в диалогах-селекторах целей (используется в фичах/заклинаниях а-ля Bane/Bless).',
+        'scope': 'world',
+        'config': false,
         'type': Boolean,
         'default': true
     });
+    addMenuSetting('Show Names', 'General');
     game.settings.register(moduleName, 'Tasha Actors', {
         'name': 'Keep Summon Actors Updated',
         'hint': 'This setting will keep actors from this module updated in the sidebar.',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': Boolean,
         'default': false,
         'onChange': async value => {
             if (value && game.user.isGM) await tashaSummon.setupFolder();
         }
     });
+    addMenuSetting('Tasha Actors', 'Summons');
     game.settings.register(moduleName, 'Tasha Initiative', {
         'name': 'Minions use caster\'s initiative',
         'hint': 'Enabling this will have minions summoned from this module to use the caster\'s initiative instead of rolling their own.  Similar to the summon spells from Tasha\'s Cauldron Of Everything',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': Boolean,
         'default': false
     });
+    addMenuSetting('Tasha Initiative', 'Summons');
     game.settings.register(moduleName, 'Summons Initiative', {
         'name': 'Auto Update Summons Initiative',
         'hint': 'Automatically update player controlled warpgate summons\' initaitve to be just after the player\'s',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': Boolean,
         'default': false,
         'onChange': value => {
@@ -191,11 +237,12 @@ export function registerSettings() {
             }
         }
     });
+    addMenuSetting('Summons Initiative', 'Summons');
     game.settings.register(moduleName, 'Companions Initiative', {
         'name': 'Auto Update Companions Initiative',
         'hint': 'Automatically update player owned NPCs\' initiative to be just after the player\'s',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': Boolean,
         'default': false,
         'onChange': value => {
@@ -206,51 +253,55 @@ export function registerSettings() {
             }
         }
     });
+    addMenuSetting('Companions Initiative', 'Summons');
     game.settings.register(moduleName, 'Add Generic Actions', {
         'name': "Добавить базовые действия",
         'hint': "Добавляет базовые действия в лист персонажа при дропе токена на карту",
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': String,
         'default': 'none',
         'choices': {
-            'none': 'None',
-            'all': 'All Actors',
-            'npc': 'All NPC Actors',
-            'character': 'All Character Actors',
-            'uNpc': 'Unlinked NPC Actors',
-            'uCharacter': 'Unlinked Character Actors',
-            'lNpc': 'Linked NPC Actors',
-            'lCharacter': 'Linked Character Actors'
+            'none': 'Выключено',
+            'all': "Все Actor'ы",
+            'npc': "Только NPC Actor'ы",
+            'character': "Только Character Actor'ы",
+            'uNpc': "Только не-линкованные NPC Actor'ы",
+            'uCharacter': "Только не-линкованные Character Actor'ы",
+            'lNpc': "Только линкованные NPC Actor'ы",
+            'lCharacter': "Только линкованные Character Actor'ы"
         }
     });
+    addMenuSetting('Add Generic Actions', 'General');
     game.settings.register(moduleName, 'Blindness Fix', {
         'name': 'Condition: Blinded (Visual Fix)',
         'hint': 'Эта настройка отключает ограничения видимости при получении Condition: Blinded',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': Boolean,
         'default': false,
         'onChange': value => {
             if (value) removeV10EffectsBlind();
         }
     });
+    addMenuSetting('Blindness Fix', 'Mechanics');
     game.settings.register(moduleName, 'Invisibility Fix', {
         'name': 'Condition: Invisible (Visual Fix)',
         'hint': 'Эта настройка отключает ограничения видимости при получении Condition: Invisible',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': Boolean,
         'default': false,
         'onChange': value => {
             if (value) removeV10EffectsInvisible();
         }
     });
+    addMenuSetting('Invisibility Fix', 'Mechanics');
     game.settings.register(moduleName, 'Auto Death Save', {
         'name': 'Auto Death Save Request',
         'hint': 'Эта настройка включает автоматический промт death save\'ов в бою (monk\'s token bar)',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': Boolean,
         'default': false,
         'onChange': value => {
@@ -261,11 +312,12 @@ export function registerSettings() {
             }
         }
     });
+    addMenuSetting('Auto Death Save', 'Mechanics');
     game.settings.register(moduleName, 'Corpse Hider', {
         'name': 'Corpse Hider',
-        'hint': 'Включает автоматическое скрытие трупов для игроков, срабатывает на смене хода в бою.',
+        'hint': 'Включает автоматическое скрытие трупов для игроков, срабатывает при смене хода в бою.',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': Boolean,
         'default': false,
         'onChange': value => {
@@ -276,11 +328,12 @@ export function registerSettings() {
             }
         }
     });
+    addMenuSetting('Corpse Hider', 'Mechanics');
     game.settings.register(moduleName, 'Cast Animations', {
         'name': 'Анимации Заклинаний',
         'hint': 'Включает автоматический проигрыш анимаций от JB2A при сотворении любых заклинаний',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': Boolean,
         'default': false,
         'onChange': value => {
@@ -291,11 +344,12 @@ export function registerSettings() {
             }
         }
     });
+    addMenuSetting('Cast Animations', 'Animations');
     game.settings.register(moduleName, 'abj_color', {
         'name': 'Abjuration',
         'hint': 'Цвет для заклинаний школы abjuration',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': String,
         'default': 'blue',
         'choices': {
@@ -307,11 +361,12 @@ export function registerSettings() {
             'yellow': 'Yellow'
         }
     });
+    addMenuSetting('abj_color', 'Animations');
     game.settings.register(moduleName, 'con_color', {
         'name': 'Conjuration',
         'hint': 'Цвет для заклинаний школы conjuration.',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': String,
         'default': 'yellow',
         'choices': {
@@ -323,11 +378,12 @@ export function registerSettings() {
             'yellow': 'Yellow'
         }
     });
+    addMenuSetting('con_color', 'Animations');
     game.settings.register(moduleName, 'div_color', {
         'name': 'Divination',
         'hint': 'Цвет для заклинаний школы divination.',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': String,
         'default': 'blue',
         'choices': {
@@ -339,11 +395,12 @@ export function registerSettings() {
             'yellow': 'Yellow'
         }
     });
+    addMenuSetting('div_color', 'Animations');
     game.settings.register(moduleName, 'enc_color', {
         'name': 'Enchantment',
         'hint': 'Цвет для заклинаний школы enchantment.',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': String,
         'default': 'pink',
         'choices': {
@@ -355,11 +412,12 @@ export function registerSettings() {
             'yellow': 'Yellow'
         }
     });
+    addMenuSetting('enc_color', 'Animations');
     game.settings.register(moduleName, 'evo_color', {
         'name': 'Evocation',
         'hint': 'Цвет для заклинаний школы evocation.',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': String,
         'default': 'red',
         'choices': {
@@ -371,11 +429,12 @@ export function registerSettings() {
             'yellow': 'Yellow'
         }
     });
+    addMenuSetting('evo_color', 'Animations');
     game.settings.register(moduleName, 'ill_color', {
         'name': 'Illusion',
         'hint': 'Цвет для заклинаний школы illusion.',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': String,
         'default': 'purple',
         'choices': {
@@ -387,11 +446,12 @@ export function registerSettings() {
             'yellow': 'Yellow'
         }
     });
+    addMenuSetting('ill_color', 'Animations');
     game.settings.register(moduleName, 'nec_color', {
         'name': 'Necromancy',
         'hint': 'Цвет для заклинаний школы necromancy.',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': String,
         'default': 'green',
         'choices': {
@@ -403,11 +463,12 @@ export function registerSettings() {
             'yellow': 'Yellow'
         }
     });
+    addMenuSetting('nec_color', 'Animations');
     game.settings.register(moduleName, 'trs_color', {
         'name': 'Transmutation',
         'hint': 'Цвет для заклинаний школы transmutation.',
         'scope': 'world',
-        'config': true,
+        'config': false,
         'type': String,
         'default': 'yellow',
         'choices': {
@@ -418,5 +479,78 @@ export function registerSettings() {
             'red': 'Red',
             'yellow': 'Yellow'
         }
+    });
+    addMenuSetting('trs_color', 'Animations');
+    game.settings.registerMenu(moduleName, 'General', {
+        'name': 'General',
+        'label': 'General',
+        'hint': 'General settings for most automations.',
+        'icon': 'fas fa-gears',
+        'type': mbaSettingsGeneral,
+        'restricted': true
+    });
+    game.settings.registerMenu(moduleName, 'Animations', {
+        'name': 'Animations',
+        'label': 'Animations',
+        'hint': 'Settings for animation automation.',
+        'icon': 'fas fa-film',
+        'type': mbaSettingsAnimations,
+        'restricted': false
+    });
+    game.settings.registerMenu(moduleName, 'Class Features', {
+        'name': 'Class Features',
+        'label': 'Class Features',
+        'hint': 'Settings for specific class features.',
+        'icon': 'fas fa-swords',
+        'type': mbaSettingsClassFeats,
+        'restricted': true
+    });
+    game.settings.registerMenu(moduleName, 'Feats', {
+        'name': 'Feats',
+        'label': 'Feats',
+        'hint': 'Settings for specific feat automations.',
+        'icon': 'fas fa-crystal-ball',
+        'type': mbaSettingsFeats,
+        'restricted': true
+    });
+    game.settings.registerMenu(moduleName, 'Mechanics', {
+        'name': 'Mechanics',
+        'label': 'Mechanics',
+        'hint': 'Settings related to game mechanics.',
+        'icon': 'fas fa-dice',
+        'type': mbaSettingsMechanics,
+        'restricted': true
+    });
+    game.settings.registerMenu(moduleName, 'Race Features', {
+        'name': 'Race Features',
+        'label': 'Race Features',
+        'hint': 'Settings for specific race features.',
+        'icon': 'fas fa-solid fa-nesting-dolls',
+        'type': mbaSettingsRaceFeats,
+        'restricted': true
+    });
+    game.settings.registerMenu(moduleName, 'Spells', {
+        'name': 'Spells',
+        'label': 'Spells',
+        'hint': 'Settings for specific spell automations.',
+        'icon': 'fas fa-wand-magic-sparkles',
+        'type': mbaSettingsSpells,
+        'restricted': true
+    });
+    game.settings.registerMenu(moduleName, 'Summons', {
+        'name': 'Summons',
+        'label': 'Summons',
+        'hint': 'Settings related to summons.',
+        'icon': 'fas fa-hand-holding-magic',
+        'type': mbaSettingsSummons,
+        'restricted': true
+    });
+    game.settings.registerMenu(moduleName, 'User Interface', {
+        'name': 'User Interface',
+        'label': 'User Interface',
+        'hint': 'Settings that modify the user interface.',
+        'icon': 'fas fa-display',
+        'type': mbaSettingsInterface,
+        'restricted': true
     });
 }

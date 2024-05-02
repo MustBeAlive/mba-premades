@@ -1,10 +1,13 @@
+import {mba} from "../../helperFunctions.js";
+import {socket} from "../../module.js";
+
 async function spawn(sourceActors, updates, duration, originItem, useActorOrigin = false, groupInitiative = false, maxRange, casterToken, spawnAnimation, callbacks, castLevel) {
     async function effectMacro() {
         let summons = effect.flags['mba-premades']?.summons?.ids[effect.name];
         if (!summons) return;
         for (let i of summons) { await warpgate.dismiss(i) };
     }
-    let effect = chrisPremades.helpers.findEffect(originItem.actor, originItem.name);
+    let effect = mba.findEffect(originItem.actor, originItem.name);
     if (!effect) {
         let casterEffectData = {
             'name': originItem.name,
@@ -16,7 +19,7 @@ async function spawn(sourceActors, updates, duration, originItem, useActorOrigin
             'flags': {
                 'effectmacro': {
                     'onDelete': {
-                        'script': chrisPremades.helpers.functionToString(effectMacro)
+                        'script': mba.functionToString(effectMacro)
                     }
                 },
                 'midi-qol': {
@@ -29,8 +32,8 @@ async function spawn(sourceActors, updates, duration, originItem, useActorOrigin
             }
         };
         if (useActorOrigin) casterEffectData.origin = originItem.actor.uuid;
-        await chrisPremades.helpers.createEffect(originItem.actor, casterEffectData);
-        effect = chrisPremades.helpers.findEffect(originItem.actor, originItem.name);
+        await mba.createEffect(originItem.actor, casterEffectData);
+        effect = mba.findEffect(originItem.actor, originItem.name);
     }
     if (!effect) return;
     let effectData = {
@@ -43,7 +46,7 @@ async function spawn(sourceActors, updates, duration, originItem, useActorOrigin
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': 'let effect = await fromUuid("' + effect.uuid + '"); if (effect) await chrisPremades.helpers.removeEffect(effect);'
+                    'script': 'let effect = await fromUuid("' + effect.uuid + '"); if (effect) await mbaPremades.helpers.removeEffect(effect);'
                 }
             },
             'midi-qol': {
@@ -58,7 +61,6 @@ async function spawn(sourceActors, updates, duration, originItem, useActorOrigin
     if (!updates) updates = {};
     setProperty(updates, 'embedded.ActiveEffect.Summoned Creature', effectData);
     let summonsIds = effect.flags['mba-premades']?.summons?.ids[originItem.name] ?? [];
-    let overwriteInitiative = chrisPremades.helpers.getConfiguration(originItem, 'overwriteInitiative');
     let groupInitiativeValue;
     for (let i of sourceActors) {
         let updates2 = duplicate(updates);
@@ -70,28 +72,28 @@ async function spawn(sourceActors, updates, duration, originItem, useActorOrigin
                 setProperty(updates2, 'actor.system.bonuses.rwak.damage', originItem.actor.system.attributes.prof);
             }
         }
-        let spawnedTokens = await chrisPremades.helpers.spawn(i, updates2, callbacks, casterToken, maxRange, spawnAnimation);
+        let spawnedTokens = await mba.spawn(i, updates2, callbacks, casterToken, maxRange, spawnAnimation);
         if (!spawnedTokens) return;
         let spawnedToken = game.canvas.scene.tokens.get(spawnedTokens[0]);
         if (!spawnedToken) return;
         summonsIds.push(spawnedToken.id);
-        if (chrisPremades.helpers.inCombat()) {
+        if (mba.inCombat()) {
             let casterCombatant = game.combat.combatants.contents.find(combatant => combatant.actorId === originItem.actor.id);
             if (casterCombatant) {
                 let initiative;
                 if (groupInitiative) {
                     if (groupInitiativeValue) {
-                        await chrisPremades.socket.executeAsGM('createCombatant', spawnedToken.id, spawnedToken.actor.id, canvas.scene.id, groupInitiativeValue);
+                        await socket.executeAsGM('createCombatant', spawnedToken.id, spawnedToken.actor.id, canvas.scene.id, groupInitiativeValue);
                     } else {
-                        await chrisPremades.socket.executeAsGM('createCombatant', spawnedToken.id, spawnedToken.actor.id, canvas.scene.id, null);
+                        await socket.executeAsGM('createCombatant', spawnedToken.id, spawnedToken.actor.id, canvas.scene.id, null);
                         await spawnedToken.actor.rollInitiative();
                         groupInitiativeValue = spawnedToken.actor.initiative;
                     }
-                } else if (game.settings.get('mba-premades', 'Tasha Initiative') != overwriteInitiative) {
+                } else if (game.settings.get('mba-premades', 'Tasha Initiative')) {
                     initiative = casterCombatant.initiative - 0.01;
-                    await chrisPremades.socket.executeAsGM('createCombatant', spawnedToken.id, spawnedToken.actor.id, canvas.scene.id, initiative)
+                    await socket.executeAsGM('createCombatant', spawnedToken.id, spawnedToken.actor.id, canvas.scene.id, initiative)
                 } else {
-                    await chrisPremades.socket.executeAsGM('createCombatant', spawnedToken.id, spawnedToken.actor.id, canvas.scene.id, null);
+                    await socket.executeAsGM('createCombatant', spawnedToken.id, spawnedToken.actor.id, canvas.scene.id, null);
                     await spawnedToken.actor.rollInitiative();
                 }
             }
@@ -108,7 +110,7 @@ async function spawn(sourceActors, updates, duration, originItem, useActorOrigin
             }
         }
     }
-    await chrisPremades.helpers.updateEffect(effect, effectUpdates);
+    await mba.updateEffect(effect, effectUpdates);
 }
 export let summons = {
     'spawn': spawn,

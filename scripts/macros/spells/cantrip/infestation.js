@@ -1,12 +1,24 @@
-// Slightly adjusted; Original macro by GPS
 export async function infestation({ speaker, actor, token, character, item, args, scope, workflow }) {
-    if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
 
+    new Sequence()
+
+        .effect()
+        .file("jaamod.spells_effects.insect_plague0")
+        .attachTo(target)
+        .scaleToObject(1.4 * target.document.texture.scaleX)
+        .fadeIn(1000)
+        .fadeOut(1000)
+        .duration(5000)
+        .mask()
+
+        .play()
+
+    if (!workflow.failedSaves.size) return;
+
     let movement = Object.values(target.actor.system.attributes.movement);
-    let found = movement.find(i => i >= 5);
-    if (!found) {
-        ui.notifications.info("Target doesn't have enough movement!");
+    if (!movement.find(i => i >= 5)) {
+        ui.notifications.info("Target doesn't have enough movement to be forced to move!");
         return;
     }
 

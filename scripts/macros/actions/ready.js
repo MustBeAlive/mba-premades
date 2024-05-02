@@ -49,7 +49,7 @@ export async function ready({ speaker, actor, token, character, item, args, scop
             .effect()
             .file("jb2a.extras.tmfx.border.circle.outpulse.02.normal")
             .attachTo(token)
-            .scaleToObject(1.2 * token.document.texture.scaleX)
+            .scaleToObject(1 * token.document.texture.scaleX)
             .tint("#FF0000")
             .belowTokens()
             .persist()

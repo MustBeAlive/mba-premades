@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function shillelagh({ speaker, actor, token, character, item, args, scope, workflow }) {
     let weapons = workflow.actor.items.filter(i => i.system.equipped && i.type === "weapon" && ["club", "quarterstaff"].includes(i.system.baseItem));
     if (!weapons.length) {
@@ -6,7 +8,7 @@ export async function shillelagh({ speaker, actor, token, character, item, args,
     }
     let selection;
     if (weapons.length === 1) [selection] = weapons[0];
-    if (!selection) [selection] = await chrisPremades.helpers.selectDocument("Which weapon would you like to empower?", weapons);
+    if (!selection) [selection] = await mba.selectDocument("Which weapon would you like to empower?", weapons);
     if (!selection) {
         ui.notifications.warn("Failed to select weapon");
         return
@@ -33,7 +35,7 @@ export async function shillelagh({ speaker, actor, token, character, item, args,
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {

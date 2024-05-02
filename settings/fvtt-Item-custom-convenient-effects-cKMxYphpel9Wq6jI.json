@@ -160,7 +160,7 @@
           "wallsBlock": "system"
         }
       },
-      "icon": "icons/skills/melee/strike-sword-gray.webp",
+      "icon": "modules/mba-premades/icons/conditions/flanking.webp",
       "name": "Flanking",
       "origin": null,
       "tint": null,
@@ -1068,76 +1068,6 @@
         "fear"
       ],
       "_id": "LbTcXPssou6eREPm"
-    },
-    {
-      "changes": [
-        {
-          "key": "system.attributes.movement.all",
-          "mode": 0,
-          "value": "0",
-          "priority": 25
-        }
-      ],
-      "description": "<ul><li><p>A grappled creature's speed becomes 0, and it can't benefit from any bonus to its speed.</p></li><li><p>The condition ends if the grappler is incapacitated.</p></li><li><p>The condition also ends if an effect removes the grappled creature from the reach of the grappler or grappling effect.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Скорость схваченного существа равна 0, и оно не получает выгоды ни от каких бонусов к скорости.</span></p></li><li><p><span style=\"font-family:Signika\">Состояние оканчивается, если схвативший становится недееспособным.</span></p></li><li><p><span style=\"font-family:Signika\">Это состояние также оканчивается, если какой-либо эффект выводит схваченное существо из зоны досягаемости того, кто его удерживает, или из зоны удерживающего эффекта. Например, когда существо отбрасывается заклинанием Волна Грома (Thunderwave).</span></p></li></ul>",
-      "disabled": false,
-      "duration": {
-        "rounds": null,
-        "seconds": null,
-        "turns": null,
-        "startTime": null,
-        "combat": null,
-        "startRound": null,
-        "startTurn": null
-      },
-      "flags": {
-        "dfreds-convenient-effects": {
-          "isConvenient": true,
-          "isDynamic": false,
-          "isViewable": true,
-          "nestedEffects": [],
-          "subEffects": []
-        },
-        "times-up": {
-          "isPassive": false
-        },
-        "dae": {
-          "disableIncapacitated": false,
-          "selfTarget": false,
-          "selfTargetAlways": false,
-          "dontApply": false,
-          "stackable": "noneName",
-          "showIcon": false,
-          "durationExpression": "",
-          "macroRepeat": "none",
-          "specialDuration": []
-        },
-        "ActiveAuras": {
-          "isAura": false,
-          "aura": "None",
-          "nameOverride": "",
-          "radius": "",
-          "alignment": "",
-          "type": "",
-          "customCheck": "",
-          "ignoreSelf": false,
-          "height": false,
-          "hidden": false,
-          "displayTemp": false,
-          "hostile": false,
-          "onlyOnce": false,
-          "wallsBlock": "system"
-        },
-        "effectmacro": {}
-      },
-      "icon": "modules/mba-premades/icons/conditions/grappled.webp",
-      "name": "Grappled",
-      "origin": null,
-      "tint": null,
-      "transfer": false,
-      "statuses": [
-        "Convenient Effect: Grappled"
-      ],
-      "_id": "MFBWLJCVLSBkHjLy"
     },
     {
       "changes": [
@@ -2496,6 +2426,76 @@
         "dead"
       ],
       "_id": "u7jksS9wm6OowUJj"
+    },
+    {
+      "changes": [
+        {
+          "key": "system.attributes.movement.all",
+          "mode": 0,
+          "value": "0",
+          "priority": 25
+        }
+      ],
+      "description": "<ul><li><p>A grappled creature's speed becomes 0, and it can't benefit from any bonus to its speed.</p></li><li><p>The condition ends if the grappler is incapacitated.</p></li><li><p>The condition also ends if an effect removes the grappled creature from the reach of the grappler or grappling effect.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Скорость схваченного существа равна 0, и оно не получает выгоды ни от каких бонусов к скорости.</span></p></li><li><p><span style=\"font-family:Signika\">Состояние оканчивается, если схвативший становится недееспособным.</span></p></li><li><p><span style=\"font-family:Signika\">Это состояние также оканчивается, если какой-либо эффект выводит схваченное существо из зоны досягаемости того, кто его удерживает, или из зоны удерживающего эффекта. Например, когда существо отбрасывается заклинанием Волна Грома (Thunderwave).</span></p></li></ul>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/grappled.webp",
+      "name": "Grappled",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Grappled",
+        "grappled"
+      ],
+      "_id": "3nRdJoSV0ukI6icZ"
     }
   ],
   "folder": null,
@@ -2512,7 +2512,7 @@
     "systemVersion": "2.4.1",
     "coreVersion": "11.315",
     "createdTime": 1698551381684,
-    "modifiedTime": 1713566717697,
+    "modifiedTime": 1714086966367,
     "lastModifiedBy": "AaGlXPdfBCo8JJO1"
   }
 }

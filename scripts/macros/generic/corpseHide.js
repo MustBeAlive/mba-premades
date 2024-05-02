@@ -22,7 +22,7 @@ export async function corpseHide(combat, update, options, userId) {
             .atLocation(token)
             .scaleToObject(2 * tokenDoc.texture.scaleX)
             .aboveInterface()
-            .waitUntilFinished(-1300)
+            .waitUntilFinished(-1600)
 
             .thenDo(function () {
                 warpgate.mutate(tokenDoc, updates, {}, options1);

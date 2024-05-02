@@ -256,9 +256,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 				],
 				'flags': {
 					'dae': {
-						'specialDuration': [
-							'isSave'
-						]
+						'specialDuration': ['isSave']
 					},
 					'chris-premades': {
 						'effect': {

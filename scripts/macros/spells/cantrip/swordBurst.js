@@ -81,7 +81,7 @@ export async function swordBurst({ speaker, actor, token, character, item, args,
 
         .play()
 
-    targets.forEach(target => {
+    for (let target of targets) {
 
         new Sequence()
 
@@ -98,5 +98,5 @@ export async function swordBurst({ speaker, actor, token, character, item, args,
             .filter("ColorMatrix", { saturate: 1 })
 
             .play()
-    })
+    }
 }
