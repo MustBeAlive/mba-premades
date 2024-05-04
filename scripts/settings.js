@@ -18,242 +18,6 @@ export function registerSettings() {
         'config': false,
         'type': String
     });
-    game.settings.register(moduleName, 'Dark Chat', {
-        'name': 'Dark Chat',
-        'hint': "Включает альтернативную (темную) версию чата.",
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false,
-        'onChange': value => {
-            changeChat(value, 'darkChat');
-        }
-    });
-    addMenuSetting("Dark Chat", "User Interface")
-    game.settings.register(moduleName, 'Rollmode Buttons', {
-        'name': 'Rollmode Buttons',
-        'hint': "Включает альтернативный селектор режимов броска (кнопки вместо выпадающего списка).",
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false,
-    });
-    addMenuSetting("Rollmode Buttons", "User Interface")
-    game.settings.register(moduleName, 'Check For Updates', {
-        'name': "Проверять обновления",
-        'hint': "Показывать сообщение при входе в мир если доступно обновление модуля",
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false
-    });
-    addMenuSetting('Check For Updates', 'General');
-    game.settings.register(moduleName, 'Blur', {
-        'name': 'Blur Automation',
-        'hint': 'Включает автоматизацию заклинания Blur через Midi-Qol hooks.',
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false,
-        'onChange': value => {
-            if (value) {
-                Hooks.on('midi-qol.preAttackRoll', macros.blur.hook);
-            } else {
-                Hooks.off('midi-qol.preAttackRoll', macros.blur.hook);
-            }
-        }
-    });
-    addMenuSetting('Blur', 'Spells');
-    game.settings.register(moduleName, 'Booming Blade', {
-        'name': 'Booming Blade',
-        'hint': 'Включает автоматизацию заклинания Booming Blade через Midi-Qol hooks.',
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false,
-        'onChange': value => {
-            if (value) {
-                Hooks.on('updateToken', macros.boomingBlade.moved);
-            } else {
-                Hooks.off('updateToken', macros.boomingBlade.moved);
-            }
-        }
-    });
-    addMenuSetting('Booming Blade', 'Spells');
-    game.settings.register(moduleName, 'Fog Cloud', {
-        'name': 'Fog Cloud',
-        'hint': 'Включает автоматизацию заклинания Fog Cloud через Midi-Qol hooks.',
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false,
-        'onChange': value => {
-            if (value) {
-                Hooks.on('midi-qol.preAttackRoll', macros.fogCloud.hook);
-            } else {
-                Hooks.off('midi-qol.preAttackRoll', macros.fogCloud.hook);
-            }
-        }
-    });
-    addMenuSetting('Fog Cloud', 'Spells');
-    game.settings.register(moduleName, 'Darkness', {
-        'name': 'Darkness',
-        'hint': 'Включает автоматизацию заклинания Darkness через Midi-Qol hooks.',
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false,
-        'onChange': value => {
-            if (value) {
-                Hooks.on('midi-qol.preAttackRoll', macros.darkness.hook);
-            } else {
-                Hooks.off('midi-qol.preAttackRoll', macros.darkness.hook);
-            }
-        }
-    });
-    addMenuSetting('Darkness', 'Spells');
-    game.settings.register(moduleName, 'Death Ward', {
-        'name': 'Death Ward',
-        'hint': 'Включает автоматизацию заклинания Death Ward через Midi-Qol hooks.',
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false,
-        'onChange': value => {
-            if (value) {
-                Hooks.on('midi-qol.preTargetDamageApplication', macros.deathWard.hook);
-            } else {
-                Hooks.off('midi-qol.preTargetDamageApplication', macros.deathWard.hook);
-            }
-        }
-    });
-    addMenuSetting('Death Ward', 'Spells');
-    game.settings.register(moduleName, 'Mirror Image', {
-        'name': 'Mirror Image',
-        'hint': 'Включает автоматизацию заклинания Mirror Image через Midi-QoL hooks.',
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false,
-        'onChange': value => {
-            if (value) {
-                Hooks.on('midi-qol.AttackRollComplete', macros.mirrorImage.hook);
-            } else {
-                Hooks.off('midi-qol.AttackRollComplete', macros.mirrorImage.hook);
-            }
-        }
-    });
-    addMenuSetting('Mirror Image', 'Spells');
-    game.settings.register(moduleName, 'Relentless Endurance', {
-        'name': 'Relentless Endurance',
-        'hint': 'Включает автоматизацию спобности орков Relentless Endurance через Midi-QoL hooks.',
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false,
-        'onChange': value => {
-            if (value) {
-                Hooks.on('midi-qol.preTargetDamageApplication', macros.relentlessEndurance);
-            } else {
-                Hooks.off('midi-qol.preTargetDamageApplication', macros.relentlessEndurance);
-            }
-        }
-    });
-    addMenuSetting('Relentless Endurance', 'Race Features');
-    game.settings.register(moduleName, 'Sanctuary', {
-        'name': 'Sanctuary',
-        'hint': 'Включает автоматизацию заклинания Sanctuary через Midi-QoL hooks.',
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false,
-        'onChange': value => {
-            if (value) {
-                Hooks.on('midi-qol.preItemRoll', macros.sanctuary.hook);
-            } else {
-                Hooks.off('midi-qol.preItemRoll', macros.sanctuary.hook);
-            }
-        }
-    });
-    addMenuSetting('Sanctuary', 'Spells');
-    game.settings.register(moduleName, 'True Strike', {
-        'name': 'True Strike',
-        'hint': 'Включает автоматизацию заклинания True Strike через Midi-Qol hooks.',
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false,
-        'onChange': value => {
-            if (value) {
-                Hooks.on('midi-qol.preAttackRoll', macros.trueStrike.hook);
-            } else {
-                Hooks.off('midi-qol.preAttackRoll', macros.trueStrike.hook);
-            }
-        }
-    });
-    addMenuSetting('True Strike', 'Spells');
-    game.settings.register(moduleName, 'Show Names', {
-        'name': 'Показывать имена',
-        'hint': 'Эта настройка включает показ имен токенов (вроде бы токенов) в диалогах-селекторах целей (используется в фичах/заклинаниях а-ля Bane/Bless).',
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': true
-    });
-    addMenuSetting('Show Names', 'General');
-    game.settings.register(moduleName, 'Tasha Actors', {
-        'name': 'Keep Summon Actors Updated',
-        'hint': 'This setting will keep actors from this module updated in the sidebar.',
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false,
-        'onChange': async value => {
-            if (value && game.user.isGM) await tashaSummon.setupFolder();
-        }
-    });
-    addMenuSetting('Tasha Actors', 'Summons');
-    game.settings.register(moduleName, 'Tasha Initiative', {
-        'name': 'Minions use caster\'s initiative',
-        'hint': 'Enabling this will have minions summoned from this module to use the caster\'s initiative instead of rolling their own.  Similar to the summon spells from Tasha\'s Cauldron Of Everything',
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false
-    });
-    addMenuSetting('Tasha Initiative', 'Summons');
-    game.settings.register(moduleName, 'Summons Initiative', {
-        'name': 'Auto Update Summons Initiative',
-        'hint': 'Automatically update player controlled warpgate summons\' initaitve to be just after the player\'s',
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false,
-        'onChange': value => {
-            if (value) {
-                Hooks.on('dnd5e.rollInitiative', tashaSummon.updateSummonInitiative);
-            } else {
-                Hooks.off('dnd5e.rollInitiative', tashaSummon.updateSummonInitiative);
-            }
-        }
-    });
-    addMenuSetting('Summons Initiative', 'Summons');
-    game.settings.register(moduleName, 'Companions Initiative', {
-        'name': 'Auto Update Companions Initiative',
-        'hint': 'Automatically update player owned NPCs\' initiative to be just after the player\'s',
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false,
-        'onChange': value => {
-            if (value) {
-                Hooks.on('dnd5e.rollInitiative', tashaSummon.updateCompanionInitiative);
-            } else {
-                Hooks.off('dnd5e.rollInitiative', tashaSummon.updateCompanionInitiative);
-            }
-        }
-    });
-    addMenuSetting('Companions Initiative', 'Summons');
     game.settings.register(moduleName, 'Add Generic Actions', {
         'name': "Добавить базовые действия",
         'hint': "Добавляет базовые действия в лист персонажа при дропе токена на карту",
@@ -273,62 +37,24 @@ export function registerSettings() {
         }
     });
     addMenuSetting('Add Generic Actions', 'General');
-    game.settings.register(moduleName, 'Blindness Fix', {
-        'name': 'Condition: Blinded (Visual Fix)',
-        'hint': 'Эта настройка отключает ограничения видимости при получении Condition: Blinded',
+    game.settings.register(moduleName, 'Check For Updates', {
+        'name': "Проверять обновления",
+        'hint': "Показывать сообщение при входе в мир если доступно обновление модуля",
         'scope': 'world',
         'config': false,
         'type': Boolean,
-        'default': false,
-        'onChange': value => {
-            if (value) removeV10EffectsBlind();
-        }
+        'default': false
     });
-    addMenuSetting('Blindness Fix', 'Mechanics');
-    game.settings.register(moduleName, 'Invisibility Fix', {
-        'name': 'Condition: Invisible (Visual Fix)',
-        'hint': 'Эта настройка отключает ограничения видимости при получении Condition: Invisible',
+    addMenuSetting('Check For Updates', 'General');
+    game.settings.register(moduleName, 'Show Names', {
+        'name': 'Показывать имена',
+        'hint': 'Эта настройка включает показ имен токенов (вроде бы токенов) в диалогах-селекторах целей (используется в фичах/заклинаниях а-ля Bane/Bless).',
         'scope': 'world',
         'config': false,
         'type': Boolean,
-        'default': false,
-        'onChange': value => {
-            if (value) removeV10EffectsInvisible();
-        }
+        'default': true
     });
-    addMenuSetting('Invisibility Fix', 'Mechanics');
-    game.settings.register(moduleName, 'Auto Death Save', {
-        'name': 'Auto Death Save Request',
-        'hint': 'Эта настройка включает автоматический промт death save\'ов в бою (monk\'s token bar)',
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false,
-        'onChange': value => {
-            if (value) {
-                Hooks.on("updateCombat", deathSaves());
-            } else {
-                Hooks.off("updateCombat", deathSaves());
-            }
-        }
-    });
-    addMenuSetting('Auto Death Save', 'Mechanics');
-    game.settings.register(moduleName, 'Corpse Hider', {
-        'name': 'Corpse Hider',
-        'hint': 'Включает автоматическое скрытие трупов для игроков, срабатывает при смене хода в бою.',
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false,
-        'onChange': value => {
-            if (value) {
-                Hooks.on("updateCombat", corpseHide());
-            } else {
-                Hooks.off("updateCombat", corpseHide());
-            }
-        }
-    });
-    addMenuSetting('Corpse Hider', 'Mechanics');
+    addMenuSetting('Show Names', 'General');
     game.settings.register(moduleName, 'Cast Animations', {
         'name': 'Анимации Заклинаний',
         'hint': 'Включает автоматический проигрыш анимаций от JB2A при сотворении любых заклинаний',
@@ -481,10 +207,336 @@ export function registerSettings() {
         }
     });
     addMenuSetting('trs_color', 'Animations');
+    game.settings.register(moduleName, 'Strength of the Grave', {
+        'name': 'Strength of the Grave',
+        'hint': 'Включает автоматизацию способности Strength of the Grave (Shadow Sorcerer) через Midi-Qol hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preTargetDamageApplication', macros.strengthOfTheGrave);
+            } else {
+                Hooks.off('midi-qol.preTargetDamageApplication', macros.strengthOfTheGrave);
+            }
+        }
+    });
+    addMenuSetting('Strength of the Grave', 'Class Features');
+    game.settings.register(moduleName, 'Blindness Fix', {
+        'name': 'Condition: Blinded (Visual Fix)',
+        'hint': 'Эта настройка отключает ограничения видимости при получении Condition: Blinded',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) removeV10EffectsBlind();
+        }
+    });
+    addMenuSetting('Blindness Fix', 'Mechanics');
+    game.settings.register(moduleName, 'Invisibility Fix', {
+        'name': 'Condition: Invisible (Visual Fix)',
+        'hint': 'Эта настройка отключает ограничения видимости при получении Condition: Invisible',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) removeV10EffectsInvisible();
+        }
+    });
+    addMenuSetting('Invisibility Fix', 'Mechanics');
+    game.settings.register(moduleName, 'Auto Death Save', {
+        'name': 'Auto Death Save Request',
+        'hint': 'Эта настройка включает автоматический промт death save\'ов в бою (monk\'s token bar)',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on("updateCombat", deathSaves());
+            } else {
+                Hooks.off("updateCombat", deathSaves());
+            }
+        }
+    });
+    addMenuSetting('Auto Death Save', 'Mechanics');
+    game.settings.register(moduleName, 'Condition Resistance', {
+        'name': 'Condition Resistance',
+        'hint': "Эта настройка включает автоматизацию condition resistance через Midi-Qol hooks.",
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.postPreambleComplete', macros.conditionResistanceEarly);
+                Hooks.on('midi-qol.RollComplete', macros.conditionResistanceLate);
+            } else {
+                Hooks.off('midi-qol.postPreambleComplete', macros.conditionResistanceEarly);
+                Hooks.off('midi-qol.RollComplete', macros.conditionResistanceLate);
+            }
+        }
+    });
+    addMenuSetting('Condition Resistance', 'Mechanics');
+    game.settings.register(moduleName, 'Condition Vulnerability', {
+        'name': 'Condition Vulnerability',
+        'hint': "Эта настройка включает автоматизацию condition vulnerability через Midi-Qol hooks.",
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.postPreambleComplete', macros.conditionVulnerabilityEarly);
+                Hooks.on('midi-qol.RollComplete', macros.conditionVulnerabilityLate);
+            } else {
+                Hooks.off('midi-qol.postPreambleComplete', macros.conditionVulnerabilityEarly);
+                Hooks.off('midi-qol.RollComplete', macros.conditionVulnerabilityLate);
+            }
+        }
+    });
+    addMenuSetting('Condition Vulnerability', 'Mechanics');
+    game.settings.register(moduleName, 'Corpse Hider', {
+        'name': 'Corpse Hider',
+        'hint': 'Включает автоматическое скрытие трупов для игроков, срабатывает при смене хода в бою.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on("updateCombat", corpseHide());
+            } else {
+                Hooks.off("updateCombat", corpseHide());
+            }
+        }
+    });
+    addMenuSetting('Corpse Hider', 'Mechanics');
+    game.settings.register(moduleName, 'Relentless Endurance', {
+        'name': 'Relentless Endurance',
+        'hint': 'Включает автоматизацию спобности орков Relentless Endurance через Midi-QoL hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preTargetDamageApplication', macros.relentlessEndurance);
+            } else {
+                Hooks.off('midi-qol.preTargetDamageApplication', macros.relentlessEndurance);
+            }
+        }
+    });
+    addMenuSetting('Relentless Endurance', 'Race Features');
+    game.settings.register(moduleName, 'Blur', {
+        'name': 'Blur Automation',
+        'hint': 'Включает автоматизацию заклинания Blur через Midi-Qol hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preAttackRoll', macros.blur.hook);
+            } else {
+                Hooks.off('midi-qol.preAttackRoll', macros.blur.hook);
+            }
+        }
+    });
+    addMenuSetting('Blur', 'Spells');
+    game.settings.register(moduleName, 'Booming Blade', {
+        'name': 'Booming Blade',
+        'hint': 'Включает автоматизацию заклинания Booming Blade через Midi-Qol hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('updateToken', macros.boomingBlade.moved);
+            } else {
+                Hooks.off('updateToken', macros.boomingBlade.moved);
+            }
+        }
+    });
+    addMenuSetting('Booming Blade', 'Spells');
+    game.settings.register(moduleName, 'Fog Cloud', {
+        'name': 'Fog Cloud',
+        'hint': 'Включает автоматизацию заклинания Fog Cloud через Midi-Qol hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preAttackRoll', macros.fogCloud.hook);
+            } else {
+                Hooks.off('midi-qol.preAttackRoll', macros.fogCloud.hook);
+            }
+        }
+    });
+    addMenuSetting('Fog Cloud', 'Spells');
+    game.settings.register(moduleName, 'Darkness', {
+        'name': 'Darkness',
+        'hint': 'Включает автоматизацию заклинания Darkness через Midi-Qol hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preAttackRoll', macros.darkness.hook);
+            } else {
+                Hooks.off('midi-qol.preAttackRoll', macros.darkness.hook);
+            }
+        }
+    });
+    addMenuSetting('Darkness', 'Spells');
+    game.settings.register(moduleName, 'Death Ward', {
+        'name': 'Death Ward',
+        'hint': 'Включает автоматизацию заклинания Death Ward через Midi-Qol hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preTargetDamageApplication', macros.deathWard.hook);
+            } else {
+                Hooks.off('midi-qol.preTargetDamageApplication', macros.deathWard.hook);
+            }
+        }
+    });
+    addMenuSetting('Death Ward', 'Spells');
+    game.settings.register(moduleName, 'Mirror Image', {
+        'name': 'Mirror Image',
+        'hint': 'Включает автоматизацию заклинания Mirror Image через Midi-QoL hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.AttackRollComplete', macros.mirrorImage.hook);
+            } else {
+                Hooks.off('midi-qol.AttackRollComplete', macros.mirrorImage.hook);
+            }
+        }
+    });
+    addMenuSetting('Mirror Image', 'Spells');
+    game.settings.register(moduleName, 'Sanctuary', {
+        'name': 'Sanctuary',
+        'hint': 'Включает автоматизацию заклинания Sanctuary через Midi-QoL hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preItemRoll', macros.sanctuary.hook);
+            } else {
+                Hooks.off('midi-qol.preItemRoll', macros.sanctuary.hook);
+            }
+        }
+    });
+    addMenuSetting('Sanctuary', 'Spells');
+    game.settings.register(moduleName, 'True Strike', {
+        'name': 'True Strike',
+        'hint': 'Включает автоматизацию заклинания True Strike через Midi-Qol hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preAttackRoll', macros.trueStrike.hook);
+            } else {
+                Hooks.off('midi-qol.preAttackRoll', macros.trueStrike.hook);
+            }
+        }
+    });
+    addMenuSetting('True Strike', 'Spells');
+    game.settings.register(moduleName, 'Tasha Actors', {
+        'name': 'Keep Summon Actors Updated',
+        'hint': 'This setting will keep actors from this module updated in the sidebar.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': async value => {
+            if (value && game.user.isGM) await tashaSummon.setupFolder();
+        }
+    });
+    addMenuSetting('Tasha Actors', 'Summons');
+    game.settings.register(moduleName, 'Tasha Initiative', {
+        'name': 'Minions use caster\'s initiative',
+        'hint': 'Enabling this will have minions summoned from this module to use the caster\'s initiative instead of rolling their own.  Similar to the summon spells from Tasha\'s Cauldron Of Everything',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false
+    });
+    addMenuSetting('Tasha Initiative', 'Summons');
+    game.settings.register(moduleName, 'Summons Initiative', {
+        'name': 'Auto Update Summons Initiative',
+        'hint': 'Automatically update player controlled warpgate summons\' initaitve to be just after the player\'s',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('dnd5e.rollInitiative', tashaSummon.updateSummonInitiative);
+            } else {
+                Hooks.off('dnd5e.rollInitiative', tashaSummon.updateSummonInitiative);
+            }
+        }
+    });
+    addMenuSetting('Summons Initiative', 'Summons');
+    game.settings.register(moduleName, 'Companions Initiative', {
+        'name': 'Auto Update Companions Initiative',
+        'hint': 'Automatically update player owned NPCs\' initiative to be just after the player\'s',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('dnd5e.rollInitiative', tashaSummon.updateCompanionInitiative);
+            } else {
+                Hooks.off('dnd5e.rollInitiative', tashaSummon.updateCompanionInitiative);
+            }
+        }
+    });
+    addMenuSetting('Companions Initiative', 'Summons');
+    game.settings.register(moduleName, 'Dark Chat', {
+        'name': 'Dark Chat',
+        'hint': "Включает альтернативную (темную) версию чата.",
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            changeChat(value, 'darkChat');
+        }
+    });
+    addMenuSetting("Dark Chat", "User Interface")
+    game.settings.register(moduleName, 'Rollmode Buttons', {
+        'name': 'Rollmode Buttons',
+        'hint': "Включает альтернативный селектор режимов броска (кнопки вместо выпадающего списка).",
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+    });
+    addMenuSetting("Rollmode Buttons", "User Interface")
     game.settings.registerMenu(moduleName, 'General', {
         'name': 'General',
         'label': 'General',
-        'hint': 'General settings for most automations.',
+        'hint': 'Общие настройки модуля.',
         'icon': 'fas fa-gears',
         'type': mbaSettingsGeneral,
         'restricted': true
@@ -492,7 +544,7 @@ export function registerSettings() {
     game.settings.registerMenu(moduleName, 'Animations', {
         'name': 'Animations',
         'label': 'Animations',
-        'hint': 'Settings for animation automation.',
+        'hint': 'Настройки автоматизации анимаций.',
         'icon': 'fas fa-film',
         'type': mbaSettingsAnimations,
         'restricted': false
@@ -500,7 +552,7 @@ export function registerSettings() {
     game.settings.registerMenu(moduleName, 'Class Features', {
         'name': 'Class Features',
         'label': 'Class Features',
-        'hint': 'Settings for specific class features.',
+        'hint': 'Настройки автоматизации классовых способностей.',
         'icon': 'fas fa-swords',
         'type': mbaSettingsClassFeats,
         'restricted': true
@@ -508,7 +560,7 @@ export function registerSettings() {
     game.settings.registerMenu(moduleName, 'Feats', {
         'name': 'Feats',
         'label': 'Feats',
-        'hint': 'Settings for specific feat automations.',
+        'hint': 'Настройки автоматизации фитов.',
         'icon': 'fas fa-crystal-ball',
         'type': mbaSettingsFeats,
         'restricted': true
@@ -516,7 +568,7 @@ export function registerSettings() {
     game.settings.registerMenu(moduleName, 'Mechanics', {
         'name': 'Mechanics',
         'label': 'Mechanics',
-        'hint': 'Settings related to game mechanics.',
+        'hint': 'Настройки автоматизации механик и QoL штук.',
         'icon': 'fas fa-dice',
         'type': mbaSettingsMechanics,
         'restricted': true
@@ -524,7 +576,7 @@ export function registerSettings() {
     game.settings.registerMenu(moduleName, 'Race Features', {
         'name': 'Race Features',
         'label': 'Race Features',
-        'hint': 'Settings for specific race features.',
+        'hint': 'Настройки автоматизации расовых способностей.',
         'icon': 'fas fa-solid fa-nesting-dolls',
         'type': mbaSettingsRaceFeats,
         'restricted': true
@@ -532,7 +584,7 @@ export function registerSettings() {
     game.settings.registerMenu(moduleName, 'Spells', {
         'name': 'Spells',
         'label': 'Spells',
-        'hint': 'Settings for specific spell automations.',
+        'hint': 'Настройки автоматизации заклинаний.',
         'icon': 'fas fa-wand-magic-sparkles',
         'type': mbaSettingsSpells,
         'restricted': true
@@ -540,7 +592,7 @@ export function registerSettings() {
     game.settings.registerMenu(moduleName, 'Summons', {
         'name': 'Summons',
         'label': 'Summons',
-        'hint': 'Settings related to summons.',
+        'hint': 'Настройки связанные с автоматизацией призыва существ.',
         'icon': 'fas fa-hand-holding-magic',
         'type': mbaSettingsSummons,
         'restricted': true
@@ -548,7 +600,7 @@ export function registerSettings() {
     game.settings.registerMenu(moduleName, 'User Interface', {
         'name': 'User Interface',
         'label': 'User Interface',
-        'hint': 'Settings that modify the user interface.',
+        'hint': 'Настройки интерфейса.',
         'icon': 'fas fa-display',
         'type': mbaSettingsInterface,
         'restricted': true

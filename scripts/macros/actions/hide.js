@@ -14,6 +14,8 @@ export async function hide({ speaker, actor, token, character, item, args, scope
             .scaleIn(0, 500, { ease: "easeOutCubic" })
             .randomRotation()
 
+            .wait(500)
+
             .thenDo(function () {
                 Sequencer.EffectManager.endEffects({ name: `${token.document.name} Hide`, object: token })
             })
@@ -55,6 +57,7 @@ export async function hide({ speaker, actor, token, character, item, args, scope
         .attachTo(token)
         .tint("#6b6b6b")
         .fadeIn(1000)
+        .fadeOut(1000)
         .animateProperty("alphaFilter", "alpha", { from: 0, to: -0.2, duration: 2000, delay: 1000 })
         .persist()
         .name(`${token.document.name} Hide`)

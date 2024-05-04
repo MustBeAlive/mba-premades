@@ -55,6 +55,14 @@ Hooks.once('ready', async function() {
     Hooks.on('createToken', addActions);
     if (game.settings.get('mba-premades', 'Cast Animations')) Hooks.on('midi-qol.postPreambleComplete', cast);
     if (game.settings.get('mba-premades', 'Auto Death Save')) Hooks.on('updateCombat', deathSaves);
+    if (game.settings.get('mba-premades', 'Condition Resistance')) {
+        Hooks.on('midi-qol.postPreambleComplete', macros.conditionResistanceEarly);
+        Hooks.on('midi-qol.RollComplete', macros.conditionResistanceLate);
+    }
+    if (game.settings.get('mba-premades', 'Condition Vulnerability')) {
+        Hooks.on('midi-qol.postPreambleComplete', macros.conditionVulnerabilityEarly);
+        Hooks.on('midi-qol.RollComplete', macros.conditionVulnerabilityLate);
+    }
     if (game.settings.get('mba-premades', 'Corpse Hider')) Hooks.on('updateCombat', corpseHide);
     if (game.settings.get('mba-premades', 'Blur')) Hooks.on('midi-qol.preAttackRoll', macros.blur.hook);
     if (game.settings.get('mba-premades', 'Booming Blade')) Hooks.on('updateToken', macros.boomingBlade.moved);
@@ -65,6 +73,7 @@ Hooks.once('ready', async function() {
     if (game.settings.get('mba-premades', 'Relentless Endurance')) Hooks.on('midi-qol.preTargetDamageApplication', macros.relentlessEndurance);
     if (game.settings.get('mba-premades', 'Sanctuary')) Hooks.on('midi-qol.preItemRoll', macros.sanctuary.hook);
     if (game.settings.get('mba-premades', 'True Strike')) Hooks.on('midi-qol.preAttackRoll', macros.trueStrike.hook);
+    if (game.settings.get('mba-premades', 'Strength of the Grave')) Hooks.on('midi-qol.preTargetDamageApplication', macros.strengthOfTheGrave);
     if (game.settings.get('mba-premades', 'Summons Initiative')) Hooks.on('dnd5e.rollInitiative', tashaSummon.updateSummonInitiative);
     if (game.settings.get('mba-premades', 'Companions Initiative')) Hooks.on('dnd5e.rollInitiative', tashaSummon.updateCompanionInitiative);
     if (game.modules.get('dae')?.active) addDAEFlags();

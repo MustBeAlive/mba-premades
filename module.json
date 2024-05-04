@@ -217,6 +217,13 @@
 			"system": "dnd5e"
 		},
 		{
+			"name": "MBA Class Feature Items",
+			"label": "MBA Class Feature Items",
+			"path": "packs/mba-class-feature-items",
+			"type": "Item",
+			"system": "dnd5e"
+		},
+		{
 			"name": "MBA Features",
 			"label": "MBA Features",
 			"path": "packs/mba-features",
@@ -249,6 +256,20 @@
 			"label": "MBA Music",
 			"path": "packs/mba-music",
 			"type": "Playlist",
+			"system": "dnd5e"
+		},
+		{
+			"name": "MBA Race Features",
+			"label": "MBA Race Features",
+			"path": "packs/mba-race-features",
+			"type": "Item",
+			"system": "dnd5e"
+		},
+		{
+			"name": "MBA Race Feature Items",
+			"label": "MBA Race Feature Items",
+			"path": "packs/mba-race-feature-items",
+			"type": "Item",
 			"system": "dnd5e"
 		},
 		{
@@ -288,11 +309,14 @@
 			"packs": [
 				"MBA Actions",
 				"MBA Class Features",
+				"MBA Class Feature Items",
 				"MBA Features",
 				"MBA Items",
 				"MBA Item Features",
 				"MBA Macro",
 				"MBA Music",
+				"MBA Race Features",
+				"MBA Race Feature Items",
 				"MBA Spells",
 				"MBA Spell Features",
 				"MBA Summons",

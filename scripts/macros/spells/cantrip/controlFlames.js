@@ -28,6 +28,7 @@ export async function controlFlames({ speaker, actor, token, character, item, ar
     let lightDim = lightDoc.config.dim;
     let lightBright = lightDoc.config.bright;
     let lightColor = lightDoc.config.color;
+    if (!lightColor) lightColor = "#000000"
     let i = 0;
 
     var ntc = {

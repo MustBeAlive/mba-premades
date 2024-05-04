@@ -40,6 +40,8 @@ import {colorSpray} from './macros/spells/level1/colorSpray.js';
 import {confusion} from './macros/spells/level4/confusion.js';
 import {command} from './macros/spells/level1/command.js';
 import {comprehendLanguages} from './macros/spells/level1/comprehendLanguages.js';
+import {conditionResistanceEarly, conditionResistanceLate} from './macros/mechanics/conditionResistance.js';
+import {conditionVulnerabilityEarly, conditionVulnerabilityLate} from './macros/mechanics/conditionVulnerability.js';
 import {coneOfCold} from './macros/spells/level5/coneOfCold.js';
 import {controlFlames} from './macros/spells/cantrip/controlFlames.js';
 import {cordonOfArrows} from './macros/spells/level2/cordonOfArrows.js';
@@ -174,7 +176,9 @@ import {produceFlame} from './macros/spells/cantrip/produceFlame.js';
 import {protectionFromEnergy} from './macros/spells/level3/protectionFromEnergy.js';
 import {protectionFromPoison} from './macros/spells/level2/protectionFromPoison.js';
 import {pyrotechnics} from './macros/spells/level2/pyrotechnics.js';
+import {rage} from './macros/classFeatures/barbarian/rage.js';
 import {rayOfFrost} from './macros/spells/cantrip/rayOfFrost.js';
+import {recklessAttack} from './macros/classFeatures/barbarian/recklessAttack.js';
 import {regenerate} from './macros/spells/level7/regenerate.js';
 import {relentlessEndurance} from './macros/raceFeatures/orc/relentlessEndurance.js';
 import {removeCurse} from './macros/spells/level3/removeCurse.js';
@@ -190,6 +194,7 @@ import {sending} from './macros/spells/level3/sending.js';
 import {shadowBlade} from './macros/spells/level2/shadowBlade.js';
 import {shapeWater} from './macros/spells/cantrip/shapeWater.js';
 import {shatter} from './macros/spells/level2/shatter.js';
+import {shellDefense} from './macros/raceFeatures/tortle/shellDefense.js';
 import {shield} from './macros/spells/level1/shield.js';
 import {shillelagh} from './macros/spells/cantrip/shillelagh.js';
 import {shockingGrasp} from './macros/spells/cantrip/shockingGrasp.js';
@@ -203,11 +208,13 @@ import {speakWithAnimals} from './macros/spells/level1/speakWithAnimals.js';
 import {speakWithDead} from './macros/spells/level3/speakWithDead.js';
 import {speakWithPlants} from './macros/spells/level3/speakWithPlants.js';
 import {spiderClimb} from './macros/spells/level2/spiderClimb.js';
+import {spikeGrowth} from './macros/spells/level2/spikeGrowth.js';
 import {spiritGuardians} from './macros/spells/level3/spiritGuarduans.js';
 import {spiritualWeapon} from './macros/spells/level2/spiritualWeapon.js';
 import {sprayOfCards} from './macros/spells/level2/sprayOfCards.js';
 import {staggeringSmite} from './macros/spells/level4/staggeringSmite.js';
 import {stinkingCloud} from './macros/spells/level3/stinkingCloud.js';
+import {strengthOfTheGrave} from './macros/classFeatures/sorcerer/shadow/strengthOfTheGrave.js';
 import {suggestion} from './macros/spells/level2/suggestion.js';
 import {sunbeam} from './macros/spells/level6/sunBeam.js';
 import {swordBurst} from './macros/spells/cantrip/swordBurst.js';
@@ -280,6 +287,10 @@ export let macros = {
     'confusion': confusion,
     'command': command,
     'comprehendLanguages': comprehendLanguages,
+    'conditionResistanceEarly': conditionResistanceEarly,
+    'conditionResistanceLate': conditionResistanceLate,
+    'conditionVulnerabilityEarly': conditionVulnerabilityEarly,
+    'conditionVulnerabilityLate': conditionVulnerabilityLate,
     'coneOfCold': coneOfCold,
     'controlFlames': controlFlames,
     'cordonOfArrows': cordonOfArrows,
@@ -414,7 +425,9 @@ export let macros = {
     'protectionFromEnergy': protectionFromEnergy,
     'protectionFromPoison': protectionFromPoison,
     'pyrotechnics': pyrotechnics,
+    'rage': rage,
     'rayOfFrost': rayOfFrost,
+    'recklessAttack': recklessAttack,
     'regenerate': regenerate,
     'relentlessEndurance': relentlessEndurance,
     'removeCurse': removeCurse,
@@ -430,6 +443,7 @@ export let macros = {
     'shadowBlade': shadowBlade,
     'shapeWater': shapeWater,
     'shatter': shatter,
+    'shellDefense': shellDefense,
     'shield': shield,
     'shillelagh': shillelagh,
     'shockingGrasp': shockingGrasp,
@@ -443,11 +457,13 @@ export let macros = {
     'speakWithDead': speakWithDead,
     'speakWithPlants': speakWithPlants,
     'spiderClimb': spiderClimb,
+    'spikeGrowth': spikeGrowth,
     'spiritGuardians': spiritGuardians,
     'spiritualWeapon': spiritualWeapon,
     'sprayOfCards': sprayOfCards,
     'staggeringSmite': staggeringSmite,
     'stinkingCloud': stinkingCloud,
+    'strengthOfTheGrave': strengthOfTheGrave,
     'suggestion': suggestion,
     'sunbeam': sunbeam,
     'swordBurst': swordBurst,

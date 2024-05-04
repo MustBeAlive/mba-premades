@@ -9,12 +9,11 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 		.effect()
 		.file("jb2a.entangle.green")
 		.atLocation(template)
+		.size(4.4, { gridUnits: true })
 		.delay(1000)
 		.fadeIn(2000)
-		.opacity(0.95)
 		.fadeOut(500)
-		.size(4.4, { gridUnits: true })
-		.belowTokens()
+		.opacity(0.95)
 		.shape("circle", {
 			lineSize: 4,
 			lineColor: "#FF0000",
@@ -24,6 +23,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 			name: "test",
 			isMask: true
 		})
+		.belowTokens()
 		.zIndex(1.5)
 		.persist()
 		.name(`Entangle`)
@@ -31,12 +31,11 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 		.effect()
 		.file("jb2a.entangle.green")
 		.atLocation(template)
+		.size(4.4, { gridUnits: true })
 		.delay(1000)
 		.fadeIn(2000)
-		.opacity(0.85)
 		.fadeOut(500)
-		.size(4.4, { gridUnits: true })
-		.belowTokens()
+		.opacity(0.85)
 		.shape("circle", {
 			lineSize: 4,
 			lineColor: "#FF0000",
@@ -46,6 +45,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 			name: "test",
 			isMask: true
 		})
+		.belowTokens()
 		.zIndex(1.3)
 		.persist()
 		.name(`Entangle`)
@@ -53,12 +53,11 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 		.effect()
 		.file("jb2a.entangle.green")
 		.atLocation(template)
+		.size(4.4, { gridUnits: true })
 		.delay(1000)
 		.fadeIn(2000)
-		.opacity(0.75)
 		.fadeOut(500)
-		.size(4.4, { gridUnits: true })
-		.belowTokens()
+		.opacity(0.75)
 		.shape("circle", {
 			lineSize: 4,
 			lineColor: "#FF0000",
@@ -68,6 +67,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 			name: "test",
 			isMask: true
 		})
+		.belowTokens()
 		.zIndex(1.2)
 		.persist()
 		.name(`Entangle`)
@@ -75,21 +75,21 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 		.effect()
 		.file("jb2a.plant_growth.02.ring.4x4.pulse.greenred")
 		.atLocation(template)
+		.size(5.6, { gridUnits: true })
 		.delay(500)
-		.scaleIn(0, 500, { ease: "easeOutCubic" })
 		.fadeIn(500)
 		.fadeOut(500)
-		.size(5.6, { gridUnits: true })
-		.belowTokens()
+		.scaleIn(0, 500, { ease: "easeOutCubic" })
 		.randomRotation()
+		.belowTokens()
 		.zIndex(2)
 		.name(`Entangle`)
 
 		.effect()
 		.atLocation(template)
 		.file(`jb2a.fireflies.many.01.green`)
-		.delay(1000)
 		.size(4, { gridUnits: true })
+		.delay(1000)
 		.fadeIn(2500)
 		.opacity(1)
 		.zIndex(2)
@@ -99,23 +99,23 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 		.effect()
 		.file("jb2a.plant_growth.02.ring.4x4.pulse.greenred")
 		.atLocation(template)
+		.size(5.6, { gridUnits: true })
 		.delay(500)
-		.scaleIn(0, 500, { ease: "easeOutCubic" })
 		.fadeIn(500)
 		.fadeOut(500)
-		.size(5.6, { gridUnits: true })
-		.belowTokens()
+		.scaleIn(0, 500, { ease: "easeOutCubic" })
 		.randomRotation()
+		.belowTokens()
 		.zIndex(2)
 
 		.effect()
 		.file("jb2a.swirling_leaves.outburst.01.greenorange")
-		.scaleIn(0, 500, { ease: "easeOutQuint" })
+		.atLocation(token)
+		.size(1.75, { gridUnits: true })
 		.delay(500)
 		.fadeOut(1000)
-		.atLocation(token)
 		.duration(1000)
-		.size(1.75, { gridUnits: true })
+		.scaleIn(0, 500, { ease: "easeOutQuint" })
 		.animateProperty("spriteContainer", "position.y", { from: 0, to: -0.15, gridUnits: true, duration: 1000 })
 		.zIndex(1)
 
@@ -124,14 +124,13 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 		.file(`jb2a.magic_signs.circle.02.conjuration.complete.dark_green`)
 		.size(4.55, { gridUnits: true })
 		.fadeIn(600)
-		.opacity(1)
 		.rotateIn(180, 600, { ease: "easeOutCubic" })
 		.scaleIn(0, 600, { ease: "easeOutCubic" })
+		.opacity(1)
 		.belowTokens()
 		.zIndex(1)
 		.persist()
 		.name(`Entangle`)
-		.waitUntilFinished()
 
 		.play()
 }

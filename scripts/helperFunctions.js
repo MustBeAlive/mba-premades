@@ -1133,7 +1133,7 @@ export let mba = {
         if (game.user.isGM) {
             await doc.update(updates);
         } else {
-            await socket.executeAsGM('updateWall', doc.uuid, updates);
+            await socket.executeAsGM('updateDoc', doc.uuid, updates);
         }
     },
     'updateEffect': async function _updateEffect(effect, updates) {
