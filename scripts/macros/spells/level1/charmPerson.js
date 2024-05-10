@@ -1,47 +1,40 @@
-// Cringe implementation, but RaW; rework w/o synthetic item use 
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
 	let ammount = workflow.castData.castLevel;
 	if (workflow.targets.size > ammount) {
-		let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+		let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
 		if (!selection.buttons) {
 			ui.notifications.warn('Failed to select right ammount of targets, try again!')
 			return;
 		}
 		let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
-		await chrisPremades.helpers.updateTargets(newTargets);
+		mba.updateTargets(newTargets);
 	}
 	await warpgate.wait(100);
 	let targets = Array.from(game.user.targets);
-	const distanceArray = [];
-	for (let i = 0; i < targets.length; i++) {
-		for (let k = i + 1; k < targets.length; k++) {
-			let target1 = fromUuidSync(targets[i].document.uuid).object;
-			let target2 = fromUuidSync(targets[k].document.uuid).object;
-			distanceArray.push(chrisPremades.helpers.getDistance(target1, target2));
-		}
-	}
-	const found = distanceArray.some((distance) => distance > 30);
-	if (found === true) {
-		ui.notifications.warn('Targets cannot be further than 30 ft. of each other!')
+	if (mba.within30(targets) === false) {
+		ui.notifications.warn('Targets cannot be further than 30 ft. of each other, try again!')
 		return;
 	}
 	await warpgate.wait(100);
-	let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Charm Person: Charm', false);
+	let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Charm Person: Charm', false);
 	if (!featureData) {
-		ui.notifications.warn('Can\'t find item in compenidum! (Charm Person: Charm)');
+		ui.notifications.warn('Unable to find item in compenidum! (Charm Person: Charm)');
 		return
 	}
+	delete featureData._id;
 	let originItem = workflow.item;
 	if (!originItem) return;
-	featureData.system.save.dc = chrisPremades.helpers.getSpellDC(originItem);
-	setProperty(featureData, 'chris-premades.spell.castData.school', originItem.system.school);
+	featureData.system.save.dc = mba.getSpellDC(originItem);
+	setProperty(featureData, 'mba-premades.spell.castData.school', originItem.system.school);
 	let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
 	let targetUuids = [];
 	for (let i of targets) targetUuids.push(i.document.uuid);
-	let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions(targetUuids);
+	let [config, options] = constants.syntheticItemWorkflowOptions(targetUuids);
 	await game.messages.get(workflow.itemCardId).delete();
 	let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
-
 	if (!featureWorkflow.failedSaves.size) return;
 	let failedTargets = Array.from(featureWorkflow.failedSaves);
 	async function effectMacroDel() {
@@ -66,7 +59,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 		'flags': {
 			'effectmacro': {
 				'onDelete': {
-					'script': chrisPremades.helpers.functionToString(effectMacroDel)
+					'script': mba.functionToString(effectMacroDel)
 				}
 			},
 			'midi-qol': {
@@ -111,8 +104,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
 		.play();
 
-	failedTargets.forEach(target => {
-
+	for (let target of failedTargets) {
 		new Sequence()
 
 			.effect()
@@ -142,7 +134,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			.scaleToObject(3)
 
 			.thenDo(function () {
-				chrisPremades.helpers.createEffect(target.actor, effectData);
+				mba.createEffect(target.actor, effectData);
 			})
 
 			.effect()
@@ -188,85 +180,29 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			.name(`${target.document.name} Charm Person`)
 
 			.play()
-	});
+	};
 }
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
 	let targets = Array.from(workflow.targets);
 	for (let i of targets) {
-		let immuneData = {
-			'name': 'Save Immunity',
-			'icon': 'modules/mba-premades/icons/generic/generic_buff.webp',
-			'description': "You succeed on the next save you make",
-			'duration': {
-				'turns': 1
-			},
-			'changes': [
-				{
-					'key': 'flags.midi-qol.min.ability.save.all',
-					'value': '100',
-					'mode': 2,
-					'priority': 120
-				}
-			],
-			'flags': {
-				'dae': {
-					'specialDuration': ['isSave']
-				},
-				'chris-premades': {
-					'effect': {
-						'noAnimation': true
-					}
-				}
-			}
-		};
-		let type = chrisPremades.helpers.raceOrType(i.actor);
-		if (type != 'humanoid') {
-			ChatMessage.create({ 
-                flavor: i.document.name + ' is unaffected by Charm Person! (target is not humanoid)', 
-                speaker: ChatMessage.getSpeaker({ actor: workflow.actor }) 
-            });
-			await chrisPremades.helpers.createEffect(i.actor, immuneData);
+		if (mba.raceOrType(i.actor) != 'humanoid') {
+			ChatMessage.create({
+				flavor: i.document.name + ' is unaffected by Charm Person! (target is not humanoid)',
+				speaker: ChatMessage.getSpeaker({ actor: workflow.actor })
+			});
+			await mba.createEffect(i.actor, constants.immunityEffectData);
 			continue;
 		}
-		let hasCharmImmunity = chrisPremades.helpers.checkTrait(i.actor, 'ci', 'charmed');
-		if (hasCharmImmunity) {
-			ChatMessage.create({ 
-                flavor: i.document.name + ' is unaffected by Charm Person! (target is immune to condition: Charmed)', 
-                speaker: ChatMessage.getSpeaker({ actor: workflow.actor }) 
-            });
-			await chrisPremades.helpers.createEffect(i.actor, immuneData);
+		if (mba.checkTrait(i.actor, 'ci', 'charmed')) {
+			ChatMessage.create({
+				flavor: i.document.name + ' is unaffected by Charm Person! (target is immune to condition: Charmed)',
+				speaker: ChatMessage.getSpeaker({ actor: workflow.actor })
+			});
+			await mba.createEffect(i.actor, constants.immunityEffectData);
 			continue;
 		}
-		if (chrisPremades.helpers.inCombat()) {
-			let advantageData = {
-				'name': 'Save Advantage: In Combat',
-				'icon': 'modules/mba-premades/icons/generic/generic_buff.webp',
-				'description': "You have advantage on the next save you make",
-				'duration': {
-					'turns': 1
-				},
-				'changes': [
-					{
-						'key': 'flags.midi-qol.advantage.ability.save.all',
-						'value': '1',
-						'mode': 5,
-						'priority': 120
-					}
-				],
-				'flags': {
-					'dae': {
-						'specialDuration': ['isSave']
-					},
-					'chris-premades': {
-						'effect': {
-							'noAnimation': true
-						}
-					}
-				}
-			};
-			await chrisPremades.helpers.createEffect(i.actor, advantageData);
-		}
+		if (mba.inCombat()) await mba.createEffect(i.actor, constants.advantageEffectData);
 	}
 }
 

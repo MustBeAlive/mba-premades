@@ -10,6 +10,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 }
             },
             'walledtemplates': {
+                'hideBorder': "alwaysHide",
                 'wallRestriction': 'move',
                 'wallsBlock': 'recurse'
             }

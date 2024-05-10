@@ -1,12 +1,14 @@
+import {mba} from "../../helperFunctions.js";
+
 export async function grapple({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.targets.size) return;
     let skipCheck = false;
     let target = workflow.targets.first();
-    if (chrisPremades.helpers.getSize(target.actor) > (chrisPremades.helpers.getSize(workflow.actor) + 1)) {
+    if (mba.getSize(target.actor) > (mba.getSize(workflow.actor) + 1)) {
         ui.notifications.info('Target is too big to attempt grapple!');
         return;
     }
-    let effect = chrisPremades.helpers.findEffect(target.actor, 'Incapacitated');
+    let effect = mba.findEffect(target.actor, 'Incapacitated');
     if (effect) skipCheck = true;
     if (!skipCheck) {
         let options = [
@@ -14,14 +16,14 @@ export async function grapple({ speaker, actor, token, character, item, args, sc
             [`Athletics (${target.actor.system.skills.ath.total})`, 'ath'],
             ['Uncontested', false]
         ];
-        let selection = await chrisPremades.helpers.remoteDialog(workflow.item.name, options, chrisPremades.helpers.firstOwner(target).id, 'How would you like to contest the grapple?');
+        let selection = await mba.remoteDialog(workflow.item.name, options, mba.firstOwner(target).id, 'How would you like to contest the grapple?');
         if (selection) {
             let sourceRoll = await workflow.actor.rollSkill('ath');
-            let targetRoll = await chrisPremades.helpers.rollRequest(target, 'skill', selection);
+            let targetRoll = await mba.rollRequest(target, 'skill', selection);
             if (targetRoll.total >= sourceRoll.total) return;
         }
     }
-    if (game.modules.get('Rideable')?.active) game.Rideable.Mount([target.document], workflow.token.document, { 'Grappled': true, 'MountingEffectsOverride': ['Grappled'] });
+    //if (game.modules.get('Rideable')?.active) game.Rideable.Mount([target.document], workflow.token.document, { 'Grappled': true, 'MountingEffectsOverride': ['Grappled'] });
     
     await new Sequence()
     
@@ -43,7 +45,7 @@ export async function grapple({ speaker, actor, token, character, item, args, sc
         .wait(150)
     
         .thenDo(function () {
-            chrisPremades.helpers.addCondition(target.actor, 'Grappled', false, workflow.item.uuid);
+            mba.addCondition(target.actor, 'Grappled', false, workflow.item.uuid);
         })
     
         .effect()

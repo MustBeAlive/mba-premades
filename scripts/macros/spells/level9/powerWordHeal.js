@@ -1,6 +1,8 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function powerWordHeal({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    let type = chrisPremades.helpers.raceOrType(target.actor);
+    let type = mba.raceOrType(target.actor);
     if (type === 'undead' || type === 'construct') {
         ui.notifications.warn('Power Word: Heal has no effect on undead and construct creatures!');
         return false;
@@ -28,22 +30,22 @@ export async function powerWordHeal({ speaker, actor, token, character, item, ar
         .play();
 
     let diff = target.actor.system.attributes.hp.max - target.actor.system.attributes.hp.value;
-    await chrisPremades.helpers.applyDamage([target], diff, 'healing');
+    await mba.applyDamage([target], diff, 'healing');
 
-    let isCharmed = await chrisPremades.helpers.findEffect(target.actor, 'Charmed');
-    if (isCharmed) await chrisPremades.helpers.removeCondition(target.actor, 'Charmed');
-    let isFrightened = await chrisPremades.helpers.findEffect(target.actor, 'Frightened');
-    if (isFrightened) await chrisPremades.helpers.removeCondition(target.actor, 'Frightened');
-    let isParalyzed = await chrisPremades.helpers.findEffect(target.actor, 'Paralyzed');
-    if (isParalyzed) await chrisPremades.helpers.removeCondition(target.actor, 'Paralyzed');
-    let isStunned = await chrisPremades.helpers.findEffect(target.actor, 'Stunned');
-    if (isStunned) await chrisPremades.helpers.removeCondition(target.actor, 'Stunned');
-    let reaction = chrisPremades.helpers.findEffect(target.actor, 'Reaction');
+    let isCharmed = await mba.findEffect(target.actor, 'Charmed');
+    if (isCharmed) await mba.removeCondition(target.actor, 'Charmed');
+    let isFrightened = await mba.findEffect(target.actor, 'Frightened');
+    if (isFrightened) await mba.removeCondition(target.actor, 'Frightened');
+    let isParalyzed = await mba.findEffect(target.actor, 'Paralyzed');
+    if (isParalyzed) await mba.removeCondition(target.actor, 'Paralyzed');
+    let isStunned = await mba.findEffect(target.actor, 'Stunned');
+    if (isStunned) await mba.removeCondition(target.actor, 'Stunned');
+    let reaction = mba.findEffect(target.actor, 'Reaction');
     if (!reaction) {
-        let isProne = await chrisPremades.helpers.findEffect(target.actor, 'Prone');
+        let isProne = await mba.findEffect(target.actor, 'Prone');
         if (isProne) {
             async function effectMacro() {
-                let effect = chrisPremades.helpers.findEffect(actor, 'Power Word: Heal');
+                let effect = mba.findEffect(actor, 'Power Word: Heal');
                 await new Dialog({
                     title: "Power Word: Heal",
                     content: "<p>Do you wish to spend your reaction to stand up?</p>",
@@ -51,16 +53,16 @@ export async function powerWordHeal({ speaker, actor, token, character, item, ar
                         yes: {
                             label: "Yes",
                             callback: async () => {
-                                await chrisPremades.helpers.removeCondition(actor, 'Prone');
-                                await chrisPremades.helpers.addCondition(actor, 'Reaction');
-                                await chrisPremades.helpers.removeEffect(effect);
+                                await mba.removeCondition(actor, 'Prone');
+                                await mba.addCondition(actor, 'Reaction');
+                                await mba.removeEffect(effect);
                                 return;
                             },
                         },
                         no: {
                             label: "No",
                             callback: async () => {
-                                await chrisPremades.helpers.removeEffect(effect);
+                                await mba.removeEffect(effect);
                                 return;
                             }
                         }
@@ -73,13 +75,13 @@ export async function powerWordHeal({ speaker, actor, token, character, item, ar
                 'flags': {
                     'effectmacro': {
                         'onCreate': {
-                            'script': chrisPremades.helpers.functionToString(effectMacro)
+                            'script': mba.functionToString(effectMacro)
                         }
                     }
                 }
 
             }
-            await chrisPremades.helpers.createEffect(target.actor, effectData);
+            await mba.createEffect(target.actor, effectData);
         }
     }
 }

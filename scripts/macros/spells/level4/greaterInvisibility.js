@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function greaterInvisibility({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     const effectData = {
@@ -52,7 +54,7 @@ export async function greaterInvisibility({ speaker, actor, token, character, it
         .wait(1500)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(target.actor, effectData);
+            mba.createEffect(target.actor, effectData);
         })
 
         .play()

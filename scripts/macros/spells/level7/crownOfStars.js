@@ -1,6 +1,9 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Crown of Stars: Send Mote', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Crown of Stars: Send Mote', false);
     if (!featureData) return;
+    delete featureData._id;
     let ammount = 7;
     let level = workflow.castData.castLevel;
     if (level === 8) ammount = 9;
@@ -9,7 +12,7 @@ export async function cast({ speaker, actor, token, character, item, args, scope
     featureData.system.uses.max = ammount;
     const moteFile = "jb2a.twinkling_stars.points09.white";
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Crown of Stars Mote`, object: token })
+        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Crown of Stars Mote`, object: token });
         await warpgate.revert(token.document, 'Crown of Stars: Send Mote');
     }
     let effectData = {
@@ -46,7 +49,7 @@ export async function cast({ speaker, actor, token, character, item, args, scope
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -535,7 +538,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let moteNumber = crownFeature.system.uses.value + 1;
     await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Crown of Stars Mote ${moteNumber}`, object: token })
     if (crownFeature.system.uses.value >= 4) return;
-    let crownEffect = chrisPremades.helpers.findEffect(actor, 'Crown of Stars');
+    let crownEffect = mba.findEffect(actor, 'Crown of Stars');
     let dimLightValue = +crownEffect.changes[0].value;
     if (dimLightValue === 30) return;
     let updates = {
@@ -554,7 +557,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         ]
     };
-    await chrisPremades.helpers.updateEffect(crownEffect, updates);
+    await mba.updateEffect(crownEffect, updates);
 }
 
 export let crownOfStars = {

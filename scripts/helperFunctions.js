@@ -411,6 +411,9 @@ export let mba = {
         return { 'x': cornerPosition[0], 'y': cornerPosition[1] };
     },
     'getItem': function _getItem(actor, name) {
+        return actor.items.find(i => i.name === name);
+    },
+    'getItemFromFlag': function _getItemFromFlag(actor, name) {
         return actor.items.find(i => i.flags['mba-premades']?.info?.name === name);
     },
     'getItemFromCompendium': async function _getItemFromCompendium(key, name, ignoreNotFound, packFolderId) {
@@ -1146,5 +1149,18 @@ export let mba = {
     },
     'updateTargets': function _updateTargets(targets) {
         game.user.updateTokenTargets(targets);
+    },
+    'within30': function _within30(targets) {
+        if (targets.length < 2) return true;
+        const distanceArray = [];
+        for (let i = 0; i < targets.length; i++) {
+            for (let k = i + 1; k < targets.length; k++) {
+                let target1 = fromUuidSync(targets[i].document.uuid).object;
+                let target2 = fromUuidSync(targets[k].document.uuid).object;
+                distanceArray.push(mba.getDistance(target1, target2));
+            }
+        }
+        if (distanceArray.some((distance) => distance > 30)) return false;
+        else return true;
     },
 };

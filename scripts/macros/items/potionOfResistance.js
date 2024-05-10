@@ -1,3 +1,5 @@
+import {mba} from "../../helperFunctions.js";
+
 export async function potionOfResistance({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let type = workflow.item.name.substring(workflow.item.name.indexOf(" ") + 1).split(" ")[1].toLowerCase();
@@ -150,20 +152,20 @@ export async function potionOfResistance({ speaker, actor, token, character, ite
         .waitUntilFinished(-500)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(target.actor, effectData);
+            mba.createEffect(target.actor, effectData);
         })
 
         .play();
 
-    let vialItem = workflow.actor.items.filter(i => i.name === workflow.item.name)[0];
+    let vialItem = mba.getItem(workflow.actor, workflow.item.name);
     if (vialItem.system.quantity > 1) {
         vialItem.update({ "system.quantity": vialItem.system.quantity - 1 });
     } else {
         workflow.actor.deleteEmbeddedDocuments("Item", [vialItem.id]);
     }
-    let emptyVialItem = workflow.actor.items.filter(i => i.name === "Empty Vial")[0];
+    let emptyVialItem = mba.getItem(workflow.actor, "Empty Vial");
     if (!emptyVialItem) {
-        const itemData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Items', 'Empty Vial', false);
+        const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Vial', false);
         if (!itemData) {
             ui.notifications.warn("Unable to find item in compenidum! (Empty Vial)");
             return

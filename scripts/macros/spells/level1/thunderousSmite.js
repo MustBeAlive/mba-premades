@@ -1,4 +1,7 @@
-// Original macro by CPR
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} Thunderous Smite` })
@@ -21,13 +24,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'mba-premades': {
                 'spell': {
                     'thunderousSmite': {
-                        'saveDC': chrisPremades.helpers.getSpellDC(workflow.item)
+                        'saveDC': mba.getSpellDC(workflow.item)
                     }
                 }
             },
@@ -44,39 +47,38 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     await new Sequence()
 
         .effect()
-        .delay(500)
         .file(`jb2a.particles.outward.blue.02.03`)
         .attachTo(token, { offset: { y: -0.25 }, gridUnits: true, followRotation: false })
         .scaleToObject(1.2)
-        .playbackRate(2)
+        .delay(500)
         .duration(2000)
         .fadeOut(800)
         .fadeIn(1000)
+        .playbackRate(2)
         .animateProperty("sprite", "height", { from: 0, to: 2, duration: 3000, gridUnits: true, ease: "easeOutBack" })
         .filter("Blur", { blurX: 0, blurY: 15 })
         .opacity(2)
         .zIndex(0.2)
 
         .effect()
-        .delay(1050)
         .file("jb2a.divine_smite.caster.reversed.orange")
-        .atLocation(token)
-        .filter("ColorMatrix", { hue: 170 })
+        .attachTo(token)
         .scaleToObject(2.2)
+        .delay(1050)
         .startTime(900)
         .fadeIn(200)
+        .filter("ColorMatrix", { hue: 170 })
 
         .effect()
         .file("jb2a.divine_smite.caster.orange")
-        .atLocation(token)
-        .filter("ColorMatrix", { hue: 170 })
+        .attachTo(token)
         .scaleToObject(1.85)
+        .filter("ColorMatrix", { hue: 170 })
         .belowTokens()
         .waitUntilFinished(-1200)
 
         .effect()
         .file("jb2a.token_border.circle.static.blue.007")
-        .atLocation(token)
         .attachTo(token)
         .scaleToObject(2)
         .fadeOut(500)
@@ -85,7 +87,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .play();
 
-    await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+    await mba.createEffect(workflow.actor, effectData);
 }
 
 async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -94,23 +96,23 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     let effect = workflow.actor.effects.find(i => i.flags['mba-premades']?.spell?.thunderousSmite);
     if (!effect) return;
     let target = workflow.targets.first();
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'thunderousSmite', 250);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'thunderousSmite', 250);
     if (!queueSetup) return;
     let oldFormula = workflow.damageRoll._formula;
     let bonusDamageFormula = '2d6[thunder]';
-    if (workflow.isCritical) bonusDamageFormula = chrisPremades.helpers.getCriticalFormula(bonusDamageFormula);
+    if (workflow.isCritical) bonusDamageFormula = mba.getCriticalFormula(bonusDamageFormula);
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRoll = await new Roll(damageFormula).roll({ async: true });
     await workflow.setDamageRoll(damageRoll);
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Thunderous Smite: Push');
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Thunderous Smite: Push');
     if (!featureData) {
-        chrisPremades.queue.remove(workflow.item.uuid);
+        queue.remove(workflow.item.uuid);
         return;
     }
     delete featureData._id;
     featureData.system.save.dc = effect.flags['mba-premades'].spell.thunderousSmite.saveDC;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([target.document.uuid]);
+    let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
     await warpgate.wait(100);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     await new Sequence()
@@ -120,10 +122,10 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .shake({ duration: 1000, strength: 1, rotation: false, fadeOutDuration: 1000 })
 
         .effect()
-        .delay(300)
         .file("jb2a.impact.ground_crack.01.blue")
         .atLocation(target)
         .size(2.3 * token.document.width, { gridUnits: true })
+        .delay(300)
         .belowTokens()
         .playbackRate(0.85)
         .randomRotation()
@@ -148,12 +150,12 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .play();
 
     if (featureWorkflow.failedSaves.size) {
-        await chrisPremades.helpers.pushToken(workflow.token, target, 10);
-        if (!chrisPremades.helpers.checkTrait(target.actor, 'ci', 'prone') && !chrisPremades.helpers.findEffect(target.actor, "Prone")) await chrisPremades.helpers.addCondition(target.actor, 'Prone');
+        await mba.pushToken(workflow.token, target, 10);
+        if (!mba.checkTrait(target.actor, 'ci', 'prone') && !mba.findEffect(target.actor, "Prone")) await mba.addCondition(target.actor, 'Prone');
     }
-    let concEffect = chrisPremades.helpers.findEffect(workflow.actor, 'Concentrating');
-    if (concEffect) await chrisPremades.helpers.removeEffect(concEffect);
-    chrisPremades.queue.remove(workflow.item.uuid);
+    let concEffect = mba.findEffect(workflow.actor, 'Concentrating');
+    if (concEffect) await mba.removeEffect(concEffect);
+    queue.remove(workflow.item.uuid);
 }
 
 export let thunderousSmite = {

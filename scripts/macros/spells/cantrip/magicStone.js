@@ -7,8 +7,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     if (!ammount) return;
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Magic Stone: Throw Stone', false);
     if (!featureData) return;
+    delete featureData._id;
     const modEval = await new Roll('@mod', item.getRollData()).evaluate({ async: true });
-    console.log(modEval);
     featureData.system.attackBonus = `- @mod + ${modEval.total}`;
     featureData.system.damage.parts[0][0] = `1d6 + ${modEval.total}[bludgeoning]`;
     featureData.system.uses.max = ammount;

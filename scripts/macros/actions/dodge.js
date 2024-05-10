@@ -1,10 +1,11 @@
-// does not account "no speed = lose dodge" case (overkill)
+import {mba} from "../../helperFunctions.js";
+
+// does not account "no speed = lose dodge" case (overkill?)
 export async function dodge({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroEveryTurn() {
-        let effect = await chrisPremades.helpers.findEffect(actor, "Dodge");
-        let isIncapacitated = await chrisPremades.helpers.findEffect(actor, "Incapacitated");
-        if (!isIncapacitated) return;
-        await chrisPremades.helpers.removeEffect(effect);
+        let effect = await mbaPremades.helpers.findEffect(actor, "Dodge");
+        if (!mbaPremades.helpers.findEffect(actor, "Incapacitated")) return;
+        await mbaPremades.helpers.removeEffect(effect);
     }
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Dodge` })
@@ -38,10 +39,10 @@ export async function dodge({ speaker, actor, token, character, item, args, scop
             },
             'effectmacro': {
                 'onEachTurn': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroEveryTurn)
+                    'script': mba.functionToString(effectMacroEveryTurn)
                 },
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             }
         }
@@ -65,7 +66,7 @@ export async function dodge({ speaker, actor, token, character, item, args, scop
         .name(`${token.document.name} Dodge`)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(workflow.actor, effectData);
+            mba.createEffect(workflow.actor, effectData);
         })
 
         .play();

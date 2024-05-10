@@ -1,6 +1,8 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function mageArmor({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    let effectData = {
+    const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
@@ -57,7 +59,7 @@ export async function mageArmor({ speaker, actor, token, character, item, args, 
         .name(`${target.document.name} Mage Armor`)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(target.actor, effectData);
+            mba.createEffect(target.actor, effectData);
         })
 
         .play()

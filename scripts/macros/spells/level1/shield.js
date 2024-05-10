@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         new Sequence()
@@ -42,7 +44,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             },
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -77,7 +79,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .name(`${token.document.name} Shield`)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(workflow.actor, effectData)
+            mba.createEffect(workflow.actor, effectData)
         })
 
         .play()

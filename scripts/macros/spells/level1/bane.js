@@ -1,10 +1,13 @@
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel + 2;
     if (workflow.targets.size <= ammount) return;
-    let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+    let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
     if (!selection.buttons) return;
     let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
-    chrisPremades.helpers.updateTargets(newTargets);
+    mba.updateTargets(newTargets);
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -18,8 +21,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-        <p>Until the spell ends, you subtract 1d4 from all attack rolls and saving throws.</p>
-    `,
+            <p>Until the spell ends, you subtract 1d4 from all attack rolls and saving throws.</p>
+        `,
         'duration': {
             'seconds': 60
         },
@@ -40,7 +43,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -85,7 +88,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .wait(delay3)
 
             .thenDo(function () {
-                chrisPremades.helpers.createEffect(target.actor, effectData)
+                mba.createEffect(target.actor, effectData)
             })
 
             .play()

@@ -1,19 +1,21 @@
+import {mba} from "../../helperFunctions.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let effect = await chrisPremades.helpers.findEffect(workflow.actor, "Hooded Lantern");
+    let effect = await mba.findEffect(workflow.actor, "Hooded Lantern");
     if (!effect) {
-        let hasOil = workflow.actor.items.filter(i => i.name === "Oil Flask");
-        if (!hasOil.length) {
+        let hasOil = mba.getItem(workflow.actor, "Oil Flask");
+        if (!hasOil) {
             ui.notifications.warn("You don't have any oil to light up the lantern!");
             return;
         }
         let choices = [["Yes, light the lantern", "light"], ["No, cancel", "cancel"]];
-        let selection = await chrisPremades.helpers.dialog("Would you like to light a Hooded Lantern?", choices);
+        let selection = await mba.dialog("Would you like to light a Hooded Lantern?", choices);
         if (!selection || selection === "cancel") return;
         await mbaPremades.macros.hoodedLantern.light({ speaker, actor, token, character, item, args, scope, workflow })
         return;
     }
     let choices = [["Raise Lantern's hood (bright light)", "bright"], ["Lower Lantern's hood (dim light)", "dim"], ["Extinguish Lantern", "extinguish"]];
-    let selection = await chrisPremades.helpers.dialog("What would you like to do?", choices);
+    let selection = await mba.dialog("What would you like to do?", choices);
     if (!selection) return;
     switch (selection) {
         case "bright": {
@@ -101,7 +103,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 .name(`${workflow.token.document.name} Hooded Lantern`)
 
                 .thenDo(function () {
-                    chrisPremades.helpers.updateEffect(effect, updates);
+                    mba.updateEffect(effect, updates);
                 })
 
                 .play()
@@ -194,7 +196,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 .name(`${workflow.token.document.name} Hooded Lantern`)
 
                 .thenDo(function () {
-                    chrisPremades.helpers.updateEffect(effect, updates);
+                    mba.updateEffect(effect, updates);
                 })
 
                 .play()
@@ -202,7 +204,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             break;
         }
         case "extinguish": {
-            await chrisPremades.helpers.removeEffect(effect);
+            await mba.removeEffect(effect);
         }
     }
 }
@@ -287,7 +289,7 @@ async function light({ speaker, actor, token, character, item, args, scope, work
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             }
         }
@@ -311,20 +313,20 @@ async function light({ speaker, actor, token, character, item, args, scope, work
         .name(`${workflow.token.document.name} Hooded Lantern`)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(workflow.actor, effectData);
+            mba.createEffect(workflow.actor, effectData);
         })
 
         .play()
 
-    let oilFlaskItem = workflow.actor.items.filter(i => i.name === "Oil Flask")[0];
+    let oilFlaskItem = mba.getItem(workflow.actor, "Oil Flask");
     if (oilFlaskItem.system.quantity > 1) {
         oilFlaskItem.update({ "system.quantity": oilFlaskItem.system.quantity - 1 });
     } else {
         workflow.actor.deleteEmbeddedDocuments("Item", [oilFlaskItem.id]);
     }
-    let emptyFlaskItem = workflow.actor.items.filter(i => i.name === "Empty Flask")[0];
+    let emptyFlaskItem = mba.getItem(workflow.actor, "Empty Flask");
     if (!emptyFlaskItem) {
-        const itemData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
+        const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
         if (!itemData) {
             ui.notifications.warn("Unable to find item in compenidum! (Empty Flask)");
             return

@@ -1,17 +1,17 @@
-// Based on CPR Searing/Thunderous Smite
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         await (warpgate.wait(200));
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} Wrathful Smite` })
-        let targetEffectUuid = effect.flags['mba-premades']?.spell?.wrathfulSmite?.targetEffectUuid;
-        if (!targetEffectUuid) return;
-        let targetEffect = await fromUuid(targetEffectUuid);
+        let targetEffect = await fromUuid(effect.flags['mba-premades']?.spell?.wrathfulSmite?.targetEffectUuid);
         if (!targetEffect) return;
-        let targetUuid = effect.flags['mba-premades']?.spell?.wrathfulSmite?.targetUuid;
-        if (!targetUuid) return;
-        let target = await fromUuid(targetUuid);
+        let target = await fromUuid(effect.flags['mba-premades']?.spell?.wrathfulSmite?.targetUuid);
+        if (!target) return;
         await Sequencer.EffectManager.endEffects({ name: `${target.name} Wrathful Smite` })
-        await chrisPremades.helpers.removeEffect(targetEffect);
+        await mbaPremades.helpers.removeEffect(targetEffect);
     }
     let effectData = {
         'icon': workflow.item.img,
@@ -32,7 +32,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             'mba-premades': {
                 'spell': {
                     'wrathfulSmite': {
-                        'saveDC': chrisPremades.helpers.getSpellDC(workflow.item),
+                        'saveDC': mba.getSpellDC(workflow.item),
                         'level': workflow.castData.castLevel,
                         'used': false
                     }
@@ -40,7 +40,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             },
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -56,37 +56,36 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     await new Sequence()
 
         .effect()
-        .delay(500)
         .file(`jb2a.particles.outward.purple.02.03`)
         .attachTo(token, { offset: { y: -0.25 }, gridUnits: true, followRotation: false })
         .scaleToObject(1.2)
-        .playbackRate(2)
+        .delay(500)
         .duration(2000)
         .fadeOut(800)
         .fadeIn(1000)
+        .playbackRate(2)
         .animateProperty("sprite", "height", { from: 0, to: 2, duration: 3000, gridUnits: true, ease: "easeOutBack" })
         .filter("Blur", { blurX: 0, blurY: 15 })
         .opacity(2)
         .zIndex(0.2)
 
         .effect()
-        .delay(1050)
         .file("jb2a.divine_smite.caster.reversed.purplepink")
-        .atLocation(token)
+        .attachTo(token)
         .scaleToObject(2.2)
+        .delay(1050)
         .startTime(900)
         .fadeIn(200)
 
         .effect()
         .file("jb2a.divine_smite.caster.purplepink")
-        .atLocation(token)
+        .attachTo(token)
         .scaleToObject(1.85)
         .belowTokens()
         .waitUntilFinished(-1200)
 
         .effect()
         .file("jb2a.token_border.circle.static.purple.007")
-        .atLocation(token)
         .attachTo(token)
         .scaleToObject(2)
         .fadeOut(500)
@@ -95,9 +94,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .play();
 
-    let effect = await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+    let effect = await mba.createEffect(workflow.actor, effectData);
     let updates = { 'flags.mba-premades.spell.wrathfulSmite.targetEffectUuid': effect.uuid };
-    await chrisPremades.helpers.updateEffect(effect, updates);
+    await mba.updateEffect(effect, updates);
 }
 
 async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -106,24 +105,23 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     let effect = workflow.actor.effects.find(i => i.flags['mba-premades']?.spell?.wrathfulSmite);
     if (!effect) return;
     let target = workflow.targets.first();
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'wrathfulSmite', 250);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'wrathfulSmite', 250);
     if (!queueSetup) return;
     let oldFormula = workflow.damageRoll._formula;
     let bonusDamageFormula = '1d6[psychic]';
-    if (workflow.isCritical) bonusDamageFormula = chrisPremades.helpers.getCriticalFormula(bonusDamageFormula);
+    if (workflow.isCritical) bonusDamageFormula = mba.getCriticalFormula(bonusDamageFormula);
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRoll = await new Roll(damageFormula).roll({ async: true });
     await workflow.setDamageRoll(damageRoll);
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Wrathful Smite: Fear');
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Wrathful Smite: Fear');
     if (!featureData) {
-        chrisPremades.queue.remove(workflow.item.uuid);
+        queue.remove(workflow.item.uuid);
         return;
     }
     delete featureData._id;
     featureData.system.save.dc = effect.flags['mba-premades'].spell.wrathfulSmite.saveDC;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([target.document.uuid]);
-    await warpgate.wait(100);
+    let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
 
     await new Sequence()
@@ -133,10 +131,10 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .shake({ duration: 1000, strength: 1, rotation: false, fadeOutDuration: 1000 })
 
         .effect()
-        .delay(300)
         .file("jb2a.impact.ground_crack.purple.01")
         .atLocation(target)
         .size(2.3 * token.document.width, { gridUnits: true })
+        .delay(300)
         .belowTokens()
         .playbackRate(0.85)
         .randomRotation()
@@ -178,12 +176,16 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
             let originEffect = await fromUuid(effect.origin);
             if (!originEffect) return;
             await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Wrathful Smite` });
-            await chrisPremades.helpers.removeEffect(originEffect);
+            await mbaPremades.helpers.removeEffect(originEffect);
         }
-        let effectData = {
+        const effectData = {
             'name': 'Wrathful Smite: Fear',
             'icon': effect.icon,
             'origin': effect.uuid,
+            'description': `
+                <p>You are frightened by Wrathul Smite.</p>
+                <p>As an action, you can make a Wisdom ability check to steel your resolve and end this effect on a success.</p>
+            `,
             'duration': {
                 'seconds': effect.duration.seconds
             },
@@ -191,7 +193,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
                 {
                     'key': 'flags.midi-qol.OverTime',
                     'mode': 0,
-                    'value': 'actionSave=true, rollType=check, saveAbility=wis, saveDC=' + effect.flags['mba-premades'].spell.wrathfulSmite.saveDC + ', saveMagic=true, name=Wrathful Smite: Action Save',
+                    'value': 'actionSave=true, rollType=check, saveAbility=wis, saveDC=' + effect.flags['mba-premades'].spell.wrathfulSmite.saveDC + ', saveMagic=true, name=Fear: Action Save',
                     'priority': 20
                 },
                 {
@@ -204,7 +206,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
             'flags': {
                 'effectmacro': {
                     'onDelete': {
-                        'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                        'script': mba.functionToString(effectMacroDel)
                     }
                 },
                 'midi-qol': {
@@ -216,7 +218,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
                 }
             }
         };
-        let targetEffect = await chrisPremades.helpers.createEffect(target.actor, effectData);
+        let targetEffect = await mba.createEffect(target.actor, effectData);
         let updates = {
             'flags': {
                 'mba-premades': {
@@ -230,12 +232,12 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
                 }
             }
         };
-        await chrisPremades.helpers.updateEffect(effect, updates);
-        chrisPremades.queue.remove(workflow.item.uuid);
+        await mba.updateEffect(effect, updates);
+        queue.remove(workflow.item.uuid);
         return;
     }
-    await chrisPremades.helpers.removeEffect(effect);
-    chrisPremades.queue.remove(workflow.item.uuid);
+    await mba.removeEffect(effect);
+    queue.remove(workflow.item.uuid);
 }
 
 export let wrathfulSmite = {

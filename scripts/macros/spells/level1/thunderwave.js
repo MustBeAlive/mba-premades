@@ -1,3 +1,6 @@
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
 
@@ -42,12 +45,12 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'thunderWave', 50);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'thunderWave', 50);
     if (!queueSetup) return;
     for (let target of Array.from(workflow.failedSaves)) {
-        chrisPremades.helpers.pushToken(workflow.token, target, 10);
+        mba.pushToken(workflow.token, target, 10);
     }
-    chrisPremades.queue.remove(workflow.item.uuid);
+    queue.remove(workflow.item.uuid);
 }
 
 export let thunderwave = {

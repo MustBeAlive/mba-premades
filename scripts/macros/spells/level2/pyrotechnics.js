@@ -1,4 +1,4 @@
-// fix chris's flag for fog cloud
+
 export async function pyrotechnics({speaker, actor, token, character, item, args, scope, workflow}) {
     let choices = [['Smoke Cloud', 'cloud'], ['Fireworks Explosion', 'explosion']];
     let selection = await chrisPremades.helpers.dialog('Choose one of the following effects:', choices);
@@ -17,12 +17,13 @@ export async function pyrotechnics({speaker, actor, token, character, item, args
                 'midi-qol': {
                     'originUuid': workflow.item.uuid
                 },
-                'chris-premades': {
+                'mba-premades': {
                     'spell': {
                         'fogCloud': true
                     }
                 },
                 'walledtemplates': {
+                    'hideBorder': "alwaysHide",
                     'wallRestriction': 'move',
                     'wallsBlock': 'recurse',
                 }
@@ -153,6 +154,7 @@ export async function pyrotechnics({speaker, actor, token, character, item, args
                 'originUuid': workflow.item.uuid
             },
             'walledtemplates': {
+                'hideBorder': "alwaysHide",
                 'wallRestriction': 'move',
                 'wallsBlock': 'recurse',
             }

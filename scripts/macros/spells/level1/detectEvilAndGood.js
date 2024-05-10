@@ -1,6 +1,9 @@
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Detect Evil and Good: Ping', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Detect Evil and Good: Ping', false);
     if (!featureData) return;
+    delete featureData._id;
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Detect Evil and Good` })
         await warpgate.revert(token.document, 'Detect Evil and Good: Ping');
@@ -9,14 +12,24 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
-        'description': "<p>For the duration, you know if there is an aberration, celestial, elemental, fey, fiend, or undead within 30 feet of you, as well as where the creature is located. Similarly, you know if there is a place or object within 30 feet of you that has been magically consecrated or desecrated.</p><p>The spell can penetrate most barriers, but it is blocked by 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood or dirt.</p>",
+        'description': `
+            <p>For the duration, you know if there is an aberration, celestial, elemental, fey, fiend, or undead within 30 feet of you, as well as where the creature is located.</p>
+            <p>Similarly, you know if there is a place or object within 30 feet of you that has been magically consecrated or desecrated.</p>
+            <p>The spell can penetrate most barriers, but it is blocked by 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood or dirt.</p>
+            <p><b>Aberration</b>: Purple</p>
+            <p><b>Celestial</b>: Yellow</p>
+            <p><b>Elemental</b>: Blue</p>
+            <p><b>Fey</b>: Green</p>
+            <p><b>Fiend</b>: Red</p>
+            <p><b>Undead</b>: Black</p>
+        `,
         'duration': {
             'seconds': 600
         },
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -72,6 +85,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .scaleIn(0, 4000, { ease: "easeOutCubic" })
         .scaleToObject(2)
         .filter("ColorMatrix", { saturate: -1, brightness: 1 })
+        .fadeOut(1000)
         .persist()
         .name(`${token.document.name} Detect Evil and Good`)
 
@@ -87,12 +101,15 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             new Sequence()
 
                 .effect()
-                .delay(gridDistance * 125)
-                .file("jb2a.detect_magic.circle.grey")
+                .file("jb2a.markers.circle_of_stars.green")
                 .atLocation(target)
                 .scaleToObject(2.5)
+                .delay(gridDistance * 125)
+                .duration(5000)
+                .fadeIn(1000)
+                .fadeOut(1000)
+                .filter("ColorMatrix", { saturate: -1, brightness: 0.8 })
                 .mask(target)
-                .opacity(0.75)
 
                 .wait(500)
 
@@ -112,7 +129,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 .zIndex(0.1)
                 .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "aberration";
                 })
 
@@ -130,7 +147,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 .opacity(0.75)
                 .belowTokens()
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "aberration";
                 })
 
@@ -150,7 +167,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 .zIndex(0.1)
                 .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "celestial";
                 })
 
@@ -168,7 +185,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 .opacity(0.75)
                 .belowTokens()
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "celestial";
                 })
 
@@ -188,7 +205,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 .zIndex(0.1)
                 .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "elemental";
                 })
 
@@ -206,7 +223,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 .opacity(0.75)
                 .belowTokens()
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "elemental";
                 })
 
@@ -226,7 +243,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 .zIndex(0.1)
                 .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "fey";
                 })
 
@@ -244,7 +261,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 .opacity(0.75)
                 .belowTokens()
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "fey";
                 })
 
@@ -264,7 +281,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 .zIndex(0.1)
                 .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "fiend";
                 })
 
@@ -282,7 +299,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 .opacity(0.75)
                 .belowTokens()
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "fiend";
                 })
 
@@ -302,7 +319,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 .zIndex(0.1)
                 .loopProperty("alphaFilter", "alpha", { values: [0.9, 0.1], duration: 1500, pingPong: true, delay: 500 })
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "undead";
                 })
 
@@ -320,7 +337,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 .opacity(0.75)
                 .belowTokens()
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "undead";
                 })
 
@@ -362,12 +379,15 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             new Sequence()
 
                 .effect()
-                .delay(gridDistance * 125)
-                .file("jb2a.detect_magic.circle.grey")
+                .file("jb2a.markers.circle_of_stars.green")
                 .atLocation(target)
                 .scaleToObject(2.5)
+                .delay(gridDistance * 125)
+                .duration(5000)
+                .fadeIn(1000)
+                .fadeOut(1000)
+                .filter("ColorMatrix", { saturate: -1, brightness: 0.8 })
                 .mask(target)
-                .opacity(0.75)
 
                 .wait(500)
 
@@ -387,7 +407,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 .zIndex(0.1)
                 .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "aberration";
                 })
 
@@ -405,7 +425,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 .opacity(0.75)
                 .belowTokens()
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "aberration";
                 })
 
@@ -425,7 +445,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 .zIndex(0.1)
                 .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "celestial";
                 })
 
@@ -443,7 +463,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 .opacity(0.75)
                 .belowTokens()
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "celestial";
                 })
 
@@ -463,7 +483,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 .zIndex(0.1)
                 .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "elemental";
                 })
 
@@ -481,7 +501,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 .opacity(0.75)
                 .belowTokens()
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "elemental";
                 })
 
@@ -501,7 +521,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 .zIndex(0.1)
                 .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "fey";
                 })
 
@@ -519,7 +539,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 .opacity(0.75)
                 .belowTokens()
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "fey";
                 })
 
@@ -539,7 +559,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 .zIndex(0.1)
                 .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "fiend";
                 })
 
@@ -557,7 +577,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 .opacity(0.75)
                 .belowTokens()
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "fiend";
                 })
 
@@ -577,7 +597,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 .zIndex(0.1)
                 .loopProperty("alphaFilter", "alpha", { values: [0.9, 0.1], duration: 1500, pingPong: true, delay: 500 })
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "undead";
                 })
 
@@ -595,7 +615,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 .opacity(0.75)
                 .belowTokens()
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     return target.actor.system.details.type.value == "undead";
                 })
 

@@ -6,9 +6,12 @@
 // Any Weapon/Armor/Ammo that has '+1/+2/+3' in its name;
 // Any item that requires attunement
 
+import { mba } from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Detect Magic: Target Creature', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Detect Magic: Target Creature', false);
     if (!featureData) return;
+    delete featureData._id;
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Detect Magic` })
         await warpgate.revert(token.document, 'Detect Magic: Target Creature');
@@ -24,7 +27,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -79,6 +82,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .attachTo(token)
         .scaleIn(0, 4000, { ease: "easeOutCubic" })
         .scaleToObject(2)
+        .fadeOut(1000)
         .persist()
         .name(`${token.document.name} Detect Magic`)
 
@@ -93,11 +97,13 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
                 .effect()
                 .delay(gridDistance * 125)
-                .file("jb2a.detect_magic.circle.blue")
+                .file("jb2a.markers.circle_of_stars.blue")
                 .atLocation(target)
                 .scaleToObject(2.5)
+                .duration(5000)
+                .fadeIn(1000)
+                .fadeOut(1000)
                 .mask(target)
-                .opacity(0.75)
 
                 .wait(500)
 
@@ -116,7 +122,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 .zIndex(0.1)
                 .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (mba.findEffect(target.actor, "Nondetection")) return false;
                     let validItems = target.actor.items.filter(i => i.type === 'weapon').concat(target.actor.items.filter(i => i.type === 'equipment'), target.actor.items.filter(i => i.type === 'consumable'));
                     let hasMagicItems = validItems.filter(i => i.system.properties?.mgc === true || i.system.attunement != 0 || i.name.includes("+1") || i.name.includes("+2") || i.name.includes("+3"));
                     return (hasMagicItems.length);
@@ -136,7 +142,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 .opacity(0.75)
                 .belowTokens()
                 .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return;
+                    if (mba.findEffect(target.actor, "Nondetection")) return;
                     let validItems = target.actor.items.filter(i => i.type === 'weapon').concat(target.actor.items.filter(i => i.type === 'equipment'), target.actor.items.filter(i => i.type === 'consumable'));
                     let hasMagicItems = validItems.filter(i => i.system.properties?.mgc === true || i.system.attunement != 0 || i.name.includes("+1") || i.name.includes("+2") || i.name.includes("+3"));
                     return (hasMagicItems.length);
@@ -151,15 +157,17 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let target = workflow.targets.first();
     let validItems = target.actor.items.filter(i => i.type === 'weapon').concat(target.actor.items.filter(i => i.type === 'equipment'), target.actor.items.filter(i => i.type === 'consumable'));
     let hasMagicItems = validItems.filter(i => i.system.properties?.mgc === true || i.system.attunement != 0 || i.name.includes("+1") || i.name.includes("+2") || i.name.includes("+3"));
-    if (!hasMagicItems.length || chrisPremades.helpers.findEffect(target.actor, "Nondetection")) {
+    if (!hasMagicItems.length || mba.findEffect(target.actor, "Nondetection")) {
         new Sequence()
 
             .effect()
-            .file("jb2a.detect_magic.circle.blue")
+            .file("jb2a.markers.circle_of_stars.blue")
             .atLocation(target)
             .scaleToObject(2.5)
+            .duration(5000)
+            .fadeIn(1000)
+            .fadeOut(1000)
             .mask(target)
-            .opacity(0.75)
 
             .play()
 
@@ -168,11 +176,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     new Sequence()
 
         .effect()
-        .file("jb2a.detect_magic.circle.blue")
+        .file("jb2a.markers.circle_of_stars.blue")
         .atLocation(target)
         .scaleToObject(2.5)
+        .duration(5000)
+        .fadeIn(1000)
+        .fadeOut(1000)
         .mask(target)
-        .opacity(0.75)
 
         .wait(500)
 

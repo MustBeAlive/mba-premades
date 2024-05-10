@@ -1,45 +1,42 @@
-// Original macro by CPR
-export async function magicMissile({speaker, actor, token, character, item, args, scope, workflow}) {
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
+export async function magicMissile({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.targets.size) return;
     let maxMissiles = 3 + (workflow.castData.castLevel - 1);
     let targets = Array.from(workflow.targets);
-    let selection = await chrisPremades.helpers.selectTarget('Сколько зарядов и в кого? (Max: ' + maxMissiles + ')', chrisPremades.constants.okCancel, targets, true, 'number');
+    let selection = await mba.selectTarget('Choose targets and ammount of missiles (Max: ' + maxMissiles + ')', constants.okCancel, targets, true, 'number');
     if (!selection.buttons) return;
     let total = 0;
     for (let i of selection.inputs) {
         if (!isNaN(i)) total += i;
     }
     if (total > maxMissiles) {
-        ui.notifications.info('Перебор зарядов, попробуй еще раз!');
+        ui.notifications.info('Input is bigger than missile ammount, try again!');
         return;
     }
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Magic Missile: Bolt', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Magic Missile: Bolt', false);
     if (!featureData) return;
-    featureData.flags['chris-premades'] = {
-        'spell': {
-            'castData': workflow.castData
-        }
-    };
-    featureData.flags['chris-premades'].spell.castData.school = workflow.item.system.school;
+    featureData.flags['mba-premades'] = { 'spell': { 'castData': workflow.castData } };
+    featureData.flags['mba-premades'].spell.castData.school = workflow.item.system.school;
     delete featureData._id;
-    if (!game.settings.get('chris-premades', 'Magic Missile Toggle') && !chrisPremades.helpers.getConfiguration(workflow.item, 'homebrew')) {
-        let damageFormula = '1d4[force] + 1';
-        if (chrisPremades.helpers.getItem(workflow.actor, 'Empowered Evocation')) damageFormula += ' + ' + workflow.actor.system.abilities.int.mod;
-        let damageRoll = await new Roll(damageFormula).roll({'async': true});
-        damageRoll.toMessage({
-            rollMode: 'roll',
-            speaker: {'alias': name},
-            flavor: workflow.item.name
-        });
-        featureData.system.damage.parts = [
-            [
-                damageRoll.total + '[force]',
-                'force'
-            ]
-        ];
-    }
-    let feature = new CONFIG.Item.documentClass(featureData, {'parent': workflow.actor});
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([]);
+    let damageFormula = '1d4[force] + 1';
+    if (mba.getItem(workflow.actor, 'Empowered Evocation')) damageFormula += ' + ' + workflow.actor.system.abilities.int.mod;
+    let damageRoll = await new Roll(damageFormula).roll({ 'async': true });
+    damageRoll.toMessage({
+        rollMode: 'roll',
+        speaker: { 'alias': name },
+        flavor: workflow.item.name
+    });
+    featureData.system.damage.parts = [
+        [
+            damageRoll.total + '[force]',
+            'force'
+        ]
+    ];
+
+    let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
+    let [config, options] = constants.syntheticItemWorkflowOptions([]);
     let colors = [
         'grey',
         'dark_red',
@@ -49,7 +46,7 @@ export async function magicMissile({speaker, actor, token, character, item, args
         'blue',
         'purple'
     ];
-    let colorSelection = chrisPremades.helpers.getConfiguration(workflow.item, 'color') ?? 'purple';
+    let colorSelection = "random";
     if (colorSelection === 'random' || colorSelection === 'cycle') await Sequencer.Preloader.preload('jb2a.magic_missile');
     let lastColor = Math.floor(Math.random() * colors.length);
     for (let i = 0; i < selection.inputs.length; i++) {
@@ -66,7 +63,16 @@ export async function magicMissile({speaker, actor, token, character, item, args
             } else {
                 path += colorSelection;
             }
-            new Sequence().effect().file(path).atLocation(workflow.token).stretchTo(targets[i]).randomizeMirrorY().play();
+            new Sequence()
+
+                .effect()
+                .file(path)
+                .atLocation(workflow.token)
+                .stretchTo(targets[i])
+                .randomizeMirrorY()
+
+                .play();
+
             await MidiQOL.completeItemUse(feature, config, options);
         }
     }

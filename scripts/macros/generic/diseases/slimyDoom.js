@@ -1,5 +1,12 @@
-export async function slimyDoom({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let target = workflow.targets.first();
+import {mba} from "../../../helperFunctions.js";
+
+export async function slimyDoom() {
+    let target = game.user.targets.first();
+    if (!target) target = await fromUuidSync(game.user._lastSelected).object;
+    if (!target) {
+        ui.notifications.warn("Unable to find target!");
+        return;
+    }
     let [isDiseased] = target.actor.effects.filter(e => e.flags['mba-premades']?.name === "Slimy Doom");
     if (isDiseased) {
         ui.notifications.info('Target is already affected by Slimy Doom!');
@@ -48,7 +55,7 @@ export async function slimyDoom({ speaker, actor, token, character, item, args, 
             }
         }
     };
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
+    await mba.createEffect(target.actor, effectData);
     ChatMessage.create({
         whisper: ChatMessage.getWhisperRecipients("GM"),
         content: `<p><b>${target.document.name}</b> is infected with <b>Slimy Doom</b></p>`,
@@ -85,5 +92,5 @@ export async function slimyDoomDamaged({ speaker, actor, token, character, item,
             }
         }
     };
-    await chrisPremades.helpers.createEffect(diseased.actor, effectData);
+    await mba.createEffect(diseased.actor, effectData);
 }

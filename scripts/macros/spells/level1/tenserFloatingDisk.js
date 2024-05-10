@@ -1,18 +1,25 @@
-// Based on multiple CPR Summon Macro
+import {tashaSummon} from "../../generic/tashaSummon.js";
+
 export async function tenserFloatingDisk({speaker, actor, token, character, item, args, scope, workflow}) {
     let sourceActor = game.actors.getName('MBA - Floating Disk');
     if (!sourceActor) {
         ui.notifications.warn('Missing actor in the side panel! (MBA - Floating Disk)');
         return;
     }
-    let name = chrisPremades.helpers.getConfiguration(workflow.item, 'name') ?? 'Floating Disk';
-    if (name === '') name = 'Floating Disk';
+    let tokenName = `${workflow.token.document.name} Floating Disk`;
     let updates = {
+        'actor': {
+            'name': tokenName,
+            'prototypeToken': {
+                'name': tokenName,
+                'disposition': workflow.token.document.disposition
+            }
+        },
         'token': {
+            'name': tokenName,
             'disposition': workflow.token.document.disposition
         }
     };
-    let animation = chrisPremades.helpers.getConfiguration(workflow.item, 'animation-') ?? 'future';
-    if (chrisPremades.helpers.jb2aCheck() != 'patreon' || !chrisPremades.helpers.aseCheck()) animation = 'none';
-    await chrisPremades.tashaSummon.spawn(sourceActor, updates, 3600, workflow.item, 30, workflow.token, animation);
+    let animation = 'future';
+    await tashaSummon.spawn(sourceActor, updates, 3600, workflow.item, 30, workflow.token, animation, {}, workflow.castData.castLevel);
 }

@@ -1,6 +1,8 @@
+import {mba} from "../../helperFunctions.js";
+
 export async function drawCard({ speaker, actor, token, character, item, args, scope, workflow }) {
     let options = [["Yes, let's draw some cards", "yes"], ["No, deny card draw", "no"]];
-    let selection = await chrisPremades.helpers.remoteDialog(workflow.item.name, options, game.users.activeGM.id, `<b>${game.users.current.name}</b> wants to draw some Tarokka cards`);
+    let selection = await mba.remoteDialog(workflow.item.name, options, game.users.activeGM.id, `<b>${game.users.current.name}</b> wants to draw some Tarokka cards`);
     if (!selection || selection === "no") {
         ui.notifications.info("GM has denied your request. Sorry!");
         return;

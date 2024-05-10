@@ -1,5 +1,12 @@
-export async function throatLeeches({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let target = workflow.targets.first();
+import {mba} from "../../../helperFunctions.js";
+
+export async function throatLeeches() {
+    let target = game.user.targets.first();
+    if (!target) target = await fromUuidSync(game.user._lastSelected).object;
+    if (!target) {
+        ui.notifications.warn("Unable to find target!");
+        return;
+    }
     let [isDiseased] = target.actor.effects.filter(e => e.flags['mba-premades']?.name === "Throat Leeches");
     if (isDiseased) {
         ui.notifications.info('Target is already affected by Throat Leeches!');
@@ -34,11 +41,11 @@ export async function throatLeeches({ speaker, actor, token, character, item, ar
                 }
                 let currentExhaustion = effect.flags['mba-premades']?.currentExhaustion;
                 let saveDC = 12;
-                let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'con');
+                let saveRoll = await mbaPremades.helpers.rollRequest(token, 'save', 'con');
                 if (saveRoll.total < saveDC) {
                     currentExhaustion += 1;
                     if (currentExhaustion > 6) currentExhaustion = 6; // temp workaround
-                    await chrisPremades.helpers.addCondition(token.actor, `Exhaustion ${currentExhaustion}`);
+                    await mbaPremades.helpers.addCondition(token.actor, `Exhaustion ${currentExhaustion}`);
                     let updates = {
                         'flags': {
                             'mba-premades': {
@@ -46,12 +53,12 @@ export async function throatLeeches({ speaker, actor, token, character, item, ar
                             }
                         }
                     };
-                    await chrisPremades.helpers.updateEffect(effect, updates);
+                    await mbaPremades.helpers.updateEffect(effect, updates);
                     return;
                 }
                 if (saveRoll.total >= saveDC && currentExhaustion > 1) {
                     currentExhaustion -= 1;
-                    await chrisPremades.helpers.addCondition(token.actor, `Exhaustion ${currentExhaustion}`);
+                    await mbaPremades.helpers.addCondition(token.actor, `Exhaustion ${currentExhaustion}`);
                     let updates = {
                         'flags': {
                             'mba-premades': {
@@ -59,7 +66,7 @@ export async function throatLeeches({ speaker, actor, token, character, item, ar
                             }
                         }
                     };
-                    await chrisPremades.helpers.updateEffect(effect, updates);
+                    await mbaPremades.helpers.updateEffect(effect, updates);
                     return;
                 }
                 if (saveRoll.total >= saveDC && currentExhaustion === 1) {
@@ -68,23 +75,23 @@ export async function throatLeeches({ speaker, actor, token, character, item, ar
                         content: `<b>${token.document.name}</b> is cured from <b>Throat Leeches!</b>`,
                         speaker: { actor: null, alias: "Disease Announcer" }
                     });
-                    await chrisPremades.helpers.removeEffect(effect);
+                    await mbaPremades.helpers.removeEffect(effect);
                 }
             }
             async function effectMacroThroatLeechesDel() {
                 let exhaustion = token.actor.effects.filter(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
                 if (!exhaustion.length) return
-                await chrisPremades.helpers.removeEffect(exhaustion[0]);
+                await mbaPremades.helpers.removeEffect(exhaustion[0]);
             }
             let level;
             let exhaustion = token.actor.effects.filter(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
             if (!exhaustion.length) {
-                await chrisPremades.helpers.addCondition(token.actor, "Exhaustion 1");
+                await mbaPremades.helpers.addCondition(token.actor, "Exhaustion 1");
                 level = 1;
             } else {
                 level = +exhaustion[0].name.slice(-1);
                 level += 1;
-                await chrisPremades.helpers.addCondition(token.actor, `Exhaustion ${level}`);
+                await mbaPremades.helpers.addCondition(token.actor, `Exhaustion ${level}`);
             }
             let number = Math.floor(Math.random() * 10000);
             const effectData = {
@@ -96,10 +103,10 @@ export async function throatLeeches({ speaker, actor, token, character, item, ar
                     },
                     'effectmacro': {
                         'dnd5e.longRest': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroThroatLeeches)
+                            'script': mbaPremades.helpers.functionToString(effectMacroThroatLeeches)
                         },
                         'onDelete': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroThroatLeechesDel)
+                            'script': mbaPremades.helpers.functionToString(effectMacroThroatLeechesDel)
                         }
                     },
                     'mba-premades': {
@@ -112,8 +119,8 @@ export async function throatLeeches({ speaker, actor, token, character, item, ar
                     }
                 }
             };
-            await chrisPremades.helpers.createEffect(token.actor, effectData);
-            await chrisPremades.helpers.removeEffect(effect);
+            await mbaPremades.helpers.createEffect(token.actor, effectData);
+            await mbaPremades.helpers.removeEffect(effect);
         });
     }
     let number = Math.floor(Math.random() * 10000);
@@ -126,7 +133,7 @@ export async function throatLeeches({ speaker, actor, token, character, item, ar
             },
             'effectmacro': {
                 'onCreate': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroThroatLeechesManifest)
+                    'script': mba.functionToString(effectMacroThroatLeechesManifest)
                 }
             },
             'mba-premades': {
@@ -139,7 +146,7 @@ export async function throatLeeches({ speaker, actor, token, character, item, ar
             }
         }
     };
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
+    await mba.createEffect(target.actor, effectData);
     ChatMessage.create({
         whisper: ChatMessage.getWhisperRecipients("GM"),
         content: `<p><b>${target.document.name}</b> is infected with <b>Throat Leeches</b></p><p>Symptoms will manifest in <b>${throatLeechesRoll.total} hours</b></p>`,

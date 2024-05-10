@@ -1,5 +1,6 @@
 import {mba} from "../../helperFunctions.js";
 import {socket} from "../../module.js";
+import {queue} from "../mechanics/queue.js";
 
 async function setupFolder() {
     let folder = game.folders.find(i => i.name === 'MBA Summons' && i.type === 'Actor');
@@ -142,22 +143,22 @@ async function meleeAttack({ speaker, actor, token, character, item, args, scope
     let attackBonus = workflow.actor.flags['mba-premades']?.summon?.attackBonus?.melee;
     if (!attackBonus) return;
     if (workflow.item.flags['mba-premades']?.attackRoll?.enabled) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'tashaMeleeAttack', 50);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'tashaMeleeAttack', 50);
     if (!queueSetup) return;
     let attackRoll = await mba.addToRoll(workflow.attackRoll, attackBonus);
     await workflow.setAttackRoll(attackRoll);
-    chrisPremades.queue.remove(workflow.item.uuid);
+    queue.remove(workflow.item.uuid);
 }
 
 async function rangedAttack({ speaker, actor, token, character, item, args, scope, workflow }) {
     let attackBonus = workflow.actor.flags['mba-premades']?.summon?.attackBonus?.ranged;
     if (!attackBonus) return;
     if (workflow.item.flags['mba-premades']?.attackRoll?.enabled) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'tashaRangedAttack', 50);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'tashaRangedAttack', 50);
     if (!queueSetup) return;
     let attackRoll = await mba.addToRoll(workflow.attackRoll, attackBonus);
     await workflow.setAttackRoll(attackRoll);
-    chrisPremades.queue.remove(workflow.item.uuid);
+    queue.remove(workflow.item.uuid);
 }
 
 function updateSummonInitiative(actor, [combatant]) {

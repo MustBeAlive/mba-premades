@@ -1,3 +1,6 @@
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.targets.size) return;
     let validTargets = [];
@@ -5,13 +8,13 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         if (i.actor.system.details.type.value != 'undead' && i.actor.system.details.type.value != 'construct') validTargets.push(i.id);
     }
     if (!validTargets.length) return;
-    await chrisPremades.helpers.updateTargets(validTargets);
+    mba.updateTargets(validTargets);
     await warpgate.wait(100);
     let ammount = 6;
-    let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(game.user.targets), false, 'multiple', undefined, false, 'Choose which targets to keep (Max: ' + ammount + ')');
+    let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(game.user.targets), false, 'multiple', undefined, false, 'Choose which targets to keep (Max: ' + ammount + ')');
     if (!selection.buttons) return;
     let finalTargets = selection.inputs.filter(i => i).slice(0, ammount);
-    chrisPremades.helpers.updateTargets(finalTargets);
+    mba.updateTargets(finalTargets);
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -55,7 +58,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .play()
 
-    targets.forEach(target => {
+    for (let target of targets) {
 
         new Sequence()
 
@@ -86,7 +89,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .zIndex(0.2)
 
             .play();
-    })
+    }
 }
 
 export let massCureWounds = {

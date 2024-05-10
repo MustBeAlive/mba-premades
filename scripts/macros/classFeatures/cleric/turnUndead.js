@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let lightMap = true;
     new Sequence()
@@ -180,18 +182,18 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     };
     let validTargets = [];
     for (let i of Array.from(workflow.targets)) {
-        if (chrisPremades.helpers.raceOrType(i.actor) != 'undead') continue;
+        if (mba.raceOrType(i.actor) != 'undead') continue;
         if (i.actor.system.attributes.hp.value === 0) continue;
-        if (i.actor.flags['mba-bestiary']?.feature?.turnResistance) await chrisPremades.helpers.createEffect(i.actor, effectDataResistance);
-        if (i.actor.flags['mba-bestiary']?.feature?.turnImmunity) await chrisPremades.helpers.createEffect(i.actor, effectDataImmunity);
+        if (i.actor.flags['mba-bestiary']?.feature?.turnResistance) await mba.createEffect(i.actor, effectDataResistance);
+        if (i.actor.flags['mba-bestiary']?.feature?.turnImmunity) await mba.createEffect(i.actor, effectDataImmunity);
         validTargets.push(i.id);
     }
-    chrisPremades.helpers.updateTargets(validTargets);
+    mba.updateTargets(validTargets);
 }
 
 async function save({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.failedSaves.size === 0) return;
-    let classIdentifier = chrisPremades.helpers.getConfiguration(workflow.item, 'identifier') ?? 'cleric';
+    let classIdentifier = 'cleric';
     let clericLevels = workflow.actor.classes[classIdentifier]?.system?.levels;
     if (!clericLevels) return;
     let destroyLevel;
@@ -224,7 +226,7 @@ async function save({ speaker, actor, token, character, item, args, scope, workf
             .play();
     }
     if (destroyTokens.length === 0) return;
-    await chrisPremades.helpers.applyDamage(destroyTokens, '10000', 'none');
+    await mba.applyDamage(destroyTokens, '10000', 'none');
 }
 
 export let turnUndead = {

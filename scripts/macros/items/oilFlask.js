@@ -1,3 +1,6 @@
+import { mba } from "../../helperFunctions.js";
+import { constants } from "../generic/constants.js";
+
 //think of a way to implement template case
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let choices = [
@@ -6,7 +9,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Pour oil on the ground (5 ft. square)", "pour"],
         ["Cancel", "cancel"]
     ];
-    let selection = await chrisPremades.helpers.dialog("What would you like to do?", choices);
+    let selection = await mba.dialog("What would you like to do?", choices);
     if (!selection || selection === "cancel") return;
     if (selection === "splash") {
         let target = workflow.targets.first();
@@ -14,13 +17,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             ui.notifications.warn("No target selected!");
             return;
         }
-        let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Item Features', 'Oil Flask: Splash Oil', false);
+        let featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Oil Flask: Splash Oil', false);
         if (!featureData) {
             ui.notifications.warn("Can't find item in compenidum! (Oil Flask: Splash Oil)");
             return
         }
+        delete featureData._id;
         let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
-        let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([target.document.uuid]);
+        let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
         await game.messages.get(workflow.itemCardId).delete();
         let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
         if (!featureWorkflow) return;
@@ -31,13 +35,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             ui.notifications.warn("No target selected!");
             return;
         }
-        let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Item Features', 'Oil Flask: Throw Flask', false);
+        let featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Oil Flask: Throw Flask', false);
         if (!featureData) {
             ui.notifications.warn("Can't find item in compenidum! (Oil Flask: Throw Flask)");
             return
         }
+        delete featureData._id;
         let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
-        let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([target.document.uuid]);
+        let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
         await game.messages.get(workflow.itemCardId).delete();
         let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
         if (!featureWorkflow) return;
@@ -63,7 +68,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             },
             'angle': 0
         };
-        let template = await chrisPremades.helpers.placeTemplate(templateData);
+        let template = await mba.placeTemplate(templateData);
         if (!template) return;
 
         new Sequence()
@@ -126,30 +131,32 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 },
                 'effectmacro': {
                     'onDelete': {
-                        'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                        'script': mba.functionToString(effectMacroDel)
                     }
                 }
             }
         };
-        await chrisPremades.helpers.createEffect(workflow.actor, templateEffectData);
+        await mba.createEffect(workflow.actor, templateEffectData);
     }
 
-    let flaskItem = workflow.actor.items.filter(i => i.name === workflow.item.name)[0];
+    let flaskItem = mba.getItem(workflow.actor, workflow.item.name);
     if (flaskItem.system.quantity > 1) {
         flaskItem.update({ "system.quantity": flaskItem.system.quantity - 1 });
     } else {
         workflow.actor.deleteEmbeddedDocuments("Item", [flaskItem.id]);
     }
-    let emptyFlaskItem = workflow.actor.items.filter(i => i.name === "Empty Flask")[0];
-    if (!emptyFlaskItem) {
-        const itemData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
-        if (!itemData) {
-            ui.notifications.warn("Unable to find item in compenidum! (Empty Flask)");
-            return
+    if (selection === "splash" || selecion === "pour") {
+        let emptyFlaskItem = mba.getItem(workflow.actor, "Empty Flask");
+        if (!emptyFlaskItem) {
+            const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
+            if (!itemData) {
+                ui.notifications.warn("Unable to find item in compenidum! (Empty Flask)");
+                return
+            }
+            await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
+        } else {
+            emptyFlaskItem.update({ "system.quantity": emptyFlaskItem.system.quantity + 1 });
         }
-        await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
-    } else {
-        emptyFlaskItem.update({ "system.quantity": emptyFlaskItem.system.quantity + 1 });
     }
 }
 
@@ -202,7 +209,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             }
         }
@@ -221,7 +228,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
         .scale(1.4)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(target.actor, effectData);
+            mba.createEffect(target.actor, effectData);
         })
 
         .effect()
@@ -282,7 +289,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
 }
 
 async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let effect = await chrisPremades.helpers.findEffect(actor, "Covered in Oil");
+    let effect = await mba.findEffect(actor, "Covered in Oil");
     if (!effect) return;
     let typeCheck = workflow.damageDetail?.some(i => i.type === "fire");
     if (!typeCheck) return;
@@ -294,7 +301,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         flavor: 'Oil Flask: Burning Oil'
     });
     let damageTotal = damageRoll.total;
-    let hasDR = chrisPremades.helpers.checkTrait(actor, "dr", "fire");
+    let hasDR = mba.checkTrait(actor, "dr", "fire");
     if (hasDR) damageTotal = Math.floor(damageTotal / 2);
     workflow.damageItem.damageDetail[0].push({
         'damage': damageTotal,
@@ -328,7 +335,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .playbackRate(0.9)
 
         .thenDo(function () {
-            chrisPremades.helpers.removeEffect(effect);
+            mba.removeEffect(effect);
         })
 
         .play()

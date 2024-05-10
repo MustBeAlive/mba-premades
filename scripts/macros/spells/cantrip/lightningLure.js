@@ -1,8 +1,9 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
 
 export async function lightningLure({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.targets.size != 1) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'lightningLure', 50);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'lightningLure', 50);
     if (!queueSetup) return;
     let target = workflow.targets.first();
     let mDistance = mba.getDistance(workflow.token, target);
@@ -42,7 +43,7 @@ export async function lightningLure({ speaker, actor, token, character, item, ar
 
             .play()
 
-        chrisPremades.queue.remove(workflow.item.uuid);
+        queue.remove(workflow.item.uuid);
         return;
     }
     let position = mba.getGridBetweenTokens(workflow.token, target, pullDistance);
@@ -131,5 +132,5 @@ export async function lightningLure({ speaker, actor, token, character, item, ar
         workflow.damageItem.tempDamage = 0;
         workflow.damageItem.totalDamage = 0;
     }
-    chrisPremades.queue.remove(workflow.item.uuid);
+    queue.remove(workflow.item.uuid);
 }

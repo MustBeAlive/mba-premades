@@ -1,3 +1,5 @@
+import {mba} from "../../helperFunctions.js";
+
 export async function disengage({ speaker, actor, token, character, item, args, scope, workflow }) {
     let effectData = {
         'name': workflow.item.name,
@@ -33,7 +35,7 @@ export async function disengage({ speaker, actor, token, character, item, args, 
         .wait(600)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(workflow.actor, effectData);
+            mba.createEffect(workflow.actor, effectData);
         })
 
         .play()

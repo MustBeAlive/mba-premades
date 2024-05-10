@@ -1,4 +1,5 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
@@ -122,11 +123,11 @@ async function hook(workflow) {
     let effectRound = effect.flags['mba-premades']?.spell?.trueStrike?.round;
     let sourceUuid = effect.flags['mba-premades']?.spell?.trueStrike?.sourceUuid;
     if ((currentRound != (effectRound + 1) || workflow.token.document.uuid != sourceUuid)) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'trueStrike', 150);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'trueStrike', 150);
     if (!queueSetup) return;
     workflow.advantage = true;
     workflow.advReminderAttackAdvAttribution.add("ADV:True Strike");
-    chrisPremades.queue.remove(workflow.item.uuid);
+    queue.remove(workflow.item.uuid);
     await mba.removeEffect(effect);
 }
 

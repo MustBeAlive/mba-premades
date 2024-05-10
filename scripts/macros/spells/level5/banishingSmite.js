@@ -1,3 +1,6 @@
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         await (warpgate.wait(200));
@@ -6,9 +9,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         if (!targetEffectUuid) return;
         let targetEffect = await fromUuid(targetEffectUuid);
         if (!targetEffect) return;
-        await chrisPremades.helpers.removeEffect(targetEffect);
+        await mbaPremades.helpers.removeEffect(targetEffect);
     }
-    let effectData = {
+    const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
@@ -39,7 +42,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             },
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -97,9 +100,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .play();
 
-    let effect = await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+    let effect = await mba.createEffect(workflow.actor, effectData);
     let updates = { 'flags.mba-premades.spell.banishingSmite.targetEffectUuid': effect.uuid };
-    await chrisPremades.helpers.updateEffect(effect, updates);
+    await mba.updateEffect(effect, updates);
 }
 
 async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -107,11 +110,11 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     if (workflow.item.system.actionType != 'mwak' && workflow.item.system.actionType != 'rwak') return;
     let effect = workflow.actor.effects.find(i => i.flags['mba-premades']?.spell?.banishingSmite);
     if (!effect) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'banishingSmite', 250);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'banishingSmite', 250);
     if (!queueSetup) return;
     let oldFormula = workflow.damageRoll._formula;
     let bonusDamageFormula = '5d10[force]';
-    if (workflow.isCritical) bonusDamageFormula = chrisPremades.helpers.getCriticalFormula(bonusDamageFormula);
+    if (workflow.isCritical) bonusDamageFormula = mba.getCriticalFormula(bonusDamageFormula);
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRoll = await new Roll(damageFormula).roll({ async: true });
     await workflow.setDamageRoll(damageRoll);
@@ -152,7 +155,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
 
         .play()
 
-    chrisPremades.queue.remove(workflow.item.uuid);
+    queue.remove(workflow.item.uuid);
 }
 
 async function post({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -161,93 +164,15 @@ async function post({ speaker, actor, token, character, item, args, scope, workf
     let effect = workflow.actor.effects.find(i => i.flags['mba-premades']?.spell?.banishingSmite);
     if (!effect) return;
     let target = workflow.targets.first();
-    if (target.actor.system.attributes.hp.value <= 50) {
-        async function effectMacroCreate() {
-            await token.document.update({ hidden: true });
-        };
-        async function effectMacroDel() {
-            await new Sequence()
+    if (target.actor.system.attributes.hp.value > 50) {
+        await mba.removeEffect(effect);
+        return;
+    }
 
-                .effect()
-                .file(canvas.scene.background.src)
-                .filter("ColorMatrix", { brightness: 0.3 })
-                .atLocation({ x: (canvas.dimensions.width) / 2, y: (canvas.dimensions.height) / 2 })
-                .size({ width: canvas.scene.width / canvas.grid.size, height: canvas.scene.height / canvas.grid.size }, { gridUnits: true })
-                .spriteOffset({ x: -0 }, { gridUnits: true })
-                .delay(1000)
-                .duration(9000)
-                .fadeIn(1500)
-                .fadeOut(1500)
-                .belowTokens()
-
-                .effect()
-                .file("jb2a.particles.inward.red.02.01")
-                .atLocation(token)
-                .delay(1000)
-                .duration(3000)
-                .fadeIn(1000)
-                .fadeOut(1000)
-
-                .effect()
-                .file("jb2a.energy_strands.in.red.01.2")
-                .delay(1500)
-                .atLocation(token)
-                .scaleToObject(3.5)
-                .playbackRate(0.8)
-
-                .effect()
-                .file("jb2a.portals.horizontal.vortex.red")
-                .delay(2800)
-                .atLocation(token)
-                .scaleToObject(2)
-                .scaleIn(0, 2000, { ease: "easeOutCubic" })
-                .fadeOut(1500)
-                .belowTokens()
-
-                .play()
-
-            await warpgate.wait(1000);
-
-            await token.document.update({ hidden: false });
-            let originEffect = await fromUuid(effect.origin);
-            if (!originEffect) return;
-            await chrisPremades.helpers.removeEffect(originEffect);
-        }
-        let effectData = {
-            'name': 'Banishing Smite: Banish',
-            'description': "You are banished from the material plane by Banishing Smite. If you are native to a different plane of existence than the material plane, you disappear, returning to your home plane. If you are native to the plane you're on, you vanish into a harmless demiplane. While there, you are incapacitated. You remain there until the spell ends, at which point you reappear in the space you left or in the nearest unoccupied space if that space is occupied.",
-            'icon': effect.icon,
-            'origin': effect.uuid,
-            'duration': {
-                'seconds': effect.duration.seconds
-            },
-            'changes': [
-                {
-                    'key': 'macro.CE',
-                    'mode': 0,
-                    'value': 'Incapacitated',
-                    'priority': 20
-                }
-            ],
-            'flags': {
-                'effectmacro': {
-                    'onCreate': {
-                        'script': chrisPremades.helpers.functionToString(effectMacroCreate)
-                    },
-                    'onDelete': {
-                        'script': chrisPremades.helpers.functionToString(effectMacroDel)
-                    }
-                },
-                'midi-qol': {
-                    'castData': {
-                        baseLevel: 5,
-                        castLevel: effect.flags['midi-qol'].castData.castLevel,
-                        itemUuid: effect.uuid
-                    }
-                }
-            }
-        };
-
+    async function effectMacroCreate() {
+        await token.document.update({ hidden: true });
+    };
+    async function effectMacroDel() {
         await new Sequence()
 
             .effect()
@@ -264,7 +189,7 @@ async function post({ speaker, actor, token, character, item, args, scope, workf
 
             .effect()
             .file("jb2a.particles.inward.red.02.01")
-            .atLocation(target)
+            .atLocation(token)
             .delay(1000)
             .duration(3000)
             .fadeIn(1000)
@@ -273,14 +198,14 @@ async function post({ speaker, actor, token, character, item, args, scope, workf
             .effect()
             .file("jb2a.energy_strands.in.red.01.2")
             .delay(1500)
-            .atLocation(target)
+            .atLocation(token)
             .scaleToObject(3.5)
             .playbackRate(0.8)
 
             .effect()
             .file("jb2a.portals.horizontal.vortex.red")
             .delay(2800)
-            .atLocation(target)
+            .atLocation(token)
             .scaleToObject(2)
             .scaleIn(0, 2000, { ease: "easeOutCubic" })
             .fadeOut(1500)
@@ -289,21 +214,102 @@ async function post({ speaker, actor, token, character, item, args, scope, workf
             .play()
 
         await warpgate.wait(1000);
-        let targetEffect = await chrisPremades.helpers.createEffect(target.actor, effectData);
-        let updates = {
-            'flags': {
-                'mba-premades': {
-                    'spell': {
-                        'banishingSmite': {
-                            'used': true,
-                            'targetEffectUuid': targetEffect.uuid
-                        }
+
+        await token.document.update({ hidden: false });
+        let originEffect = await fromUuid(effect.origin);
+        if (!originEffect) return;
+        await mba.removeEffect(originEffect);
+    }
+    let effectData = {
+        'name': 'Banishing Smite: Banish',
+        'description': "You are banished from the material plane by Banishing Smite. If you are native to a different plane of existence than the material plane, you disappear, returning to your home plane. If you are native to the plane you're on, you vanish into a harmless demiplane. While there, you are incapacitated. You remain there until the spell ends, at which point you reappear in the space you left or in the nearest unoccupied space if that space is occupied.",
+        'icon': effect.icon,
+        'origin': effect.uuid,
+        'duration': {
+            'seconds': effect.duration.seconds
+        },
+        'changes': [
+            {
+                'key': 'macro.CE',
+                'mode': 0,
+                'value': 'Incapacitated',
+                'priority': 20
+            }
+        ],
+        'flags': {
+            'effectmacro': {
+                'onCreate': {
+                    'script': mba.functionToString(effectMacroCreate)
+                },
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDel)
+                }
+            },
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 5,
+                    castLevel: effect.flags['midi-qol'].castData.castLevel,
+                    itemUuid: effect.uuid
+                }
+            }
+        }
+    };
+
+    await new Sequence()
+
+        .effect()
+        .file(canvas.scene.background.src)
+        .filter("ColorMatrix", { brightness: 0.3 })
+        .atLocation({ x: (canvas.dimensions.width) / 2, y: (canvas.dimensions.height) / 2 })
+        .size({ width: canvas.scene.width / canvas.grid.size, height: canvas.scene.height / canvas.grid.size }, { gridUnits: true })
+        .spriteOffset({ x: -0 }, { gridUnits: true })
+        .delay(1000)
+        .duration(9000)
+        .fadeIn(1500)
+        .fadeOut(1500)
+        .belowTokens()
+
+        .effect()
+        .file("jb2a.particles.inward.red.02.01")
+        .atLocation(target)
+        .delay(1000)
+        .duration(3000)
+        .fadeIn(1000)
+        .fadeOut(1000)
+
+        .effect()
+        .file("jb2a.energy_strands.in.red.01.2")
+        .delay(1500)
+        .atLocation(target)
+        .scaleToObject(3.5)
+        .playbackRate(0.8)
+
+        .effect()
+        .file("jb2a.portals.horizontal.vortex.red")
+        .delay(2800)
+        .atLocation(target)
+        .scaleToObject(2)
+        .scaleIn(0, 2000, { ease: "easeOutCubic" })
+        .fadeOut(1500)
+        .belowTokens()
+
+        .play()
+
+    await warpgate.wait(1000);
+    let targetEffect = await mba.createEffect(target.actor, effectData);
+    let updates = {
+        'flags': {
+            'mba-premades': {
+                'spell': {
+                    'banishingSmite': {
+                        'used': true,
+                        'targetEffectUuid': targetEffect.uuid
                     }
                 }
             }
-        };
-        await chrisPremades.helpers.updateEffect(effect, updates);
-    } else await chrisPremades.helpers.removeEffect(effect);
+        }
+    };
+    await mba.updateEffect(effect, updates);
 }
 
 export let banishingSmite = {

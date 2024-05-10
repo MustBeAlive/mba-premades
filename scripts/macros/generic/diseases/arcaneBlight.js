@@ -1,6 +1,13 @@
-export async function arcaneBlight({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let target = workflow.targets.first();
-    let arcaneBlightImmune = await chrisPremades.helpers.findEffect(target.actor, "Arcane Blight: Immunity");
+import {mba} from "../../../helperFunctions.js";
+
+export async function arcaneBlight() {
+    let target = game.user.targets.first();
+    if (!target) target = await fromUuidSync(game.user._lastSelected).object;
+    if (!target) {
+        ui.notifications.warn("Unable to find target!");
+        return;
+    }
+    let arcaneBlightImmune = await mba.findEffect(target.actor, "Arcane Blight: Immunity");
     if (arcaneBlightImmune) {
         ChatMessage.create({
             whisper: ChatMessage.getWhisperRecipients("GM"),
@@ -26,7 +33,7 @@ export async function arcaneBlight({ speaker, actor, token, character, item, arg
         let saveDC = effect.flags['mba-premades']?.saveDC;
         let fails = effect.flags['mba-premades']?.fails;
         let newSaveDC;
-        let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'con');
+        let saveRoll = await mbaPremades.helpers.rollRequest(token, 'save', 'con');
         if (saveRoll.total >= saveDC) {
             let arcaneBlightRoll = await new Roll("1d6").roll({ 'async': true });
             await MidiQOL.displayDSNForRoll(arcaneBlightRoll, 'damageRoll');
@@ -66,14 +73,14 @@ export async function arcaneBlight({ speaker, actor, token, character, item, arg
                 }
             }
         };
-        await chrisPremades.helpers.updateEffect(effect, updates);
+        await mbaPremades.helpers.updateEffect(effect, updates);
         if (effect.flags['mba-premades']?.fails > 2) {
             ChatMessage.create({
                 whisper: ChatMessage.getWhisperRecipients("GM"),
                 content: `<b>${token.document.name}</b> failed the save against Arcane Blight three times and turns into Nothic under DM's Control!`,
                 speaker: { actor: null, alias: "Disease Announcer" }
             });
-            await chrisPremades.helpers.removeEffect(effect);
+            await mbaPremades.helpers.removeEffect(effect);
         }
         if (effect.flags['mba-premades']?.saveDC < 1) {
             let immuneData = {
@@ -90,8 +97,8 @@ export async function arcaneBlight({ speaker, actor, token, character, item, arg
                 content: `<b>${token.document.name}</b> is cured from <b>Arcane Blight!</b>`,
                 speaker: { actor: null, alias: "Disease Announcer" }
             });
-            await chrisPremades.helpers.removeEffect(effect);
-            await chrisPremades.helpers.createEffect(actor, immuneData);
+            await mbaPremades.helpers.removeEffect(effect);
+            await mbaPremades.helpers.createEffect(actor, immuneData);
         }
     }
     let number = Math.floor(Math.random() * 10000);
@@ -112,7 +119,7 @@ export async function arcaneBlight({ speaker, actor, token, character, item, arg
             },
             'effectmacro': {
                 'dnd5e.longRest': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroArcaneBlight)
+                    'script': mba.functionToString(effectMacroArcaneBlight)
                 }
             },
             'mba-premades': {
@@ -126,7 +133,7 @@ export async function arcaneBlight({ speaker, actor, token, character, item, arg
             }
         }
     };
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
+    await mba.createEffect(target.actor, effectData);
     ChatMessage.create({
         whisper: ChatMessage.getWhisperRecipients("GM"),
         content: `<p><b>${target.document.name}</b> is infected with <b>Arcane Blight</b></p>`,

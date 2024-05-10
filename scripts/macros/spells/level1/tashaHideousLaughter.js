@@ -1,11 +1,12 @@
-// Animation by EskieMoh#2969
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
-    let targetInt = target.actor.system.abilities.int.value;
-    if (targetInt <= 4) {
+    if (target.actor.system.abilities.int.value <= 4) {
         ui.notifications.warn(target.document.name + " is unaffected by Tasha's Hideous Laughter!")
-        await chrisPremades.helpers.removeCondition(workflow.actor, "Concentrating");
+        await mba.removeCondition(workflow.actor, "Concentrating");
         return;
     }
     async function effectMacroDel() {
@@ -14,8 +15,12 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
-        'description': "You perceive everything as hilariously funny and fall into fits of laughter. At the end of each of yours turns, and each time you take damage while affected by this spell, you can can make another Wisdom saving throw. You have advantage on the saving throw if it's triggered by damage. On a success, the spell ends.",
         'origin': workflow.item.uuid,
+        'description': `
+            <p>You perceive everything as hilariously funny and fall into fits of laughter.</p>
+            <p>At the end of each of yours turns, and each time you take damage while affected by this spell, you can can make another Wisdom saving throw.</p>
+            <p>You have advantage on the saving throw if it's triggered by damage. On a success, the spell ends.</p>
+        `,
         'duration': {
             'seconds': 60
         },
@@ -29,7 +34,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': 'turn=end, saveAbility=wis, saveDC=' + chrisPremades.helpers.getSpellDC(workflow.item) + ', saveMagic=true, name=Tasha\'s Hideous Laughted: Turn End',
+                'value': `turn=end, saveAbility=wis, saveDC=${mba.getSpellDC(workflow.item)}, saveMagic=true, name=Tasha\'s Hideous Laughter: Turn End, killAnim=true`,
                 'priority': 20
             },
             {
@@ -42,13 +47,13 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'mba-premades': {
                 'spell': {
                     'tashaHideousLaughter': {
-                        'spellDC': chrisPremades.helpers.getSpellDC(workflow.item)
+                        'spellDC': mba.getSpellDC(workflow.item)
                     }
                 }
             },
@@ -168,8 +173,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .name(`${target.document.name} Hideous Laughter`)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(target.actor, effectData);
-            chrisPremades.helpers.addCondition(target.actor, 'Prone');
+            mba.createEffect(target.actor, effectData);
+            mba.addCondition(target.actor, 'Prone');
         })
 
         .animation()
@@ -207,7 +212,6 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .loopProperty("sprite", "height", { from: 0, to: 0.015, duration: 300, gridUnits: true, pingPong: true, ease: "easeOutQuad" })
         .persist()
         .name(`${target.document.name} Hideous Laughter`)
-        .waitUntilFinished(-200)
 
         .animation()
         .on(target)
@@ -217,38 +221,12 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 }
 
 async function damaged({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let saveAdvantage = {
-        'name': 'Save Advantage',
-        'icon': 'modules/mba-premades/icons/generic/generic_buff.webp',
-        'description': "You have advantage on the next save you make",
-        'duration': {
-            'turns': 1
-        },
-        'changes': [
-            {
-                'key': 'flags.midi-qol.advantage.ability.save.all',
-                'mode': 0,
-                'value': 1,
-                'priority': 20
-            }
-        ],
-        'flags': {
-            'dae': {
-                'specialDuration': ["isSave"]
-            },
-            'chris-premades': {
-                'effect': {
-                    'noAnimation': true
-                }
-            }
-        }
-    };
-    await chrisPremades.helpers.createEffect(actor, saveAdvantage);
-    let effect = await chrisPremades.helpers.findEffect(actor, "Tasha's Hideous Laughter");
+    await mba.createEffect(actor, constants.advantageEffectData);
+    let effect = await mba.findEffect(actor, "Tasha's Hideous Laughter");
     let saveDC = effect.flags['mba-premades']?.spell?.tashaHideousLaughter?.spellDC;
-    let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'wis');
+    let saveRoll = await mba.rollRequest(token, 'save', 'wis');
     if (saveRoll.total < saveDC) return;
-    await chrisPremades.helpers.removeEffect(effect);
+    await mba.removeEffect(effect);
 }
 
 export let tashaHideousLaughter = {

@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function disguiseSelf({ speaker, actor, token, character, item, args, scope, workflow }) {
     let choices1 = [["Small", "small"], ["Medium", "medium"]];
     let choices2;
@@ -20,11 +22,11 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
     // Sex List: Male, Female 
 
 
-    let sizeSelection = await chrisPremades.helpers.dialog("What is your size?", choices1);
+    let sizeSelection = await mba.dialog("What is your size?", choices1);
     if (!sizeSelection) return;
     if (sizeSelection === "small") {
         choices2 = [["Gnome", "gnome"], ["Halfling", "halfling"]];
-        raceSelection = await chrisPremades.helpers.dialog("Choose Race:", choices2);
+        raceSelection = await mba.dialog("Choose Race:", choices2);
         if (!raceSelection) return;
         if (raceSelection === "gnome") {
             choices3 = [["Forest", "forest"], ["Rock", "rock"]];
@@ -42,7 +44,7 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
             ["Human", "human"],
             ["Tiefling", "tiefling"]
         ];
-        raceSelection = await chrisPremades.helpers.dialog("Choose Race:", choices2);
+        raceSelection = await mba.dialog("Choose Race:", choices2);
         if (!raceSelection) return;
         if (raceSelection === "dragonborn") {
             choices3 = [["Chromatic", "chromatic"], ["Gem", "gem"], ["Metallic", "metallic"]];
@@ -72,13 +74,13 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
             choices3 = [["Tiefling", "tiefling"]];
         }
     }
-    subraceSelection = await chrisPremades.helpers.dialog("Choose Subrace:", choices3);
+    subraceSelection = await mba.dialog("Choose Subrace:", choices3);
     if (!subraceSelection) return;
     let choices4 = [["Adult", "adult"], ["Old", "old"]];
-    let ageSelection = await chrisPremades.helpers.dialog("Choose Age:", choices4);
+    let ageSelection = await mba.dialog("Choose Age:", choices4);
     if (!ageSelection) return
     let choices5 = [["Male", "male"], ["Female", "female"]];
-    let sexSelection = await chrisPremades.helpers.dialog("Choose Sex:", choices5);
+    let sexSelection = await mba.dialog("Choose Sex:", choices5);
     if (!sexSelection) return
 
     if (sizeSelection === "small") {
@@ -2346,12 +2348,12 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
     let showIcon = true;
     if (game.users.current.isGM) {
         let hide = [["Yes, hide effect icon", "yes"], ["No, keep it", "no"]];
-        let hideIcon = await chrisPremades.helpers.dialog("Do you want to hide the effect icon?", hide);
+        let hideIcon = await mba.dialog("Do you want to hide the effect icon?", hide);
         if (hideIcon === "yes") showIcon = false;
     };
     async function effectMacro() {
-        await game.Gametime.doIn({ hours: 1 }, async () => {
-            let effect = await chrisPremades.helpers.findEffect(actor, "Disguise Self");
+        await game.Gametime.doIn({ hour: 1 }, async () => {
+            let effect = await mbaPremades.helpers.findEffect(actor, "Disguise Self");
             if (effect) await warpgate.revert(token.document, "Disguise Self");
         });
     };
@@ -2378,10 +2380,10 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
             },
             'effectmacro': {
                 'onCreate': {
-                    'script': chrisPremades.helpers.functionToString(effectMacro)
+                    'script': mba.functionToString(effectMacro)
                 },
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {

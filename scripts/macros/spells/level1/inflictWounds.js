@@ -19,7 +19,7 @@ export async function inflictWounds({ speaker, actor, token, character, item, ar
 
         .effect()
         .file("jaamod.sequencer_fx_master.blood_splat.red.2")
-        .delay(100)
+        .delay(900)
         .attachTo(target)
         .scaleToObject(1.7)
         .duration(5000)

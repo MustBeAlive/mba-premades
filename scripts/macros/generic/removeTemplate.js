@@ -1,6 +1,7 @@
-// Original macro by CPR
+import {mba} from "../../helperFunctions.js";
+
 export async function removeTemplate({speaker, actor, token, character, item, args, scope, workflow}) {
-    let effect = chrisPremades.helpers.findEffect(workflow.actor, workflow.item.name + ' Template');
+    let effect = mba.findEffect(workflow.actor, workflow.item.name + ' Template');
     if (!effect) return;
     let updates = {
         'flags': {
@@ -11,5 +12,5 @@ export async function removeTemplate({speaker, actor, token, character, item, ar
             }
         }
     };
-    await chrisPremades.helpers.updateEffect(effect, updates);
+    await mba.updateEffect(effect, updates);
 }

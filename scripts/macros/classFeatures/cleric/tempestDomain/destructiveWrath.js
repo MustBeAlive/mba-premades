@@ -1,3 +1,6 @@
+import {mba} from "../../../../helperFunctions.js";
+import {queue} from "../../../mechanics/queue.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Destructive Wrath`, object: token })
@@ -7,8 +10,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-        <p>You will deal maximum damage on your next instance of lightning or thunder damage, instead of rolling.</p>
-    `,
+            <p>You will deal maximum damage on your next instance of lightning or thunder damage, instead of rolling.</p>
+        `,
         'changes': [
             {
                 'key': 'flags.midi-qol.onUseMacroName',
@@ -24,11 +27,12 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             },
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             }
         }
     };
+    
     await new Sequence()
 
         .effect()
@@ -180,18 +184,18 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .name(`${token.document.name} Destructive Wrath`)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(workflow.actor, effectData)
+            mba.createEffect(workflow.actor, effectData)
         })
 
         .play()
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'destructiveWrath', 351);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'destructiveWrath', 351);
     if (!queueSetup) return;
     let oldDamageRoll = workflow.damageRoll;
     if (oldDamageRoll.terms.length === 0) {
-        chrisPremades.queue.remove(workflow.item.uuid);
+        queue.remove(workflow.item.uuid);
         return;
     }
     let newDamageRoll = '';
@@ -206,7 +210,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     }
     let damageRoll = await new Roll(newDamageRoll).roll({async: true});
     await workflow.setDamageRoll(damageRoll);
-    chrisPremades.queue.remove(workflow.item.uuid);
+    queue.remove(workflow.item.uuid);
 }
 
 

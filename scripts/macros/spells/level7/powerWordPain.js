@@ -1,41 +1,25 @@
+import { mba } from "../../../helperFunctions.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     if (target.actor.system.attributes.hp.value > 100) {
         ui.notifications.warn('Target has more than 100 HP!');
         return;
     }
-    let hasCharmImmunity = chrisPremades.helpers.checkTrait(target.actor, 'ci', 'charmed');
-    if (hasCharmImmunity) {
+    if (mba.checkTrait(target.actor, 'ci', 'charmed')) {
         ui.notifications.warn('Target is immune to condition: Charmed!');
         return;
     }
-
-    new Sequence()
-        .effect()
-        .file("jb2a.sacred_flame.source.white")
-        .atLocation(target)
-        .anchor(0.5)
-        .scaleToObject(1.5)
-        .fadeIn(250)
-        .fadeOut(500)
-
-        .effect()
-        .file("jb2a.sacred_flame.target.white")
-        .atLocation(target)
-        .scaleToObject(2.5)
-        .anchor(0.5)
-        .fadeIn(250)
-        .fadeOut(500)
-        .delay(1500)
-
-        .play();
-
-    await warpgate.wait(3500);
-    let effectData = {
+    const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
-        'description': "You are affected by crippling pain. Any speed you have cannot be higher than 10 feet. You also have disadvantage on attack rolls, ability checks, and saving throws, other than Constitution saving throws. Finally, if you try to cast a spell, you must first succeed on a Constitution saving throw, or the casting fails and the spell is wasted. At the end of each of your turns, you can make a Constitution saving throw. On a successful save, the pain ends.",
+        'description': `
+            <p>You are affected by crippling pain.</p>
+            <p>Any speed you have cannot be higher than 10 feet. You also have disadvantage on attack rolls, ability checks, and saving throws, other than Constitution saving throws.</p>
+            <p>Finally, if you try to cast a spell, you must first succeed on a Constitution saving throw, or the casting fails and the spell is wasted.</p>
+            <p>At the end of each of your turns, you can make a Constitution saving throw. On a successful save, the effect ends.</p>
+        `,
         'changes': [
             {
                 'key': 'flags.midi-qol.onUseMacroName',
@@ -46,7 +30,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': 'turn=end, saveAbility=con, saveDC=' + chrisPremades.helpers.getSpellDC(workflow.item) + ' , saveMagic=true, name=Crippling Pain',
+                'value': 'turn=end, saveAbility=con, saveDC=' + mba.getSpellDC(workflow.item) + ' , saveMagic=true, name=Power Word Pain: Turn End, killAnim=true',
                 'priority': 20
             },
             {
@@ -135,7 +119,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             'mba-premades': {
                 'spell': {
                     'powerWordPain': {
-                        'saveDC': chrisPremades.helpers.getSpellDC(workflow.item),
+                        'saveDC': mba.getSpellDC(workflow.item),
                     }
                 }
             },
@@ -148,15 +132,42 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
+
+    new Sequence()
+
+        .effect()
+        .file("jb2a.sacred_flame.source.white")
+        .atLocation(target)
+        .scaleToObject(1.5)
+        .fadeIn(250)
+        .fadeOut(500)
+        .anchor(0.5)
+
+        .effect()
+        .file("jb2a.sacred_flame.target.white")
+        .atLocation(target)
+        .scaleToObject(2.5)
+        .delay(1500)
+        .fadeIn(250)
+        .fadeOut(500)
+        .anchor(0.5)
+
+        .wait(3500)
+
+        .thenDo(function () {
+            mba.createEffect(target.actor, effectData);
+        })
+
+        .play();
 }
 
 async function check({ speaker, actor, token, character, item, args, scope, workflow }) {
-    if (workflow.item.type != "spell" || workflow.item.name === "Crippling Pain") return;
-    let effect = await chrisPremades.helpers.findEffect(actor, "Power Word: Pain");
+    if (workflow.item.type != "spell" || workflow.item.name === "Power Word Pain: Turn End") return;
+    let effect = await mba.findEffect(actor, "Power Word: Pain");
     let spellDC = effect.flags['mba-premades']?.spell?.powerWordPain?.saveDC;
-    let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'con');
-    if (saveRoll.total < spellDC) {
+    let saveRoll = await mba.rollRequest(token, 'save', 'con');
+    if (saveRoll.total >= spellDC) return;
+    else {
         ui.notifications.warn('Spell fails!');
         return false;
     }

@@ -3,20 +3,29 @@ import {cast} from './macros/animations/cast.js';
 import {changeChat} from './macros/ui/changeChat.js';
 import {corpseHide} from './macros/mechanics/corpseHide.js';
 import {deathSaves} from './macros/mechanics/deathSaves.js';
-import {macros} from './macros.js';
+import {macros, onHitMacro} from './macros.js';
 import {removeV10EffectsBlind} from './macros/mechanics/blindness.js';
 import {removeV10EffectsInvisible} from './macros/mechanics/invisibility.js';
 import {tashaSummon} from './macros/generic/tashaSummon.js';
+import {tokenMoved, combatUpdate, tokenMovedEarly} from './macros/mechanics/movement.js';
 
 let moduleName = 'mba-premades';
 
 export function registerSettings() {
     game.settings.register(moduleName, 'LastGM', {
         'name': 'LastGM',
-        'hint': 'Last GM to join the game.',
+        'hint': 'Отслеживает подключенного ГМа.',
         'scope': 'world',
         'config': false,
         'type': String
+    });
+    game.settings.register(moduleName, 'Movement Triggers', {
+        'name': 'Movement Triggers',
+        'hint': 'Синхронизирует передвижение.',
+        'scope': 'world',
+        'config': false,
+        'type': Object,
+        'default': {}
     });
     game.settings.register(moduleName, 'Add Generic Actions', {
         'name': "Добавить базовые действия",
@@ -46,9 +55,68 @@ export function registerSettings() {
         'default': false
     });
     addMenuSetting('Check For Updates', 'General');
+    game.settings.register(moduleName, 'Combat Listener', {
+        'name': 'Отслеживание Боя',
+        'hint': 'Включает автоматизацию отслеживания состояния боя.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value && game.user.isGM) {
+                Hooks.on('updateCombat', combatUpdate);
+            } else if (game.user.isGM) {
+                Hooks.off('updateCombat', combatUpdate);
+            }
+        }
+    });
+    addMenuSetting('Combat Listener', 'General');
+    game.settings.register(moduleName, 'Movement Listener', {
+        'name': 'Отслеживание Передвижения',
+        'hint': 'Включает автоматизацию отслеживания передвижения токенов.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value && game.user.isGM) {
+                Hooks.on('updateToken', tokenMoved);
+                Hooks.on('preUpdateToken', tokenMovedEarly);
+            } else if (game.user.isGM) {
+                Hooks.off('updateToken', tokenMoved);
+                Hooks.off('preUpdateToken', tokenMovedEarly);
+            }
+        }
+    });
+    addMenuSetting('Movement Listener', 'General');
+    game.settings.register(moduleName, 'On Hit', {
+        'name': 'Отслеживание Попаданий',
+        'hint': 'Включает автоматизацию срабатываний способностей/заклинаний при попадании.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.RollComplete', onHitMacro);
+            } else {
+                Hooks.off('midi-qol.RollComplete', onHitMacro);
+            }
+        }
+    });
+    addMenuSetting('On Hit', 'General');
+    game.settings.register(moduleName, 'Priority Queue', {
+        'name': 'Приоритетная Очередь',
+        'hint': 'Позволяет макросам модуля срабатывать в заранее установленном порядке. Предотвращает ситуации с одновременным появлением нескольких поп-аут окон, а так же выстраивает модификации атак/урона в "правильный" порядок.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': true
+    });
+    addMenuSetting('Priority Queue', 'General');
     game.settings.register(moduleName, 'Show Names', {
         'name': 'Показывать имена',
-        'hint': 'Эта настройка включает показ имен токенов (вроде бы токенов) в диалогах-селекторах целей (используется в фичах/заклинаниях а-ля Bane/Bless).',
+        'hint': 'Включает показ имен токенов (вроде бы именно токенов) в диалогах-селекторах целей (используется в фичах/заклинаниях а-ля Bane/Bless).',
         'scope': 'world',
         'config': false,
         'type': Boolean,
@@ -363,6 +431,24 @@ export function registerSettings() {
         }
     });
     addMenuSetting('Booming Blade', 'Spells');
+    game.settings.register(moduleName, 'Compelled Duel', {
+        'name': 'Compelled Duel',
+        'hint': 'Включает автоматизацию заклинания Compelled Duel через Midi-Qol hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                if (game.user.isGM) Hooks.on('updateToken', macros.compelledDuel.movement);
+                Hooks.on('midi-qol.RollComplete', macros.compelledDuel.attacked);
+            } else {
+                if (game.user.isGM) Hooks.off('updateToken', macros.compelledDuel.movement);
+                Hooks.off('midi-qol.RollComplete', macros.compelledDuel.attacked);
+            }
+        }
+    });
+    addMenuSetting('Compelled Duel', 'Spells');
     game.settings.register(moduleName, 'Fog Cloud', {
         'name': 'Fog Cloud',
         'hint': 'Включает автоматизацию заклинания Fog Cloud через Midi-Qol hooks.',
@@ -427,6 +513,22 @@ export function registerSettings() {
         }
     });
     addMenuSetting('Mirror Image', 'Spells');
+    game.settings.register(moduleName, 'Protection from Evil and Good', {
+        'name': 'Protection from Evil and Good',
+        'hint': 'Включает автоматизацию заклинания Protection from Evil and Good через Midi-QoL hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preAttackRoll', macros.protectionFromEvilAndGood.hook);
+            } else {
+                Hooks.off('midi-qol.preAttackRoll', macros.protectionFromEvilAndGood.hook);
+            }
+        }
+    });
+    addMenuSetting('Protection from Evil and Good', 'Spells');
     game.settings.register(moduleName, 'Sanctuary', {
         'name': 'Sanctuary',
         'hint': 'Включает автоматизацию заклинания Sanctuary через Midi-QoL hooks.',

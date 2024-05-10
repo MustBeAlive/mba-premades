@@ -1,5 +1,12 @@
-export async function sewerPlague({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let target = workflow.targets.first();
+import {mba} from "../../../helperFunctions.js";
+
+export async function sewerPlague() {
+    let target = game.user.targets.first();
+    if (!target) target = await fromUuidSync(game.user._lastSelected).object;
+    if (!target) {
+        ui.notifications.warn("Unable to find target!");
+        return;
+    }
     let [isDiseased] = target.actor.effects.filter(e => e.flags['mba-premades']?.name === "Sewer Plague");
     if (isDiseased) {
         ui.notifications.info('Target is already affected by Sewer Plague!');
@@ -35,12 +42,12 @@ export async function sewerPlague({ speaker, actor, token, character, item, args
                 }
                 let currentExhaustion = effect.flags['mba-premades']?.currentExhaustion;
                 let saveDC = 11;
-                let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'con');
+                let saveRoll = await mbaPremades.helpers.rollRequest(token, 'save', 'con');
                 if (saveRoll.total < 11) {
-                    await chrisPremades.helpers.removeCondition(token.actor, "Exhaustion " + currentExhaustion);
+                    await mbaPremades.helpers.removeCondition(token.actor, "Exhaustion " + currentExhaustion);
                     currentExhaustion += 1;
                     if (currentExhaustion > 6) currentExhaustion = 6; // temp workaround
-                    await chrisPremades.helpers.addCondition(token.actor, "Exhaustion " + currentExhaustion);
+                    await mbaPremades.helpers.addCondition(token.actor, "Exhaustion " + currentExhaustion);
                     let updates = {
                         'flags': {
                             'mba-premades': {
@@ -48,13 +55,13 @@ export async function sewerPlague({ speaker, actor, token, character, item, args
                             }
                         }
                     };
-                    await chrisPremades.helpers.updateEffect(effect, updates);
+                    await mbaPremades.helpers.updateEffect(effect, updates);
                     return;
                 }
                 if (saveRoll.total >= saveDC && currentExhaustion > 1) {
-                    await chrisPremades.helpers.removeCondition(token.actor, "Exhaustion " + currentExhaustion);
+                    await mbaPremades.helpers.removeCondition(token.actor, "Exhaustion " + currentExhaustion);
                     currentExhaustion -= 1;
-                    await chrisPremades.helpers.addCondition(token.actor, "Exhaustion " + currentExhaustion);
+                    await mbaPremades.helpers.addCondition(token.actor, "Exhaustion " + currentExhaustion);
                     let updates = {
                         'flags': {
                             'mba-premades': {
@@ -62,11 +69,11 @@ export async function sewerPlague({ speaker, actor, token, character, item, args
                             }
                         }
                     };
-                    await chrisPremades.helpers.updateEffect(effect, updates);
+                    await mbaPremades.helpers.updateEffect(effect, updates);
                     return;
                 }
                 if (saveRoll.total >= saveDC && currentExhaustion === 1) {
-                    await chrisPremades.helpers.removeEffect(effect);
+                    await mbaPremades.helpers.removeEffect(effect);
                     ChatMessage.create({
                         whisper: ChatMessage.getWhisperRecipients("GM"),
                         content: `<b>${token.document.name}</b> is cured from <b>Sewer Plague!</b>`,
@@ -77,7 +84,7 @@ export async function sewerPlague({ speaker, actor, token, character, item, args
             async function effectMacroSewerPlagueDel() {
                 let exhaustion = token.actor.effects.filter(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
                 if (!exhaustion.length) return
-                await chrisPremades.helpers.removeEffect(exhaustion[0]);
+                await mbaPremades.helpers.removeEffect(exhaustion[0]);
             }
             let number = Math.floor(Math.random() * 10000);
             let effectData = {
@@ -89,10 +96,10 @@ export async function sewerPlague({ speaker, actor, token, character, item, args
                     },
                     'effectmacro': {
                         'dnd5e.longRest': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroSewerPlague)
+                            'script': mbaPremades.helpers.functionToString(effectMacroSewerPlague)
                         },
                         'onDelete': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroSewerPlagueDel)
+                            'script': mbaPremades.helpers.functionToString(effectMacroSewerPlagueDel)
                         }
                     },
                     'mba-premades': {
@@ -105,9 +112,9 @@ export async function sewerPlague({ speaker, actor, token, character, item, args
                     }
                 }
             };
-            await chrisPremades.helpers.addCondition(token.actor, "Exhaustion 1");
-            await chrisPremades.helpers.createEffect(token.actor, effectData);
-            await chrisPremades.helpers.removeEffect(effect);
+            await mbaPremades.helpers.addCondition(token.actor, "Exhaustion 1");
+            await mbaPremades.helpers.createEffect(token.actor, effectData);
+            await mbaPremades.helpers.removeEffect(effect);
         });
     }
     let number = Math.floor(Math.random() * 10000);
@@ -120,7 +127,7 @@ export async function sewerPlague({ speaker, actor, token, character, item, args
             },
             'effectmacro': {
                 'onCreate': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroSewerPlagueManifest)
+                    'script': mba.functionToString(effectMacroSewerPlagueManifest)
                 }
             },
             'mba-premades': {
@@ -133,7 +140,7 @@ export async function sewerPlague({ speaker, actor, token, character, item, args
             }
         }
     };
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
+    await mba.createEffect(target.actor, effectData);
     ChatMessage.create({
         whisper: ChatMessage.getWhisperRecipients("GM"),
         content: `<p><b>${target.document.name}</b> is infected with <b>Sewer Plague</b></p><p>Symptoms will manifest in <b>${sewerPlagueRoll.total}</b> days</p>`,

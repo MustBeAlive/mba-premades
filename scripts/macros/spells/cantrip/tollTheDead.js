@@ -1,3 +1,5 @@
+import {queue} from "../../mechanics/queue.js";
+
 export async function tollTheDead({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.targets.size != 1) return;
     let target = workflow.targets.first();
@@ -22,14 +24,14 @@ export async function tollTheDead({ speaker, actor, token, character, item, args
 
         .play()
 
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'tollTheDead', 50);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'tollTheDead', 50);
     if (!queueSetup) return;
     if (target.actor.system.attributes.hp.value === target.actor.system.attributes.hp.max) {
-        chrisPremades.queue.remove(workflow.item.uuid);
+        queue.remove(workflow.item.uuid);
         return;
     }
     let damageFormula = workflow.damageRoll._formula.replace('d8', 'd12');
     let damageRoll = await new Roll(damageFormula).roll({ async: true });
     await workflow.setDamageRoll(damageRoll);
-    chrisPremades.queue.remove(workflow.item.uuid);
+    queue.remove(workflow.item.uuid);
 }

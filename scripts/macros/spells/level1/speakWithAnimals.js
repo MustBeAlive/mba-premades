@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function speakWithAnimals({ speaker, actor, token, character, item, args, scope, workflow }) {
     const effectData = {
         'name': workflow.item.name,
@@ -50,5 +52,5 @@ export async function speakWithAnimals({ speaker, actor, token, character, item,
         .play()
 
     await warpgate.wait(1000);
-    await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+    await mba.createEffect(workflow.actor, effectData);
 }

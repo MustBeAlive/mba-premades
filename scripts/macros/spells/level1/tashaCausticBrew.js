@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let targets = Array.from(workflow.targets);
     let template = await canvas.scene.collections.templates.get(workflow.templateId);
@@ -7,8 +9,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.markers.bubble.02.complete.green.0")
         .atLocation(token)
-        .scale(0.1)
         .rotateTowards(template)
+        .scale(0.1)
         .rotate(90)
         .playbackRate(1)
         .duration(5100)
@@ -20,8 +22,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.markers.light_orb.complete.green")
         .atLocation(token)
-        .scale(0.25)
         .rotateTowards(template)
+        .scale(0.25)
         .playbackRate(1.5)
         .duration(5100)
         .scaleOut(0, 2000, { ease: "easeOutCubic" })
@@ -31,10 +33,10 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("animated-spell-effects-cartoon.smoke.47")
-        .delay(1700)
         .atLocation(token)
-        .scale(0.1)
         .rotateTowards(template)
+        .delay(1700)
+        .scale(0.1)
         .rotate(90)
         .playbackRate(0.5)
         .spriteOffset({ x: -0.4, y: 0 + (token.document.width - 1) / 2 }, { gridUnits: true })
@@ -45,8 +47,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.breath_weapons.acid.line.green")
         .atLocation(token)
-        .scale(0.5)
         .rotateTowards(template)
+        .scale(0.5)
         .playbackRate(1.5)
         .spriteOffset({ x: 0.35 + (token.document.width - 1) / 2 }, { gridUnits: true })
         .zIndex(1)
@@ -79,9 +81,44 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     let targets = Array.from(workflow.failedSaves);
-
-    targets.forEach(target => {
-
+    async function effectMacroDel() {
+        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Caustic Brew` })
+    };
+    const effectData = {
+        'name': workflow.item.name,
+        'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
+        'description': `
+            <p></p>
+        `,
+        'duration': {
+            'seconds': 60
+        },
+        'changes': [
+            {
+                'key': 'flags.midi-qol.OverTime',
+                'mode': 0,
+                'value': `turn=start, damageType=acid, damageRoll=(${workflow.castData.castLevel * 2})d4, name=Caustic Brew: Turn Start, killAnim=true, fastForwardDamage=true`,
+                'priority': 20
+            }
+        ],
+        'flags': {
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDel)
+                }
+            },
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 1,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
+                }
+            }
+        }
+    };
+    for (let target of targets) {
+        await mba.createEffect(target.actor, effectData);
         new Sequence()
 
             .effect()
@@ -178,15 +215,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .name(`${target.document.name} Caustic Brew`)
 
             .play()
-    })
-}
-
-async function del(token) {
-    await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Caustic Brew` })
+    }
 }
 
 export let tashaCausticBrew = {
     'cast': cast,
-    'item': item,
-    'del': del
+    'item': item
 }

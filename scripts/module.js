@@ -7,8 +7,9 @@ import {constants} from './macros/generic/constants.js';
 import {corpseHide} from './macros/mechanics/corpseHide.js';
 import {createRollModeButtons} from './macros/ui/rollmodeButtons.js';
 import {deathSaves} from './macros/mechanics/deathSaves.js';
-import {macros} from './macros.js';
+import {macros, onHitMacro} from './macros.js';
 import {mba as helpers} from './helperFunctions.js';
+import {queue} from './macros/mechanics/queue.js';
 import {registerSettings} from './settings.js';
 import {remoteAimCrosshair, remoteDialog, remoteDocumentDialog, remoteDocumentsDialog, remoteMenu} from './macros/generic/remoteDialog.js';
 import {removeV10EffectsBlind} from './macros/mechanics/blindness.js';
@@ -17,6 +18,7 @@ import {rollModeChange} from './macros/ui/rollmodeButtons.js';
 import {runAsGM, runAsUser} from './macros/generic/runAsGM.js';
 import {summons} from './macros/generic/summons.js';
 import {tashaSummon} from './macros/generic/tashaSummon.js';
+import {tokenMove, tokenMoved, combatUpdate, updateMoveTriggers, updateGMTriggers, loadTriggers, tokenMovedEarly} from './macros/mechanics/movement.js';
 export let socket;
 
 Hooks.once('init', async function() {
@@ -39,22 +41,32 @@ Hooks.once('socketlib.ready', async function() {
     socket.register('remoteMenu', remoteMenu);
     socket.register('rollItem', runAsUser.rollItem);
     socket.register('updateCombatant', runAsGM.updateCombatant);
-    socket.register('updateEffect', runAsGM.updateEffect);
-    socket.register('updateInitiative', runAsGM.updateInitiative);
     socket.register('updateDoc', runAsGM.updateDoc);
+    socket.register('updateEffect', runAsGM.updateEffect);
+    socket.register('updateGMTriggers', updateGMTriggers);
+    socket.register('updateInitiative', runAsGM.updateInitiative);
+    socket.register('updateMoveTriggers', updateMoveTriggers);
 });
 
 Hooks.once('ready', async function() {
     if (game.user.isGM) {
         if (game.settings.get('mba-premades', 'Tasha Actors')) await tashaSummon.setupFolder();
         game.settings.set('mba-premades', 'LastGM', game.user.id);
+        if (game.settings.get('mba-premades', 'Blindness Fix')) removeV10EffectsBlind();
+        if (game.settings.get('mba-premades', 'Invisibility Fix')) removeV10EffectsInvisible();
+        Hooks.on('createToken', addActions);
+        if (game.settings.get('mba-premades', 'Cast Animations')) Hooks.on('midi-qol.postPreambleComplete', cast);
+        if (game.settings.get('mba-premades', 'Auto Death Save')) Hooks.on('updateCombat', deathSaves);
+        if (game.settings.get('mba-premades', 'Corpse Hider')) Hooks.on('updateCombat', corpseHide);
+        if (game.settings.get('mba-premades', 'On Hit')) Hooks.on('midi-qol.RollComplete', onHitMacro);
+        if (game.settings.get('mba-premades', 'Combat Listener')) Hooks.on('updateCombat', combatUpdate);
+        if (game.settings.get('mba-premades', 'Movement Listener')) {
+            Hooks.on('preUpdateToken', tokenMovedEarly);
+            Hooks.on('updateToken', tokenMoved);
+        }
         if (game.settings.get('mba-premades', 'Check For Updates')) checkUpdate();
     }
-    if (game.settings.get('mba-premades', 'Blindness Fix')) removeV10EffectsBlind();
-    if (game.settings.get('mba-premades', 'Invisibility Fix')) removeV10EffectsInvisible();
-    Hooks.on('createToken', addActions);
-    if (game.settings.get('mba-premades', 'Cast Animations')) Hooks.on('midi-qol.postPreambleComplete', cast);
-    if (game.settings.get('mba-premades', 'Auto Death Save')) Hooks.on('updateCombat', deathSaves);
+    await loadTriggers();
     if (game.settings.get('mba-premades', 'Condition Resistance')) {
         Hooks.on('midi-qol.postPreambleComplete', macros.conditionResistanceEarly);
         Hooks.on('midi-qol.RollComplete', macros.conditionResistanceLate);
@@ -63,13 +75,15 @@ Hooks.once('ready', async function() {
         Hooks.on('midi-qol.postPreambleComplete', macros.conditionVulnerabilityEarly);
         Hooks.on('midi-qol.RollComplete', macros.conditionVulnerabilityLate);
     }
-    if (game.settings.get('mba-premades', 'Corpse Hider')) Hooks.on('updateCombat', corpseHide);
     if (game.settings.get('mba-premades', 'Blur')) Hooks.on('midi-qol.preAttackRoll', macros.blur.hook);
     if (game.settings.get('mba-premades', 'Booming Blade')) Hooks.on('updateToken', macros.boomingBlade.moved);
+    if (game.settings.get('mba-premades', 'Compelled Duel')) Hooks.on('updateToken', macros.compelledDuel.movement);
+    if (game.settings.get('mba-premades', 'Compelled Duel')) Hooks.on('midi-qol.RollComplete', macros.compelledDuel.attacked);
     if (game.settings.get('mba-premades', 'Fog Cloud')) Hooks.on('midi-qol.preAttackRoll', macros.fogCloud.hook);
     if (game.settings.get('mba-premades', 'Darkness')) Hooks.on('midi-qol.preAttackRoll', macros.darkness.hook);
     if (game.settings.get('mba-premades', 'Death Ward')) Hooks.on('midi-qol.preTargetDamageApplication', macros.deathWard.hook);
     if (game.settings.get('mba-premades', 'Mirror Image')) Hooks.on('midi-qol.AttackRollComplete', macros.mirrorImage.hook);
+    if (game.settings.get('mba-premades', 'Protection from Evil and Good')) Hooks.on('midi-qol.preAttackRoll', macros.protectionFromEvilAndGood.hook);
     if (game.settings.get('mba-premades', 'Relentless Endurance')) Hooks.on('midi-qol.preTargetDamageApplication', macros.relentlessEndurance);
     if (game.settings.get('mba-premades', 'Sanctuary')) Hooks.on('midi-qol.preItemRoll', macros.sanctuary.hook);
     if (game.settings.get('mba-premades', 'True Strike')) Hooks.on('midi-qol.preAttackRoll', macros.trueStrike.hook);
@@ -86,6 +100,8 @@ globalThis['mbaPremades'] = {
     constants,
     helpers,
     macros,
+    queue,
     summons,
-    tashaSummon
+    tashaSummon,
+    tokenMove
 }

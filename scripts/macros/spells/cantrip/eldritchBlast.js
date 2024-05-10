@@ -1,4 +1,4 @@
-import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
@@ -53,13 +53,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     if (!workflow.damageRoll) return;
     let agonizingBlast = workflow.actor.flags['mba-premades']?.feature?.agonizingBlast;
     if (!agonizingBlast) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'agonizingBlast', 50);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'agonizingBlast', 50);
     if (!queueSetup) return;
     let bonusDamage = Math.max(workflow.actor.system.abilities.cha.mod, 0);
     let damageFormula = workflow.damageRoll._formula + ' + ' + bonusDamage;
     let damageRoll = await new Roll(damageFormula).roll({async: true});
     await workflow.setDamageRoll(damageRoll);
-    chrisPremades.queue.remove(workflow.item.uuid);
+    queue.remove(workflow.item.uuid);
 }
 
 export let eldritchBlast = {

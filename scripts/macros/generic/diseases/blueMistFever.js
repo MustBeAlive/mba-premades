@@ -1,5 +1,12 @@
-export async function blueMistFever({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let target = workflow.targets.first();
+import {mba} from "../../../helperFunctions.js";
+
+export async function blueMistFever() {
+    let target = game.user.targets.first();
+    if (!target) target = await fromUuidSync(game.user._lastSelected).object;
+    if (!target) {
+        ui.notifications.warn("Unable to find target!");
+        return;
+    }
     const [isDiseased] = target.actor.effects.filter(e => e.flags['mba-premades']?.name === "Blue Mist Fever");
     if (isDiseased) {
         ui.notifications.info('Target is already affected by Blue Mist Fever!');
@@ -31,9 +38,9 @@ export async function blueMistFever({ speaker, actor, token, character, item, ar
                     console.log('Unable to find effect (Blue Mist Fever)');
                     return;
                 }
-                let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'con');
+                let saveRoll = await mbaPremades.helpers.rollRequest(token, 'save', 'con');
                 if (saveRoll.total < 13) return;
-                await chrisPremades.helpers.removeEffect(effect);
+                await mbaPremades.helpers.removeEffect(effect);
                 ChatMessage.create({
                     whisper: ChatMessage.getWhisperRecipients("GM"),
                     content: `<b>${token.document.name}</b> is cured from <b>Blue Mist Fever!</b>`,
@@ -50,7 +57,7 @@ export async function blueMistFever({ speaker, actor, token, character, item, ar
                     },
                     'effectmacro': {
                         'dnd5e.longRest': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroBlueMistFever)
+                            'script': mbaPremades.helpers.functionToString(effectMacroBlueMistFever)
                         }
                     },
                     'mba-premades': {
@@ -62,8 +69,8 @@ export async function blueMistFever({ speaker, actor, token, character, item, ar
                     }
                 }
             };
-            await chrisPremades.helpers.createEffect(actor, effectData);
-            await chrisPremades.helpers.removeEffect(effect);
+            await mbaPremades.helpers.createEffect(actor, effectData);
+            await mbaPremades.helpers.removeEffect(effect);
         });
     }
     let number = Math.floor(Math.random() * 10000);
@@ -76,7 +83,7 @@ export async function blueMistFever({ speaker, actor, token, character, item, ar
             },
             'effectmacro': {
                 'onCreate': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroBlueMistFeverManifest)
+                    'script': mba.functionToString(effectMacroBlueMistFeverManifest)
                 }
             },
             'mba-premades': {
@@ -89,7 +96,7 @@ export async function blueMistFever({ speaker, actor, token, character, item, ar
             }
         }
     };
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
+    await mba.createEffect(target.actor, effectData);
     ChatMessage.create({
         whisper: ChatMessage.getWhisperRecipients("GM"),
         content: `<p><b>${target.document.name}</b> is infected with <b>Blue Mist Fever</b></p><p>Symptoms will manifest in <b>${blueMistFeverRoll.total} hours</b></p>`,

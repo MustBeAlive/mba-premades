@@ -1,3 +1,6 @@
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
     new Sequence()
@@ -120,7 +123,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 'template': {
                     'name': 'maelstrom',
                     'castLevel': workflow.castData.castLevel,
-                    'saveDC': chrisPremades.helpers.getSpellDC(workflow.item),
+                    'saveDC': mba.getSpellDC(workflow.item),
                     'macroName': 'maelstrom',
                     'templateUuid': template.uuid,
                     'turn': 'end',
@@ -138,12 +141,12 @@ async function trigger(token, trigger) {
     if (!originUuid) return;
     let originItem = await fromUuid(originUuid);
     if (!originItem) return;
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Maelstrom: Strong Current', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Maelstrom: Strong Current', false);
     if (!featureData) return;
-    featureData.system.save.dc = trigger.saveDC;
     delete featureData._id;
+    featureData.system.save.dc = trigger.saveDC;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': originItem.actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([token.uuid]);
+    let [config, options] = constants.syntheticItemWorkflowOptions([token.uuid]);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow.failedSaves.size) return;
     let target = token.object;

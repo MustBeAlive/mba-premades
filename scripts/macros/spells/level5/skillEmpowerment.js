@@ -1,4 +1,5 @@
-// Based on CPR macro (imo, buttons > dropdown)
+import {mba} from "../../../helperFunctions.js";
+
 export async function skillEmpowerment({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let options = Object.entries(CONFIG.DND5E.skills).filter(([key, value]) => target.actor.system.skills[key].value === 1).map(([i, j]) => ({ 'value': i, 'html': j.label }));
@@ -6,7 +7,7 @@ export async function skillEmpowerment({ speaker, actor, token, character, item,
     for (let i = 0; i < options.length; i++) {
         choices.push([options[i].html, options[i].value]);
     }
-    let selection = await chrisPremades.helpers.dialog('Choose one of the skills:', choices);
+    let selection = await mba.dialog('Choose one of the skills:', choices);
     if (!selection) return;
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Skill Empowerment` })
@@ -30,7 +31,7 @@ export async function skillEmpowerment({ speaker, actor, token, character, item,
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -102,7 +103,7 @@ export async function skillEmpowerment({ speaker, actor, token, character, item,
         .waitUntilFinished(-1000)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(target.actor, effectData);
+            mba.createEffect(target.actor, effectData);
         })
 
         .effect()

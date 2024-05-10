@@ -1,11 +1,12 @@
+import {tashaSummon} from "../generic/tashaSummon.js";
+
 export async function panpipesOfTheSewers({ speaker, actor, token, character, item, args, scope, workflow }) {
     let sourceActor = game.actors.getName('Sewer Pipes: Swarm of Rats');
     if (!sourceActor) {
         ui.notifications.warn('Missing actor in the side panel! (Sewer Pipes: Swarm of Rats)');
         return;
     }
-    let tokenName = chrisPremades.helpers.getConfiguration(workflow.item, 'name') ?? 'Sewer Pipes: Swarm of Rats';
-    if (tokenName === '') tokenName = 'Sewer Pipes: Swarm of Rats';
+    let tokenName = 'Sewer Pipes: Swarm of Rats';
     let updates = {
         'actor': {
             'name': tokenName,
@@ -19,7 +20,8 @@ export async function panpipesOfTheSewers({ speaker, actor, token, character, it
             'disposition': workflow.token.document.disposition
         }
     };
-    let animation = chrisPremades.helpers.getConfiguration(workflow.item, 'animation-') ?? 'nature';
+    let animation = 'nature';
+
     new Sequence()
     
         .wait(150)
@@ -71,5 +73,5 @@ export async function panpipesOfTheSewers({ speaker, actor, token, character, it
     
         .play();
     
-    await chrisPremades.tashaSummon.spawn(sourceActor, updates, 86400, workflow.item, 30, workflow.token, animation);
+    await tashaSummon.spawn(sourceActor, updates, 86400, workflow.item, 30, workflow.token, animation);
 }

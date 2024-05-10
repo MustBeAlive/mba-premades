@@ -1,13 +1,15 @@
-//Animations by EskieMoh#2969
-//Adjusted; Original macro by CPR
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
+
 async function hexItem({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.targets.size != 1) return;
     let target = workflow.targets.first();
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Hex: Move', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Hex: Move', false);
     if (!featureData) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'hex', 50);
+    delete featureData._id;
+    let queueSetup = await queue.setup(workflow.item.uuid, 'hex', 50);
     if (!queueSetup) return;
-    let selection = await chrisPremades.helpers.dialog(workflow.item.name, [
+    let selection = await mba.dialog(workflow.item.name, [
         ['Strength', 'str'],
         ['Dexterity', 'dex'],
         ['Constitution', 'con'],
@@ -135,16 +137,16 @@ async function hexItem({ speaker, actor, token, character, item, args, scope, wo
 
         .play();
 
-    await chrisPremades.helpers.createEffect(target.actor, targetEffectData);
+    await mba.createEffect(target.actor, targetEffectData);
     async function effectMacro() {
         await warpgate.revert(token.document, 'Hex');
         let targetTokenId = effect.changes[0].value;
         let targetToken = canvas.scene.tokens.get(targetTokenId);
         if (!targetToken) return;
         let targetActor = targetToken.actor;
-        let targetEffect = chrisPremades.helpers.findEffect(targetActor, 'Hexed');
+        let targetEffect = mbaPremades.helpers.findEffect(targetActor, 'Hexed');
         if (!targetEffect) return;
-        await chrisPremades.helpers.removeEffect(targetEffect);
+        await mbaPremades.helpers.removeEffect(targetEffect);
     }
     let sourceEffectData = {
         'name': 'Hex',
@@ -171,7 +173,7 @@ async function hexItem({ speaker, actor, token, character, item, args, scope, wo
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacro)
+                    'script': mba.functionToString(effectMacro)
                 }
             },
             'midi-qol': {
@@ -206,16 +208,16 @@ async function hexItem({ speaker, actor, token, character, item, args, scope, wo
         'description': sourceEffectData.name
     };
     await warpgate.mutate(workflow.token.document, updates, {}, options);
-    let conEffect = chrisPremades.helpers.findEffect(workflow.actor, 'Concentrating');
+    let conEffect = mba.findEffect(workflow.actor, 'Concentrating');
     if (conEffect) {
         let updates = {
             'duration': {
                 'seconds': seconds
             }
         };
-        await chrisPremades.helpers.updateEffect(conEffect, updates);
+        await mba.updateEffect(conEffect, updates);
     }
-    chrisPremades.queue.remove(workflow.item.uuid);
+    queue.remove(workflow.item.uuid);
 }
 
 async function hexAttack({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -226,15 +228,15 @@ async function hexAttack({ speaker, actor, token, character, item, args, scope, 
     let hexedTarget = sourceActor.flags['mba-premades']?.spell?.hex;
     let targetToken = workflow.hitTargets.first();
     if (targetToken.id != hexedTarget) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'hex', 250);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'hex', 250);
     if (!queueSetup) return;
     let oldFormula = workflow.damageRoll._formula;
     let bonusDamageFormula = '1d6[necrotic]';
-    if (workflow.isCritical) bonusDamageFormula = chrisPremades.helpers.getCriticalFormula(bonusDamageFormula);
+    if (workflow.isCritical) bonusDamageFormula = mba.getCriticalFormula(bonusDamageFormula);
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRoll = await new Roll(damageFormula).roll({ async: true });
     await workflow.setDamageRoll(damageRoll);
-    chrisPremades.queue.remove(workflow.item.uuid);
+    queue.remove(workflow.item.uuid);
 
     new Sequence()
 
@@ -290,14 +292,14 @@ async function hexMoveItem({ speaker, actor, token, character, item, args, scope
     let selection = 'flags.midi-qol.disadvantage.ability.check.str';
     if (oldTargetToken) {
         let oldTargetActor = oldTargetToken.actor;
-        let oldTargetEffect = chrisPremades.helpers.findEffect(oldTargetActor, 'Hexed');
+        let oldTargetEffect = mba.findEffect(oldTargetActor, 'Hexed');
         if (oldTargetEffect) {
-            await chrisPremades.helpers.removeEffect(oldTargetEffect);
+            await mba.removeEffect(oldTargetEffect);
             oldTargetOrigin = oldTargetEffect.origin;
             selection = oldTargetEffect.changes[0].key;
         }
     }
-    let effect = chrisPremades.helpers.findEffect(workflow.actor, 'Hex');
+    let effect = mba.findEffect(workflow.actor, 'Hex');
     let duration = 3600;
     if (effect) duration = effect.duration.remaining;
     let icon = effect.flags['mba-premades']?.spell?.hex?.icon;
@@ -330,7 +332,7 @@ async function hexMoveItem({ speaker, actor, token, character, item, args, scope
             }
         }
     };
-    await chrisPremades.helpers.createEffect(targetActor, effectData);
+    await mba.createEffect(targetActor, effectData);
     new Sequence()
 
         .effect()
@@ -388,7 +390,7 @@ async function hexMoveItem({ speaker, actor, token, character, item, args, scope
         let changes = effect.changes;
         changes[0].value = targetToken.id;
         let updates = { changes };
-        await chrisPremades.helpers.updateEffect(effect, updates);
+        await mba.updateEffect(effect, updates);
     }
 }
 

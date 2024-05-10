@@ -1,3 +1,5 @@
+import {mba} from "../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     new Sequence()
@@ -18,9 +20,10 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .play()
 }
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
-    await chrisPremades.helpers.addCondition(workflow.targets.first().actor, "Prone");
+    await mba.addCondition(workflow.targets.first().actor, "Prone");
 }
 
 export let decanterOfEndlessWater = {

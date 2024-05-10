@@ -1,5 +1,13 @@
-export async function cackleFever({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let target = workflow.targets.first();
+import {mba} from "../../../helperFunctions.js";
+import {constants} from "../constants.js";
+
+export async function cackleFever() {
+    let target = game.user.targets.first();
+    if (!target) target = await fromUuidSync(game.user._lastSelected).object;
+    if (!target) {
+        ui.notifications.warn("Unable to find target!");
+        return;
+    }
     let [isImmune] = target.actor.effects.filter(e => e.flags['mba-premades']?.name === "Cackle Fever: Immune");
     if (isImmune) {
         ui.notifications.info("Target is immune to the effects of Cackle Fever");
@@ -10,7 +18,7 @@ export async function cackleFever({ speaker, actor, token, character, item, args
         ui.notifications.info('Target is already affected by Cackle Fever!');
         return;
     }
-    if (chrisPremades.helpers.raceOrType(target.actor) != "humanoid") {
+    if (mba.raceOrType(target.actor) != "humanoid") {
         ui.notifications.info("Cackle Fever can only affect humanoids!");
         return;
     }
@@ -40,7 +48,7 @@ export async function cackleFever({ speaker, actor, token, character, item, args
                 await mbaPremades.macros.diseases.cackleFeverTrigger(actor, token);
             };
             async function effectMacroCackleFeverFrightened() {
-                if (!chrisPremades.helpers.findEffect(actor, "Frightened")) return;
+                if (!mbaPremades.helpers.findEffect(actor, "Frightened")) return;
                 await mbaPremades.macros.diseases.cackleFeverTrigger(actor, token);
             };
             async function effectMacroCackleFeverRest() {
@@ -52,7 +60,7 @@ export async function cackleFever({ speaker, actor, token, character, item, args
                 let saveDC = effect.flags['mba-premades']?.saveDC;
                 let fails = effect.flags['mba-premades']?.fails;
                 let newSaveDC;
-                let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'con');
+                let saveRoll = await mbaPremades.helpers.rollRequest(token, 'save', 'con');
                 if (saveRoll.total >= saveDC) {
                     let cackleFeverRoll = await new Roll("1d6").roll({ 'async': true });
                     await MidiQOL.displayDSNForRoll(cackleFeverRoll, 'damageRoll');
@@ -92,14 +100,14 @@ export async function cackleFever({ speaker, actor, token, character, item, args
                         }
                     }
                 };
-                await chrisPremades.helpers.updateEffect(effect, updates);
+                await mbaPremades.helpers.updateEffect(effect, updates);
                 if (effect.flags['mba-premades']?.fails > 2) {
                     ChatMessage.create({
                         whisper: ChatMessage.getWhisperRecipients("GM"),
                         content: `<b>${token.document.name}</b> failed the save against <b>Cackle Fever</b> 3 times and gains a randomly determined form of <b>Indefinite Madness</b>!`,
                         speaker: { actor: null, alias: "Disease Announcer" }
                     });
-                    await chrisPremades.helpers.removeEffect(effect);
+                    await mbaPremades.helpers.removeEffect(effect);
                 };
                 if (effect.flags['mba-premades']?.saveDC < 1) {
                     ChatMessage.create({
@@ -107,7 +115,7 @@ export async function cackleFever({ speaker, actor, token, character, item, args
                         content: `<b>${token.document.name}</b> is cured from <b>Cackle Fever!</b> (Save DC dropped to 0)`,
                         speaker: { actor: null, alias: "Disease Announcer" }
                     });
-                    await chrisPremades.helpers.removeEffect(effect);
+                    await mbaPremades.helpers.removeEffect(effect);
                 };
             }
             async function effectMacroCackleFeverDel() {
@@ -116,11 +124,11 @@ export async function cackleFever({ speaker, actor, token, character, item, args
                 if (!exhaustion) return;
                 let level = +exhaustion.name.slice(-1);
                 if (level === 1) {
-                    await chrisPremades.helpers.removeCondition(actor, "Exhaustion 1");
+                    await mbaPremades.helpers.removeCondition(actor, "Exhaustion 1");
                     return;
                 }
                 level -= 1;
-                await chrisPremades.helpers.addCondition(actor, "Exhaustion " + level);
+                await mbaPremades.helpers.addCondition(actor, "Exhaustion " + level);
             }
             let number = Math.floor(Math.random() * 10000);
             let effectData = {
@@ -140,16 +148,16 @@ export async function cackleFever({ speaker, actor, token, character, item, args
                     },
                     'effectmacro': {
                         'dnd5e.longRest': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroCackleFeverRest)
+                            'script': mbaPremades.helpers.functionToString(effectMacroCackleFeverRest)
                         },
                         'onCombatStart': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroCackleFeverCombatStart)
+                            'script': mbaPremades.helpers.functionToString(effectMacroCackleFeverCombatStart)
                         },
                         'onTurnStart': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroCackleFeverFrightened)
+                            'script': mbaPremades.helpers.functionToString(effectMacroCackleFeverFrightened)
                         },
                         'onDelete': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroCackleFeverDel)
+                            'script': mbaPremades.helpers.functionToString(effectMacroCackleFeverDel)
                         }
                     },
                     'mba-premades': {
@@ -165,17 +173,17 @@ export async function cackleFever({ speaker, actor, token, character, item, args
             };
             let exhaustion = token.actor.effects.filter(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
             if (!exhaustion.length) {
-                await chrisPremades.helpers.addCondition(actor, "Exhaustion 1");
-                await chrisPremades.helpers.createEffect(actor, effectData);
-                await chrisPremades.helpers.removeEffect(effect);
+                await mbaPremades.helpers.addCondition(actor, "Exhaustion 1");
+                await mbaPremades.helpers.createEffect(actor, effectData);
+                await mbaPremades.helpers.removeEffect(effect);
                 return;
             }
             let level = +exhaustion[0].name.slice(-1);
             level += 1;
             if (level > 6) level = 6;
-            await chrisPremades.helpers.addCondition(actor, "Exhaustion " + level);
-            await chrisPremades.helpers.createEffect(actor, effectData);
-            await chrisPremades.helpers.removeEffect(effect);
+            await mbaPremades.helpers.addCondition(actor, "Exhaustion " + level);
+            await mbaPremades.helpers.createEffect(actor, effectData);
+            await mbaPremades.helpers.removeEffect(effect);
         });
     }
     let number = Math.floor(Math.random() * 10000);
@@ -188,7 +196,7 @@ export async function cackleFever({ speaker, actor, token, character, item, args
             },
             'effectmacro': {
                 'onCreate': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroCackleFeverManifest)
+                    'script': mba.functionToString(effectMacroCackleFeverManifest)
                 }
             },
             'mba-premades': {
@@ -202,7 +210,7 @@ export async function cackleFever({ speaker, actor, token, character, item, args
             }
         }
     };
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
+    await mba.createEffect(target.actor, effectData);
     ChatMessage.create({
         whisper: ChatMessage.getWhisperRecipients("GM"),
         content: `<p><b>${target.document.name}</b> is infected with <b>Cackle Fever</b></p><p>Symptoms will manifest in <b>${cackleFeverRoll.total} hours</b></p>`,
@@ -216,9 +224,9 @@ export async function cackleFeverTrigger(actor, token) {
         console.log('Unable to find effect (Cackle Fever)');
         return;
     }
-    if (chrisPremades.helpers.findEffect(actor, "Incapacitated")) return;
+    if (mba.findEffect(actor, "Incapacitated")) return;
     let saveDC = effect.flags['mba-premades']?.saveDC;
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Features', 'Cackle Fever: Mad Laughter', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Features', 'Cackle Fever: Mad Laughter', false);
     if (!featureData) {
         ui.notifications.warn(`Unable to find item in the compenidum! (Cackle Fever: Mad Laughter)`);
         return
@@ -226,7 +234,7 @@ export async function cackleFeverTrigger(actor, token) {
     delete featureData._id;
     featureData.system.save.dc = saveDC
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': token.actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([token.document.uuid]);
+    let [config, options] = constants.syntheticItemWorkflowOptions([token.document.uuid]);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow.failedSaves.size) return;
     async function effectMacroDel() {
@@ -259,7 +267,7 @@ export async function cackleFeverTrigger(actor, token) {
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             }
         }
@@ -276,8 +284,8 @@ export async function cackleFeverTrigger(actor, token) {
         .name(`${token.document.name} Cackle Fever`)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(token.actor, effectData);
-            if (!chrisPremades.helpers.findEffect(token.actor, "Prone")) chrisPremades.helpers.addCondition(token.actor, 'Prone');
+            mba.createEffect(token.actor, effectData);
+            if (!mba.findEffect(token.actor, "Prone")) mba.addCondition(token.actor, 'Prone');
         })
 
         .animation()
@@ -333,9 +341,9 @@ export async function cackleFeverDamaged({ speaker, actor, token, character, ite
         console.log('Unable to find effect (Cackle Fever)');
         return;
     }
-    if (chrisPremades.helpers.findEffect(infected.actor, "Incapacitated")) return;
+    if (mba.findEffect(infected.actor, "Incapacitated")) return;
     let saveDC = effect.flags['mba-premades']?.saveDC;
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Features', 'Cackle Fever: Mad Laughter', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Features', 'Cackle Fever: Mad Laughter', false);
     if (!featureData) {
         ui.notifications.warn(`Unable to find item in the compenidum! (Cackle Fever: Mad Laughter)`);
         return
@@ -343,7 +351,7 @@ export async function cackleFeverDamaged({ speaker, actor, token, character, ite
     delete featureData._id;
     featureData.system.save.dc = saveDC
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': infected.actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([infected.document.uuid]);
+    let [config, options] = constants.syntheticItemWorkflowOptions([infected.document.uuid]);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow.failedSaves.size) return;
     async function effectMacroDel() {
@@ -376,7 +384,7 @@ export async function cackleFeverDamaged({ speaker, actor, token, character, ite
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             }
         }
@@ -393,8 +401,8 @@ export async function cackleFeverDamaged({ speaker, actor, token, character, ite
         .name(`${infected.document.name} Cackle Fever`)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(infected.actor, effectData);
-            if (!chrisPremades.helpers.findEffect(infected.actor, "Prone")) chrisPremades.helpers.addCondition(infected.actor, 'Prone');
+            mba.createEffect(infected.actor, effectData);
+            if (!mba.findEffect(infected.actor, "Prone")) mba.addCondition(infected.actor, 'Prone');
         })
 
         .animation()
@@ -442,13 +450,13 @@ export async function cackleFeverDamaged({ speaker, actor, token, character, ite
 }
 
 export async function cackleFeverAura(actor, token) {
-    if (!chrisPremades.helpers.inCombat()) return;
+    if (!mba.inCombat()) return;
     let tokenId = game.combat.current.tokenId;
-    let [target] = await chrisPremades.helpers.findNearby(token, 10, null, false, false).filter(i => i.document.id === tokenId);
+    let [target] = await mba.findNearby(token, 10, null, false, false).filter(i => i.document.id === tokenId);
     if (!target) return;
-    if (chrisPremades.helpers.checkTrait(target.actor, "ci", "diseased")) return;
-    if (chrisPremades.helpers.findEffect(actor, "Cackle Fever: Immune")) return;
-    let saveRoll = await chrisPremades.helpers.rollRequest(target.actor, 'save', 'con');
+    if (mba.checkTrait(target.actor, "ci", "diseased")) return;
+    if (mba.findEffect(actor, "Cackle Fever: Immune")) return;
+    let saveRoll = await mba.rollRequest(target.actor, 'save', 'con');
     if (saveRoll.total < 10) {
         await mbaPremades.macros.diseases.cackleFever();
         return;
@@ -465,6 +473,6 @@ export async function cackleFeverAura(actor, token) {
                 }
             }
         };
-        await chrisPremades.helpers.createEffect(target.actor, immuneData);
+        await mba.createEffect(target.actor, immuneData);
     }
 }

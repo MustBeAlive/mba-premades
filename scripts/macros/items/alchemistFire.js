@@ -1,3 +1,6 @@
+import {mba} from "../../helperFunctions.js";
+import {constants} from "../generic/constants.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     const target = workflow.targets.first();
     async function effectMacroDel() {
@@ -25,14 +28,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': 'turn=start, damageType=fire, damageRoll=1d4, damageBeforeSave=true, name=Burning, killAnim=true',
+                'value': 'turn=start, damageType=fire, damageRoll=1d4, damageBeforeSave=true, name=Burning, killAnim=true, fastForwardDamage=true',
                 'priority': 20
             }
         ],
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             }
         }
@@ -41,20 +44,21 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ui.notifications.warn("No target selected!");
         return;
     }
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Item Features', "Alchemist's Fire: Throw Flask", false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', "Alchemist's Fire: Throw Flask", false);
     if (!featureData) {
-        ui.notifications.warn("Unable to find item in compenidum! (Alchemist's Fire: Throw Flask)");
+        ui.notifications.warn("Unable to find item in compendium! (Alchemist's Fire: Throw Flask)");
         return
     }
+    delete featureData._id;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([target.document.uuid]);
+    let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
     await game.messages.get(workflow.itemCardId).delete();
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow) return;
     if (featureWorkflow.hitTargets.size) {
         mbaPremades.macros.alchemistFire.animation({ speaker, actor, token, character, item, args, scope, workflow });
         await warpgate.wait(1500);
-        await chrisPremades.helpers.createEffect(target.actor, effectData);
+        await mba.createEffect(target.actor, effectData);
     } else {
         let offsetX = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
         if (offsetX === 0) offsetX = 1;
@@ -81,22 +85,11 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .play()
     }
 
-    let flaskItem = workflow.actor.items.filter(i => i.name === workflow.item.name)[0];
+    let flaskItem = mba.getItem(workflow.actor, workflow.item.name);
     if (flaskItem.system.quantity > 1) {
         flaskItem.update({ "system.quantity": flaskItem.system.quantity - 1 });
     } else {
         workflow.actor.deleteEmbeddedDocuments("Item", [flaskItem.id]);
-    }
-    let emptyFlaskItem = workflow.actor.items.filter(i => i.name === "Empty Flask")[0];
-    if (!emptyFlaskItem) {
-        const itemData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
-        if (!itemData) {
-            ui.notifications.warn("Unable to find item in compenidum! (Empty Flask)");
-            return
-        }
-        await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
-    } else {
-        emptyFlaskItem.update({ "system.quantity": emptyFlaskItem.system.quantity + 1 });
     }
 }
 

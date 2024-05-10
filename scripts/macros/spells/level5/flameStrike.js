@@ -1,40 +1,32 @@
-// Animation by Mesus#8666
+import {mba} from "../../../helperFunctions.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel - 1;
     let fireDice = 4;
     let radiantDice = 4;
     if (ammount > 4) {
-        let choices = [
-            ['Fire', 'fire'],
-            ['Radiant', 'radiant']
-        ];
-        let selection = await chrisPremades.helpers.dialog('Choose which damage to scale:', choices);
-        if (!selection) return;
-        switch (selection) {
-            case 'fire': {
-                fireDice = ammount;
-                break;
-            }
-            case 'radiant': {
-                radiantDice = ammount;
-                break;
-            }
+        let choices = [['Fire', 'fire'],['Radiant', 'radiant']];
+        let selection = await mba.dialog('Choose which damage to scale:', choices);
+        if (!selection) {
+            ui.notifications.warn("Failed to choose damage to scale, try again!");
+            return;
         }
+        if (selection === "fire") fireDice = ammount;
+        else if (selection === "radiant") radiantDice = ammount;
     }
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Flame Strike: Blast', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Flame Strike: Blast', false);
     if (!featureData) return;
+    delete featureData._id;
     let originItem = workflow.item;
     if (!originItem) return;
-    featureData.system.save.dc = chrisPremades.helpers.getSpellDC(originItem);
+    featureData.system.save.dc = mba.getSpellDC(originItem);
     featureData.system.damage.parts[0][0] = fireDice + 'd6[fire]';
     featureData.system.damage.parts[1][0] = radiantDice + 'd6[radiant]';
-    setProperty(featureData, 'chris-premades.spell.castData.school', originItem.system.school);
+    setProperty(featureData, 'mba-premades.spell.castData.school', originItem.system.school);
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
     await game.messages.get(workflow.itemCardId).delete();
     await MidiQOL.completeItemUse(feature);
 }
-
-
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = fromUuidSync(workflow.templateUuid);

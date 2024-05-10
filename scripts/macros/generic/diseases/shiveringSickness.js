@@ -1,10 +1,17 @@
-export async function shiveringSickness({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let target = workflow.targets.first();
-    if (chrisPremades.helpers.raceOrType(target.actor) != "humanoid") {
+import {mba} from "../../../helperFunctions.js";
+
+export async function shiveringSickness() {
+    let target = game.user.targets.first();
+    if (!target) target = await fromUuidSync(game.user._lastSelected).object;
+    if (!target) {
+        ui.notifications.warn("Unable to find target!");
+        return;
+    }
+    if (mba.raceOrType(target.actor) != "humanoid") {
         console.log("Target is unaffected by Shivering Sickness (not humanoid)");
         return;
     }
-    if (chrisPremades.helpers.findEffect(target.actor, "Insect Repellent")) { // for later use?
+    if (mba.findEffect(target.actor, "Insect Repellent")) { // for later use?
         console.log("Target is protected against Shivering Sickness");
         return;
     }
@@ -40,14 +47,14 @@ export async function shiveringSickness({ speaker, actor, token, character, item
                     console.log('Unable to find effect (Shivering Sickness)');
                     return;
                 }
-                let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'con');
+                let saveRoll = await mbaPremades.helpers.rollRequest(token, 'save', 'con');
                 if (saveRoll.total < 11) return;
                 ChatMessage.create({
                     whisper: ChatMessage.getWhisperRecipients("GM"),
                     content: `<b>${token.document.name}</b> is cured from <b>Shivering Sickness!</b>`,
                     speaker: { actor: null, alias: "Disease Announcer" }
                 });
-                await chrisPremades.helpers.removeEffect(effect);
+                await mbaPremades.helpers.removeEffect(effect);
             }
             let number = Math.floor(Math.random() * 10000);
             const effectData = {
@@ -73,7 +80,7 @@ export async function shiveringSickness({ speaker, actor, token, character, item
                     },
                     'effectmacro': {
                         'dnd5e.longRest': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroShiveringSickness)
+                            'script': mbaPremades.helpers.functionToString(effectMacroShiveringSickness)
                         }
                     },
                     'mba-premades': {
@@ -85,8 +92,8 @@ export async function shiveringSickness({ speaker, actor, token, character, item
                     }
                 }
             };
-            await chrisPremades.helpers.createEffect(actor, effectData);
-            await chrisPremades.helpers.removeEffect(effect);
+            await mbaPremades.helpers.createEffect(actor, effectData);
+            await mbaPremades.helpers.removeEffect(effect);
         });
     }
     let number = Math.floor(Math.random() * 10000);
@@ -99,7 +106,7 @@ export async function shiveringSickness({ speaker, actor, token, character, item
             },
             'effectmacro': {
                 'onCreate': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroShiveringSicknessManifest)
+                    'script': mba.functionToString(effectMacroShiveringSicknessManifest)
                 }
             },
             'mba-premades': {
@@ -112,7 +119,7 @@ export async function shiveringSickness({ speaker, actor, token, character, item
             }
         }
     };
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
+    await mba.createEffect(target.actor, effectData);
     ChatMessage.create({
         whisper: ChatMessage.getWhisperRecipients("GM"),
         content: `<p><b>${target.document.name}</b> is infected with <b>Shivering Sickness</b></p><p>Symptoms will manifest in <b>${shiveringSicknessRoll.total} hours</b></p>`,

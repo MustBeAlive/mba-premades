@@ -1,3 +1,5 @@
+import {mba} from "../../helperFunctions.js";
+
 export async function dash({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Dash` })
@@ -19,7 +21,7 @@ export async function dash({ speaker, actor, token, character, item, args, scope
             },
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             }
         }
@@ -45,7 +47,7 @@ export async function dash({ speaker, actor, token, character, item, args, scope
         .wait(750)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(workflow.actor, effectData);
+            mba.createEffect(workflow.actor, effectData);
         })
 
         .play();

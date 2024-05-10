@@ -5,6 +5,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     let dice = 1 + (Math.floor((level + 1) / 6));
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Produce Flame: Hurl', false);
     if (!featureData) return;
+    delete featureData._id;
     featureData.system.damage.parts[0][0] = dice + 'd8[fire]';
     async function effectMacroDel() {
         await warpgate.revert(token.document, 'Produce Flame: Hurl');

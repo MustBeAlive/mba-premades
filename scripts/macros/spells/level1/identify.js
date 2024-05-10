@@ -1,9 +1,8 @@
-// Original macro by GPS
 export async function identify({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let dialog = await new Dialog({
+    await new Dialog({
         title: "Identify",
         content: `
-            <p>Would you like to identify an item? (Drag it to the box below!)</p>
+            <p>Would you like to identify an item?</p><p>(Drag it to the box below!)</p>
             <form>
                 <div class="form-group">
                 <div class="form-fields">
@@ -130,5 +129,24 @@ export async function identify({ speaker, actor, token, character, item, args, s
         });
 
         dialogSuccess.render(true);
+
+        new Sequence()
+
+            .effect()
+            .file("jb2a.magic_signs.circle.02.divination.complete.dark_blue")
+            .attachTo(token)
+            .scaleToObject(2 * token.document.texture.scaleX)
+
+            .effect()
+            .file("jaamod.misc.important_dark")
+            .attachTo(token)
+            .scaleToObject(2 * token.document.texture.scaleX)
+            .delay(2500)
+            .rotate(45)
+            .playbackRate(0.7)
+            .fadeIn(500)
+            .fadeOut(500)
+
+            .play()
     }
 }

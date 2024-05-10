@@ -1,10 +1,12 @@
+import {mba} from "../../helperFunctions.js";
+
 export async function help({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     if (target.id === workflow.token.id) {
         ui.notifications.warn("You can't help yourself!");
         return;
     }
-    let effect = await chrisPremades.helpers.findEffect(target.actor, "Help");
+    let effect = await mba.findEffect(target.actor, "Help");
     if (effect) {
         ui.notifications.info("Someone is already helping/distracting targeted creature!");
         await game.messages.get(workflow.itemCardId).delete();
@@ -57,7 +59,7 @@ export async function help({ speaker, actor, token, character, item, args, scope
             },
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             }
         }
@@ -76,7 +78,7 @@ export async function help({ speaker, actor, token, character, item, args, scope
         .name(`${target.document.name} Help`)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(target.actor, effectData);
+            mba.createEffect(target.actor, effectData);
         })
 
         .play();

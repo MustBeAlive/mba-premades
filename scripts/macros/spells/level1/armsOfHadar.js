@@ -1,4 +1,5 @@
-//Animation by EskieMoh#2969
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let targets = Array.from(workflow.targets);
     new Sequence()
@@ -7,12 +8,12 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 new Sequence()
 
                     .effect()
-                    .name(`${target.data.name}ArmsofHadar`)
                     .from(target)
                     .atLocation(target)
                     .scaleToObject(target.document.texture.scaleX)
                     .fadeOut(100)
                     .persist()
+                    .name(`${target.document.name} Arms of Hadar`)
 
                     .wait(150)
 
@@ -25,8 +26,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         })
 
         .effect()
-        .atLocation(token)
         .file(`jb2a.ward.rune.dark_purple.01`)
+        .atLocation(token)
         .scaleToObject(1.85)
         .scaleIn(0, 600, { ease: "easeOutCubic" })
         .belowTokens()
@@ -56,10 +57,10 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.particles.outward.purple.01.02")
+        .atLocation(token)
         .scaleIn(0, 1000, { ease: "easeOutQuint" })
         .delay(500)
         .fadeOut(1000)
-        .atLocation(token)
         .duration(1000)
         .size(1.75, { gridUnits: true })
         .animateProperty("spriteContainer", "position.y", { from: 0, to: -0.5, gridUnits: true, duration: 1000 })
@@ -76,25 +77,25 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .waitUntilFinished()
 
         .effect()
-        .delay(150)
-        .belowTokens()
         .file("jb2a.impact.ground_crack.dark_red.02")
         .atLocation(token)
+        .delay(150)
+        .belowTokens()
         .size(3.5, { gridUnits: true })
         .filter("ColorMatrix", { hue: -100, brightness: -1 })
 
         .effect()
-        .delay(150)
         .file("jb2a.impact.004.dark_purple")
         .atLocation(token)
+        .delay(150)
         .scaleToObject(4)
         .filter("ColorMatrix", { hue: -100, brightness: -1 })
         .scaleIn(0, 500, { ease: "easeOutCirc" })
 
         .effect()
-        .delay(150)
         .file("jb2a.arms_of_hadar.dark_purple")
         .atLocation(token)
+        .delay(150)
         .randomRotation()
         .scaleIn(0, 750, { ease: "easeOutCirc" })
         .animateProperty("sprite", "width", { from: 5.5, to: 0, duration: 1500, delay: 1000, gridUnits: true, ease: "easeOutCirc" })
@@ -107,10 +108,10 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .thenDo(function () {
             targets.forEach(target => {
-                let tokenCenterX = token.x + canvas.grid.size * target.data.width / 2
-                let tokenCenterY = token.y + canvas.grid.size * target.data.width / 2
-                let targetCenterX = target.x + canvas.grid.size * target.data.width / 2
-                let targetCenterY = target.y + canvas.grid.size * target.data.width / 2
+                let tokenCenterX = token.x + canvas.grid.size * target.document.width / 2
+                let tokenCenterY = token.y + canvas.grid.size * target.document.width / 2
+                let targetCenterX = target.x + canvas.grid.size * target.document.width / 2
+                let targetCenterY = target.y + canvas.grid.size * target.document.width / 2
                 let newX = targetCenterX - (canvas.grid.size / 2.5 * Math.sign(tokenCenterX - targetCenterX))
                 let newY = targetCenterY - (canvas.grid.size / 2.5 * Math.sign(tokenCenterY - targetCenterY))
 
@@ -124,13 +125,13 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                     .opacity(0.75)
 
                     .thenDo(function () {
-                        Sequencer.EffectManager.endEffects({ name: `${target.data.name}ArmsofHadar` })
+                        Sequencer.EffectManager.endEffects({ name: `${target.document.name} Arms of Hadar` })
                     })
 
                     .effect()
                     .from(target)
                     .atLocation(target)
-                    .scaleToObject(target.data.width * target.document.texture.scaleX)
+                    .scaleToObject(target.document.width * target.document.texture.scaleX)
                     .moveTowards({ x: newX, y: newY }, { rotate: false, ease: "easeOutBack" })
                     .duration(750)
                     .loopProperty("sprite", "position.x", { from: -0.05, to: 0.05, duration: 175, pingPong: true, gridUnits: true })
@@ -140,7 +141,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                     .effect()
                     .from(target)
                     .atLocation(target)
-                    .scaleToObject(target.data.width * target.document.texture.scaleX)
+                    .scaleToObject(target.document.width * target.document.texture.scaleX)
                     .moveTowards({ x: newX, y: newY }, { rotate: false, ease: "easeOutBack" })
                     .duration(750)
                     .waitUntilFinished(-50)
@@ -166,11 +167,9 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     let targets = Array.from(workflow.failedSaves);
-    for (let i = 0; i < targets.length; i++) {
-        let target = fromUuidSync(targets[i].document.uuid).object;
-        let reactionSpend = await chrisPremades.helpers.findEffect(target.actor, 'Reaction');
-        if (reactionSpend) return;
-        await chrisPremades.helpers.addCondition(target.actor, 'Reaction');
+    for (let target of targets) {
+        if (mba.findEffect(target.actor, 'Reaction')) continue;
+        await mba.addCondition(target.actor, 'Reaction');
     }
 }
 

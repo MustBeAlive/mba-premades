@@ -1,4 +1,11 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function featherFall({ speaker, actor, token, character, item, args, scope, workflow }) {
+    if (mba.findEffect(workflow.actor, "Reaction")) {
+        ui.notifications.warn("You don't have reaction avaliable!");
+        return;
+    }
+    await mba.addCondition(workflow.actor, "Reaction");
     let targets = Array.from(workflow.targets);
     let effectData = {
         'name': workflow.item.name,
@@ -34,7 +41,7 @@ export async function featherFall({ speaker, actor, token, character, item, args
             .waitUntilFinished(-750)
 
             .thenDo(function () {
-                chrisPremades.helpers.createEffect(target.actor, effectData);
+                mba.createEffect(target.actor, effectData);
             })
 
             .effect()

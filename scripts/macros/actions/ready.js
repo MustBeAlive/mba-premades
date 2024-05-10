@@ -1,11 +1,13 @@
+import {mba} from "../../helperFunctions.js";
+
 export async function ready({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let reactionSpent = await chrisPremades.helpers.findEffect(workflow.actor, "Reaction");
+    let reactionSpent = await mba.findEffect(workflow.actor, "Reaction");
     if (reactionSpent) {
         ui.notifications.warn("In order to ready an action you need to have your reaction available!");
         return;
     }
     let choices = [["Yes (begin concentrating)", "yes"], ["No", "no"]];
-    let selection = await chrisPremades.helpers.dialog("Are you readying a spell?", choices);
+    let selection = await mba.dialog("Are you readying a spell?", choices);
     if (!selection) return;
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Ready` })
@@ -23,13 +25,13 @@ export async function ready({ speaker, actor, token, character, item, args, scop
                 },
                 'effectmacro': {
                     'onDelete': {
-                        'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                        'script': mba.functionToString(effectMacroDel)
                     }
                 }
             }
         };
-        await chrisPremades.helpers.addCondition(workflow.actor, "Reaction");
-        await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+        await mba.addCondition(workflow.actor, "Reaction");
+        await mba.createEffect(workflow.actor, effectData);
     
         await new Sequence()
     
@@ -60,17 +62,17 @@ export async function ready({ speaker, actor, token, character, item, args, scop
     
         return;
     }
-    let isConcentrating = await chrisPremades.helpers.findEffect(workflow.actor, "Concentrating");
+    let isConcentrating = await mba.findEffect(workflow.actor, "Concentrating");
     if (isConcentrating) {
         let oldConc = await fromUuid(isConcentrating.flags['midi-qol']?.isConcentration);
         let concChoices = [
             [`Stop concentrating on <b>${oldConc.name}</b>`, "yes"],
             ["Cancel readying action", "no"]
         ];
-        let concSelection = await chrisPremades.helpers.dialog("You are already concentrating on a spell", concChoices);
+        let concSelection = await mba.dialog("You are already concentrating on a spell", concChoices);
         if (!concSelection) return;
         if (concSelection === "no") return;
-        await chrisPremades.helpers.removeCondition(workflow.actor, "Concentrating");
+        await mba.removeCondition(workflow.actor, "Concentrating");
         await warpgate.wait(100);
     }
     let effectData = {
@@ -93,13 +95,13 @@ export async function ready({ speaker, actor, token, character, item, args, scop
             },
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             }
         }
     };
-    await chrisPremades.helpers.addCondition(workflow.actor, "Reaction");
-    await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+    await mba.addCondition(workflow.actor, "Reaction");
+    await mba.createEffect(workflow.actor, effectData);
     
     await new Sequence()
     

@@ -1,35 +1,38 @@
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
 export async function witchBolt({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.hitTargets.size) return;
     let target = workflow.targets.first();
     async function effectMacroEveryTurn() {
-        let effect = await chrisPremades.helpers.findEffect(actor, "Witch Bolt");
+        let effect = await mba.findEffect(actor, "Witch Bolt");
         if (!effect) return;
         let target = await fromUuid(effect.flags['mba-premades']?.spell?.witchBolt?.targetUuid);
         let nearbyToken = await MidiQOL.findNearby(null, token, 30, { includeIncapacitated: false, canSee: true }).filter(i => i.name === target.name);
         if (!nearbyToken.length) {
             ui.notifications.info(`Witch Bolt ends (target is outside the spell's range)`);
-            await chrisPremades.helpers.removeCondition(actor, "Concentrating");
+            await mba.removeCondition(actor, "Concentrating");
             return;
         }
         if (game.combat.current.tokenId != token.document.id) return;
         let choices = [['Yes!', 'yes'], ['No, stop concentrating!', 'no']];
-        let selection = await chrisPremades.helpers.dialog('Use action to sustain Witch Bolt?', choices);
+        let selection = await mba.dialog('Use action to sustain Witch Bolt?', choices);
         if (!selection) return;
         if (selection === "no") {
-            await chrisPremades.helpers.removeCondition(actor, 'Concentrating');
+            await mba.removeCondition(actor, 'Concentrating');
             return;
         }
         let color = effect.flags['mba-premades']?.spell?.witchBolt?.color;
         let animation = "jb2a.impact.012." + color;
         if (color === "dark_green") animation = "jb2a.impact.012.green02";
-        let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Witch Bolt: Sustained Damage');
+        let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Witch Bolt: Sustained Damage');
         if (!featureData) {
             ui.notifications.warn("Missing item in the compendium! (Witch Bolt: Sustained Damage)")
             return;
         }
         delete featureData._id;
         let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
-        let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([effect.flags['mba-premades']?.spell?.witchBolt?.targetUuid]);
+        let [config, options] = constants.syntheticItemWorkflowOptions([effect.flags['mba-premades']?.spell?.witchBolt?.targetUuid]);
         await warpgate.wait(100);
         await MidiQOL.completeItemUse(feature, config, options);
         await new Sequence()
@@ -57,7 +60,7 @@ export async function witchBolt({ speaker, actor, token, character, item, args, 
         ['Red', 'red'],
         ['Yellow', 'yellow']
     ];
-    let selection = await chrisPremades.helpers.dialog("Choose animation color:", color);
+    let selection = await mba.dialog("Choose animation color:", color);
     if (!selection) selection = "blue";
     let animation1 = "jb2a.impact.012." + selection;
     if (selection === "dark_green") animation1 = "jb2a.impact.012.green02";
@@ -75,10 +78,10 @@ export async function witchBolt({ speaker, actor, token, character, item, args, 
         'flags': {
             'effectmacro': {
                 'onEachTurn': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroEveryTurn)
+                    'script': mba.functionToString(effectMacroEveryTurn)
                 },
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'mba-premades': {
@@ -169,7 +172,7 @@ export async function witchBolt({ speaker, actor, token, character, item, args, 
         .name(`${token.document.name} Witch Bolt`)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(workflow.actor, effectData);
+            mba.createEffect(workflow.actor, effectData);
         })
 
         .play()

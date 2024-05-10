@@ -1,3 +1,6 @@
+import { mba } from "../../helperFunctions.js";
+import { constants } from "../generic/constants.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     const target = workflow.targets.first();
     if (!target) {
@@ -9,45 +12,49 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Throw vial at someone (20 ft.)", "shatter"],
         ["Cancel", "cancel"]
     ];
-    let selection = await chrisPremades.helpers.dialog("What would you like to do?", choices);
+    let selection = await mba.dialog("What would you like to do?", choices);
     if (!selection || selection === "cancel") return;
     let featureData;
     if (selection === "splash") {
-        featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Item Features', 'Acid Vial: Splash Acid', false);
+        featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Acid Vial: Splash Acid', false);
         if (!featureData) {
             ui.notifications.warn("Unable to find item in compenidum! (Acid Vial: Splash Acid)");
             return
         }
     }
     if (selection === "shatter") {
-        featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Item Features', 'Acid Vial: Throw Vial', false);
+        featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Acid Vial: Throw Vial', false);
         if (!featureData) {
             ui.notifications.warn("Unable to find item in compenidum! (Acid Vial: Throw Vial)");
             return
         }
     }
+    delete featureData._id;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([target.document.uuid]);
+    let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
     await game.messages.get(workflow.itemCardId).delete();
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow) return;
 
-    let vialItem = workflow.actor.items.filter(i => i.name === workflow.item.name)[0];
+    let vialItem = mba.getItem(workflow.actor, workflow.item.name);
     if (vialItem.system.quantity > 1) {
         vialItem.update({ "system.quantity": vialItem.system.quantity - 1 });
     } else {
         workflow.actor.deleteEmbeddedDocuments("Item", [vialItem.id]);
     }
-    let emptyVialItem = workflow.actor.items.filter(i => i.name === "Empty Vial")[0];
-    if (!emptyVialItem) {
-        const itemData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Items', 'Empty Vial', false);
-        if (!itemData) {
-            ui.notifications.warn("Unable to find item in compenidum! (Empty Vial)");
-            return
+    
+    if (selection === "splash") {
+        let emptyVialItem = mba.getItem(workflow.actor, "Empty Vial");
+        if (!emptyVialItem) {
+            const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Vial', false);
+            if (!itemData) {
+                ui.notifications.warn("Unable to find item in compenidum! (Empty Vial)");
+                return
+            }
+            await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
+        } else {
+            emptyVialItem.update({ "system.quantity": emptyVialItem.system.quantity + 1 });
         }
-        await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
-    } else {
-        emptyVialItem.update({ "system.quantity": emptyVialItem.system.quantity + 1 });
     }
 }
 
@@ -76,12 +83,6 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
 
         return
     }
-    let damageRoll = await new Roll('2d6[acid]').roll({ 'async': true });
-    await damageRoll.toMessage({
-        rollMode: 'roll',
-        speaker: { 'alias': name },
-        flavor: 'Acid Vial'
-    });
 
     new Sequence()
 
@@ -97,7 +98,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
         .scale(1.4)
 
         .thenDo(function () {
-            chrisPremades.helpers.applyDamage(target, damageRoll.total, 'acid')
+            mba.applyDamage(target, damageRoll.total, 'acid')
         })
 
         .effect()
@@ -192,9 +193,6 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
 
         .play()
 }
-
-
-
 
 export let acidVial = {
     'item': item,

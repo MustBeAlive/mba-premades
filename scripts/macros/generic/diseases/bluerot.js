@@ -1,5 +1,12 @@
-export async function bluerot({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let target = workflow.targets.first();
+import {mba} from "../../../helperFunctions.js";
+
+export async function bluerot() {
+    let target = game.user.targets.first();
+    if (!target) target = await fromUuidSync(game.user._lastSelected).object;
+    if (!target) {
+        ui.notifications.warn("Unable to find target!");
+        return;
+    }
     let [isDiseased] = target.actor.effects.filter(e => e.flags['mba-premades']?.name === "Bluerot");
     if (isDiseased) {
         ui.notifications.info('Target is already affected by Bluerot!');
@@ -50,15 +57,15 @@ export async function bluerot({ speaker, actor, token, character, item, args, sc
                 }
                 let conPenalty = effect.flags['mba-premades']?.conPenalty;
                 let chaPenalty = effect.flags['mba-premades']?.chaPenalty;
-                let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'con');
+                let saveRoll = await mbaPremades.helpers.rollRequest(token, 'save', 'con');
                 if (saveRoll.total < 12) {
-                    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Features', 'Bluerot: Boil Burst', false);
+                    let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Features', 'Bluerot: Boil Burst', false);
                     if (!featureData) {
                         ui.notifications.warn(`Unable to find item in the compenidum! (Bluerot: Boil Burst)`);
                         return
                     }
                     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': token.actor });
-                    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([token.document.uuid]);
+                    let [config, options] = mbaPremades.constants.syntheticItemWorkflowOptions([token.document.uuid]);
                     await MidiQOL.completeItemUse(feature, config, options);
                     if (token.actor.system.attributes.hp.value < 1) {
                         let updates = {
@@ -83,7 +90,7 @@ export async function bluerot({ speaker, actor, token, character, item, args, sc
                                 }
                             ]
                         };
-                        await chrisPremades.helpers.updateEffect(effect, updates);
+                        await mbaPremades.helpers.updateEffect(effect, updates);
                     }
                     return;
                 }
@@ -122,14 +129,14 @@ export async function bluerot({ speaker, actor, token, character, item, args, sc
                     content: `<p><b>Bluerot</b> progress for <b>${token.document.name}</b></p><p>Constitution Penalty: <b>${conPenalty}</b></p><p>Charisma Penalty: <b>${chaPenalty}</b></p>`,
                     speaker: { actor: null, alias: "Disease Announcer" }
                 });
-                await chrisPremades.helpers.updateEffect(effect, updates);
+                await mbaPremades.helpers.updateEffect(effect, updates);
                 if (conPenalty === 0 && chaPenalty === 0) {
                     ChatMessage.create({
                         whisper: ChatMessage.getWhisperRecipients("GM"),
                         content: `<b>${token.document.name}</b> is cured from <b>Bluerot!</b>`,
                         speaker: { actor: null, alias: "Disease Announcer" }
                     });
-                    await chrisPremades.helpers.removeEffect(effect);
+                    await mbaPremades.helpers.removeEffect(effect);
                 }
             }
             let number = Math.floor(Math.random() * 10000);
@@ -162,7 +169,7 @@ export async function bluerot({ speaker, actor, token, character, item, args, sc
                     },
                     'effectmacro': {
                         'dnd5e.longRest': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroBluerot)
+                            'script': mbaPremades.helpers.functionToString(effectMacroBluerot)
                         }
                     },
                     'mba-premades': {
@@ -176,8 +183,8 @@ export async function bluerot({ speaker, actor, token, character, item, args, sc
                     }
                 }
             };
-            await chrisPremades.helpers.createEffect(actor, effectData);
-            await chrisPremades.helpers.removeEffect(effect);
+            await mbaPremades.helpers.createEffect(actor, effectData);
+            await mbaPremades.helpers.removeEffect(effect);
         });
     }
     let number = Math.floor(Math.random() * 10000);
@@ -190,7 +197,7 @@ export async function bluerot({ speaker, actor, token, character, item, args, sc
             },
             'effectmacro': {
                 'onCreate': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroBluerotManifest)
+                    'script': mba.functionToString(effectMacroBluerotManifest)
                 }
             },
             'mba-premades': {
@@ -203,7 +210,7 @@ export async function bluerot({ speaker, actor, token, character, item, args, sc
             }
         }
     };
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
+    await mba.createEffect(target.actor, effectData);
     ChatMessage.create({
         whisper: ChatMessage.getWhisperRecipients("GM"),
         content: `<p><b>${target.document.name}</b> is infected with <b>Bluerot</b></p><p>Symptoms will manifest in <b>${bluerotRoll.total} hours</b></p>`,

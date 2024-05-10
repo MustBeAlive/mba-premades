@@ -1,4 +1,5 @@
 import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
@@ -98,11 +99,11 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     let sourceActor = await fromUuid(effect.origin);
     let sourceActorId = sourceActor.actor.id;
     if (workflow.targets.first().actor.id != sourceActorId) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'chillTouch', 50);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'chillTouch', 50);
     if (!queueSetup) return;
     workflow.disadvantage = true;
     workflow.advReminderAttackAdvAttribution.add('DIS: Chill Touch');
-    chrisPremades.queue.remove(workflow.item.uuid);
+    queue.remove(workflow.item.uuid);
 }
 
 export let chillTouch = {

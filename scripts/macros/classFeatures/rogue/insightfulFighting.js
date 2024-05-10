@@ -1,9 +1,11 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function insightfulFighting({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.targets.size != 1) return;
     let target = workflow.targets.first();
-    if (chrisPremades.helpers.findEffect(target.actor, 'Incapacitated')) return;
+    if (mba.findEffect(target.actor, 'Incapacitated')) return;
     let sourceRoll = await workflow.actor.rollSkill('ins');
-    let targetRoll = await chrisPremades.helpers.rollRequest(target, 'skill', 'dec');
+    let targetRoll = await mba.rollRequest(target, 'skill', 'dec');
     if (targetRoll.total >= sourceRoll.total) return;
     let effectData = {
         'name': 'Insightful Fighting',
@@ -24,7 +26,7 @@ export async function insightfulFighting({ speaker, actor, token, character, ite
             }
         ]
     };
-    let effect = chrisPremades.helpers.findEffect(workflow.actor, 'Insightful Fighting');
-    if (effect) await chrisPremades.helpers.removeEffect(effect);
-    await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+    let effect = mba.findEffect(workflow.actor, 'Insightful Fighting');
+    if (effect) await mba.removeEffect(effect);
+    await mba.createEffect(workflow.actor, effectData);
 }

@@ -1,8 +1,8 @@
-// animation is kinda cringe, but will do for now
+import {mba} from "../../helperFunctions.js";
+
 export async function hide({ speaker, actor, token, character, item, args, scope, workflow }) {
     let rollResult = await workflow.actor.rollSkill('ste');
     async function effectMacroDel() {
-
         new Sequence()
 
             .effect()
@@ -22,7 +22,7 @@ export async function hide({ speaker, actor, token, character, item, args, scope
 
             .play();
     }
-    let effectData = {
+    const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
@@ -34,7 +34,7 @@ export async function hide({ speaker, actor, token, character, item, args, scope
             },
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             }
         }
@@ -63,7 +63,7 @@ export async function hide({ speaker, actor, token, character, item, args, scope
         .name(`${token.document.name} Hide`)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(workflow.actor, effectData);
+            mba.createEffect(workflow.actor, effectData);
         })
 
         .play();

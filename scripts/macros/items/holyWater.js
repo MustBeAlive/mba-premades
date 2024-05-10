@@ -1,3 +1,6 @@
+import { mba } from "../../helperFunctions.js";
+import { constants } from "../generic/constants.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     const target = workflow.targets.first();
     if (!target) {
@@ -9,45 +12,47 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Throw flask of Holy Water at someone (20 ft.)", "shatter"],
         ["Cancel", "cancel"]
     ];
-    let selection = await chrisPremades.helpers.dialog("What would you like to do?", choices);
+    let selection = await mba.dialog("What would you like to do?", choices);
     if (!selection || selection === "cancel") return;
     let featureData;
     if (selection === "splash") {
-        featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Item Features', 'Holy Water: Splash Water', false);
+        featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Holy Water: Splash Water', false);
         if (!featureData) {
             ui.notifications.warn("Unable to find item in compenidum! (Holy Water: Splash Water)");
             return
         }
     }
     if (selection === "shatter") {
-        featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Item Features', 'Holy Water: Throw Flask', false);
+        featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Holy Water: Throw Flask', false);
         if (!featureData) {
             ui.notifications.warn("Unable to find item in compenidum! (Holy Water: Throw Flask)");
             return
         }
     }
+    delete featureData._id;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([target.document.uuid]);
+    let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
     await game.messages.get(workflow.itemCardId).delete();
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow) return;
-
-    let flaskItem = workflow.actor.items.filter(i => i.name === workflow.item.name)[0];
+    let flaskItem = mba.getItem(workflow.actor, workflow.item.name);
     if (flaskItem.system.quantity > 1) {
         flaskItem.update({ "system.quantity": flaskItem.system.quantity - 1 });
     } else {
         workflow.actor.deleteEmbeddedDocuments("Item", [flaskItem.id]);
     }
-    let emptyFlaskItem = workflow.actor.items.filter(i => i.name === "Empty Flask")[0];
-    if (!emptyFlaskItem) {
-        const itemData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
-        if (!itemData) {
-            ui.notifications.warn("Unable to find item in compenidum! (Empty Flask)");
-            return
+    if (selection === "splash") {
+        let emptyFlaskItem = mba.getItem(workflow.actor, "Empty Flask");
+        if (!emptyFlaskItem) {
+            const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
+            if (!itemData) {
+                ui.notifications.warn("Unable to find item in compenidum! (Empty Flask)");
+                return
+            }
+            await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
+        } else {
+            emptyFlaskItem.update({ "system.quantity": emptyFlaskItem.system.quantity + 1 });
         }
-        await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
-    } else {
-        emptyFlaskItem.update({ "system.quantity": emptyFlaskItem.system.quantity + 1 });
     }
 }
 
@@ -76,7 +81,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
 
         return;
     }
-    let type = await chrisPremades.helpers.raceOrType(target.actor).toLowerCase();
+    let type = await mba.raceOrType(target.actor).toLowerCase();
     if (type === "undead" || type === 'fiend') {
         let damageRoll = await new Roll('2d6[radiant]').roll({ 'async': true });
         await damageRoll.toMessage({
@@ -109,7 +114,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
             .startTime(400)
 
             .thenDo(function () {
-                chrisPremades.helpers.applyDamage(target, damageRoll.total, 'radiant')
+                mba.applyDamage(target, damageRoll.total, 'radiant')
             })
 
             .play()

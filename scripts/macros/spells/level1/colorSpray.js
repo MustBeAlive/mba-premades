@@ -1,15 +1,13 @@
-// Reworked; Original Macro by DDB and based on @ccjmk and @crymic macro for sleep.
+import {mba} from "../../../helperFunctions.js";
+
 export async function colorSpray({ speaker, actor, token, character, item, args, scope, workflow }) {
     const blindHp = await workflow.damageTotal;
-    const immuneConditions = [game.i18n.localize("Blinded"), game.i18n.localize("Unconscious")];
     console.log(`Color Spray Spell => Available HP Pool [${blindHp}] points`);
-
-    const targets = await Array.from(workflow.targets)
-        .filter((i) => i.actor.system.attributes.hp.value != 0 && !i.actor.effects.find((x) => immuneConditions.includes((x.name ?? x.label))))
+    const targets = Array.from(workflow.targets)
+        .filter((i) => i.actor.system.attributes.hp.value != 0 && !mba.checkTrait(i.actor, 'ci', 'blinded') && !mba.checkTrait(i.actor, 'ci', 'unconscious'))
         .sort((a, b) => (canvas.tokens.get(a.id).actor.system.attributes.hp.value < canvas.tokens.get(b.id).actor.system.attributes.hp.value ? -1 : 1));
     let remainingBlindHp = blindHp;
     let blindTarget = [];
-
     let template = await canvas.scene.collections.templates.get(workflow.templateId);
 
     new Sequence()
@@ -113,18 +111,19 @@ export async function colorSpray({ speaker, actor, token, character, item, args,
     await warpgate.wait(500);
 
     for (let target of targets) {
-        const findTarget = await canvas.tokens.get(target.id);
-        const targetHpValue = findTarget.actor.system.attributes.hp.value;
-        const targetImg = findTarget.document.texture.src;
-
+        const targetHpValue = target.actor.system.attributes.hp.value;
+        const targetImg = target.document.texture.src;
         if (remainingBlindHp >= targetHpValue) {
             remainingBlindHp -= targetHpValue;
-            console.log(`Color Spray Results => Target: ${findTarget.name} |  HP: ${targetHpValue} | HP Pool: ${remainingBlindHp} | Status: Blinded`);
-            blindTarget.push(`<div class="midi-qol-flex-container"><div>Blinded: </div><div class="midi-qol-target-npc midi-qol-target-name" id="${findTarget.id}"> ${findTarget.name}</div><div><img src="${targetImg}" width="30" height="30" style="border:0px"></div></div>`);
+            console.log(`Color Spray Results => Target: ${target.document.name} |  HP: ${targetHpValue} | HP Pool: ${remainingBlindHp} | Status: Blinded`);
+            blindTarget.push(`<div class="midi-qol-flex-container"><div>Blinded: </div><div class="midi-qol-target-npc midi-qol-target-name" id="${target.id}"> ${target.document.name}</div><div><img src="${targetImg}" width="30" height="30" style="border:0px"></div></div>`);
             const effectData = {
-                'name': 'Color Spray: Blinded',
+                'name': 'Color Spray: Blind',
                 'icon': workflow.item.img,
                 'origin': workflow.item.uuid,
+                'description': `
+                    <p>You are blinded until the end of ${workflow.token.document.name} next turn.</p>
+                `,
                 'changes': [
                     {
                         'key': 'macro.CE',
@@ -147,12 +146,12 @@ export async function colorSpray({ speaker, actor, token, character, item, args,
                     }
                 },
             };
-            await chrisPremades.helpers.createEffect(findTarget.actor, effectData);
+            await mba.createEffect(target.actor, effectData);
             await warpgate.wait(200);
 
         } else {
             console.log(`Color Spray Results => Target: ${target.name} | HP: ${targetHpValue} | HP Pool: ${remainingBlindHp - targetHpValue} | Status: Not enough HP remaining`);
-            blindTarget.push(`<div class="midi-qol-flex-container"><div>Resisted: </div><div class="midi-qol-target-npc midi-qol-target-name" id="${findTarget.id}"> ${findTarget.name}</div><div><img src="${targetImg}" width="30" height="30" style="border:0px"></div></div>`);
+            blindTarget.push(`<div class="midi-qol-flex-container"><div>Resisted: </div><div class="midi-qol-target-npc midi-qol-target-name" id="${target.id}"> ${target.document.name}</div><div><img src="${targetImg}" width="30" height="30" style="border:0px"></div></div>`);
         }
     }
     await warpgate.wait(500);

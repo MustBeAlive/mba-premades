@@ -1,10 +1,11 @@
-//Animation by EskieMoh#2969
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
 	let template = canvas.scene.collections.templates.get(workflow.templateId);
 
 	new Sequence()
 
-		.wait(1000)
+		.wait(700)
 
 		.effect()
 		.file("jb2a.entangle.green")
@@ -155,7 +156,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			{
 				'key': 'flags.midi-qol.OverTime',
 				'mode': 0,
-				'value': 'actionSave=true, rollType=check, saveAbility=str, saveDC=' + chrisPremades.helpers.getSpellDC(workflow.item) + ', saveMagic=true, name=Entangle: Action Save',
+				'value': 'actionSave=true, rollType=check, saveAbility=str, saveDC=' + mba.getSpellDC(workflow.item) + ', saveMagic=true, name=Entangle: Action Save',
 				'priority': 20
 			}
 		],
@@ -165,7 +166,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			},
 			'effectmacro': {
 				'onDelete': {
-					'script': chrisPremades.helpers.functionToString(effectMacroDel)
+					'script': mba.functionToString(effectMacroDel)
 				}
 			},
 			'midi-qol': {
@@ -178,20 +179,19 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 		}
 	};
 	for (let i of Array.from(workflow.failedSaves)) {
-		await chrisPremades.helpers.createEffect(i.actor, effectData);
+		await mba.createEffect(i.actor, effectData);
 		new Sequence()
 
 			.effect()
-			.delay(100)
 			.file('jb2a.entangle.green')
 			.attachTo(i)
+			.size(1.5, { gridUnits: true })
+			.delay(100)
 			.fadeIn(5000)
-			.zIndex(1)
 			.fadeOut(1000)
 			.scaleIn(0, 5000, { ease: "easeOutCubic" })
-			.size(1.5, { gridUnits: true })
+			.zIndex(1)
 			.mask(i)
-			.fadeOut(500)
 			.persist()
 			.name(`${i.document.name} Entangle`)
 

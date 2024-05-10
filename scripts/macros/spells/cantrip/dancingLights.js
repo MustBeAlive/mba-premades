@@ -27,5 +27,5 @@ export async function dancingLights({speaker, actor, token, character, item, arg
             }
         }
     let animation = 'celestial';
-    await summons.spawn(sourceActors, updates, 60, workflow.item, undefined, undefined, 120, workflow.token, animation);
+    await summons.spawn(sourceActors, updates, 60, workflow.item, undefined, undefined, 120, workflow.token, animation, {}, workflow.castData.castLevel);
 }

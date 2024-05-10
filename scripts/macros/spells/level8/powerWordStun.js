@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function powerWordStun({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     if (target.actor.system.attributes.hp.value > 150) {
@@ -26,16 +28,19 @@ export async function powerWordStun({ speaker, actor, token, character, item, ar
         .play();
 
     await warpgate.wait(3500);
-    let effectData = {
+    const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
-        'description': "You are stunned by a power word. At the end of each of your turns, you can make a Constitution Saving Throw. On a successful save, this stunning effect ends.",
+        'description': `
+            <p>You are stunned by a power word.</p>
+            <p>At the end of each of your turns, you can make a Constitution Saving Throw. On a successful save, this stun ends.</p>
+        `,
         'changes': [
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': 'turn=end, saveAbility=con, saveDC=' + chrisPremades.helpers.getSpellDC(workflow.item) + ' , saveMagic=true, name=Stun',
+                'value': 'turn=end, saveAbility=con, saveDC=' + mba.getSpellDC(workflow.item) + ' , saveMagic=true, name=Stun: Turn End, killAnim=true',
                 'priority': 20
             },
             {
@@ -58,5 +63,5 @@ export async function powerWordStun({ speaker, actor, token, character, item, ar
             }
         }
     };
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
+    await mba.createEffect(target.actor, effectData);
 }

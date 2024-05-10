@@ -1,3 +1,6 @@
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let feetRadius = workflow.castData.castLevel * 20;
     let gridRadius = (workflow.castData.castLevel * 8) + 0.8;
@@ -20,13 +23,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 }
             },
             'walledtemplates': {
+                'hideBorder': "alwaysHide",
                 'wallRestriction': 'move',
                 'wallsBlock': 'recurse',
             }
         },
         'angle': 0
     };
-    let template = await chrisPremades.helpers.placeTemplate(templateData);
+    let template = await mba.placeTemplate(templateData);
     if (!template) return;
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: "Fog Cloud" })
@@ -36,7 +40,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'duration': {
-            'seconds': chrisPremades.helpers.itemDuration(workflow.item).seconds
+            'seconds': mba.itemDuration(workflow.item).seconds
         },
         'changes': [
             {
@@ -49,7 +53,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             }
         }
@@ -104,7 +108,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .play()
 
-    await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+    await mba.createEffect(workflow.actor, effectData);
 }
 
 async function hook(workflow) {
@@ -135,7 +139,7 @@ async function hook(workflow) {
         }
     }
     if (!sourceInFogCloud && !targetInFogCloud) return;
-    let distance = chrisPremades.helpers.getDistance(sourceToken, targetToken);
+    let distance = mba.getDistance(sourceToken, targetToken);
     let sourceCanSeeTarget = false;
     let targetCanSeeSource = false;
     let sourceSenses = sourceToken.actor.system.attributes.senses;
@@ -143,7 +147,7 @@ async function hook(workflow) {
     if ((sourceSenses.tremorsense >= distance) || (sourceSenses.blindsight >= distance)) sourceCanSeeTarget = true;
     if ((targetSenses.tremorsense >= distance) || (targetSenses.blindsight >= distance)) targetCanSeeSource = true;
     if (sourceCanSeeTarget && targetCanSeeSource) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'fogCloud', 50);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'fogCloud', 50);
     if (!queueSetup) return;
     if (sourceCanSeeTarget && !targetCanSeeSource) {
         workflow.advantage = true;
@@ -162,7 +166,7 @@ async function hook(workflow) {
         //workflow.attackAdvAttribution.add('Fog Cloud: Target And Source Can\'t See Eachother');
         workflow.advReminderAttackAdvAttribution.add("DIS:Fog Cloud (you and target are unable to see eachother)");
     }
-    chrisPremades.queue.remove(workflow.item.uuid);
+    queue.remove(workflow.item.uuid);
 }
 
 export let fogCloud = {

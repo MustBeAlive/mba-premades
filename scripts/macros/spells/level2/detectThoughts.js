@@ -1,7 +1,10 @@
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Detect Thoughts: Probe Mind', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Detect Thoughts: Probe Mind', false);
     if (!featureData) return;
-    featureData.system.save.dc = chrisPremades.helpers.getSpellDC(workflow.item);
+    delete featureData._id;
+    featureData.system.save.dc = mba.getSpellDC(workflow.item);
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Detect Thoughts` })
         await warpgate.revert(token.document, 'Detect Thoughts: Probe Mind');
@@ -17,7 +20,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -72,6 +75,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .attachTo(token)
         .scaleIn(0, 4000, { ease: "easeOutCubic" })
         .scaleToObject(2)
+        .fadeOut(1000)
         .persist()
         .name(`${token.document.name} Detect Thoughts`)
 
@@ -87,12 +91,14 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             new Sequence()
 
                 .effect()
-                .delay(gridDistance * 125)
-                .file("jb2a.detect_magic.circle.purple")
+                .file("jb2a.markers.circle_of_stars.orangepurple")
                 .atLocation(target)
                 .scaleToObject(2.5)
+                .delay(gridDistance * 125)
+                .duration(5000)
+                .fadeIn(1000)
+                .fadeOut(1000)
                 .mask(target)
-                .opacity(0.75)
 
                 .wait(500)
 
@@ -113,7 +119,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 .playIf(() => {
                     let targetIntValue = target.actor.system.abilities.int.value;
                     let languages = target.actor.system.traits.languages.value;
-                    if (targetIntValue <= 3 || !languages.size || chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (targetIntValue <= 3 || !languages.size || mba.findEffect(target.actor, "Nondetection")) return false;
                     return true;
                 })
 
@@ -133,7 +139,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 .playIf(() => {
                     let targetIntValue = target.actor.system.abilities.int.value;
                     let languages = target.actor.system.traits.languages.value;
-                    if (targetIntValue <= 3 || !languages.size || chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
+                    if (targetIntValue <= 3 || !languages.size || mba.findEffect(target.actor, "Nondetection")) return false;
                     return true;
                 })
 
@@ -148,17 +154,19 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     new Sequence()
 
         .effect()
-        .file("jb2a.detect_magic.circle.purple")
+        .file("jb2a.markers.circle_of_stars.orangepurple")
         .atLocation(target)
         .scaleToObject(2.5)
+        .duration(5000)
+        .fadeIn(1000)
+        .fadeOut(1000)
         .mask(target)
-        .opacity(0.75)
 
         .play()
 
     let targetIntValue = target.actor.system.abilities.int.value;
     let languages = target.actor.system.traits.languages.value;
-    if (targetIntValue <= 3 || languages.size < 1 || chrisPremades.helpers.findEffect(target.actor, "Nondetection")) {
+    if (targetIntValue <= 3 || languages.size < 1 || mba.findEffect(target.actor, "Nondetection")) {
         ui.notifications.info('Target is unaffected by Detect Thoughts!');
         return false;
     }
@@ -166,7 +174,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
 async function fail({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) {
-        await chrisPremades.helpers.removeCondition(workflow.actor, 'Concentrating');
+        await mba.removeCondition(workflow.actor, 'Concentrating');
         return;
     }
     let target = workflow.targets.first();

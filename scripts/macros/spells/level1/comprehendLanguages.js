@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function comprehendLanguages({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Comprehend Languages` })
@@ -24,7 +26,7 @@ export async function comprehendLanguages({ speaker, actor, token, character, it
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -96,7 +98,7 @@ export async function comprehendLanguages({ speaker, actor, token, character, it
         .waitUntilFinished(-1000)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(workflow.actor, effectData);
+            mba.createEffect(workflow.actor, effectData);
         })
 
         .effect()
@@ -104,7 +106,7 @@ export async function comprehendLanguages({ speaker, actor, token, character, it
         .attachTo(token)
         .scaleToObject(1.5)
         .fadeIn(500)
-        .fadeOut(500)
+        .fadeOut(1000)
         .randomRotation()
         .mask(token)
         .persist()
@@ -133,7 +135,7 @@ export async function comprehendLanguages({ speaker, actor, token, character, it
         .loopProperty("alphaFilter", "alpha", { from: 0.75, to: 1, duration: 1500, pingPong: true, ease: "easeOutSine" })
         .filter("Glow", { color: 0x30effd, distance: 3, outerStrength: 4, innerStrength: 0 })
         .fadeIn(500)
-        .fadeOut(500)
+        .fadeOut(1000)
         .zIndex(0.1)
         .persist()
         .name(`${token.document.name} Comprehend Languages`)

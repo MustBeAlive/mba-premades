@@ -1,10 +1,13 @@
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
 export async function longstrider({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel;
     if (workflow.targets.size > ammount) {
-        let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+        let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
         if (!selection.buttons) return;
         let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
-        chrisPremades.helpers.updateTargets(newTargets);
+        mba.updateTargets(newTargets);
     }
     await warpgate.wait(100);
     let targets = Array.from(game.user.targets);
@@ -45,38 +48,38 @@ export async function longstrider({ speaker, actor, token, character, item, args
             .file("jb2a.energy_beam.normal.yellow.03")
             .attachTo(token)
             .stretchTo(target)
-            .scaleIn(0, 2000, { ease: "easeOutExpo" })
-            .opacity(0.7)
+            .duration(10500)
             .fadeIn(1000)
             .fadeOut(2000)
-            .duration(10500)
+            .scaleIn(0, 2000, { ease: "easeOutExpo" })
+            .opacity(0.7)
 
             .effect()
             .file("jb2a.energy_field.01.yellow")
-            .delay(500)
             .attachTo(target)
+            .scaleToObject(2 * target.document.texture.scaleX)
+            .delay(500)
+            .duration(10000)
             .scaleIn(0, 3500, { ease: "easeOutBack" })
             .scaleOut(0, 3500, { ease: "easeInSine" })
-            .scaleToObject(2 * target.document.texture.scaleX)
             .belowTokens()
             .playbackRate(0.9)
-            .duration(10000)
             .name(`${target.document.name} Longstrider`)
 
             .effect()
             .file("jb2a.energy_field.02.below.yellow")
-            .delay(4000)
+            .scaleToObject(1.55 * target.document.texture.scaleX)
             .attachTo(target)
+            .delay(4000)
             .fadeIn(1000)
             .fadeOut(1000)
-            .scaleToObject(1.55 * target.document.texture.scaleX)
             .playbackRate(0.9)
             .name(`${target.document.name} Longstrider`)
 
             .wait(2000)
 
             .thenDo(function () {
-                chrisPremades.helpers.createEffect(target.actor, effectData);
+                mba.createEffect(target.actor, effectData);
             })
 
             .play()

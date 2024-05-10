@@ -1,10 +1,12 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function scrying({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let conc = await chrisPremades.helpers.findEffect(workflow.actor, "Concentrating");
-    let saveDC = await chrisPremades.helpers.getSpellDC(workflow.item);
+    let conc = await mba.findEffect(workflow.actor, "Concentrating");
+    let saveDC = await mba.getSpellDC(workflow.item);
     let choicesType = [["Creature", "creature"], ["Location", "location"]];
-    let selectionType = await chrisPremades.helpers.dialog("What are you scrying?", choicesType);
+    let selectionType = await mba.dialog("What are you scrying?", choicesType);
     if (!selectionType) {
-        if (conc) await chrisPremades.helpers.removeEffect(conc);
+        if (conc) await mba.removeEffect(conc);
         return;
     }
     if (selectionType === "creature") {
@@ -13,27 +15,27 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
             ["Firsthand (you have met the target)", "firsthand"],
             ["Familiar (you know the target well)", "familiar"]
         ];
-        let selectionKnowledge = await chrisPremades.helpers.dialog("How well do you know the target?", choicesKnowledge);
+        let selectionKnowledge = await mba.dialog("How well do you know the target?", choicesKnowledge);
         if (!selectionKnowledge) {
-            if (conc) await chrisPremades.helpers.removeEffect(conc);
+            if (conc) await mba.removeEffect(conc);
             return;
         }
         if (selectionKnowledge === "secondhand") saveDC -= 5;
-        if (selectionKnowledge === "firsthand") saveDC += 0;
-        if (selectionKnowledge === "familiar") saveDC += 5;
+        else if (selectionKnowledge === "firsthand") saveDC += 0;
+        else if (selectionKnowledge === "familiar") saveDC += 5;
         let choicesConnection = [
             ["Likeness or picture", "picture"],
             ["Possession or garment", "garment"],
             ["Body part, lock of hair, bit of nail, or the like", "part"]
         ];
-        let selectionConnection = await chrisPremades.helpers.dialog("Do you possess any physical connection to the target?", choicesConnection);
+        let selectionConnection = await mba.dialog("Do you possess any physical connection to the target?", choicesConnection);
         if (!selectionConnection) {
-            if (conc) await chrisPremades.helpers.removeEffect(conc);
+            if (conc) await mba.removeEffect(conc);
             return;
         }
         if (selectionConnection === "picture") saveDC += 2;
-        if (selectionConnection === "garment") saveDC += 5;
-        if (selectionConnection === "part") saveDC += 10;
+        else if (selectionConnection === "garment") saveDC += 5;
+        else if (selectionConnection === "part") saveDC += 10;
     }
 
     new Sequence()
@@ -280,13 +282,13 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
             ["Target Failed", "fail"],
             ["Don't contest (fail voluntarily)", "fail"]
         ];
-        let selectionGM = await chrisPremades.helpers.remoteDialog(workflow.item.name, choicesGM, game.users.activeGM.id, `
+        let selectionGM = await mba.remoteDialog(workflow.item.name, choicesGM, game.users.activeGM.id, `
             <p><b>${workflow.token.document.name}</b> attempts to Scry ${selectionType}.</p>
             <p>Save DC: <b>Wisdom, ${saveDC}</b></p>
         `);
         if (!selectionGM || selectionGM === "save") {
             ui.notifications.info(`Target succesfully saved! (Save DC: ${saveDC})`);
-            if (conc) await chrisPremades.helpers.removeEffect(conc);
+            if (conc) await mba.removeEffect(conc);
             return;
         }
     }
@@ -309,5 +311,5 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
         }
     };
 
-    await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+    await mba.createEffect(workflow.actor, effectData);
 }

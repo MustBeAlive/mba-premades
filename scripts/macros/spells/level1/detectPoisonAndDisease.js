@@ -1,6 +1,9 @@
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Detect Poison and Disease: Target Creature', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Detect Poison and Disease: Target Creature', false);
     if (!featureData) return;
+    delete featureData._id;
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Detect Poison and Disease` })
         await warpgate.revert(token.document, 'Detect Poison and Disease: Target Creature');
@@ -16,7 +19,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -66,11 +69,12 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .belowTokens()
 
         .effect()
-        .delay(1500)
         .file("jb2a.token_border.circle.spinning.blue.001")
         .attachTo(token)
-        .scaleIn(0, 4000, { ease: "easeOutCubic" })
         .scaleToObject(2)
+        .delay(1500)
+        .fadeOut(1000)
+        .scaleIn(0, 4000, { ease: "easeOutCubic" })
         .filter("ColorMatrix", { hue: 285 })
         .persist()
         .name(`${token.document.name} Detect Poison and Disease`)
@@ -78,63 +82,65 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .play()
 
     targets.forEach(target => {
-            const distance = Math.sqrt(
-                Math.pow(target.x - token.x, 2) + Math.pow(target.y - token.y, 2)
-            );
-            const gridDistance = distance / canvas.grid.size
+        const distance = Math.sqrt(
+            Math.pow(target.x - token.x, 2) + Math.pow(target.y - token.y, 2)
+        );
+        const gridDistance = distance / canvas.grid.size
 
-            new Sequence()
+        new Sequence()
 
-                .effect()
-                .delay(gridDistance * 125)
-                .file("jb2a.detect_magic.circle.green")
-                .atLocation(target)
-                .scaleToObject(2.5)
-                .mask(target)
-                .opacity(0.75)
+            .effect()
+            .delay(gridDistance * 125)
+            .file("jb2a.markers.circle_of_stars.green")
+            .atLocation(target)
+            .scaleToObject(2.5)
+            .duration(5000)
+            .fadeIn(1000)
+            .fadeOut(1000)
+            .mask(target)
 
-                .wait(500)
+            .wait(500)
 
-                .effect()
-                .delay(gridDistance * 125)
-                .from(target)
-                .belowTokens()
-                .attachTo(target, { locale: true })
-                .scaleToObject(1, { considerTokenScale: true })
-                .spriteRotation(target.rotation * -1)
-                .filter("Glow", { color: 0x00bd16, distance: 15 })
-                .duration(17500)
-                .fadeIn(1000, { delay: 1000 })
-                .fadeOut(3500, { ease: "easeInSine" })
-                .opacity(0.75)
-                .zIndex(0.1)
-                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
-                .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
-                    let effects = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true || e.name.includes("Poison") && e.name != "Poisoned" && e.name != "Detect Poison and Disease");
-                    return (effects.length)
-                })
+            .effect()
+            .delay(gridDistance * 125)
+            .from(target)
+            .belowTokens()
+            .attachTo(target, { locale: true })
+            .scaleToObject(1, { considerTokenScale: true })
+            .spriteRotation(target.rotation * -1)
+            .filter("Glow", { color: 0x00bd16, distance: 15 })
+            .duration(17500)
+            .fadeIn(1000, { delay: 1000 })
+            .fadeOut(3500, { ease: "easeInSine" })
+            .opacity(0.75)
+            .zIndex(0.1)
+            .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+            .playIf(() => {
+                if (mba.findEffect(target.actor, "Nondetection")) return false;
+                let effects = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true || e.name.includes("Poison") && e.name != "Poisoned" && e.name != "Detect Poison and Disease");
+                return (effects.length)
+            })
 
-                .effect()
-                .delay(gridDistance * 125)
-                .file("jb2a.extras.tmfx.outflow.circle.01")
-                .attachTo(target, { locale: true })
-                .scaleToObject(1.5, { considerTokenScale: false })
-                .randomRotation()
-                .duration(17500)
-                .fadeIn(4000, { delay: 0 })
-                .fadeOut(3500, { ease: "easeInSine" })
-                .scaleIn(0, 3500, { ease: "easeInOutCubic" })
-                .tint(0x00bd16)
-                .opacity(0.75)
-                .belowTokens()
-                .playIf(() => {
-                    if (chrisPremades.helpers.findEffect(target.actor, "Nondetection")) return false;
-                    let effects = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true || e.name.includes("Poison") && e.name != "Poisoned" && e.name != "Detect Poison and Disease");
-                    return (effects.length)
-                })
+            .effect()
+            .delay(gridDistance * 125)
+            .file("jb2a.extras.tmfx.outflow.circle.01")
+            .attachTo(target, { locale: true })
+            .scaleToObject(1.5, { considerTokenScale: false })
+            .randomRotation()
+            .duration(17500)
+            .fadeIn(4000, { delay: 0 })
+            .fadeOut(3500, { ease: "easeInSine" })
+            .scaleIn(0, 3500, { ease: "easeInOutCubic" })
+            .tint(0x00bd16)
+            .opacity(0.75)
+            .belowTokens()
+            .playIf(() => {
+                if (mba.findEffect(target.actor, "Nondetection")) return false;
+                let effects = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true || e.name.includes("Poison") && e.name != "Poisoned" && e.name != "Detect Poison and Disease");
+                return (effects.length)
+            })
 
-                .play();
+            .play();
     })
 }
 
@@ -145,24 +151,29 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         new Sequence()
 
             .effect()
-            .file("jb2a.detect_magic.circle.green")
+            .file("jb2a.markers.circle_of_stars.green")
             .atLocation(target)
             .scaleToObject(2.5)
+            .duration(5000)
+            .fadeIn(1000)
+            .fadeOut(1000)
             .mask(target)
-            .opacity(0.75)
 
             .play()
 
+        ui.notifications.info("Target is not affected by any poison or disease");
         return;
     }
     new Sequence()
 
         .effect()
-        .file("jb2a.detect_magic.circle.green")
+        .file("jb2a.markers.circle_of_stars.green")
         .atLocation(target)
         .scaleToObject(2.5)
+        .duration(5000)
+        .fadeIn(1000)
+        .fadeOut(1000)
         .mask(target)
-        .opacity(0.75)
 
         .wait(500)
 
@@ -246,7 +257,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         }
         /* CHECKED STYLES */
         .detectPoison [type="radio"]:checked + img {
-            outline: 2px solid #f00;
+            outline: 2px solid #005c8a;
         }
     </style>
     <form class="detectPoison">
@@ -288,9 +299,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 buttons: {
                     ok: {
                         label: "Ok",
-                        callback: async (html) => {
-                            resolve()
-                        }
                     }
                 }
             }).render(true);

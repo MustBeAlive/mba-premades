@@ -1,10 +1,11 @@
-//Animation by EskieMoh#2969
+import {mba} from "../../../helperFunctions.js";
+
 export async function guidingBolt({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${target.document.name} Guiding Bolt`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Guiding Bolt`, object: token })
     }
-    let effectData = {
+    const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
@@ -24,7 +25,7 @@ export async function guidingBolt({ speaker, actor, token, character, item, args
             },
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -38,7 +39,9 @@ export async function guidingBolt({ speaker, actor, token, character, item, args
     };
     if (!workflow.hitTargets.size) {
         let offsetX = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
+        if (offsetX === 0) offsetX = 1;
         let offsetY = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
+        if (offsetY === 0) offsetY = 1;
 
         new Sequence()
 
@@ -51,35 +54,6 @@ export async function guidingBolt({ speaker, actor, token, character, item, args
             .fadeOut(2000)
             .duration(5000)
             .zIndex(0)
-
-            .wait(250)
-
-            .effect()
-            .atLocation(token)
-            .file(`jb2a.magic_signs.circle.02.evocation.loop.yellow`)
-            .scaleToObject(1.25)
-            .rotateIn(180, 600, { ease: "easeOutCubic" })
-            .scaleIn(0, 600, { ease: "easeOutCubic" })
-            .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-            .belowTokens()
-            .fadeOut(2000)
-            .filter("ColorMatrix", { hue: 5, saturate: 0, brightness: 1.2 })
-            .zIndex(0)
-
-            .effect()
-            .atLocation(token)
-            .file(`jb2a.magic_signs.circle.02.evocation.loop.yellow`)
-            .scaleToObject(1.25)
-            .rotateIn(180, 600, { ease: "easeOutCubic" })
-            .scaleIn(0, 600, { ease: "easeOutCubic" })
-            .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-            .belowTokens(true)
-            .filter("ColorMatrix", { saturate: -1, brightness: 2 })
-            .filter("Blur", { blurX: 5, blurY: 10 })
-            .zIndex(0.1)
-            .duration(1200)
-            .fadeIn(200, { ease: "easeOutCirc", delay: 500 })
-            .fadeOut(300, { ease: "linear" })
 
             .wait(250)
 
@@ -106,35 +80,6 @@ export async function guidingBolt({ speaker, actor, token, character, item, args
         .fadeOut(2000)
         .duration(5000)
         .zIndex(0)
-
-        .wait(250)
-
-        .effect()
-        .atLocation(token)
-        .file(`jb2a.magic_signs.circle.02.evocation.loop.yellow`)
-        .scaleToObject(1.25)
-        .rotateIn(180, 600, { ease: "easeOutCubic" })
-        .scaleIn(0, 600, { ease: "easeOutCubic" })
-        .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-        .belowTokens()
-        .fadeOut(2000)
-        .filter("ColorMatrix", { hue: 5, saturate: 0, brightness: 1.2 })
-        .zIndex(0)
-
-        .effect()
-        .atLocation(token)
-        .file(`jb2a.magic_signs.circle.02.evocation.loop.yellow`)
-        .scaleToObject(1.25)
-        .rotateIn(180, 600, { ease: "easeOutCubic" })
-        .scaleIn(0, 600, { ease: "easeOutCubic" })
-        .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-        .belowTokens(true)
-        .filter("ColorMatrix", { saturate: -1, brightness: 2 })
-        .filter("Blur", { blurX: 5, blurY: 10 })
-        .zIndex(0.1)
-        .duration(1200)
-        .fadeIn(200, { ease: "easeOutCirc", delay: 500 })
-        .fadeOut(300, { ease: "linear" })
 
         .wait(250)
 
@@ -181,20 +126,20 @@ export async function guidingBolt({ speaker, actor, token, character, item, args
         .name(`${target.document.name} Guiding Bolt`)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(target.actor, effectData);
+            mba.createEffect(target.actor, effectData);
         })
 
         .effect()
         .file("jb2a.particles.outward.orange.02.03")
         .attachTo(target)
+        .scaleToObject(1.8 * target.document.texture.scaleX)
+        .scaleIn(0, 500, { ease: "easeOutCirc" })
         .fadeIn(1000)
         .fadeOut(500)
-        .scaleToObject(target.document.texture.scaleX * 1.5)
-        .scaleIn(0, 500, { ease: "easeOutCirc" })
-        .zIndex(1)
         .filter("ColorMatrix", { hue: -5, saturate: -0.2, brightness: 1.2 })
+        .zIndex(1)
         .randomRotation()
-        .mask(target)
+        .mask()
         .persist()
         .name(`${target.document.name} Guiding Bolt`)
 

@@ -1,10 +1,12 @@
+import {mba} from "../../helperFunctions.js";
+
 export async function crowbar({ speaker, actor, token, character, item, args, scope, workflow }) {
     let options = [["Leverage can be applied, proceed", "yes"], ["Leverage cannot be applied, cancel", "no"]];
-    let selection = await chrisPremades.helpers.remoteDialog(workflow.item.name, options, game.users.activeGM.id, `<b>${workflow.token.document.name}</b> wants to use crowbar`);
+    let selection = await mba.remoteDialog(workflow.item.name, options, game.users.activeGM.id, `<b>${workflow.token.document.name}</b> wants to use crowbar`);
     if (!selection || selection === "no") {
         ui.notifications.info("GM has denied your request. Sorry!");
         return;
-    }
+    };
     const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
@@ -24,6 +26,6 @@ export async function crowbar({ speaker, actor, token, character, item, args, sc
                 'specialDuration': ['isCheck.str']
             }
         }
-    }
-    await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+    };
+    await mba.createEffect(workflow.actor, effectData);
 }

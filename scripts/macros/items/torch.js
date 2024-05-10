@@ -1,24 +1,26 @@
+import {mba} from "../../helperFunctions.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let effect = await chrisPremades.helpers.findEffect(workflow.actor, "Torch");
+    let effect = await mba.findEffect(workflow.actor, "Torch");
     if (!effect) {
         let choices = [["Yes, light the torch", "light"], ["No, cancel", "cancel"]];
-        let selection = await chrisPremades.helpers.dialog("Would you like to light a torch?", choices);
+        let selection = await mba.dialog("Would you like to light a torch?", choices);
         if (!selection || selection === "cancel") return;
         await mbaPremades.macros.torch.light({speaker, actor, token, character, item, args, scope, workflow})
         return;
     }
     let choices = [["Light new Torch", "light"], ["Extinguish Torch", "extinguish"]];
-    let selection = await chrisPremades.helpers.dialog("What would you like to do?", choices);
+    let selection = await mba.dialog("What would you like to do?", choices);
     if (!selection) return;
     switch (selection) {
         case "light": {
-            await chrisPremades.helpers.removeEffect(effect);
+            await mba.removeEffect(effect);
             await warpgate.wait(100);
             await mbaPremades.macros.torch.light({speaker, actor, token, character, item, args, scope, workflow})
             break;
         }
         case "extinguish": {
-            await chrisPremades.helpers.removeEffect(effect);
+            await mba.removeEffect(effect);
         }
     }
 }
@@ -103,7 +105,7 @@ async function light({ speaker, actor, token, character, item, args, scope, work
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             }
         }
@@ -153,7 +155,7 @@ async function light({ speaker, actor, token, character, item, args, scope, work
         .wait(250)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(workflow.actor, effectData);
+            mba.createEffect(workflow.actor, effectData);
             if (workflow.item.system.quantity > 1) {
                 workflow.item.update({ "system.quantity": workflow.item.system.quantity - 1});
             } else {

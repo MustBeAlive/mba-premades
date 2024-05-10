@@ -1,4 +1,5 @@
 import {mba} from '../../helperFunctions.js';
+
 let animations = {
     'abj': 'jb2a.magic_signs.circle.02.abjuration.loop.',
     'con': 'jb2a.magic_signs.circle.02.conjuration.loop.',
@@ -9,6 +10,7 @@ let animations = {
     'nec': 'jb2a.magic_signs.circle.02.necromancy.loop.',
     'trs': 'jb2a.magic_signs.circle.02.transmutation.loop.'
 }
+
 let defaults = {
     'abj': 'blue',
     'con': 'yellow',
@@ -19,6 +21,7 @@ let defaults = {
     'nec': 'green',
     'trs': 'yellow'
 };
+
 export async function cast(workflow) {
     if (!workflow.token || workflow.item?.type != 'spell') return;
     let school = workflow.item.system.school;

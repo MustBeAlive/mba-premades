@@ -1,16 +1,19 @@
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
 export async function bless({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel + 2;
     if (workflow.targets.size > ammount) {
-        let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+        let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
         if (!selection.buttons) return;
         let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
-        chrisPremades.helpers.updateTargets(newTargets);
+        mba.updateTargets(newTargets);
     }
     let targets = Array.from(game.user.targets);
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} Bless` })
     }
-    let effectData = {
+    const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
@@ -37,7 +40,7 @@ export async function bless({ speaker, actor, token, character, item, args, scop
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -58,30 +61,30 @@ export async function bless({ speaker, actor, token, character, item, args, scop
     
             .effect()
             .file("jb2a.particle_burst.01.circle.yellow")
-            .delay(delay1)
             .atLocation(target)
             .scaleToObject(2 * target.document.texture.scaleX)
+            .delay(delay1)
             .fadeIn(500)
             .fadeOut(500)
             .playbackRate(0.9)
     
             .effect()
             .file("jb2a.bless.200px.loop.yellow")
-            .delay(delay2)
             .attachTo(target)
-            .scaleIn(0, 1500, {ease: "easeOutCubic"})
             .scaleToObject(2.1 * target.document.texture.scaleX)
+            .delay(delay2)
+            .scaleIn(0, 1500, {ease: "easeOutCubic"})
+            .fadeOut(1000)
             .opacity(0.8)
             .playbackRate(0.8)
             .belowTokens()
-            .fadeOut(1000)
             .persist()
             .name(`${target.document.name} Bless`)
     
             .wait(delay3)
     
             .thenDo(function () {
-                chrisPremades.helpers.createEffect(target.actor, effectData)
+                mba.createEffect(target.actor, effectData)
             })
     
             .play()

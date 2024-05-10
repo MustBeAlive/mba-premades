@@ -1,14 +1,13 @@
-// Reworked to use workflow; Original Macro by @ccjmk and @crymic
+import {mba} from "../../../helperFunctions.js";
+
 export async function sleep({ speaker, actor, token, character, item, args, scope, workflow }) {
 	const sleepHp = await workflow.damageTotal;
-	const condition = "Unconscious";
 	console.log(`Sleep Spell => Available HP Pool [${sleepHp}] points`);
 	const targets = Array.from(workflow.targets)
-		.filter((i) => i.actor.system.attributes.hp.value != 0 && !i.actor.effects.find((x) => x.data.label === condition))
+		.filter((i) => i.actor.system.attributes.hp.value != 0 && !mba.findEffect(i.actor, "Unconscious"))
 		.sort((a, b) => (canvas.tokens.get(a.id).actor.system.attributes.hp.value < canvas.tokens.get(b.id).actor.system.attributes.hp.value ? -1 : 1));
 	let remainingSleepHp = sleepHp;
 	let sleepTarget = [];
-
 	let template = canvas.scene.collections.templates.get(workflow.templateId);
 
 	new Sequence()
@@ -54,23 +53,20 @@ export async function sleep({ speaker, actor, token, character, item, args, scop
 		.play();
 
 	for (let target of targets) {
-		const findTarget = await canvas.tokens.get(target.id);
-		const immuneType = findTarget.actor.type === "character"
-			? ["undead", "construct"].some((race) => (findTarget.actor.system.details.race || "").toLowerCase().includes(race))
-			: ["undead", "construct"].some((value) => (findTarget.actor.system.details.type.value || "").toLowerCase().includes(value));
-		const immuneCI = findTarget.actor.system.traits.ci.custom.includes("Sleep");
-		const sleeping = findTarget.actor.effects.find((i) => i.label === condition);
-		const targetHpValue = findTarget.actor.system.attributes.hp.value;
-		const targetImg = findTarget.document.texture.src;
+		const immuneType = mba.raceOrType(target.actor) === "undead" || mba.raceOrType(target.actor) === "construct";
+		const immuneCI = mba.checkTrait(target.actor, 'ci', "unconscious") || mba.checkTrait(target.actor, 'ci', "charmed");
+		const sleeping = mba.findEffect(target.actor, "Sleeping");
+		const targetHpValue = target.actor.system.attributes.hp.value;
+		const targetImg = target.document.texture.src;
 		if ((immuneType) || (immuneCI) || (sleeping)) {
-			console.log(`Sleep Results => Target: ${findTarget.name} | HP: ${targetHpValue} | Status: Resists`);
-			sleepTarget.push(`<div class="midi-qol-flex-container"><div>Resisted: </div><div class="midi-qol-target-npc midi-qol-target-name" id="${findTarget.id}"> ${findTarget.name}</div><div><img src="${targetImg}" width="30" height="30" style="border:0px"></div></div>`);
+			console.log(`Sleep Results => Target: ${target.name} | HP: ${targetHpValue} | Status: Resists`);
+			sleepTarget.push(`<div class="midi-qol-flex-container"><div>Resisted: </div><div class="midi-qol-target-npc midi-qol-target-name" id="${target.id}"> ${target.document.name}</div><div><img src="${targetImg}" width="30" height="30" style="border:0px"></div></div>`);
 			continue;
 		}
 		if (remainingSleepHp >= targetHpValue) {
 			remainingSleepHp -= targetHpValue;
-			console.log(`Sleep Results => Target: ${findTarget.name} |  HP: ${targetHpValue} | HP Pool: ${remainingSleepHp} | Status: Slept`);
-			sleepTarget.push(`<div class="midi-qol-flex-container"><div>Fell asleep: </div><div class="midi-qol-target-npc midi-qol-target-name" id="${findTarget.id}"> ${findTarget.name}</div><div><img src="${targetImg}" width="30" height="30" style="border:0px"></div></div>`);
+			console.log(`Sleep Results => Target: ${target.name} |  HP: ${targetHpValue} | HP Pool: ${remainingSleepHp} | Status: Fell asleep`);
+			sleepTarget.push(`<div class="midi-qol-flex-container"><div>Fell asleep: </div><div class="midi-qol-target-npc midi-qol-target-name" id="${target.id}"> ${target.document.name}</div><div><img src="${targetImg}" width="30" height="30" style="border:0px"></div></div>`);
 			async function effectMacroDel() {
 				await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Sleep` })
 			}
@@ -78,6 +74,9 @@ export async function sleep({ speaker, actor, token, character, item, args, scop
 				'name': workflow.item.name,
 				'icon': workflow.item.img,
 				'origin': workflow.item.uuid,
+				'description': `
+					<p>You are unconscious until the spell ends, you take damage, or someone uses and action to shake or slap you awake.</p>
+				`,
 				'duration': {
 					'seconds': 60
 				},
@@ -95,7 +94,7 @@ export async function sleep({ speaker, actor, token, character, item, args, scop
 					},
 					'effectmacro': {
 						'onDelete': {
-							'script': chrisPremades.helpers.functionToString(effectMacroDel)
+							'script': mba.functionToString(effectMacroDel)
 						}
 					},
 					'midi-qol': {
@@ -121,7 +120,7 @@ export async function sleep({ speaker, actor, token, character, item, args, scop
 				.name(`${target.document.name} Sleep`)
 
 				.thenDo(function () {
-					chrisPremades.helpers.createEffect(findTarget.actor, effectData);
+					mba.createEffect(target.actor, effectData);
 				})
 
 				.play();
@@ -130,8 +129,8 @@ export async function sleep({ speaker, actor, token, character, item, args, scop
 			continue;
 
 		} else {
-			console.log(`Sleep Results => Target: ${target.name} | HP: ${targetHpValue} | HP Pool: ${remainingSleepHp - targetHpValue} | Status: Missed`);
-			sleepTarget.push(`<div class="midi-qol-flex-container"><div>misses</div><div class="midi-qol-target-npc midi-qol-target-name" id="${findTarget.id}"> ${findTarget.name}</div><div><img src="${targetImg}" width="30" height="30" style="border:0px"></div></div>`);
+			console.log(`Sleep Results => Target: ${target.name} | HP: ${targetHpValue} | HP Pool: ${remainingSleepHp - targetHpValue} | Status: Resisted`);
+			sleepTarget.push(`<div class="midi-qol-flex-container"><div>Resisted: </div><div class="midi-qol-target-npc midi-qol-target-name" id="${target.id}"> ${target.document.name}</div><div><img src="${targetImg}" width="30" height="30" style="border:0px"></div></div>`);
 		}
 	}
 	await warpgate.wait(500);

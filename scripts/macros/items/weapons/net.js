@@ -1,7 +1,9 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function net({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first()
     if (!workflow.hitTargets.size) return;
-    if (chrisPremades.helpers.getSize(target.actor) > 3) {
+    if (mba.getSize(target.actor) > 3) {
         ui.notifications.warn("Target is to big to be caught in the Net!");
         return;
     }
@@ -13,10 +15,10 @@ export async function net({ speaker, actor, token, character, item, args, scope,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-        <p>You are restrained by the Net.</p>
-        <p>You can attempt to free yourself by making a Strength Ability Check (DC10).</p>
-        <p>Another creature can make this check for you, or can deal at least 5 slashing damage to the net (AC10) to achieve same goal.</p>
-    `,
+            <p>You are restrained by the Net.</p>
+            <p>You can attempt to free yourself by making a Strength Ability Check (DC10).</p>
+            <p>Another creature can make this check for you, or can deal at least 5 slashing damage to the net (AC10) to achieve same goal.</p>
+        `,
         'changes': [
             {
                 'key': 'flags.midi-qol.OverTime',
@@ -37,7 +39,7 @@ export async function net({ speaker, actor, token, character, item, args, scope,
             },
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             }
         }
@@ -56,7 +58,7 @@ export async function net({ speaker, actor, token, character, item, args, scope,
         .wait(1000)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(target.actor, effectData)
+            mba.createEffect(target.actor, effectData)
         })
 
         .play()

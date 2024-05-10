@@ -1,4 +1,5 @@
-// Make something better in PC case; work with animation
+import {mba} from "../../../helperFunctions.js";
+
 export async function powerWordKill({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let currentHP = target.actor.system.attributes.hp.value;
@@ -31,12 +32,12 @@ export async function powerWordKill({ speaker, actor, token, character, item, ar
 
     await warpgate.wait(3500);
     if (target.actor.type === "npc") {
-        await chrisPremades.helpers.applyDamage([target], currentHP, 'none');
+        await mba.applyDamage([target], currentHP, 'none');
         return;
     }
-    await chrisPremades.helpers.applyDamage([target], currentHP, 'none');
+    await mba.applyDamage([target], currentHP, 'none');
     await target.actor.update({ "system.attributes.death.failure": 3 });
     await warpgate.wait(100);
-    await chrisPremades.helpers.removeCondition(target.actor, 'Unconscious');
-    await chrisPremades.helpers.addCondition(target.actor, 'Dead', true);
+    await mba.removeCondition(target.actor, 'Unconscious');
+    await mba.addCondition(target.actor, 'Dead', true);
 }

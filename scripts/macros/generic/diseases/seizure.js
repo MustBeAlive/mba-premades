@@ -1,5 +1,12 @@
-export async function seizure({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let target = workflow.targets.first();
+import {mba} from "../../../helperFunctions.js";
+
+export async function seizure() {
+    let target = game.user.targets.first();
+    if (!target) target = await fromUuidSync(game.user._lastSelected).object;
+    if (!target) {
+        ui.notifications.warn("Unable to find target!");
+        return;
+    }
     let [isDiseased] = target.actor.effects.filter(e => e.flags['mba-premades']?.name === "Seizure");
     if (isDiseased) {
         ui.notifications.info('Target is already affected by Seizure!');
@@ -46,7 +53,7 @@ export async function seizure({ speaker, actor, token, character, item, args, sc
             }
         }
     };
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
+    await mba.createEffect(target.actor, effectData);
     ChatMessage.create({
         whisper: ChatMessage.getWhisperRecipients("GM"),
         content: `<p><b>${target.document.name}</b> is infected with <b>Seizure</b></p>`,

@@ -1,13 +1,15 @@
+import {mba} from "../../helperFunctions.js";
+
 export async function shove({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.targets.size) return;
     let skipCheck = false;
     let target = workflow.targets.first();
     if (workflow.actor.uuid === target.actor.uuid) return;
-    if ((chrisPremades.helpers.getSize(target.actor)) > (chrisPremades.helpers.getSize(actor) + 1)) {
+    if ((mba.getSize(target.actor)) > (mba.getSize(actor) + 1)) {
         ui.notifications.info('Target is too big to shove!');
         return;
     }
-    let effect = chrisPremades.helpers.findEffect(target.actor, 'Incapacitated');
+    let effect = mba.findEffect(target.actor, 'Incapacitated');
     if (effect) skipCheck = true;
     if (!skipCheck) {
         let options = [
@@ -15,14 +17,14 @@ export async function shove({ speaker, actor, token, character, item, args, scop
             [`Athletics (${target.actor.system.skills.ath.total})`, 'ath'],
             ['Uncontested', false]
         ];
-        let selection = await chrisPremades.helpers.remoteDialog(workflow.item.name, options, chrisPremades.helpers.firstOwner(target).id, 'How would you like to contest the shove?');
+        let selection = await mba.remoteDialog(workflow.item.name, options, mba.firstOwner(target).id, 'How would you like to contest the shove?');
         if (selection) {
             let sourceRoll = await workflow.actor.rollSkill('ath');
-            let targetRoll = await chrisPremades.helpers.rollRequest(target, 'skill', selection);
+            let targetRoll = await mba.rollRequest(target, 'skill', selection);
             if (targetRoll.total >= sourceRoll.total) return;
         }
     }
-    let selection = await chrisPremades.helpers.dialog('What do you want to do?', [['Push 5 ft.', 'move'], ['Knock Prone', 'prone']]);
+    let selection = await mba.dialog('What do you want to do?', [['Push 5 ft.', 'move'], ['Knock Prone', 'prone']]);
     if (!selection) return;
     if (selection === 'prone') {
 
@@ -76,7 +78,7 @@ export async function shove({ speaker, actor, token, character, item, args, scop
             .delay(850)
 
             .thenDo(function () {
-                chrisPremades.helpers.addCondition(target.actor, 'Prone', false, null);
+                mba.addCondition(target.actor, 'Prone', false, null);
             })
 
             .play();

@@ -1,4 +1,7 @@
-// Original macro by CPR
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} Staggering Smite` })
@@ -21,13 +24,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'mba-premades': {
                 'spell': {
                     'staggeringSmite': {
-                        'saveDC': chrisPremades.helpers.getSpellDC(workflow.item)
+                        'saveDC': mba.getSpellDC(workflow.item)
                     }
                 }
             },
@@ -84,7 +87,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .play();
 
-    await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+    await mba.createEffect(workflow.actor, effectData);
 }
 
 async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -93,23 +96,23 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     let effect = workflow.actor.effects.find(i => i.flags['mba-premades']?.spell?.staggeringSmite);
     if (!effect) return;
     let target = workflow.targets.first();
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'staggeringSmite', 250);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'staggeringSmite', 250);
     if (!queueSetup) return;
     let oldFormula = workflow.damageRoll._formula;
     let bonusDamageFormula = '4d6[psychic]';
-    if (workflow.isCritical) bonusDamageFormula = chrisPremades.helpers.getCriticalFormula(bonusDamageFormula);
+    if (workflow.isCritical) bonusDamageFormula = mba.getCriticalFormula(bonusDamageFormula);
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRoll = await new Roll(damageFormula).roll({ async: true });
     await workflow.setDamageRoll(damageRoll);
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Staggering Smite: Stagger');
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Staggering Smite: Stagger');
     if (!featureData) {
-        chrisPremades.queue.remove(workflow.item.uuid);
+        queue.remove(workflow.item.uuid);
         return;
     }
     delete featureData._id;
     featureData.system.save.dc = effect.flags['mba-premades'].spell.staggeringSmite.saveDC;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([target.document.uuid]);
+    let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
     await warpgate.wait(100);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
 
@@ -169,8 +172,8 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         let effectData = {
             'name': 'Staggering Smite: Stagger',
             'icon': effect.icon,
-            'description': "You are staggered by Staggering Smite. You have disadvantage on ability checks, attack rolls and can't take reactions until the end of your next turn.",
             'origin': effect.uuid,
+            'description': "You are staggered by Staggering Smite. You have disadvantage on ability checks, attack rolls and can't take reactions until the end of your next turn.",
             'duration': {
                 'seconds': 12
             },
@@ -200,7 +203,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
                 },
                 'effectmacro': {
                     'onDelete': {
-                        'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                        'script': mba.functionToString(effectMacroDel)
                     }
                 },
                 'midi-qol': {
@@ -212,10 +215,10 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
                 }
             }
         };
-        await chrisPremades.helpers.createEffect(target.actor, effectData);
+        await mba.createEffect(target.actor, effectData);
     }
-    await chrisPremades.helpers.removeEffect(effect);
-    chrisPremades.queue.remove(workflow.item.uuid);
+    await mba.removeEffect(effect);
+    queue.remove(workflow.item.uuid);
 }
 
 export let staggeringSmite = {

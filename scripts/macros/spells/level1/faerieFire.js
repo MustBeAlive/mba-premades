@@ -1,8 +1,9 @@
-//Animations by: eskiemoh
-async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
+import {mba} from "../../../helperFunctions.js";
+
+export async function faerieFire({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.templateUuid) return;
     let choices = [["Blue", "blue"], ["Green", "green"], ["Purple", "purple"]];
-    let color = await chrisPremades.helpers.dialog("Choose color:", choices);
+    let color = await mba.dialog("Choose color:", choices);
     if (!color) color = "purple";
     let tintColor;
     let hue;
@@ -19,15 +20,55 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             tintColor = '0xdcace3';
             hue = '250';
     }
-    let templateDoc = await fromUuid(workflow.templateUuid);
-    if (!templateDoc) return;
-    let template = templateDoc.object;
-    let position = template.ray.project(0.5);
+    async function effectMacroDel() {
+        Sequencer.EffectManager.endEffects({ 'name': `${token.document.name} Faerie Fire`, object: token });
+    };
+    const effectData = {
+        'name': workflow.item.name,
+        'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
+        'description': `
+            <p></p>
+        `,
+        'duration': {
+            'seconds': 60
+        },
+        'changes': [
+            {
+                'key': 'flags.midi-qol.grants.advantage.attack.all',
+                'mode': 2,
+                'value': 1,
+                'priority': 20
+            },
+            {
+                'key': 'system.traits.ci.value',
+                'mode': 0,
+                'value': "invisible",
+                'priority': 20
+            },
+            {
+                'key': 'ATL.light.dim',
+                'mode': 4,
+                'value': 10,
+                'priority': 20
+            }
+        ],
+        'flags': {
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDel)
+                }
+            }
+        }
+    }
+    let template = canvas.scene.collections.templates.get(workflow.templateId);
+    //let position = template.ray.project(0.5);
 
     new Sequence()
+
         .effect()
         .file('animated-spell-effects-cartoon.flash.25')
-        .atLocation(position)
+        .atLocation(template)
         .scale(0.05)
         .playbackRate(1)
         .duration(1500)
@@ -41,7 +82,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file('jb2a.particles.outward.white.01.03')
-        .atLocation(position)
+        .atLocation(template)
         .scale(0.025)
         .playbackRate(1)
         .duration(1500)
@@ -54,7 +95,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file('jb2a.sacred_flame.target.' + color)
-        .atLocation(position)
+        .atLocation(template)
         .scale(0.05)
         .playbackRate(1)
         .duration(1500)
@@ -66,25 +107,25 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file('jb2a.impact.010.' + color)
-        .atLocation(position, { 'offset': { 'y': -0.25 }, 'gridUnits': true })
+        .atLocation(template, { 'offset': { 'y': -0.25 }, 'gridUnits': true })
         .scale(0.45)
         .randomRotation()
         .zIndex(1)
 
         .effect()
         .file('jb2a.particles.outward.white.01.03')
-        .scaleIn(0, 500, { 'ease': 'easeOutQuint' })
-        .fadeOut(1000)
-        .atLocation(position, { 'offset': { 'y': -0.25 }, 'gridUnits': true })
-        .randomRotation()
-        .duration(2500)
+        .atLocation(template, { 'offset': { 'y': -0.25 }, 'gridUnits': true })
         .size(3, { 'gridUnits': true })
+        .scaleIn(0, 500, { 'ease': 'easeOutQuint' })
+        .duration(2500)
+        .fadeOut(1000)
+        .randomRotation()
         .filter('Glow', { 'color': tintColor, 'distance': 10 })
         .zIndex(2)
 
         .effect()
         .file('jb2a.fireflies.{{Pfew}}.02.' + color)
-        .atLocation(position, { 'randomOffset': 0.25 })
+        .atLocation(template, { 'randomOffset': 0.25 })
         .scaleToObject(1.8)
         .randomRotation()
         .duration(750)
@@ -100,63 +141,58 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file('animated-spell-effects-cartoon.energy.pulse.yellow')
-        .atLocation(position, { 'offset': { 'y': -0.25 }, 'gridUnits': true })
+        .atLocation(template, { 'offset': { 'y': -0.25 }, 'gridUnits': true })
         .size(5, { 'gridUnits': true })
-        .filter('ColorMatrix', { 'saturate': -1, 'brightness': 2, 'hue': hue })
         .fadeOut(250)
+        .filter('ColorMatrix', { 'saturate': -1, 'brightness': 2, 'hue': hue })
         .filter('Blur', { 'blurX': 10, 'blurY': 10 })
         .zIndex(0.5)
 
         .effect()
-        .delay(50)
         .file('animated-spell-effects-cartoon.energy.pulse.yellow')
-        .atLocation(position, { 'offset': { 'y': -0.25 }, 'gridUnits': true })
+        .atLocation(template, { 'offset': { 'y': -0.25 }, 'gridUnits': true })
         .size(5, { 'gridUnits': true })
+        .delay(50)
         .filter('ColorMatrix', { 'hue': hue })
         .zIndex(0.5)
 
         .play();
 
-    if (!workflow.failedSaves.size) return;
+    if (!workflow.failedSaves.size) {
+        await canvas.scene.templates.find(t => t.id === template.id)?.delete();
+        return;
+    }
+    await warpgate.wait(1300);
+    for (let target of workflow.failedSaves) {
 
-    await (warpgate.wait(1000));
-
-    for (let i of workflow.failedSaves) {
-
+        await mba.createEffect(target.actor, effectData);
         new Sequence()
 
             .effect()
             .file('jb2a.fireflies.many.01.' + color)
-            .attachTo(i)
+            .attachTo(target)
             .scaleToObject(1.4)
             .randomRotation()
             .fadeIn(500, { 'delay': 500 })
             .fadeOut(1500, { 'ease': 'easeInSine' })
             .persist()
-            .name('Faerie Fire')
+            .name(`${target.document.name} Faerie Fire`)
 
             .effect()
-            .from(i)
+            .from(target)
+            .attachTo(target)
             .belowTokens()
-            .attachTo(i)
-            .scaleToObject(i.document.texture.scaleX)
-            .spriteRotation(i.document.texture.rotation * -1)
+            .scaleToObject(target.document.texture.scaleX)
+            .spriteRotation(target.document.texture.rotation * -1)
             .filter('Glow', { 'color': tintColor, 'distance': 20 })
             .fadeIn(1500, { 'delay': 500 })
             .fadeOut(1500, { 'ease': 'easeInSine' })
             .zIndex(0.1)
             .persist()
-            .name('Faerie Fire')
+            .name(`${target.document.name} Faerie Fire`)
 
             .play();
     }
-}
-
-async function del(token, origin) {
-    Sequencer.EffectManager.endEffects({ 'name': 'Faerie Fire', object: token });
-}
-
-export let faerieFire = {
-    'item': item,
-    'del': del
+    await warpgate.wait(500);
+    await canvas.scene.templates.find(t => t.id === template.id)?.delete();
 }

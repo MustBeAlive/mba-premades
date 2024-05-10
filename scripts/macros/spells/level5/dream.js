@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     new Sequence()
 
@@ -267,9 +269,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    const saveDC = await chrisPremades.helpers.getSpellDC(workflow.item);
+    const saveDC = await mba.getSpellDC(workflow.item);
     let choicesGM1 = [["Target is Awake", "awake"], ["Target is Asleep", "asleep"], ["Target does not have a need to sleep (such as elf)", "no"]];
-    let selectionGM1 = await chrisPremades.helpers.remoteDialog(workflow.item.name, choicesGM1, game.users.activeGM.id, `
+    let selectionGM1 = await mba.remoteDialog(workflow.item.name, choicesGM1, game.users.activeGM.id, `
         <p><b>${workflow.token.document.name}</b> attempts to cast <b>Dream</b></p>
     `);
     if (!selectionGM1) return;
@@ -277,16 +279,17 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ui.notifications.warn("Dream is inapplicable (target does not have a need to sleep)");
         return;
     }
-    if (selectionGM1 === "awake") {
+    else if (selectionGM1 === "awake") {
         let choicesAwake = [["Yes, wait for the target to fall asleep", "yes"], ["No, cancel casting Dream", "no"]];
-        let selectionAwake = await chrisPremades.helpers.dialog("Target is awake. Would you like to wait?", choicesAwake);
+        let selectionAwake = await mba.dialog("Target is awake. Would you like to wait?", choicesAwake);
         if (!selectionAwake || selectionAwake === "no") return;
         if (selectionAwake === "yes") {
-            let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Dream: Retry', false);
+            let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Dream: Retry', false);
             if (!featureData) {
                 ui.notifications.warn("Unable to find item in Compendium! (Dream: Retry)");
                 return;
             }
+            delete featureData._id;
             featureData.system.save.dc = saveDC;
             async function effectMacroDel() {
                 await warpgate.revert(token.document, "Dream");
@@ -301,7 +304,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 'flags': {
                     'effectmacro': {
                         'onDelete': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                            'script': mba.functionToString(effectMacroDel)
                         }
                     },
                     'midi-qol': {
@@ -332,22 +335,22 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             return;
         }
     }
-    if (selectionGM1 === "asleep") {
+    else if (selectionGM1 === "asleep") {
         let choicesAsleep = [["Friendly (dialog)", "dream"], ["Nightmare (save)", "nightmare"]];
-        let selectionAsleep = await chrisPremades.helpers.dialog("Choose dream type:", choicesAsleep);
+        let selectionAsleep = await mba.dialog("Choose dream type:", choicesAsleep);
         if (!selectionAsleep) return;
-        if (selectionAsleep === "dream") await chrisPremades.helpers.createEffect(workflow.actor, effectData);
-        if (selectionAsleep === "nightmare") {
+        if (selectionAsleep === "dream") await mba.createEffect(workflow.actor, effectData);
+        else if (selectionAsleep === "nightmare") {
             let disadvantage = false;
             let choicesNightmare = [["Body part, lock of hair, clipping from a nail or similar", "yes"], ["Nothing", "no"]];
-            let selectionNightmare = await chrisPremades.helpers.dialog("Do you have anything of the above?", choicesNightmare);
+            let selectionNightmare = await mba.dialog("Do you have anything of the above?", choicesNightmare);
             if (!selectionNightmare) return;
             if (selectionNightmare === "yes") disadvantage = true;
             let choicesGM2 = [
                 ["Target Saved", "save"],
                 ["Target Failed", "fail"]
             ];
-            let selectionGM2 = await chrisPremades.helpers.remoteDialog(workflow.item.name, choicesGM2, game.users.activeGM.id, `
+            let selectionGM2 = await mba.remoteDialog(workflow.item.name, choicesGM2, game.users.activeGM.id, `
                 <p><b>${workflow.token.document.name}</b> attempts to cast <b>Dream</b></p>
                 <p>Save DC: <b>Wisdom: ${saveDC}</b></p>
                 <p>Disadvantage: <b>${disadvantage}</b></p>
@@ -357,8 +360,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 ui.notifications.info(`Target succesfully saved! (Save DC: ${saveDC})`);
                 return;
             }
-            if (selectionGM2 === "fail") {
-                await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+            else if (selectionGM2 === "fail") {
+                await mba.createEffect(workflow.actor, effectData);
                 let damageRoll = await new Roll("3d6[psychic]").roll({ 'async': true });
                 await MidiQOL.displayDSNForRoll(damageRoll, 'damageRoll');
                 damageRoll.toMessage({
@@ -380,7 +383,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 }
 
 async function wait({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let effect = await chrisPremades.helpers.findEffect(workflow.actor, "Dream");
+    let effect = await mba.findEffect(workflow.actor, "Dream");
     if (!effect) return;
     const effectData = {
         'name': effect.name,
@@ -400,7 +403,7 @@ async function wait({ speaker, actor, token, character, item, args, scope, workf
         }
     };
     let choicesGM1 = [["Target is still Awake", "awake"], ["Target fell Asleep", "asleep"]];
-    let selectionGM1 = await chrisPremades.helpers.remoteDialog(workflow.item.name, choicesGM1, game.users.activeGM.id, `
+    let selectionGM1 = await mba.remoteDialog(workflow.item.name, choicesGM1, game.users.activeGM.id, `
         <p><b>${workflow.token.document.name}</b> attempts to cast <b>Dream</b></p>
     `);
     if (!selectionGM1) return;
@@ -408,27 +411,27 @@ async function wait({ speaker, actor, token, character, item, args, scope, workf
         ui.notifications.info("Target is still awake!");
         return;
     }
-    if (selectionGM1 === "asleep") {
+    else if (selectionGM1 === "asleep") {
         let choicesAsleep = [["Friendly (dialog)", "dream"], ["Nightmare (save)", "nightmare"]];
-        let selectionAsleep = await chrisPremades.helpers.dialog("Choose dream type:", choicesAsleep);
+        let selectionAsleep = await mba.dialog("Choose dream type:", choicesAsleep);
         if (!selectionAsleep) return;
         if (selectionAsleep === "dream") {
-            await chrisPremades.helpers.removeEffect(effect);
+            await mba.removeEffect(effect);
             await warpgate.wait(100);
-            await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+            await mba.createEffect(workflow.actor, effectData);
         }
-        if (selectionAsleep === "nightmare") {
+        else if (selectionAsleep === "nightmare") {
             let disadvantage = false;
             let choicesNightmare = [["Body part, lock of hair, clipping from a nail or similar", "yes"], ["Nothing", "no"]];
-            let selectionNightmare = await chrisPremades.helpers.dialog("Do you have anything of the above?", choicesNightmare);
+            let selectionNightmare = await mba.dialog("Do you have anything of the above?", choicesNightmare);
             if (!selectionNightmare) return;
             if (selectionNightmare === "yes") disadvantage = true;
-            let saveDC = await chrisPremades.helpers.getSpellDC(workflow.item);
+            let saveDC = await mba.getSpellDC(workflow.item);
             let choicesGM2 = [
                 ["Target Saved", "save"],
                 ["Target Failed", "fail"]
             ];
-            let selectionGM2 = await chrisPremades.helpers.remoteDialog(workflow.item.name, choicesGM2, game.users.activeGM.id, `
+            let selectionGM2 = await mba.remoteDialog(workflow.item.name, choicesGM2, game.users.activeGM.id, `
                 <p><b>${workflow.token.document.name}</b> attempts to cast <b>Dream</b></p>
                 <p>Save DC: <b>Wisdom: ${saveDC}</b></p>
                 <p>Disadvantage: <b>${disadvantage}</b></p>
@@ -436,10 +439,10 @@ async function wait({ speaker, actor, token, character, item, args, scope, workf
             if (!selectionGM2) return;
             if (selectionGM2 === "save") {
                 ui.notifications.info(`Target succesfully saved! (Save DC: ${saveDC})`);
-                await chrisPremades.helpers.removeEffect(effect);
+                await mba.removeEffect(effect);
                 return;
             }
-            if (selectionGM2 === "fail") {
+            else if (selectionGM2 === "fail") {
                 let damageRoll = await new Roll("3d6[psychic]").roll({ 'async': true });
                 await MidiQOL.displayDSNForRoll(damageRoll, 'damageRoll');
                 damageRoll.toMessage({
@@ -455,9 +458,9 @@ async function wait({ speaker, actor, token, character, item, args, scope, workf
                     `,
                     speaker: { actor: null, alias: "GM Helper" }
                 });
-                await chrisPremades.helpers.removeEffect(effect);
+                await mba.removeEffect(effect);
                 await warpgate.wait(100);
-                await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+                await mba.createEffect(workflow.actor, effectData);
             }
         }
 

@@ -1,3 +1,7 @@
+import {mba} from "../../../helperFunctions.js";
+import {constants} from "../../generic/constants.js";
+import {queue} from "../../mechanics/queue.js";
+
 async function animation(target, token, attackType) {
     let hitSeq = new Sequence()
 
@@ -172,7 +176,7 @@ async function animation(target, token, attackType) {
 async function attack({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.hitTargets.size != 1) return;
     if (!(workflow.item.system.actionType === 'rwak' || workflow.item.system.properties.fin === true)) return;
-    let originFeature = workflow.actor.items.find(i => i.name === "Sneak Attack");
+    let originFeature = mba.getItem(workflow.actor, "Sneak Attack");
     if (!originFeature) return;
     let currentTurn = game.combat.round + '-' + game.combat.turn;
     if (currentTurn === originFeature.flags['mba-premades']?.feature?.sneakAttack?.turn) return;
@@ -181,18 +185,18 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     if (workflow.advantage) doSneak = true;
     let target = workflow.targets.first();
     if (!doSneak && !workflow.disadvantage) {
-        let nearbyTokens = await chrisPremades.helpers.findNearby(target, 5, 'enemy').filter(i => i.id != workflow.token.id);
+        let nearbyTokens = await mba.findNearby(target, 5, 'enemy').filter(i => i.id != workflow.token.id);
         if (nearbyTokens.length > 0) doSneak = true;
     }
-    let rakishAudacity = chrisPremades.helpers.getItem(workflow.actor, 'Rakish Audacity');
-    if (rakishAudacity && !workflow.disadvantage && !doSneak && (chrisPremades.helpers.getDistance(workflow.token, target) <= 5)) {
-        let rNearbyTokens = await chrisPremades.helpers.findNearby(workflow.token, 5, 'all', true).filter(t => t.id != target.id);
+    let rakishAudacity = mba.getItem(workflow.actor, 'Rakish Audacity');
+    if (rakishAudacity && !workflow.disadvantage && !doSneak && (mba.getDistance(workflow.token, target) <= 5)) {
+        let rNearbyTokens = await mba.findNearby(workflow.token, 5, 'all', true).filter(t => t.id != target.id);
         if (rNearbyTokens.length === 0) {
             doSneak = true;
             displayRakish = true;
         }
     }
-    let insightfulFighting = chrisPremades.helpers.findEffect(workflow.actor, 'Insightful Fighting');
+    let insightfulFighting = mba.findEffect(workflow.actor, 'Insightful Fighting');
     let iTarget = false;
     if (insightfulFighting) {
         let effectTarget = insightfulFighting.changes[0].value;
@@ -202,17 +206,16 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
         }
     }
     if (!doSneak) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'sneakAttack', 215);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'sneakAttack', 215);
     if (!queueSetup) return;
     let sneakDialog = true;
     if (sneakDialog === true) {
-        let selection = await chrisPremades.helpers.dialog(originFeature.name, chrisPremades.constants.yesNo, 'Use ' + originFeature.name + '?');
+        let selection = await mba.dialog(originFeature.name, constants.yesNo, 'Use ' + originFeature.name + '?');
         if (!selection) {
-            chrisPremades.queue.remove(workflow.item.uuid);
+            queue.remove(workflow.item.uuid);
             return;
         }
     }
-    //await chrisPremades.helpers.setTurnCheck(originFeature, 'feature', 'sneakAttack');
     let defaultDamageType = workflow.defaultDamageType;
     let oldFormula = workflow.damageRoll._formula;
     let bonusDamageFormula;
@@ -231,9 +234,9 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
         if (workflow.actor.system.details.cr > 3) number = 4;
         bonusDamageFormula = number + 'd6[' + defaultDamageType + ']';
     }
-    let eyeFeature = chrisPremades.helpers.getItem(workflow.actor, 'Eye for Weakness');
+    let eyeFeature = mba.getItem(workflow.actor, 'Eye for Weakness');
     if (iTarget && eyeFeature) bonusDamageFormula += ' + 3d6[' + defaultDamageType + ']';
-    if (workflow.isCritical) bonusDamageFormula = chrisPremades.helpers.getCriticalFormula(bonusDamageFormula);
+    if (workflow.isCritical) bonusDamageFormula = mba.getCriticalFormula(bonusDamageFormula);
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRoll = await new Roll(damageFormula).roll({ async: true });
     await workflow.setDamageRoll(damageRoll);
@@ -241,16 +244,16 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     await originFeature.use();
     if (displayRakish) await rakishAudacity.use();
     if (iTarget) {
-        let iFeature = chrisPremades.helpers.getItem(workflow.actor, 'Insightful Fighting');
+        let iFeature = mba.getItem(workflow.actor, 'Insightful Fighting');
         if (iFeature) await iFeature.displayCard();
         if (eyeFeature) await eyeFeature.use();
     }
-    chrisPremades.queue.remove(workflow.item.uuid);
+    queue.remove(workflow.item.uuid);
     let animationType;
-    if (chrisPremades.helpers.getDistance(workflow.token, target) > 5) animationType = 'ranged';
+    if (mba.getDistance(workflow.token, target) > 5) animationType = 'ranged';
     if (!animationType) animationType = defaultDamageType;
     await animation(target, workflow.token, animationType);
-    await originFeature.setFlag('mba-premades', 'feature.sneakAttack.turn', game.combat.round + '-' + game.combat.turn);
+    if (mba.inCombat()) await originFeature.setFlag('mba-premades', 'feature.sneakAttack.turn', game.combat.round + '-' + game.combat.turn);
 }
 
 async function combatEnd(origin) {

@@ -1,4 +1,5 @@
-//needs testing
+import {mba} from "../../../helperFunctions.js";
+
 export async function cunningAction({ speaker, actor, token, character, item, args, scope, workflow }) {
     new Sequence()
 
@@ -13,14 +14,14 @@ export async function cunningAction({ speaker, actor, token, character, item, ar
         ["Disengage", "Disengage"],
         ["Hide", "Hide"]
     ];
-    let actionName = await chrisPremades.helpers.dialog("Choose action type:", choices);
+    let actionName = await mba.dialog("Choose action type:", choices);
     if (!actionName) return;
     let action = token.actor.items.getName(actionName);
     if (action) {
         await action.use();
         return;
     }
-    let actionData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Actions', actionName, false);
+    let actionData = await mba.getItemFromCompendium('mba-premades.MBA Actions', actionName, false);
     if (!actionData) {
         ui.notifications.warn(`Unable to find item in compendium! (${actionName})`);
         return;

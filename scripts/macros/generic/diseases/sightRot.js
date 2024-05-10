@@ -1,6 +1,13 @@
-export async function sightRot({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let target = workflow.targets.first();
-    let type = await chrisPremades.helpers.raceOrType(target.actor);
+import {mba} from "../../../helperFunctions.js";
+
+export async function sightRot() {
+    let target = game.user.targets.first();
+    if (!target) target = await fromUuidSync(game.user._lastSelected).object;
+    if (!target) {
+        ui.notifications.warn("Unable to find target!");
+        return;
+    }
+    let type = await mba.raceOrType(target.actor);
     if (type != "beast" && type != "humanoid") {
         console.log("Target is unaffected by Sight Rot (Neither beast, nor humanoid)");
         return;
@@ -44,7 +51,7 @@ export async function sightRot({ speaker, actor, token, character, item, args, s
                                 }
                             }
                         };
-                        await chrisPremades.helpers.updateEffect(effect, updates);
+                        await mbaPremades.helpers.updateEffect(effect, updates);
                         ChatMessage.create({
                             whisper: ChatMessage.getWhisperRecipients("GM"),
                             content: `
@@ -57,7 +64,7 @@ export async function sightRot({ speaker, actor, token, character, item, args, s
                         return;
                     }
                     if (eyebrightCurrent > eyebrightLast && eyebrightCurrent === 3) {
-                        await chrisPremades.helpers.removeEffect(effect);
+                        await mbaPremades.helpers.removeEffect(effect);
                         ChatMessage.create({
                             whisper: ChatMessage.getWhisperRecipients("GM"),
                             content: `<b>${token.document.name}</b> is cured from <b>Sight Rot!</b>`,
@@ -99,7 +106,7 @@ export async function sightRot({ speaker, actor, token, character, item, args, s
                         }
                     }
                 };
-                await chrisPremades.helpers.updateEffect(effect, updates);
+                await mbaPremades.helpers.updateEffect(effect, updates);
                 ChatMessage.create({
                     whisper: ChatMessage.getWhisperRecipients("GM"),
                     content: `
@@ -109,11 +116,11 @@ export async function sightRot({ speaker, actor, token, character, item, args, s
                     `,
                     speaker: { actor: null, alias: "Disease Announcer" }
                 });
-                if (currentPenalty === 5 && !chrisPremades.helpers.findEffect(actor, 'Blinded')) await chrisPremades.helpers.addCondition(actor, "Blinded");
+                if (currentPenalty === 5 && !mbaPremades.helpers.findEffect(actor, 'Blinded')) await mbaPremades.helpers.addCondition(actor, "Blinded");
             }
             async function effectMacroSightRotDel() {
-                let effect = chrisPremades.helpers.findEffect(actor, "Blinded");
-                if (effect) await chrisPremades.helpers.removeEffect(effect);
+                let effect = mbaPremades.helpers.findEffect(actor, "Blinded");
+                if (effect) await mbaPremades.helpers.removeEffect(effect);
             }
             let number = Math.floor(Math.random() * 10000);
             let effectData = {
@@ -145,10 +152,10 @@ export async function sightRot({ speaker, actor, token, character, item, args, s
                     },
                     'effectmacro': {
                         'dnd5e.longRest': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroSightRot)
+                            'script': mbaPremades.helpers.functionToString(effectMacroSightRot)
                         },
                         'onDelete': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroSightRotDel)
+                            'script': mbaPremades.helpers.functionToString(effectMacroSightRotDel)
                         }
                     },
                     'mba-premades': {
@@ -164,8 +171,8 @@ export async function sightRot({ speaker, actor, token, character, item, args, s
                     }
                 }
             };
-            await chrisPremades.helpers.createEffect(token.actor, effectData);
-            await chrisPremades.helpers.removeEffect(effect);
+            await mbaPremades.helpers.createEffect(token.actor, effectData);
+            await mbaPremades.helpers.removeEffect(effect);
         });
     }
     let number = Math.floor(Math.random() * 10000);
@@ -178,7 +185,7 @@ export async function sightRot({ speaker, actor, token, character, item, args, s
             },
             'effectmacro': {
                 'onCreate': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroSightRotManifest)
+                    'script': mba.functionToString(effectMacroSightRotManifest)
                 }
             },
             'mba-premades': {
@@ -191,7 +198,7 @@ export async function sightRot({ speaker, actor, token, character, item, args, s
             }
         }
     };
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
+    await mba.createEffect(target.actor, effectData);
     ChatMessage.create({
         whisper: ChatMessage.getWhisperRecipients("GM"),
         content: `<p><b>${target.document.name}</b> is infected with <b>Sight Rot</b></p><p>Symptoms will manifest in <b>1 day</b></p>`,
@@ -221,7 +228,7 @@ export async function sightRotOintment({ speaker, actor, token, character, item,
             }
         }
     };
-    await chrisPremades.helpers.updateEffect(effect, updates);
+    await mba.updateEffect(effect, updates);
     ChatMessage.create({
         content: `<p><b>${target.document.name}</b> applied eyebright ointment</b></p><p>Consecutive uses: <b>${eyebrightCurrent}</b></p>`,
         speaker: { actor: null, alias: "Disease Announcer" }

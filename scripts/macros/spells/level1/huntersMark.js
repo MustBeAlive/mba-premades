@@ -1,10 +1,12 @@
-//Adjusted; Original animations by EskieMoh#2969 (hex)
-//Adjusted; Original macro by CPR
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.targets.size != 1) return;
     let target = workflow.targets.first();
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Hunter\'s Mark: Move', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Hunter\'s Mark: Move', false);
     if (!featureData) return;
+    delete featureData._id;
     let seconds;
     switch (workflow.castData.castLevel) {
         case 3:
@@ -38,7 +40,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    await chrisPremades.helpers.createEffect(workflow.targets.first().actor, targetEffectData);
+    await mba.createEffect(workflow.targets.first().actor, targetEffectData);
 
     new Sequence()
 
@@ -101,9 +103,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         let targetToken = canvas.scene.tokens.get(targetTokenId);
         if (!targetToken) return;
         let targetActor = targetToken.actor;
-        let targetEffect = chrisPremades.helpers.findEffect(targetActor, 'Marked');
+        let targetEffect = mbaPremades.helpers.findEffect(targetActor, 'Marked');
         if (!targetEffect) return;
-        await chrisPremades.helpers.removeEffect(targetEffect);
+        await mbaPremades.helpers.removeEffect(targetEffect);
     }
     let sourceEffectData = {
         'name': 'Hunter\'s Mark',
@@ -130,7 +132,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacro)
+                    'script': mba.functionToString(effectMacro)
                 }
             },
             'midi-qol': {
@@ -158,14 +160,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'description': sourceEffectData.name
     };
     await warpgate.mutate(workflow.token.document, updates, {}, options);
-    let conEffect = chrisPremades.helpers.findEffect(workflow.actor, 'Concentrating');
+    let conEffect = mba.findEffect(workflow.actor, 'Concentrating');
     if (conEffect) {
         let updates = {
             'duration': {
                 'seconds': seconds
             }
         };
-        await chrisPremades.helpers.updateEffect(conEffect, updates);
+        await mba.updateEffect(conEffect, updates);
     }
 }
 
@@ -177,15 +179,15 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     let markedTarget = sourceActor.flags['mba-premades']?.spell?.huntersMark;
     let targetToken = workflow.hitTargets.first();
     if (targetToken.id != markedTarget) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'huntersMark', 250);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'huntersMark', 250);
     if (!queueSetup) return;
     let oldFormula = workflow.damageRoll._formula;
     let bonusDamageFormula = '1d6[' + workflow.defaultDamageType + ']'
-    if (workflow.isCritical) bonusDamageFormula = chrisPremades.helpers.getCriticalFormula(bonusDamageFormula);
+    if (workflow.isCritical) bonusDamageFormula = mba.getCriticalFormula(bonusDamageFormula);
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRoll = await new Roll(damageFormula).roll({ async: true });
     await workflow.setDamageRoll(damageRoll);
-    chrisPremades.queue.remove(workflow.item.uuid);
+    queue.remove(workflow.item.uuid);
 
     new Sequence()
 
@@ -242,13 +244,13 @@ async function move({ speaker, actor, token, character, item, args, scope, workf
     let oldTargetOrigin;
     if (oldTargetToken) {
         let oldTargetActor = oldTargetToken.actor;
-        let oldTargetEffect = chrisPremades.helpers.findEffect(oldTargetActor, 'Marked');
+        let oldTargetEffect = mba.findEffect(oldTargetActor, 'Marked');
         if (oldTargetEffect) {
-            await chrisPremades.helpers.removeEffect(oldTargetEffect);
+            await mba.removeEffect(oldTargetEffect);
             oldTargetOrigin = oldTargetEffect.origin;
         }
     }
-    let effect = chrisPremades.helpers.findEffect(workflow.actor, 'Hunter\'s Mark');
+    let effect = mba.findEffect(workflow.actor, 'Hunter\'s Mark');
     let duration = 3600;
     if (effect) duration = effect.duration.remaining;
     let effectData = {
@@ -268,7 +270,7 @@ async function move({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    await chrisPremades.helpers.createEffect(targetActor, effectData);
+    await mba.createEffect(targetActor, effectData);
 
     new Sequence()
 
@@ -329,7 +331,7 @@ async function move({ speaker, actor, token, character, item, args, scope, workf
         let changes = effect.changes;
         changes[0].value = targetToken.id;
         let updates = { changes };
-        await chrisPremades.helpers.updateEffect(effect, updates);
+        await mba.updateEffect(effect, updates);
     }
 }
 
