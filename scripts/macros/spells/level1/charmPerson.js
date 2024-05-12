@@ -6,11 +6,15 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 	if (workflow.targets.size > ammount) {
 		let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
 		if (!selection.buttons) {
-			ui.notifications.warn('Failed to select right ammount of targets, try again!')
+			ui.notifications.warn('Failed to select targets, try again!')
 			return;
 		}
 		let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
 		mba.updateTargets(newTargets);
+		if (Array.from(game.user.targets).length > ammount) {
+            ui.notifications.warn("Too many targets selected, try again!");
+            return;
+        }
 	}
 	await warpgate.wait(100);
 	let targets = Array.from(game.user.targets);
@@ -19,16 +23,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 		return;
 	}
 	await warpgate.wait(100);
-	let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Charm Person: Charm', false);
+	let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', "Charm Person: Charm", false);
 	if (!featureData) {
-		ui.notifications.warn('Unable to find item in compenidum! (Charm Person: Charm)');
+		ui.notifications.warn("Unable to find item in compendium! (Charm Person: Charm)");
 		return
 	}
 	delete featureData._id;
-	let originItem = workflow.item;
-	if (!originItem) return;
-	featureData.system.save.dc = mba.getSpellDC(originItem);
-	setProperty(featureData, 'mba-premades.spell.castData.school', originItem.system.school);
+	featureData.system.save.dc = mba.getSpellDC(workflow.item);
+	setProperty(featureData, 'mba-premades.spell.castData.school', workflow.item.system.school);
 	let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
 	let targetUuids = [];
 	for (let i of targets) targetUuids.push(i.document.uuid);

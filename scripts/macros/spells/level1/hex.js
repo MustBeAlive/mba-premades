@@ -16,7 +16,7 @@ async function hexItem({ speaker, actor, token, character, item, args, scope, wo
         ['Intelligence', 'int'],
         ['Wisdom', 'wis'],
         ['Charisma', 'cha']
-    ], 'What ability should have disadvantage?');
+    ], '<b>What ability should have disadvantage?</b>');
     if (!selection) selection = 'str';
     let icon;
     switch (selection) {

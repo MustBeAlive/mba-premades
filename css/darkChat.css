@@ -213,3 +213,9 @@ body.darkChat .dice-tray__input {
 body.darkChat .dice-tray__buttons {
     height: 1.5rem !important;
 }
+
+
+/* Simply Portraits Fix */
+body.darkChat .simply-portraits {
+    filter: invert(1);
+}

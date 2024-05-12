@@ -1,10 +1,13 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function dragonsBreath({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Dragon\'s Breath: Attack', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', "Dragon's Breath: Attack", false);
     if (!featureData) {
-        ui.notifications.warn('Missing item in the compendium! (Dragon\'s Breath: Attack)');
+        ui.notifications.warn("Unable to find item in the compendium! (Dragon's Breath: Attack)");
         return;
     }
+    delete featureData._id;
     let damageTypes = [
         ['Acid 🧪', 'acid'],
         ['Cold ❄️', 'cold'],
@@ -12,7 +15,7 @@ export async function dragonsBreath({ speaker, actor, token, character, item, ar
         ['Lightning ⚡', 'lightning'],
         ['Poison ☠️', 'poison']
     ];
-    let chooseDamage = await chrisPremades.helpers.dialog('Choose damage type:', damageTypes);
+    let chooseDamage = await mba.dialog("Dragon's Breath", damageTypes, `<b>Choose damage type:</b>`);
     if (!chooseDamage) {
         ui.notifications.warn('Failed to choose damage type, try again!');
         return;
@@ -39,10 +42,9 @@ export async function dragonsBreath({ speaker, actor, token, character, item, ar
         }
     }
     featureData.system.damage.parts = damageParts;
-    featureData.system.save.dc = chrisPremades.helpers.getSpellDC(workflow.item);
-
+    featureData.system.save.dc = mba.getSpellDC(workflow.item);
     async function effectMacroDel() {
-        await warpgate.revert(token.document, 'Dragon\'s Breath: Attack');
+        await warpgate.revert(token.document, "Dragon's Breath: Attack");
     }
     let effectData = {
         'label': workflow.item.name,
@@ -55,7 +57,7 @@ export async function dragonsBreath({ speaker, actor, token, character, item, ar
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {

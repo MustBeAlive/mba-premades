@@ -37,7 +37,7 @@ async function creator() {
         ["Slimy Doom", "slimyDoom"],
         ["Throat Leeches", "throatLeeches"]
     ];
-    let selection = await mba.dialog("Choose disease to apply:", choices);
+    let selection = await mba.dialog("Disease Creator", choices, `<b>Choose disease to apply:</b>`);
     if (!selection) return;
     if (selection === "arcaneBlight") await arcaneBlight();
     else if (selection === "blindingSickness") await blindingSickness();

@@ -3,7 +3,7 @@ import { mba } from "../../../helperFunctions.js";
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let choices = [["One Stone", 1], ["Two Stones", 2], ["Three Stones", 3]];
-    let ammount = await mba.dialog("Choose ammount of stones:", choices);
+    let ammount = await mba.dialog("Magic Stone", choices, `<b>Choose ammount of stones:</b>`);
     if (!ammount) return;
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Magic Stone: Throw Stone', false);
     if (!featureData) return;

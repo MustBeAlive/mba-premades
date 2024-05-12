@@ -1,3 +1,6 @@
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.templateId) return;
     let template = canvas.scene.collections.templates.get(workflow.templateId);
@@ -16,7 +19,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     });
-    let attachToken = await chrisPremades.helpers.dialog('Attach to self?', [['Yes', true], ['No', false]]) || false;
+    let attachToken = await mba.dialog('Darkness', [['Yes', true], ['No', false]], `<b>Attach template to yourself?</b>`) || false;
     if (attachToken) {
         let tokenObject = workflow.token;
         await template.update(
@@ -73,10 +76,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
 async function hook(workflow) {
     if (workflow.targets.size != 1) return;
-    let targetToken = workflow.targets.first().document;
-    if (!targetToken) return;
-    let sourceToken = workflow.token.document;
-    let sourceTemplates = game.modules.get('templatemacro').api.findContainers(sourceToken);
+    let targetDoc = workflow.targets.first().document;
+    if (!targetDoc) return;
+    let sourceDoc = workflow.token.document;
+    let sourceTemplates = game.modules.get('templatemacro').api.findContainers(sourceDoc);
     let sourceInDarkness = false;
     for (let i = 0; sourceTemplates.length > i; i++) {
         let testTemplate = canvas.scene.collections.templates.get(sourceTemplates[i]);
@@ -88,7 +91,7 @@ async function hook(workflow) {
         }
     }
     let targetInDarkness = false;
-    let targetTemplates = game.modules.get('templatemacro').api.findContainers(targetToken);
+    let targetTemplates = game.modules.get('templatemacro').api.findContainers(targetDoc);
     for (let i = 0; targetTemplates.length > i; i++) {
         let testTemplate = canvas.scene.collections.templates.get(targetTemplates[i]);
         if (!testTemplate) continue;
@@ -99,19 +102,19 @@ async function hook(workflow) {
         }
     }
     if (!sourceInDarkness && !targetInDarkness) return;
-    let distance = chrisPremades.helpers.getDistance(sourceToken, targetToken);
+    let distance = mba.getDistance(sourceDoc, targetDoc);
     let sourceCanSeeTarget = false;
     let targetCanSeeSource = false;
-    let sourceActor = sourceToken.actor;
-    let targetActor = targetToken.actor;
+    let sourceActor = sourceDoc.actor;
+    let targetActor = targetDoc.actor;
     let sourceDS = sourceActor.flags['mba-premades']?.feature?.devilsight;
     let targetDS = targetActor.flags['mba-premades']?.feature?.devilsight;
-    let sourceSenses = sourceToken.actor.system.attributes.senses;
-    let targetSenses = targetToken.actor.system.attributes.senses;
+    let sourceSenses = sourceDoc.actor.system.attributes.senses;
+    let targetSenses = targetDoc.actor.system.attributes.senses;
     if ((sourceDS && distance <= 120) || (sourceSenses.tremorsense >= distance) || (sourceSenses.blindsight >= distance) || (sourceSenses.truesight >= distance)) sourceCanSeeTarget = true;
     if ((targetDS && distance <= 120) || (targetSenses.tremorsense >= distance) || (targetSenses.blindsight >= distance) || (targetSenses.truesight >= distance)) targetCanSeeSource = true;
     if (sourceCanSeeTarget && targetCanSeeSource) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'darkness', 50);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'darkness', 50);
     if (!queueSetup) return;
     if (sourceCanSeeTarget && !targetCanSeeSource) {
         workflow.advantage = true;
@@ -127,15 +130,10 @@ async function hook(workflow) {
         workflow.disadvantage = true;
         workflow.advReminderAttackAdvAttribution.add("DIS:Darkness (you and target are unable to see eachother)");
     }
-    chrisPremades.queue.remove(workflow.item.uuid);
-}
-
-async function del() {
-    await Sequencer.EffectManager.endEffects({ name: "Darkness" })
+    queue.remove(workflow.item.uuid);
 }
 
 export let darkness = {
     'item': item,
-    'hook': hook,
-    'del': del
+    'hook': hook
 };

@@ -1,4 +1,6 @@
-// Based on CPR Searing/Thunderous Smite
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         await (warpgate.wait(200));
@@ -11,7 +13,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         if (!targetUuid) return;
         let target = await fromUuid(targetUuid);
         await Sequencer.EffectManager.endEffects({ name: `${target.name} Branding Smite` })
-        await chrisPremades.helpers.removeEffect(targetEffect);
+        await mbaPremades.helpers.removeEffect(targetEffect);
     }
     let effectData = {
         'name': workflow.item.name,
@@ -39,7 +41,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             },
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'flags': {
@@ -97,9 +99,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .play();
 
-    let effect = await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+    let effect = await mba.createEffect(workflow.actor, effectData);
     let updates = { 'flags.mba-premades.spell.brandingSmite.targetEffectUuid': effect.uuid };
-    await chrisPremades.helpers.updateEffect(effect, updates);
+    await mba.updateEffect(effect, updates);
 }
 
 async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -107,11 +109,11 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     if (workflow.item.system.actionType != 'mwak' && workflow.item.system.actionType != 'rwak') return;
     let effect = workflow.actor.effects.find(i => i.flags['mba-premades']?.spell?.brandingSmite);
     if (!effect) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'brandingSmite', 250);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'brandingSmite', 250);
     if (!queueSetup) return;
     let oldFormula = workflow.damageRoll._formula;
     let bonusDamageFormula = effect.flags['mba-premades']?.spell?.brandingSmite?.level + 'd6[radiant]';
-    if (workflow.isCritical) bonusDamageFormula = chrisPremades.helpers.getCriticalFormula(bonusDamageFormula);
+    if (workflow.isCritical) bonusDamageFormula = mba.getCriticalFormula(bonusDamageFormula);
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRoll = await new Roll(damageFormula).roll({ async: true });
     await workflow.setDamageRoll(damageRoll);
@@ -119,7 +121,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         let originEffect = await fromUuid(effect.origin);
         if (!originEffect) return;
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Branding Smite` });
-        await chrisPremades.helpers.removeEffect(originEffect);
+        await mba.removeEffect(originEffect);
     }
     let effectData = {
         'name': 'Branding Smite: Brand',
@@ -146,7 +148,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -204,7 +206,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
 
         .play();
 
-    let targetEffect = await chrisPremades.helpers.createEffect(target.actor, effectData);
+    let targetEffect = await mba.createEffect(target.actor, effectData);
     let updates = {
         'flags': {
             'mba-premades': {
@@ -218,8 +220,8 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
             }
         }
     };
-    await chrisPremades.helpers.updateEffect(effect, updates);
-    chrisPremades.queue.remove(workflow.item.uuid);
+    await mba.updateEffect(effect, updates);
+    queue.remove(workflow.item.uuid);
 }
 
 export let brandingSmite = {

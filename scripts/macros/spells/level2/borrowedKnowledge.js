@@ -1,13 +1,11 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function borrowedKnowledge({ speaker, actor, token, character, item, args, scope, workflow }) {
     let options = Object.entries(CONFIG.DND5E.skills).filter(([key, value]) => workflow.actor.system.skills[key].value < 1).map(([i, j]) => ({ 'value': i, 'html': j.label }));
     let choices = [];
-    for (let i = 0; i < options.length; i++) {
-        choices.push([options[i].html, options[i].value]);
-    }
-    let selection = await chrisPremades.helpers.dialog('Choose one of the skills:', choices);
-    if (!selection) {
-        return;
-    }
+    for (let i = 0; i < options.length; i++) choices.push([options[i].html, options[i].value]);
+    let selection = await mba.dialog("Borrowed Knowledge", choices, "Choose one of the skills:");
+    if (!selection) return;
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Borrowed Knowledge` })
     }
@@ -30,7 +28,7 @@ export async function borrowedKnowledge({ speaker, actor, token, character, item
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -42,8 +40,8 @@ export async function borrowedKnowledge({ speaker, actor, token, character, item
             }
         }
     };
-    let effect = chrisPremades.helpers.findEffect(workflow.actor, workflow.item.name);
-    if (effect) await chrisPremades.helpers.removeEffect(effect);
+    let effect = mba.findEffect(workflow.actor, workflow.item.name);
+    if (effect) await mba.removeEffect(effect);
 
     let offset = [
         { x: 0, y: -0.55 },
@@ -59,7 +57,6 @@ export async function borrowedKnowledge({ speaker, actor, token, character, item
 
         .thenDo(function () {
             for (let i = 0; i < offset.length; i++) {
-
                 new Sequence()
 
                     .effect()
@@ -80,7 +77,6 @@ export async function borrowedKnowledge({ speaker, actor, token, character, item
                     .opacity(0.5)
 
                     .play()
-
             }
         })
 
@@ -106,8 +102,9 @@ export async function borrowedKnowledge({ speaker, actor, token, character, item
         .effect()
         .file("jb2a.template_circle.symbol.normal.runes.orange")
         .attachTo(token)
-        .scaleToObject(1.5)
+        .scaleToObject(1.8)
         .fadeIn(500)
+        .fadeOut(1000)
         .randomRotation()
         .mask(token)
         .persist()
@@ -119,7 +116,7 @@ export async function borrowedKnowledge({ speaker, actor, token, character, item
         .scaleToObject(1.55, { considerTokenScale: true })
         .randomRotation()
         .fadeIn(500)
-        .fadeOut(2500)
+        .fadeOut(1000)
         .belowTokens()
         .opacity(0.45)
         .loopProperty("alphaFilter", "alpha", { from: 0.75, to: 1, duration: 1500, pingPong: true, ease: "easeOutSine" })
@@ -128,19 +125,19 @@ export async function borrowedKnowledge({ speaker, actor, token, character, item
         .name(`${token.document.name} Borrowed Knowledge`)
 
         .effect()
-        .from(token)
         .attachTo(token, { bindAlpha: false })
+        .scaleToObject(1, { considerTokenScale: true })
         .belowTokens()
         .mirrorX(token.document.data.mirrorX)
-        .scaleToObject(1, { considerTokenScale: true })
         .loopProperty("alphaFilter", "alpha", { from: 0.75, to: 1, duration: 1500, pingPong: true, ease: "easeOutSine" })
         .filter("Glow", { color: 0xc77400, distance: 3, outerStrength: 4, innerStrength: 0 })
         .fadeIn(500)
+        .fadeOut(1000)
         .zIndex(0.1)
         .persist()
         .name(`${token.document.name} Borrowed Knowledge`)
 
         .play()
 
-    await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+    await mba.createEffect(workflow.actor, effectData);
 }

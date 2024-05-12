@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function mistyStep({ speaker, actor, token, character, item, args, scope, workflow }) {
     let randomColor = false;
     let colors = [
@@ -18,15 +20,18 @@ export async function mistyStep({ speaker, actor, token, character, item, args, 
     let animation1 = "jb2a.misty_step.01." + colors[(animRoll1.total - 1)][1];
     let animation2 = "jb2a.misty_step.02." + colors[(animRoll2.total - 1)][1];
     if (randomColor === false) {
-        let selection = await chrisPremades.helpers.dialog("Select color:", colors);
-        if (!selection) return;
+        let selection = await mba.dialog("Misty Step", colors, `<b>Choose Color:</b>`);
         animation1 = "jb2a.misty_step.01." + selection;
         animation2 = "jb2a.misty_step.02." + selection;
+        if (!selection) {
+            animation1 = "jb2a.misty_step.01.blue";
+            animation2 = "jb2a.misty_step.02.blue";
+        }
     }
     let maxRange = 30;
     let icon = workflow.token.document.texture.src;
     let interval = workflow.token.document.width % 2 === 0 ? 1 : -1;
-    let position = await chrisPremades.helpers.aimCrosshair(workflow.token, maxRange, icon, interval, workflow.token.document.width);
+    let position = await mba.aimCrosshair(workflow.token, maxRange, icon, interval, workflow.token.document.width);
     if (position.cancelled) return;
 
     new Sequence()

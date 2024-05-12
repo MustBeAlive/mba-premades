@@ -159,7 +159,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     if (!effect) return;
     if (workflow.item.system.actionType != 'mwak' && workflow.item.system.actionType != 'rwak') return;
     let choices = [['Yes, go ahead', 'yes'], ['No!', 'no']];
-    let selection = await mba.dialog('Use Zephyr Strike to gain advantage?', choices);
+    let selection = await mba.dialog("Zephyr Strike", choices, `<b>Use Zephyr Strike to gain advantage on the attack roll?</b>`);
     if (!selection || selection === 'no') return;
     const effectData = {
         'name': 'Zephyr Strike: Advantage',

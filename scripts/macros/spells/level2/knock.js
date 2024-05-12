@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function knock({ speaker, actor, token, character, item, args, scope, workflow }) {
     const aoeDistance = 3;
     let config = {
@@ -38,7 +40,7 @@ export async function knock({ speaker, actor, token, character, item, args, scop
 
     let updates = { 'ds': 0 };
     let options = [["Yes, door can be opened", "yes"], ["No, deny request", "no"]];
-    let selection = await chrisPremades.helpers.remoteDialog("Knock", options, game.users.activeGM.id, `<b>${workflow.token.document.name}</b> attempts cast knock on the door:`);
+    let selection = await mba.remoteDialog("Knock", options, game.users.activeGM.id, `<b>${workflow.token.document.name}</b> attempts cast knock on the door:`);
 
     new Sequence()
 
@@ -101,7 +103,7 @@ export async function knock({ speaker, actor, token, character, item, args, scop
 
         .thenDo(function () {
             if (selection === "yes") {
-                mbaPremades.helpers.updateDoc(lockedDoor, updates);
+                mba.updateDoc(lockedDoor, updates);
             }
         })
 

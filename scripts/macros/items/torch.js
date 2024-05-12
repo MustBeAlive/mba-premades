@@ -4,13 +4,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let effect = await mba.findEffect(workflow.actor, "Torch");
     if (!effect) {
         let choices = [["Yes, light the torch", "light"], ["No, cancel", "cancel"]];
-        let selection = await mba.dialog("Would you like to light a torch?", choices);
+        let selection = await mba.dialog("Torch", choices, `Would you like to light a <b>Torch</b>?`);
         if (!selection || selection === "cancel") return;
         await mbaPremades.macros.torch.light({speaker, actor, token, character, item, args, scope, workflow})
         return;
     }
     let choices = [["Light new Torch", "light"], ["Extinguish Torch", "extinguish"]];
-    let selection = await mba.dialog("What would you like to do?", choices);
+    let selection = await mba.dialog("Torch", choices, `<b>What would you like to do?</b>`);
     if (!selection) return;
     switch (selection) {
         case "light": {

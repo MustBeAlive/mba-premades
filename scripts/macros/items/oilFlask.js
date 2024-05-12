@@ -9,7 +9,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Pour oil on the ground (5 ft. square)", "pour"],
         ["Cancel", "cancel"]
     ];
-    let selection = await mba.dialog("What would you like to do?", choices);
+    let selection = await mba.dialog("Oil Flask", choices, `<b>What would you like to do?</b>`);
     if (!selection || selection === "cancel") return;
     if (selection === "splash") {
         let target = workflow.targets.first();

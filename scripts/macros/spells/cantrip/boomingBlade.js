@@ -102,17 +102,12 @@ async function moved(token, changes) {
     let effect = mba.getEffects(token.actor).find(i => i.flags['mba-premades']?.spell?.boomingBlade);
     if (!effect) return;
     await token.object?._animation;
-    let selection = await mba.dialog(effect.name, constants.yesNo, 'Did ' + token.actor.name + ' move willingly?');
+    let selection = await mba.dialog(effect.name, constants.yesNo, `Did <b>${token.actor.name}</b> move willingly?`);
     if (!selection) return;
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Booming Blade: Movement Damage', false);
     if (!featureData) return;
     delete featureData._id;
-    featureData.system.damage.parts = [
-        [
-            effect.flags['mba-premades'].spell.boomingBlade.diceNumber + 'd8[thunder]',
-            'thunder'
-        ]
-    ];
+    featureData.system.damage.parts = [[effect.flags['mba-premades'].spell.boomingBlade.diceNumber + 'd8[thunder]','thunder']];
     if (!effect.origin) return;
     let originItem = await fromUuid(effect.origin);
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': originItem.actor });

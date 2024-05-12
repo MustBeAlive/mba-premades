@@ -1,19 +1,40 @@
-async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let ammount = workflow.castData.castLevel - 1;
-    if (workflow.targets.size <= ammount) return;
-    let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
-    if (!selection.buttons) return;
-    let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
-    chrisPremades.helpers.updateTargets(newTargets);
-}
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
 
-async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-    if (!workflow.failedSaves.size) return;
-    let targets = Array.from(workflow.failedSaves);
-    for (let i = 0; i < targets.length; i++) {
-        let target = fromUuidSync(targets[i].document.uuid).object;
+export async function blindnessDeafness({ speaker, actor, token, character, item, args, scope, workflow }) {
+    let ammount = workflow.castData.castLevel - 1;
+    let targets = Array.from(workflow.targets);
+    if (workflow.targets.size > ammount) {
+        let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+        if (!selection.buttons) return;
+        if (selection.inputs.length > ammount) {
+            ui.notifications.warn("Too many targets selected, try again!");
+            return
+        }
+        let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
+        mba.updateTargets(newTargets);
+        await warpgate.wait(100);
+        targets = Array.from(game.user.targets);
+    }
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Blindness/Deafness: Save", false);
+    if (!featureData) {
+        ui.notifications.warn("Unable to find item in compendium! (Blindness/Deafness: Save)");
+        return
+    }
+    delete featureData._id;
+    featureData.system.save.dc = mba.getSpellDC(workflow.item);
+    setProperty(featureData, 'mba-premades.spell.castData.school', workflow.item.system.school);
+    let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
+    let targetUuids = [];
+    for (let i of targets) targetUuids.push(i.document.uuid);
+    let [config, options] = constants.syntheticItemWorkflowOptions(targetUuids);
+    await game.messages.get(workflow.itemCardId).delete();
+    let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
+    if (!featureWorkflow.failedSaves.size) return;
+    let failedTargets = Array.from(featureWorkflow.failedSaves);
+    for (let target of failedTargets) {
         let choices = [['Blindness', 'blind'], ['Deafness', 'deaf']];
-        let selection = await chrisPremades.helpers.dialog('Choose condition for ' + target.document.name, choices);
+        let selection = await mba.dialog(`Blindness/Deafness`, choices, `Choose condition for <b>${target.document.name}</b>:`);
         if (!selection) return;
         let name;
         let description;
@@ -32,6 +53,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 break;
             }
         }
+        async function effectMacroDel() {
+            await Sequencer.EffectManager.endEffects({ name: `${token.document.name} BD`, object: token })
+        };
         let effectData = {
             'name': name,
             'icon': workflow.item.img,
@@ -44,7 +68,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 {
                     'key': 'flags.midi-qol.OverTime',
                     'mode': 0,
-                    'value': 'turn=end, saveAbility=con, saveDC=' + chrisPremades.helpers.getSpellDC(workflow.item) + ' , saveMagic=true, name=Blindness',
+                    'value': `turn=end, saveAbility=con, saveDC=${mba.getSpellDC(workflow.item)}, saveMagic=true, name=Blindness/Deafness: Turn End, killAnim= true`,
                     'priority': 20
                 },
                 {
@@ -55,6 +79,11 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 }
             ],
             'flags': {
+                'effectmacro': {
+                    'onDelete': {
+                        'script': mba.functionToString(effectMacroDel)
+                    }
+                },
                 'midi-qol': {
                     'castData': {
                         baseLevel: 2,
@@ -64,11 +93,33 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 }
             }
         };
-        await chrisPremades.helpers.createEffect(target.actor, effectData);
-    }
-}
 
-export let blindnessDeafness = {
-    'cast': cast,
-    'item': item,
+        new Sequence()
+
+            .effect()
+            .file("jb2a.energy_beam.normal.dark_purplered.02")
+            .attachTo(token)
+            .stretchTo(target)
+            .duration(2000)
+            .fadeOut(1000)
+            .scaleIn(0, 2000, { ease: "easeOutExpo" })
+            .playbackRate(0.8)
+            .waitUntilFinished(-1500)
+
+            .effect()
+            .file("jb2a.energy_strands.complete.dark_purple02.01")
+            .attachTo(target)
+            .scaleToObject(1.7 * target.document.texture.scaleX)
+            .fadeIn(500)
+            .fadeOut(1000)
+            .opacity(0.8)
+            .persist()
+            .name(`${target.document.name} BD`)
+
+            .thenDo(function () {
+                mba.createEffect(target.actor, effectData);
+            })
+
+            .play()
+    }
 }

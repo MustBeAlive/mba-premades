@@ -1,5 +1,5 @@
-import { mba } from '../../../helperFunctions.js';
-import { constants } from '../../generic/constants.js';
+import {mba} from '../../../helperFunctions.js';
+import {constants} from '../../generic/constants.js';
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);

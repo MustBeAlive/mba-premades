@@ -25,7 +25,7 @@ export async function potionOfHealing({ speaker, actor, token, character, item, 
         return;
     };
     let choices = [["Action (max healing)", "action"], ["Bonus (roll healing)", "bonus"], ["Cancel", "cancel"]];
-    let selection = await mba.dialog("Choose action type:", choices);
+    let selection = await mba.dialog("Potion of Healing", choices, `<b>Choose action type:</b>`);
     if (!selection || selection === "cancel") return;
     let healAmmount;
     if (selection === "action") {

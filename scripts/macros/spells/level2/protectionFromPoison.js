@@ -1,9 +1,10 @@
+import {mba} from "../../../helperFunctions.js";
+
+//Add poison neutralisation part (look at lesser/greater restoration implementation)
+
 export async function protectionFromPoison({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    let poisoned = chrisPremades.helpers.findEffect(target.actor, 'Poisoned');
-    if (poisoned) {
-        await chrisPremades.helpers.removeCondition(target.actor, 'Poisoned');
-    }
+    //if (mba.findEffect(target.actor, 'Poisoned')) await mba.removeCondition(target.actor, 'Poisoned');
     /*
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} Protection from Poison` });
@@ -31,7 +32,7 @@ export async function protectionFromPoison({ speaker, actor, token, character, i
                 'priority': 20
             },
             {
-                'key': 'flags.chris-premades.CR.poisoned',
+                'key': 'flags.mba-premades.CR.poisoned',
                 'mode': 2,
                 'value': 1,
                 'priority': 20
@@ -80,10 +81,8 @@ export async function protectionFromPoison({ speaker, actor, token, character, i
         .name(`${target.document.name} Protection from Poison`)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(target.actor, effectData);
+            mba.createEffect(target.actor, effectData);
         })
 
         .play()
-
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
 }

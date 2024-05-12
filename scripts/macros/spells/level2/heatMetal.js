@@ -1,3 +1,6 @@
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
 async function animation({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let offset = [
@@ -120,9 +123,9 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     let target = workflow.targets.first();
     let damageDice = workflow.castData.castLevel + 'd8[fire]';
     let targetUuid = target.document.uuid;
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Heat Metal: Pulse', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Heat Metal: Pulse', false);
     if (!featureData) return;
-    let spellDC = chrisPremades.helpers.getSpellDC(workflow.item);
+    let spellDC = mba.getSpellDC(workflow.item);
     featureData.flags['mba-premades'] = {
         'spell': {
             'heatMetal': {
@@ -150,7 +153,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'mba-premades': {
@@ -209,7 +212,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     }
-    await chrisPremades.helpers.createEffect(target.actor, effectDataTarget);
+    await mba.createEffect(target.actor, effectDataTarget);
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -220,11 +223,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     if (!damageDice || !targetUuid || !spellDC || !originUuid) return;
     let target = await fromUuid(targetUuid);
     if (!target) return;
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Heat Metal: Damage', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Heat Metal: Damage', false);
     if (!featureData) return;
+    delete featureData._id;
     featureData.system.damage.parts = [[damageDice, 'fire']];
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([targetUuid]);
+    let [config, options] = constants.syntheticItemWorkflowOptions([targetUuid]);
     await MidiQOL.completeItemUse(feature, config, options);
 
     new Sequence()
@@ -274,22 +278,23 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     }
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
+    await mba.createEffect(target.actor, effectData);
 }
 
 async function dialogue(token, actor, effect, origin) {
-    let selection = await chrisPremades.helpers.dialog('Do you wish to drop heated object?', [['Yes (no save)', 'yes'], ['No/Unable (save)', 'no']]);
+    let selection = await mba.dialog("Heat Metal", [['Yes (no save)', 'yes'], ['No/Unable (save)', 'no']], `<b>Do you want to drop the heated object?</b>`);
     if (selection === "yes") {
         await effect.delete();
         return;
     }
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Heat Metal: Disadvantage', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Heat Metal: Disadvantage', false);
     if (!featureData) return;
+    delete featureData._id;
     let spellDC = effect.flags['mba-premades']?.spell?.heatMetal?.spellDC;
     if (!spellDC) return;
     featureData.system.save.dc = spellDC;
     let spell = new CONFIG.Item.documentClass(featureData, { 'parent': origin.actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([token.document.uuid]);
+    let [config, options] = constants.syntheticItemWorkflowOptions([token.document.uuid]);
     let heatMetalWorkflow = await MidiQOL.completeItemUse(spell, config, options);
     if (!heatMetalWorkflow.failedSaves.size) {
         await effect.delete();
@@ -326,7 +331,7 @@ async function dialogue(token, actor, effect, origin) {
             }
         }
     }
-    await chrisPremades.helpers.createEffect(actor, effectData);
+    await mba.createEffect(actor, effectData);
     await effect.delete();
 
     new Sequence()
@@ -358,9 +363,9 @@ async function del(effect) {
     if (!targetUuid) return;
     let target = await fromUuid(targetUuid);
     if (!target) return;
-    let targetEffect = chrisPremades.helpers.findEffect(target.actor, 'Heat Metal: Disadvantage');
+    let targetEffect = mba.findEffect(target.actor, 'Heat Metal: Disadvantage');
     if (!targetEffect) return;
-    await chrisPremades.helpers.removeEffect(targetEffect);
+    await mba.removeEffect(targetEffect);
 }
 
 export let heatMetal = {

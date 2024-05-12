@@ -1,54 +1,53 @@
-// Based on multiple CPR macro; Checks for right ammount of targets and checks right distance between them
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel - 1;
-    let concEffect = await chrisPremades.helpers.findEffect(workflow.actor, 'Concentrating');
+    let concEffect = await mba.findEffect(workflow.actor, 'Concentrating');
     if (workflow.targets.size > ammount) {
-        let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+        let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
         if (!selection.buttons) {
             ui.notifications.warn('Failed to select right ammount of targets, try again!')
-            await chrisPremades.helpers.removeEffect(concEffect);
+            await mba.removeEffect(concEffect);
             return;
         }
         let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
-        await chrisPremades.helpers.updateTargets(newTargets);
-    }
-    let targets = Array.from(game.user.targets);
-    const distanceArray = [];
-    for (let i = 0; i < targets.length; i++) {
-        for (let k = i + 1; k < targets.length; k++) {
-            let target1 = fromUuidSync(targets[i].document.uuid).object;
-            let target2 = fromUuidSync(targets[k].document.uuid).object;
-            distanceArray.push(chrisPremades.helpers.getDistance(target1, target2));
+        mba.updateTargets(newTargets);
+        if (Array.from(game.user.targets).length > ammount) {
+            ui.notifications.warn("Too many targets selected, try again!");
+            await mba.removeEffect(concEffect);
+            return;
         }
     }
-    const found = distanceArray.some((distance) => distance > 30);
-    if (found === true) {
+    let targets = Array.from(game.user.targets);
+    if (mba.within30(targets) === false) {
         ui.notifications.warn('Targets cannot be further than 30 ft. of each other!')
-        await chrisPremades.helpers.removeEffect(concEffect);
+        await mba.removeEffect(concEffect);
         return;
     }
     await warpgate.wait(100);
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Hold Person: Hold', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Hold Person: Hold', false);
     if (!featureData) {
-        ui.notifications.warn('Can\'t find item in compenidum! (Hold Person: Hold)');
+        ui.notifications.warn("Unable to find item in the compenidum! (Hold Person: Hold)");
         return
     }
+    delete featureData._id;
+    featureData.system.save.dc = mba.getSpellDC(originItem);
     let originItem = workflow.item;
     if (!originItem) return;
-    featureData.system.save.dc = chrisPremades.helpers.getSpellDC(originItem);
-    setProperty(featureData, 'chris-premades.spell.castData.school', originItem.system.school);
+    setProperty(featureData, 'mba-premades.spell.castData.school', originItem.system.school);
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
     let targetUuids = [];
     for (let i of targets) {
         targetUuids.push(i.document.uuid);
     }
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions(targetUuids);
+    let [config, options] = constants.syntheticItemWorkflowOptions(targetUuids);
     await warpgate.wait(100);
     await game.messages.get(workflow.itemCardId).delete();
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
 
     if (!featureWorkflow.failedSaves.size) {
-        await chrisPremades.helpers.removeEffect(concEffect);
+        await mba.removeEffect(concEffect);
         return;
     }
     let failTargets = Array.from(featureWorkflow.failedSaves);
@@ -67,7 +66,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 {
                     'key': 'flags.midi-qol.OverTime',
                     'mode': 0,
-                    'value': 'turn=end, saveAbility=wis, saveDC=' + chrisPremades.helpers.getSpellDC(workflow.item) + ' , saveMagic=true, name=Hold Person: Hold',
+                    'value': 'turn=end, saveAbility=wis, saveDC=' + mba.getSpellDC(workflow.item) + ' , saveMagic=true, name=Hold Person: Hold, killAnim=true',
                     'priority': 20
                 },
                 {
@@ -80,7 +79,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             'flags': {
                 'effectmacro': {
                     'onDelete': {
-                        'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                        'script': mba.functionToString(effectMacroDel)
                     }
                 },
                 'midi-qol': {
@@ -175,7 +174,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             .waitUntilFinished(-1600)
 
             .thenDo(function () {
-                chrisPremades.helpers.createEffect(target.actor, effectData);
+                mba.createEffect(target.actor, effectData);
             })
 
             .effect()
@@ -197,38 +196,9 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let targets = Array.from(workflow.targets);
     for (let target of targets) {
-        let type = chrisPremades.helpers.raceOrType(target.actor);
-        let immuneData = {
-            'name': 'Save Immunity',
-            'icon': 'modules/mba-premades/icons/generic/generic_buff.webp',
-            'description': "You succeed on the next save you make",
-            'duration': {
-                'turns': 1
-            },
-            'changes': [
-                {
-                    'key': 'flags.midi-qol.min.ability.save.all',
-                    'value': '100',
-                    'mode': 2,
-                    'priority': 120
-                }
-            ],
-            'flags': {
-                'dae': {
-                    'specialDuration': [
-                        'isSave'
-                    ]
-                },
-                'chris-premades': {
-                    'effect': {
-                        'noAnimation': true
-                    }
-                }
-            }
-        };
-        if (type != 'humanoid') {
+        if (mba.raceOrType(target.actor) != 'humanoid') {
             ChatMessage.create({ flavor: target.name + ' is unaffected by Hold Person! (Target is not humanoid)', speaker: ChatMessage.getSpeaker({ actor: workflow.actor }) });
-            await chrisPremades.helpers.createEffect(target.actor, immuneData);
+            await mba.createEffect(target.actor, constants.immunityEffectData);
             return;
         }
     }

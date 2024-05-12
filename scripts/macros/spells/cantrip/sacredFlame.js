@@ -21,7 +21,7 @@ export async function sacredFlame({ speaker, actor, token, character, item, args
         color = choices[animRoll.total - 1][1];
     }
     if (animation === "selection") {
-        color = await mba.dialog("Choose color:", choices);
+        color = await mba.dialog("Sacred Flame", choices, `<b>Choose color:</b>`);
         if (!color) color = "white";
     }
     if (animation === "default") color = "white";

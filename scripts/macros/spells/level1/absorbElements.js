@@ -2,7 +2,7 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function absorbElements({ speaker, actor, token, character, item, args, scope, workflow }) {
     let choices = [['Acid 🧪', 'acid'], ['Cold ❄️', 'cold'], ['Fire 🔥', 'fire'], ['Lightning ⚡', 'lightning'], ['Thunder ☁️', 'thunder'], ["None of the above", "none"]];
-    let type = await mba.dialog("Choose damage element (ask GM)", choices);
+    let type = await mba.dialog("Absorb Elements", choices, `<b>Choose damage element (ask GM)</b>`);
     if (!type || type === "none") return;
     let level = workflow.castData.castLevel;
     let icon;

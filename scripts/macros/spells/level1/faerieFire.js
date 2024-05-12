@@ -3,7 +3,7 @@ import {mba} from "../../../helperFunctions.js";
 export async function faerieFire({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.templateUuid) return;
     let choices = [["Blue", "blue"], ["Green", "green"], ["Purple", "purple"]];
-    let color = await mba.dialog("Choose color:", choices);
+    let color = await mba.dialog("Faerie Fire", choices, `<b>Choose color:</b>`);
     if (!color) color = "purple";
     let tintColor;
     let hue;

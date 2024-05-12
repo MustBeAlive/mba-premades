@@ -11,7 +11,7 @@ export async function command({ speaker, actor, token, character, item, args, sc
         ['Halt', 'Halt'],
         ['Other', 'Other']
     ];
-    let selection = await mba.dialog('Choose command:', choices);
+    let selection = await mba.dialog("Command", choices, `<b>Choose command word:</b>`);
     if (!selection) return;
     let name;
     let icon;

@@ -1,7 +1,9 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function lesserRestoration({ speaker, actor, token, character, item, args, scope, workflow }) {
     const target = workflow.targets.first();
     let choices1 = [['Condition', 'condition'], ['Disease', 'disease']];
-    let selection1 = await chrisPremades.helpers.dialog('Choose effect type:', choices1);
+    let selection1 = await mba.dialog('Lesser Restoration: Type', choices1, `<b>Choose type of effect to remove:</b>`);
     if (!selection1) return;
     if (selection1 === 'condition') {
         let choices2 = [
@@ -12,34 +14,34 @@ export async function lesserRestoration({ speaker, actor, token, character, item
             ['Level of Exhaustion', 'exhaustion']
         ];
         let effect;
-        let selection2 = await chrisPremades.helpers.dialog('Which condition do you wish to remove?', choices2);
+        let selection2 = await mba.dialog("Lesser Restoration: Condition", choices2, `<b>Which condition would you like to remove?</b>`);
         if (!selection2) return;
         switch (selection2) {
             case 'blindness': {
-                effect = await chrisPremades.helpers.findEffect(target.actor, "Blinded");
+                effect = await mba.findEffect(target.actor, "Blinded");
                 if (!effect) {
                     ui.notifications.warn("Target is not blinded!");
                     return;
                 }
-                await chrisPremades.helpers.removeEffect(effect);
+                await mba.removeEffect(effect);
                 break;
             }
             case 'deafness': {
-                effect = await chrisPremades.helpers.findEffect(target.actor, "Deafened");
+                effect = await mba.findEffect(target.actor, "Deafened");
                 if (!effect) {
                     ui.notifications.warn("Target is not deafened!");
                     return;
                 }
-                await chrisPremades.helpers.removeEffect(effect);
+                await mba.removeEffect(effect);
                 break;
             }
             case 'paralyzed': {
-                effect = await chrisPremades.helpers.findEffect(target.actor, "Paralyzed");
+                effect = await mba.findEffect(target.actor, "Paralyzed");
                 if (!effect) {
                     ui.notifications.warn("Target is not paralyzed!");
                     return;
                 }
-                await chrisPremades.helpers.removeEffect(effect);
+                await mba.removeEffect(effect);
                 break;
             }
             case 'poisoned': {
@@ -49,21 +51,21 @@ export async function lesserRestoration({ speaker, actor, token, character, item
                     return;
                 }
                 if (effectsFirst.length < 2) {
-                    let poison = await chrisPremades.helpers.findEffect(target.actor, effectsFirst[0].name);
+                    let poison = await mba.findEffect(target.actor, effectsFirst[0].name);
                     if (!poison) {
                         ui.notifications.warn(`Unable to find Poison: ${effectsFirst[0].name}`);
                         return;
                     }
-                    await chrisPremades.helpers.removeEffect(poison);
+                    await mba.removeEffect(poison);
                 } else {
                     let effects = effectsFirst.filter(i => i.name != "Poisoned");
                     if (effects.length < 2) {
-                        let poison = await chrisPremades.helpers.findEffect(target.actor, effects[0].name);
+                        let poison = await mba.findEffect(target.actor, effects[0].name);
                         if (!poison) {
                             ui.notifications.warn(`Unable to find Poison: ${effects[0].name}`);
                             return;
                         }
-                        await chrisPremades.helpers.removeEffect(poison);
+                        await mba.removeEffect(poison);
                     } else {
                         let selection = [];
                         for (let i = 0; i < effects.length; i++) {
@@ -145,12 +147,12 @@ export async function lesserRestoration({ speaker, actor, token, character, item
                             }).render(true);
                         });
                         let effectToRemoveName = effectToRemove.split(",")[0];
-                        let removeEffect = await chrisPremades.helpers.findEffect(target.actor, effectToRemoveName);
+                        let removeEffect = await mba.findEffect(target.actor, effectToRemoveName);
                         if (!removeEffect) {
                             ui.notifications.warn("Something went wrong, unable to find the effect!");
                             return;
                         }
-                        await chrisPremades.helpers.removeEffect(removeEffect);
+                        await mba.removeEffect(removeEffect);
                     }
                 }
                 break;
@@ -163,16 +165,16 @@ export async function lesserRestoration({ speaker, actor, token, character, item
                 }
                 let level = +exhaustion[0].name.slice(-1);
                 if (level === 1) {
-                    await chrisPremades.helpers.removeCondition(target.actor, "Exhaustion 1");
+                    await mba.removeCondition(target.actor, "Exhaustion 1");
                     break;
                 }
                 level -= 1;
-                await chrisPremades.helpers.addCondition(target.actor, `Exhaustion ${level}`);
+                await mba.addCondition(target.actor, `Exhaustion ${level}`);
                 break
             }
         }
     }
-    if (selection1 === "disease") {
+    else if (selection1 === "disease") {
         let curable = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true).filter(e => e.flags['mba-premades']?.lesserRestoration === true);
         if (!curable.length) {
             let uncurable = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true).filter(e => !e.flags['mba-premades']?.lesserRestoration === true);
@@ -269,8 +271,8 @@ export async function lesserRestoration({ speaker, actor, token, character, item
             let effect = curable[i];
             if (effect.flags['mba-premades']?.name === diseaseFlagName) diseaseToRemoveName = effect.name;
         }
-        let diseaseToRemove = await chrisPremades.helpers.findEffect(target.actor, diseaseToRemoveName);
-        await chrisPremades.helpers.removeEffect(diseaseToRemove);
+        let diseaseToRemove = await mba.findEffect(target.actor, diseaseToRemoveName);
+        await mba.removeEffect(diseaseToRemove);
     }
 
     new Sequence()
@@ -345,4 +347,4 @@ export async function lesserRestoration({ speaker, actor, token, character, item
         .attachTo(target)
 
         .play()
-}
+}   

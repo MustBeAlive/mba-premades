@@ -1,7 +1,7 @@
 //think of a way to implement ammo coating
 export async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let types = [["Weapon (Slashing or Piercing)", "weapon"], ["Ammo (3 pieces)", "ammo"], ["Cancel", "cancel"]];
-    let typeSelection = await chrisPremades.helpers.dialog("What would you like to coat with poison?", types);
+    let typeSelection = await chrisPremades.helpers.dialog("Basic Poison", types, `<b>What would you like to coat with poison?</b>`);
     if (!typeSelection || typeSelection === "cancel") return;
     if (typeSelection === "weapon") {
         let weapons = workflow.actor.items.filter(i => i.type === 'weapon' && i.system.equipped && i.system.actionType === 'mwak' && i.system.damage.parts[0][1] != 'bludgeoning');

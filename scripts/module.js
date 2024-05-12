@@ -7,6 +7,7 @@ import {constants} from './macros/generic/constants.js';
 import {corpseHide} from './macros/mechanics/corpseHide.js';
 import {createRollModeButtons} from './macros/ui/rollmodeButtons.js';
 import {deathSaves} from './macros/mechanics/deathSaves.js';
+import {itemDC, noEffectAnimationCreate, noEffectAnimationDelete} from './macros/mechanics/activeEffect.js';
 import {macros, onHitMacro} from './macros.js';
 import {mba as helpers} from './helperFunctions.js';
 import {queue} from './macros/mechanics/queue.js';
@@ -52,8 +53,6 @@ Hooks.once('ready', async function() {
     if (game.user.isGM) {
         if (game.settings.get('mba-premades', 'Tasha Actors')) await tashaSummon.setupFolder();
         game.settings.set('mba-premades', 'LastGM', game.user.id);
-        if (game.settings.get('mba-premades', 'Blindness Fix')) removeV10EffectsBlind();
-        if (game.settings.get('mba-premades', 'Invisibility Fix')) removeV10EffectsInvisible();
         Hooks.on('createToken', addActions);
         if (game.settings.get('mba-premades', 'Cast Animations')) Hooks.on('midi-qol.postPreambleComplete', cast);
         if (game.settings.get('mba-premades', 'Auto Death Save')) Hooks.on('updateCombat', deathSaves);
@@ -88,8 +87,15 @@ Hooks.once('ready', async function() {
     if (game.settings.get('mba-premades', 'Sanctuary')) Hooks.on('midi-qol.preItemRoll', macros.sanctuary.hook);
     if (game.settings.get('mba-premades', 'True Strike')) Hooks.on('midi-qol.preAttackRoll', macros.trueStrike.hook);
     if (game.settings.get('mba-premades', 'Strength of the Grave')) Hooks.on('midi-qol.preTargetDamageApplication', macros.strengthOfTheGrave);
+    if (game.settings.get('mba-premades', 'Active Effect Additions')) {
+        Hooks.on('preCreateActiveEffect', itemDC);  
+        Hooks.on('preCreateActiveEffect', noEffectAnimationCreate);
+        Hooks.on('preDeleteActiveEffect', noEffectAnimationDelete);
+    }
     if (game.settings.get('mba-premades', 'Summons Initiative')) Hooks.on('dnd5e.rollInitiative', tashaSummon.updateSummonInitiative);
     if (game.settings.get('mba-premades', 'Companions Initiative')) Hooks.on('dnd5e.rollInitiative', tashaSummon.updateCompanionInitiative);
+    if (game.settings.get('mba-premades', 'Blindness Fix')) removeV10EffectsBlind();
+    if (game.settings.get('mba-premades', 'Invisibility Fix')) removeV10EffectsInvisible();
     if (game.modules.get('dae')?.active) addDAEFlags();
     Hooks.on("dnd5e.preRollHitDie", macros.diseases.diseaseHitDie);
     //Hooks.on("dnd5e.preLongRest", macros.diseases.diseaseLongRest1);

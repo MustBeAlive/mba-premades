@@ -62,6 +62,7 @@ import {cureWounds} from './macros/spells/level1/cureWounds.js';
 import {dancingLights} from './macros/spells/cantrip/dancingLights.js';
 import {dancingMonkeyFruit} from './macros/items/dancingMonkeyFruit.js';
 import {darkness} from './macros/spells/level2/darkness.js';
+import {darkvision} from './macros/spells/level2/darkvision.js';
 import {deathWard} from './macros/spells/level3/deathWard.js';
 import {decanterOfEndlessWater} from './macros/items/decanterOfEndlessWater.js';
 import {destructiveWrath} from './macros/classFeatures/cleric/tempestDomain/destructiveWrath.js';
@@ -80,6 +81,7 @@ import {dragonsBreath} from './macros/spells/level2/dragonsBreath.js';
 import {drawCard} from './macros/generic/drawCard.js';
 import {dream} from './macros/spells/level5/dream.js';
 import {druidcraft} from './macros/spells/cantrip/druidcraft.js';
+import {dustDevil} from './macros/spells/level2/dustDevil.js';
 import {earthbind} from './macros/spells/level2/earthbind.js';
 import {earthTremor} from './macros/spells/level1/earthTremor.js';
 import {eldritchBlast} from './macros/spells/cantrip/eldritchBlast.js';
@@ -94,6 +96,7 @@ import {eyebite} from './macros/spells/level6/eyebite.js';
 import {fadeAway} from './macros/feats/fadeAway.js';
 import {faerieFire} from './macros/spells/level1/faerieFire.js';
 import {falseLife} from './macros/spells/level1/falseLife.js';
+import {favoredFoe} from './macros/classFeatures/ranger/favoredFoe.js';
 import {featherFall} from './macros/spells/level1/featherFall.js';
 import {fear} from './macros/spells/level3/fear.js';
 import {findFamiliar} from './macros/spells/level1/findFamiliar.js';
@@ -101,9 +104,11 @@ import {fingerOfDeath} from './macros/spells/level7/fingerOfDeath.js';
 import {fireball} from './macros/spells/level3/fireball.js';
 import {fireBolt} from './macros/spells/cantrip/firebolt.js';
 import {fizbanPlatinumShield} from './macros/spells/level6/fizbanPlatinumShield.js';
+import {flameBlade} from './macros/spells/level2/flameBlade.js';
 import {flameStrike} from './macros/spells/level5/flameStrike.js';
 import {flamingSphere} from './macros/spells/level2/flamingSphere.js';
 import {fleshToStone} from './macros/spells/level6/fleshToStone.js';
+import {flexibleCasting} from './macros/classFeatures/sorcerer/flexibleCasting.js';
 import {fogCloud} from './macros/spells/level1/fogCloud.js';
 import {fly} from './macros/spells/level3/fly.js';
 import {friends} from './macros/spells/cantrip/friends.js';
@@ -120,6 +125,7 @@ import {guidance} from './macros/spells/cantrip/guidance.js';
 import {guidingBolt} from './macros/spells/level1/guidingBolt.js';
 import {gust} from './macros/spells/cantrip/gust.js';
 import {hailOfThorns} from './macros/spells/level1/hailOfThorns.js';
+import {haloOfSpores} from './macros/classFeatures/druid/circleOfSpores/haloOfSpores.js';
 import {harm} from './macros/spells/level6/harm.js';
 import {haste} from './macros/spells/level3/haste.js';
 import {heal} from './macros/spells/level6/heal.js';
@@ -165,11 +171,13 @@ import {melfAcidArrow} from './macros/spells/level2/melfAcidArrow.js';
 import {melfMinuteMeteors} from './macros/spells/level3/melfMinuteMeteors.js';
 import {mending} from './macros/spells/cantrip/mending.js';
 import {message} from './macros/spells/cantrip/message.js';
+import {metamagic} from './macros/classFeatures/sorcerer/metamagic.js';
 import {mindSliver} from './macros/spells/cantrip/mindSliver.js';
 import {minorIllusion} from './macros/spells/cantrip/minorIllusion.js';
 import {mirrorImage} from './macros/spells/level2/mirrorImage.js';
 import {mistyStep} from './macros/spells/level2/mistyStep.js';
 import {moldEarth} from './macros/spells/cantrip/moldEarth.js';
+import {moonbeam} from './macros/spells/level2/moonbeam.js';
 import {net} from './macros/items/weapons/net.js';
 import {nondetection} from './macros/spells/level3/nondetection.js';
 import {oilFlask} from './macros/items/oilFlask.js';
@@ -186,6 +194,7 @@ import {powerWordPain} from './macros/spells/level7/powerWordPain.js';
 import {powerWordStun} from './macros/spells/level8/powerWordStun.js';
 import {prayerOfHealing} from './macros/spells/level2/prayerOfHealing.js';
 import {prestidigitation} from './macros/spells/cantrip/prestidigitation.js';
+import {primalCompanion} from './macros/classFeatures/ranger/beastMaster/primalCompanion.js';
 import {primalSavagery} from './macros/spells/cantrip/primalSavagery.js';
 import {primordialWard} from './macros/spells/level6/primordialWard.js';
 import {prismaticSpray} from './macros/spells/level7/prismaticSpray.js';
@@ -241,10 +250,12 @@ import {strengthOfTheGrave} from './macros/classFeatures/sorcerer/shadow/strengt
 import {suggestion} from './macros/spells/level2/suggestion.js';
 import {sunbeam} from './macros/spells/level6/sunBeam.js';
 import {swordBurst} from './macros/spells/cantrip/swordBurst.js';
+import {symbioticEntity} from './macros/classFeatures/druid/circleOfSpores/symbioticEntity.js';
 import {tashaCausticBrew} from './macros/spells/level1/tashaCausticBrew.js';
 import {tashaHideousLaughter} from './macros/spells/level1/tashaHideousLaughter.js';
 import {tashaMindWhip} from './macros/spells/level2/tashaMindWhip.js';
 import {telekinesis} from './macros/spells/level5/telekinesis.js';
+import {telekinetic} from './macros/feats/telekinetic.js';
 import {tenserFloatingDisk} from './macros/spells/level1/tenserFloatingDisk.js';
 import {thaumaturgy} from './macros/spells/cantrip/thaumaturgy.js';
 import {thornWhip} from './macros/spells/cantrip/thornWhip.js';
@@ -353,6 +364,7 @@ export let macros = {
     'dancingLights': dancingLights,
     'dancingMonkeyFruit': dancingMonkeyFruit,
     'darkness': darkness,
+    'darkvision': darkvision,
     'deathWard': deathWard,
     'decanterOfEndlessWater': decanterOfEndlessWater,
     'destructiveWrath': destructiveWrath,
@@ -371,6 +383,7 @@ export let macros = {
     'drawCard': drawCard,
     'dream': dream,
     'druidcraft': druidcraft,
+    'dustDevil': dustDevil,
     'earthbind': earthbind,
     'earthTremor': earthTremor,
     'eldritchBlast': eldritchBlast,
@@ -385,6 +398,7 @@ export let macros = {
     'fadeAway': fadeAway,
     'faerieFire': faerieFire,
     'falseLife': falseLife,
+    'favoredFoe': favoredFoe,
     'featherFall': featherFall,
     'fear': fear,
     'findFamiliar': findFamiliar,
@@ -392,9 +406,11 @@ export let macros = {
     'fireball': fireball,
     'fireBolt': fireBolt,
     'fizbanPlatinumShield': fizbanPlatinumShield,
+    'flameBlade': flameBlade,
     'flameStrike': flameStrike,
     'flamingSphere': flamingSphere,
     'fleshToStone': fleshToStone,
+    'flexibleCasting': flexibleCasting,
     'fogCloud': fogCloud,
     'fly': fly,
     'friends': friends,
@@ -411,6 +427,7 @@ export let macros = {
     'guidingBolt': guidingBolt,
     'gust': gust,
     'hailOfThorns': hailOfThorns,
+    'haloOfSpores': haloOfSpores,
     'harm': harm,
     'haste': haste,
     'heal': heal,
@@ -456,11 +473,13 @@ export let macros = {
     'melfMinuteMeteors': melfMinuteMeteors,
     'mending': mending,
     'message': message,
+    'metamagic': metamagic,
     'mindSliver': mindSliver,
     'minorIllusion': minorIllusion,
     'mirrorImage': mirrorImage,
     'mistyStep': mistyStep,
     'moldEarth': moldEarth,
+    'moonbeam': moonbeam,
     'net': net,
     'nondetection': nondetection,
     'oilFlask': oilFlask,
@@ -477,6 +496,7 @@ export let macros = {
     'powerWordStun': powerWordStun,
     'prayerOfHealing': prayerOfHealing,
     'prestidigitation': prestidigitation,
+    'primalCompanion': primalCompanion,
     'primalSavagery': primalSavagery,
     'primordialWard': primordialWard,
     'prismaticSpray': prismaticSpray,
@@ -532,10 +552,12 @@ export let macros = {
     'suggestion': suggestion,
     'sunbeam': sunbeam,
     'swordBurst': swordBurst,
+    'symbioticEntity': symbioticEntity,
     'tashaCausticBrew': tashaCausticBrew,
     'tashaHideousLaughter': tashaHideousLaughter,
     'tashaMindWhip': tashaMindWhip,
     'telekinesis': telekinesis,
+    'telekinetic': telekinetic,
     'tenserFloatingDisk': tenserFloatingDisk,
     'thaumaturgy': thaumaturgy,
     'thornWhip': thornWhip,

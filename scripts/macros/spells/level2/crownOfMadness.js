@@ -1,17 +1,17 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function crownOfMadness({ speaker, actor, token, character, item, args, scope, workflow }) {
 	if (!workflow.failedSaves.size) return;
 	let target = workflow.targets.first();
-	let effect = await chrisPremades.helpers.findEffect(workflow.actor, 'Concentrating');
-	let type = chrisPremades.helpers.raceOrType(target.actor);
-	if (type != 'humanoid') {
+	let effect = await mba.findEffect(workflow.actor, 'Concentrating');
+	if (mba.raceOrType(target.actor) != 'humanoid') {
 		ui.notifications.info(target.document.name + ' is unaffected by Crown of Madness! (target is not humanoid)');
-		await chrisPremades.helpers.removeCondition(workflow.actor, 'Concentrating');
+		await mba.removeCondition(workflow.actor, 'Concentrating');
 		return;
 	}
-	let hasCharmImmunity = chrisPremades.helpers.checkTrait(target.actor, 'ci', 'charmed');
-	if (hasCharmImmunity) {
+	if (mba.checkTrait(target.actor, 'ci', 'charmed')) {
 		ui.notifications.info(target.document.name + ' is unaffected by Crown of Madness! (target is immune to condition: Charmed)');
-		await chrisPremades.helpers.removeCondition(workflow.actor, 'Concentrating');
+		await mba.removeCondition(workflow.actor, 'Concentrating');
 		return;
 	}
 	async function effectMacroCaster() {
@@ -20,25 +20,28 @@ export async function crownOfMadness({ speaker, actor, token, character, item, a
 			['Yes!', 'yes'],
 			['No, stop concentrating!', 'no']
 		];
-		let selection = await chrisPremades.helpers.dialog('Use action to sustain Crown of Madness?', choices);
+		let selection = await mbaPremades.helpers.dialog("Crown of Madness", choices, `<b>Use action to maintain Crown of Madness?</b>`);
 		if (!selection) return;
 		if (selection === "yes") return;
-		await chrisPremades.helpers.removeCondition(actor, 'Concentrating');
+		await mbaPremades.helpers.removeCondition(actor, 'Concentrating');
 	}
 	let updates = {
 		'flags': {
 			'effectmacro': {
 				'onTurnStart': {
-					'script': chrisPremades.helpers.functionToString(effectMacroCaster)
+					'script': mba.functionToString(effectMacroCaster)
 				}
 			}
 		}
 	}
-	await chrisPremades.helpers.updateEffect(effect, updates)
+	await mba.updateEffect(effect, updates)
 	async function effectMacroStart() {
 		await new Dialog({
 			title: "Crown of Madness",
-			content: "<p>You must use your action to make a melee attack against a creature other than yourself before moving (caster chooses the creature).</p><p>You can act normally if caster refuses to choose any creature or if none are within your reach.</p>",
+			content: `
+				<p>You must use your action to make a melee attack against a creature other than yourself before moving (caster chooses the creature).</p>
+				<p>You can act normally if caster refuses to choose any creature or if none are within your reach.</p>
+			`,
 			buttons: {
 				ok: {
 					label: "Ok",
@@ -61,7 +64,7 @@ export async function crownOfMadness({ speaker, actor, token, character, item, a
 			{
 				'key': 'flags.midi-qol.OverTime',
 				'mode': 0,
-				'value': 'turn=end, saveAbility=wis, saveDC=' + chrisPremades.helpers.getSpellDC(workflow.item) + ', saveMagic=true, name=Crown of Madness: Turn End',
+				'value': 'turn=end, saveAbility=wis, saveDC=' + mba.getSpellDC(workflow.item) + ', saveMagic=true, name=Crown of Madness: Turn End',
 				'priority': 20
 			},
 			{
@@ -74,10 +77,10 @@ export async function crownOfMadness({ speaker, actor, token, character, item, a
 		'flags': {
 			'effectmacro': {
 				'onTurnStart': {
-					'script': chrisPremades.helpers.functionToString(effectMacroStart)
+					'script': mba.functionToString(effectMacroStart)
 				},
 				'onDelete': {
-					'script': chrisPremades.helpers.functionToString(effectMacroDel)
+					'script': mba.functionToString(effectMacroDel)
 				}
 			},
 			'midi-qol': {
@@ -181,7 +184,7 @@ export async function crownOfMadness({ speaker, actor, token, character, item, a
 		.name(`${target.document.name} Crown of Madness`)
 
 		.thenDo(function () {
-			chrisPremades.helpers.createEffect(target.actor, effectData);
+			mba.createEffect(target.actor, effectData);
 		})
 
 		.play();

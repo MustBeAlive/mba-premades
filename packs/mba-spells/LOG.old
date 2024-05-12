@@ -1,12 +1,10 @@
-2024/05/09-14:17:02.454 4ff4 Recovering log #1676
-2024/05/09-14:17:02.504 4ff4 Level-0 table #1680: started
-2024/05/09-14:17:02.650 4ff4 Level-0 table #1680: 95605 bytes OK
-2024/05/09-14:17:02.703 4ff4 Delete type=0 #1676
-2024/05/09-14:17:02.703 4ff4 Delete type=3 #1674
-2024/05/09-15:34:50.791 4d4 Moved #1680 to level-1 95605 bytes OK: files[ 0 1 1 0 0 0 0 ]
-2024/05/09-17:58:32.150 4d4 Compacting 1@1 + 1@2 files
-2024/05/09-17:58:32.305 4d4 Generated table #1682@1: 401 keys, 1080726 bytes
-2024/05/09-17:58:32.305 4d4 Compacted 1@1 + 1@2 files => 1080726 bytes
-2024/05/09-17:58:32.336 4d4 compacted to: files[ 0 0 1 0 0 0 0 ]
-2024/05/09-17:58:32.336 4d4 Delete type=2 #1678
-2024/05/09-17:58:32.336 4d4 Delete type=2 #1680
+2024/05/10-23:40:44.359 36b0 Recovering log #1695
+2024/05/10-23:40:44.414 36b0 Delete type=0 #1695
+2024/05/10-23:40:44.414 36b0 Delete type=3 #1693
+2024/05/11-01:01:19.078 4a80 Moved #1694 to level-1 15385 bytes OK: files[ 0 1 1 0 0 0 0 ]
+2024/05/11-04:03:51.768 4a80 Compacting 1@1 + 1@2 files
+2024/05/11-04:03:51.898 4a80 Generated table #1698@1: 396 keys, 1089052 bytes
+2024/05/11-04:03:51.898 4a80 Compacted 1@1 + 1@2 files => 1089052 bytes
+2024/05/11-04:03:51.933 4a80 compacted to: files[ 0 0 1 0 0 0 0 ]
+2024/05/11-04:03:51.933 4a80 Delete type=2 #1692
+2024/05/11-04:03:51.941 4a80 Delete type=2 #1694

@@ -65,8 +65,8 @@ async function trigger(token, trigger) {
     if (!originItem) return;
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Snare: Trigger', false);
     if (!featureData) return;
-    featureData.system.save.dc = trigger.saveDC;
     delete featureData._id;
+    featureData.system.save.dc = trigger.saveDC;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': originItem.actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([token.uuid]);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);

@@ -1,8 +1,269 @@
-// Original macro by CPR
+import {mba} from "../../../helperFunctions.js";
+
+async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
+    if (workflow.failedSaves.size != 1) return;
+    let animate = true; //chrisPremades.helpers.getConfiguration(workflow.item, 'animation') ?? chrisPremades.helpers.jb2aCheck() === 'patreon';
+    let selection = await mba.dialog(workflow.item.name, [['Enlarge', 'enlarge'], ['Reduce', 'reduce']], '<b>Enlarge or Reduce?</b>');
+    if (!selection) return;
+    let targetToken = workflow.targets.first();
+    if (selection === 'enlarge') {
+        async function effectMacro() {
+            await mbaPremades.macros.enlargeReduce.end(token);
+        }
+        let effectData = {
+            'name': 'Enlarge',
+            'icon': 'modules/mba-premades/icons/spells/level2/enlarge_reduce1.webp',
+            'origin': workflow.item.uuid,
+            'duration': {
+                'seconds': 60
+            },
+            'changes': [
+                {
+                    'key': 'system.bonuses.mwak.damage',
+                    'mode': 2,
+                    'value': '+1d4',
+                    'priority': 20
+                },
+                {
+                    'key': 'system.bonuses.rwak.damage',
+                    'mode': 2,
+                    'value': '+1d4',
+                    'priority': 20
+                },
+                {
+                    'key': 'flags.midi-qol.advantage.ability.check.str',
+                    'mode': 0,
+                    'value': '1',
+                    'priority': 20
+                },
+                {
+                    'key': 'flags.midi-qol.advantage.ability.save.str',
+                    'mode': 0,
+                    'value': '1',
+                    'priority': 20
+                }
+            ],
+            'flags': {
+                'effectmacro': {
+                    'onDelete': {
+                        'script': mba.functionToString(effectMacro)
+                    }
+                },
+                'mba-premades': {
+                    'spell': {
+                        'enlargeReduce': selection
+                    }
+                },
+                'flags': {
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 2,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
+                    }
+                }
+            }
+        };
+        let token = {};
+        let actor = {};
+        let doGrow = true;
+        let targetSize = targetToken.actor.system.traits.size;
+        if (targetSize != 'tiny' || targetSize != 'sm') {
+            let room = mba.checkForRoom(targetToken, 1);
+            let direction = mba.findDirection(room);
+            switch (direction) {
+                case 'none':
+                    doGrow = false;
+                    break;
+                case 'ne':
+                    setProperty(token, 'y', targetToken.y - canvas.grid.size);
+                    break;
+                case 'sw':
+                    setProperty(token, 'x', targetToken.x - canvas.grid.size);
+                    break;
+                case 'nw':
+                    setProperty(token, 'x', targetToken.x - canvas.grid.size);
+                    setProperty(token, 'y', targetToken.y - canvas.grid.size);
+                    break;
+            }
+        }
+        if (doGrow) {
+            switch (targetSize) {
+                case 'tiny':
+                    setProperty(token, 'texture.scaleX', '0.8');
+                    setProperty(token, 'texture.scaleY', '0.8');
+                    setProperty(actor, 'system.traits.size', 'sm');
+                    break;
+                case 'sm':
+                    setProperty(token, 'texture.scaleX', '1');
+                    setProperty(token, 'texture.scaleY', '1');
+                    setProperty(actor, 'system.traits.size', 'med');
+                    break;
+                case 'med':
+                    setProperty(token, 'height', targetToken.document.height + 1);
+                    setProperty(token, 'width', targetToken.document.width + 1);
+                    setProperty(actor, 'system.traits.size', 'lg');
+                    break;
+                case 'lg':
+                    setProperty(token, 'height', targetToken.document.height + 1);
+                    setProperty(token, 'width', targetToken.document.width + 1);
+                    setProperty(actor, 'system.traits.size', 'huge');
+                    break;
+                case 'huge':
+                    setProperty(token, 'height', targetToken.document.height + 1);
+                    setProperty(token, 'width', targetToken.document.width + 1);
+                    setProperty(actor, 'system.traits.size', 'grg');
+                    break;
+                case 'grg':
+                    setProperty(token, 'height', targetToken.document.height + 1);
+                    setProperty(token, 'width', targetToken.document.width + 1);
+                    break;
+            }
+        }
+        let updates = {
+            'token': token,
+            'actor': actor,
+            'embedded': {
+                'ActiveEffect': {
+                    [effectData.name]: effectData
+                }
+            }
+        };
+        let callbacks = {
+            'delta': (delta, tokenDoc) => {
+                if ('x' in delta.token) delete delta.token.x;
+                if ('y' in delta.token) delete delta.token.y;
+            }
+        };
+        if (animate) {
+            await enlargeAnimation(targetToken, updates, 'Enlarge/Reduce', callbacks);
+        } else {
+            let options = {
+                'permanent': false,
+                'name': 'Enlarge/Reduce',
+                'description': 'Enlarge/Reduce'
+            };
+            await warpgate.mutate(targetToken.document, updates, callbacks, options);
+        }
+    } else {
+        async function effectMacro() {
+            await mbaPremades.macros.enlargeReduce.end(token);
+        }
+        let effectData = {
+            'name': 'Reduce',
+            'icon': 'modules/mba-premades/icons/spells/level2/enlarge_reduce2.webp',
+            'origin': workflow.item.uuid,
+            'duration': {
+                'seconds': 60
+            },
+            'changes': [
+                {
+                    'key': 'system.bonuses.mwak.damage',
+                    'mode': 2,
+                    'value': '-1d4',
+                    'priority': 20
+                },
+                {
+                    'key': 'system.bonuses.rwak.damage',
+                    'mode': 2,
+                    'value': '-1d4',
+                    'priority': 20
+                },
+                {
+                    'key': 'flags.midi-qol.disadvantage.ability.check.str',
+                    'mode': 0,
+                    'value': '1',
+                    'priority': 20
+                },
+                {
+                    'key': 'flags.midi-qol.disadvantage.ability.save.str',
+                    'mode': 0,
+                    'value': '1',
+                    'priority': 20
+                }
+            ],
+            'flags': {
+                'effectmacro': {
+                    'onDelete': {
+                        'script': mba.functionToString(effectMacro)
+                    }
+                },
+                'mba-premades': {
+                    'spell': {
+                        'enlargeReduce': selection
+                    }
+                },
+                'flags': {
+                    'midi-qol': {
+                        'castData': {
+                            baseLevel: 2,
+                            castLevel: workflow.castData.castLevel,
+                            itemUuid: workflow.item.uuid
+                        }
+                    }
+                }
+            }
+        };
+        let token = {};
+        let actor = {};
+        let targetSize = targetToken.actor.system.traits.size;
+        switch (targetSize) {
+            case 'tiny':
+                setProperty(token, 'texture.scaleX', '0.25');
+                setProperty(token, 'texture.scaleY', '0.25');
+            case 'sm':
+                setProperty(token, 'texture.scaleX', '0.5');
+                setProperty(token, 'texture.scaleY', '0.5');
+                setProperty(actor, 'system.traits.size', 'tiny');
+                break;
+            case 'med':
+                setProperty(token, 'texture.scaleX', '0.8');
+                setProperty(token, 'texture.scaleY', '0.8');
+                setProperty(actor, 'system.traits.size', 'sm');
+                break;
+            case 'lg':
+                setProperty(token, 'height', targetToken.document.height - 1);
+                setProperty(token, 'width', targetToken.document.width - 1);
+                setProperty(actor, 'system.traits.size', 'med');
+                break;
+            case 'huge':
+                setProperty(token, 'height', targetToken.document.height - 1);
+                setProperty(token, 'width', targetToken.document.width - 1);
+                setProperty(actor, 'system.traits.size', 'lg');
+                break;
+            case 'grg':
+                setProperty(token, 'height', targetToken.document.height - 1);
+                setProperty(token, 'width', targetToken.document.width - 1);
+                setProperty(actor, 'system.traits.size', 'huge');
+                break;
+        }
+        let updates = {
+            'token': token,
+            'actor': actor,
+            'embedded': {
+                'ActiveEffect': {
+                    [effectData.name]: effectData
+                }
+            }
+        };
+        if (animate) {
+            await reduceAnimation(targetToken, updates, 'Enlarge/Reduce');
+        } else {
+            let options = {
+                'permanent': false,
+                'name': 'Enlarge/Reduce',
+                'description': 'Enlarge/Reduce'
+            };
+            await warpgate.mutate(targetToken.document, updates, {}, options);
+        }
+    }
+}
+
 async function enlargeAnimation(token, updates, name, callbacks) {
     //Animations by: eskiemoh
     let scale = 1;
-    let size = chrisPremades.helpers.getSize(token.actor, true);
+    let size = mba.getSize(token.actor, true);
     switch (size) {
         case 'small':
             scale = 0.8;
@@ -12,6 +273,7 @@ async function enlargeAnimation(token, updates, name, callbacks) {
             break;
     }
     await new Sequence()
+
         .effect()
         .file('jb2a.static_electricity.03.orange')
         .atLocation(token)
@@ -106,10 +368,11 @@ async function enlargeAnimation(token, updates, name, callbacks) {
 
         .play();
 }
+
 async function reduceAnimation(token, updates, name) {
     //Animations by: eskiemoh
     let scale = 1;
-    let size = chrisPremades.helpers.getSize(token.actor, true);
+    let size = mba.getSize(token.actor, true);
     switch (size) {
         case 'medium':
             scale = 0.8;
@@ -214,271 +477,14 @@ async function reduceAnimation(token, updates, name) {
 
         .play()
 }
-async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-    if (workflow.failedSaves.size != 1) return;
-    let animate = chrisPremades.helpers.getConfiguration(workflow.item, 'animation') ?? chrisPremades.helpers.jb2aCheck() === 'patreon';
-    let selection = await chrisPremades.helpers.dialog(workflow.item.name, [['Enlarge', 'enlarge'], ['Reduce', 'reduce']], 'Enlarge or Reduce?');
-    if (!selection) return;
-    let targetToken = workflow.targets.first();
-    if (selection === 'enlarge') {
-        async function effectMacro() {
-            await chrisPremades.macros.enlargeReduce.end(token);
-        }
-        let effectData = {
-            'name': 'Enlarge',
-            'icon': 'modules/mba-premades/icons/spells/level2/enlarge_reduce1.webp',
-            'origin': workflow.item.uuid,
-            'duration': {
-                'seconds': 60
-            },
-            'changes': [
-                {
-                    'key': 'system.bonuses.mwak.damage',
-                    'mode': 2,
-                    'value': '+1d4',
-                    'priority': 20
-                },
-                {
-                    'key': 'system.bonuses.rwak.damage',
-                    'mode': 2,
-                    'value': '+1d4',
-                    'priority': 20
-                },
-                {
-                    'key': 'flags.midi-qol.advantage.ability.check.str',
-                    'mode': 0,
-                    'value': '1',
-                    'priority': 20
-                },
-                {
-                    'key': 'flags.midi-qol.advantage.ability.save.str',
-                    'mode': 0,
-                    'value': '1',
-                    'priority': 20
-                }
-            ],
-            'flags': {
-                'effectmacro': {
-                    'onDelete': {
-                        'script': chrisPremades.helpers.functionToString(effectMacro)
-                    }
-                },
-                'chris-premades': {
-                    'spell': {
-                        'enlargeReduce': selection
-                    }
-                },
-                'flags': {
-                    'midi-qol': {
-                        'castData': {
-                            baseLevel: 2,
-                            castLevel: workflow.castData.castLevel,
-                            itemUuid: workflow.item.uuid
-                        }
-                    }
-                }
-            }
-        };
-        let token = {};
-        let actor = {};
-        let doGrow = true;
-        let targetSize = targetToken.actor.system.traits.size;
-        if (targetSize != 'tiny' || targetSize != 'sm') {
-            let room = chrisPremades.helpers.checkForRoom(targetToken, 1);
-            let direction = chrisPremades.helpers.findDirection(room);
-            switch (direction) {
-                case 'none':
-                    doGrow = false;
-                    break;
-                case 'ne':
-                    setProperty(token, 'y', targetToken.y - canvas.grid.size);
-                    break;
-                case 'sw':
-                    setProperty(token, 'x', targetToken.x - canvas.grid.size);
-                    break;
-                case 'nw':
-                    setProperty(token, 'x', targetToken.x - canvas.grid.size);
-                    setProperty(token, 'y', targetToken.y - canvas.grid.size);
-                    break;
-            }
-        }
-        if (doGrow) {
-            switch (targetSize) {
-                case 'tiny':
-                    setProperty(token, 'texture.scaleX', '0.8');
-                    setProperty(token, 'texture.scaleY', '0.8');
-                    setProperty(actor, 'system.traits.size', 'sm');
-                    break;
-                case 'sm':
-                    setProperty(token, 'texture.scaleX', '1');
-                    setProperty(token, 'texture.scaleY', '1');
-                    setProperty(actor, 'system.traits.size', 'med');
-                    break;
-                case 'med':
-                    setProperty(token, 'height', targetToken.document.height + 1);
-                    setProperty(token, 'width', targetToken.document.width + 1);
-                    setProperty(actor, 'system.traits.size', 'lg');
-                    break;
-                case 'lg':
-                    setProperty(token, 'height', targetToken.document.height + 1);
-                    setProperty(token, 'width', targetToken.document.width + 1);
-                    setProperty(actor, 'system.traits.size', 'huge');
-                    break;
-                case 'huge':
-                    setProperty(token, 'height', targetToken.document.height + 1);
-                    setProperty(token, 'width', targetToken.document.width + 1);
-                    setProperty(actor, 'system.traits.size', 'grg');
-                    break;
-                case 'grg':
-                    setProperty(token, 'height', targetToken.document.height + 1);
-                    setProperty(token, 'width', targetToken.document.width + 1);
-                    break;
-            }
-        }
-        let updates = {
-            'token': token,
-            'actor': actor,
-            'embedded': {
-                'ActiveEffect': {
-                    [effectData.name]: effectData
-                }
-            }
-        };
-        let callbacks = {
-            'delta': (delta, tokenDoc) => {
-                if ('x' in delta.token) delete delta.token.x;
-                if ('y' in delta.token) delete delta.token.y;
-            }
-        };
-        if (animate) {
-            await enlargeAnimation(targetToken, updates, 'Enlarge/Reduce', callbacks);
-        } else {
-            let options = {
-                'permanent': false,
-                'name': 'Enlarge/Reduce',
-                'description': 'Enlarge/Reduce'
-            };
-            await warpgate.mutate(targetToken.document, updates, callbacks, options);
-        }
-    } else {
-        async function effectMacro() {
-            await chrisPremades.macros.enlargeReduce.end(token);
-        }
-        let effectData = {
-            'name': 'Reduce',
-            'icon': 'modules/mba-premades/icons/spells/level2/enlarge_reduce2.webp',
-            'origin': workflow.item.uuid,
-            'duration': {
-                'seconds': 60
-            },
-            'changes': [
-                {
-                    'key': 'system.bonuses.mwak.damage',
-                    'mode': 2,
-                    'value': '-1d4',
-                    'priority': 20
-                },
-                {
-                    'key': 'system.bonuses.rwak.damage',
-                    'mode': 2,
-                    'value': '-1d4',
-                    'priority': 20
-                },
-                {
-                    'key': 'flags.midi-qol.disadvantage.ability.check.str',
-                    'mode': 0,
-                    'value': '1',
-                    'priority': 20
-                },
-                {
-                    'key': 'flags.midi-qol.disadvantage.ability.save.str',
-                    'mode': 0,
-                    'value': '1',
-                    'priority': 20
-                }
-            ],
-            'flags': {
-                'effectmacro': {
-                    'onDelete': {
-                        'script': chrisPremades.helpers.functionToString(effectMacro)
-                    }
-                },
-                'chris-premades': {
-                    'spell': {
-                        'enlargeReduce': selection
-                    }
-                },
-                'flags': {
-                    'midi-qol': {
-                        'castData': {
-                            baseLevel: 2,
-                            castLevel: workflow.castData.castLevel,
-                            itemUuid: workflow.item.uuid
-                        }
-                    }
-                }
-            }
-        };
-        let token = {};
-        let actor = {};
-        let targetSize = targetToken.actor.system.traits.size;
-        switch (targetSize) {
-            case 'tiny':
-                setProperty(token, 'texture.scaleX', '0.25');
-                setProperty(token, 'texture.scaleY', '0.25');
-            case 'sm':
-                setProperty(token, 'texture.scaleX', '0.5');
-                setProperty(token, 'texture.scaleY', '0.5');
-                setProperty(actor, 'system.traits.size', 'tiny');
-                break;
-            case 'med':
-                setProperty(token, 'texture.scaleX', '0.8');
-                setProperty(token, 'texture.scaleY', '0.8');
-                setProperty(actor, 'system.traits.size', 'sm');
-                break;
-            case 'lg':
-                setProperty(token, 'height', targetToken.document.height - 1);
-                setProperty(token, 'width', targetToken.document.width - 1);
-                setProperty(actor, 'system.traits.size', 'med');
-                break;
-            case 'huge':
-                setProperty(token, 'height', targetToken.document.height - 1);
-                setProperty(token, 'width', targetToken.document.width - 1);
-                setProperty(actor, 'system.traits.size', 'lg');
-                break;
-            case 'grg':
-                setProperty(token, 'height', targetToken.document.height - 1);
-                setProperty(token, 'width', targetToken.document.width - 1);
-                setProperty(actor, 'system.traits.size', 'huge');
-                break;
-        }
-        let updates = {
-            'token': token,
-            'actor': actor,
-            'embedded': {
-                'ActiveEffect': {
-                    [effectData.name]: effectData
-                }
-            }
-        };
-        if (animate) {
-            await reduceAnimation(targetToken, updates, 'Enlarge/Reduce');
-        } else {
-            let options = {
-                'permanent': false,
-                'name': 'Enlarge/Reduce',
-                'description': 'Enlarge/Reduce'
-            };
-            await warpgate.mutate(targetToken.document, updates, {}, options);
-        }
-    }
-}
+
 async function end(token, origin) {
     await warpgate.revert(token.document, 'Enlarge/Reduce', { 'updateOpts': { 'token': { 'animate': true } } });
 }
+
 export let enlargeReduce = {
+    'item': item,
     'enlargeAnimation': enlargeAnimation,
     'reduceAnimation': reduceAnimation,
-    'item': item,
     'end': end
 }

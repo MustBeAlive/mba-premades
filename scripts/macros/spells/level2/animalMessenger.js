@@ -1,12 +1,14 @@
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
      let target = workflow.targets.first();
-     let effect = await chrisPremades.helpers.findEffect(target.actor, 'Animal Messenger');
+     let effect = await mba.findEffect(target.actor, 'Animal Messenger');
      if (!effect) return;
-     if (chrisPremades.helpers.raceOrType(target.actor) != 'beast') {
+     if (mba.raceOrType(target.actor) != 'beast') {
           ui.notifications.warn('Animal Messenger can only affect beasts!');
           return;
      }
-     if (chrisPremades.helpers.getSize(target.actor) != 0) {
+     if (mba.getSize(target.actor) != 0) {
           ui.notifications.warn('Animal Messenger can only affect tiny creatures!');
           return;
      }
@@ -130,7 +132,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
           .play();
 
      await warpgate.wait(4000);
-     await chrisPremades.helpers.createEffect(target.actor, effectData);
+     await mba.createEffect(target.actor, effectData);
 }
 
 export let animalMessenger = {

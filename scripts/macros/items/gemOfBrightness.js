@@ -1,5 +1,5 @@
-import { mba } from "../../helperFunctions.js";
-import { constants } from "../generic/constants.js";
+import {mba} from "../../helperFunctions.js";
+import {constants} from "../generic/constants.js";
 
 export async function gemOfBrightness({ speaker, actor, token, character, item, args, scope, workflow }) {
     let gemItem = mba.getItem(workflow.actor, "Gem of Brightness");
@@ -8,13 +8,18 @@ export async function gemOfBrightness({ speaker, actor, token, character, item, 
         return;
     }
     let usesCurrent = gemItem.system.uses.value;
+    let price = gemItem.system.price.value;
+    if (usesCurrent < 1 || price === 50) {
+        ui.notifications.info("Gem is no longer magical!");
+        return;
+    }
     let choices = [
         ["Create Light (0 charges)", "light"],
         ["Ray of Blinding Light (1 charge)", "ray"],
-        ["Cone of Blinding Light (5 chages)", "cone"],
+        ["Cone of Blinding Light (5 charges)", "cone"],
         ["Cancel", "cancel"]
     ];
-    let selection = await mba.dialog("Choose effect:", choices);
+    let selection = await mba.dialog("Gem of Brightness", choices, `<b>Choose one of the effects:</b>`);
     if (!selection || selection === "cancel") return;
     const effectData = {
         'name': "Gem of Brightness: Blindness",
@@ -164,7 +169,6 @@ export async function gemOfBrightness({ speaker, actor, token, character, item, 
         await gemItem.update({ "system.uses.value": usesCurrent });
         if (!featureWorkflow.failedSaves.size) return;
         await mba.createEffect(target.actor, effectData);
-        return;
     }
     else if (selection === "cone") {
         let templateData = {
@@ -210,6 +214,10 @@ export async function gemOfBrightness({ speaker, actor, token, character, item, 
         };
         await mba.createEffect(workflow.actor, templateEffectData);
         let targets = Array.from(game.user.targets);
+        if (!targets.length) {
+            ui.notifications.warn("No targets found!");
+            return;
+        }
         let targetUuids = [];
         for (let target of targets) targetUuids.push(target.document.uuid);
         let featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Gem of Brightness: Blinding Light', false);
@@ -286,8 +294,12 @@ export async function gemOfBrightness({ speaker, actor, token, character, item, 
         usesCurrent -= 5;
         if (usesCurrent < 0) usesCurrent = 0;
         await gemItem.update({ "system.uses.value": usesCurrent });
-        if (!featureWorkflow.failedSaves.size) return;
-        let failedTargets = Array.from(featureWorkflow.failedSaves);
-        for (let target of failedTargets) await mba.createEffect(target.actor, effectData);
+        if (featureWorkflow.failedSaves.size) {
+            let failedTargets = Array.from(featureWorkflow.failedSaves);
+            for (let target of failedTargets) await mba.createEffect(target.actor, effectData);
+        }
     }
+    if (usesCurrent > 1) return;
+    await gemItem.update({ "system.price.value": 50 });
+    ui.notifications.info("Gem of Brightness lost it's magical properties!");
 }

@@ -1,25 +1,5 @@
-async function hook(workflow) {
-    if (!workflow.token) return;
-    if (workflow.targets.size != 1) return;
-    let validTypes = [
-        'mwak',
-        'rwak',
-        'msak',
-        'rsak'
-    ];
-    if (!validTypes.includes(workflow.item.system?.actionType)) return;
-    let targetActor = workflow.targets.first().actor;
-    let targetEffect = chrisPremades.helpers.findEffect(targetActor, "Blur");
-    if (!targetEffect) return;
-    let blindsight = workflow.actor.system.attributes.senses.blindsight;
-    let truesight = workflow.actor.system.attributes.senses.truesight;
-    if (!blindsight && !truesight) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'blur', 50);
-    if (!queueSetup) return;
-    workflow.advantage = true;
-    workflow.advReminderAttackAdvAttribution.add('ADV: Ignores disadvantage from Blur (has Blindsight/Truesight)');
-    chrisPremades.queue.remove(workflow.item.uuid);
-}
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     const effectData = {
@@ -75,10 +55,33 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+    await mba.createEffect(workflow.actor, effectData);
+}
+
+async function hook(workflow) {
+    if (!workflow.token) return;
+    if (workflow.targets.size != 1) return;
+    let validTypes = [
+        'mwak',
+        'rwak',
+        'msak',
+        'rsak'
+    ];
+    if (!validTypes.includes(workflow.item.system?.actionType)) return;
+    let target = workflow.targets.first();
+    let targetEffect = mba.findEffect(target.actor, "Blur");
+    if (!targetEffect) return;
+    let blindsight = workflow.actor.system.attributes.senses.blindsight;
+    let truesight = workflow.actor.system.attributes.senses.truesight;
+    if (!blindsight && !truesight) return;
+    let queueSetup = await queue.setup(workflow.item.uuid, 'blur', 50);
+    if (!queueSetup) return;
+    workflow.advantage = true;
+    workflow.advReminderAttackAdvAttribution.add('ADV: Ignores disadvantage from Blur (has Blindsight/Truesight)');
+    queue.remove(workflow.item.uuid);
 }
 
 export let blur = {
-    'hook': hook,
-    'item': item
+    'item': item,
+    'hook': hook
 }

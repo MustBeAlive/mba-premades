@@ -10,7 +10,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     }
     let sourceActor = await mba.selectDocument('Choose Familiar', actors);
     if (!sourceActor) return;
-    let creatureType = await mba.dialog('Choose creature type:', [['Celestial', 'celestial'], ['Fey', 'fey'], ['Fiend', 'fiend']]);
+    let creatureType = await mba.dialog(workflow.item.name, [['Celestial', 'celestial'], ['Fey', 'fey'], ['Fiend', 'fiend']], `<b>Choose creature type:</b>`);
     if (!creatureType) return;
     let name = `${workflow.token.document.name} ${sourceActor[0].prototypeToken.name}`;
     let updates = {
@@ -55,7 +55,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     };
     let investmentOfTheChainMaster = mba.getItem(workflow.actor, 'Eldritch Invocations: Investment of the Chain Master');
     if (investmentOfTheChainMaster) {
-        let movement = await mba.dialog(investmentOfTheChainMaster.name, [['Flying', 'fly'], ['Swimming', 'swim']], 'Choose speed type to grant:s');
+        let movement = await mba.dialog(investmentOfTheChainMaster.name, [['Flying', 'fly'], ['Swimming', 'swim']], '<b>Choose speed type to grant:</b>');
         let weaponItems = sourceActor[0].items.filter(i => i.type === 'weapon');
         let saveItems = sourceActor[0].items.filter(i => i.system.save.dc != null);
         for (let i of weaponItems) {

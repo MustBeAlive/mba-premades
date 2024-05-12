@@ -4,8 +4,11 @@ import {queue} from "../../mechanics/queue.js";
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.targets.size != 1) return;
     let target = workflow.targets.first();
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Hunter\'s Mark: Move', false);
-    if (!featureData) return;
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', "Hunter's Mark: Move", false);
+    if (!featureData) {
+        ui.notifications.warn("Unable to find item in the compendium! (Hunter's Mark: Move)");
+        return;
+    }
     delete featureData._id;
     let seconds;
     switch (workflow.castData.castLevel) {
@@ -40,7 +43,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    await mba.createEffect(workflow.targets.first().actor, targetEffectData);
+    await mba.createEffect(target.actor, targetEffectData);
 
     new Sequence()
 
@@ -98,7 +101,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .play()
 
     async function effectMacro() {
-        await warpgate.revert(token.document, 'Hunter\'s Mark');
+        await warpgate.revert(token.document, "Hunter's Mark");
         let targetTokenId = effect.changes[0].value;
         let targetToken = canvas.scene.tokens.get(targetTokenId);
         if (!targetToken) return;
@@ -108,7 +111,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         await mbaPremades.helpers.removeEffect(targetEffect);
     }
     let sourceEffectData = {
-        'name': 'Hunter\'s Mark',
+        'name': "Hunter's Mark",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'duration': {
@@ -143,7 +146,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 }
             }
         }
-    }
+    };
     let updates = {
         'embedded': {
             'Item': {
@@ -182,7 +185,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     let queueSetup = await queue.setup(workflow.item.uuid, 'huntersMark', 250);
     if (!queueSetup) return;
     let oldFormula = workflow.damageRoll._formula;
-    let bonusDamageFormula = '1d6[' + workflow.defaultDamageType + ']'
+    let bonusDamageFormula = '1d6[' + workflow.defaultDamageType + ']';
     if (workflow.isCritical) bonusDamageFormula = mba.getCriticalFormula(bonusDamageFormula);
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRoll = await new Roll(damageFormula).roll({ async: true });
@@ -291,7 +294,7 @@ async function move({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.hunters_mark.loop.01.green")
         .attachTo(targetToken)
-        .scaleToObject(0.75)
+        .scaleToObject(0.9)
         .scaleIn(0, 250, { ease: "easeOutCubic" })
         .zIndex(0.1)
         .fadeOut(500)

@@ -7,7 +7,7 @@ export async function jumping() {
         return;
     }
     let choices = [["Distance Check", "check"], ["Animation", 'animation']];
-    let selection = await mba.dialog("Choose what to do:", choices);
+    let selection = await mba.dialog("Jumping Helper", choices, `<b>What would you like to do?</b>`);
     if (!selection) return;
     if (selection === "animation") {
         let config = {

@@ -11,7 +11,7 @@ export async function strengthOfTheGrave(token, { item, workflow, ditem }) {
     if (!originItem) return;
     if (!originItem.system.uses.value) return;
     if (workflow.isCritical || mba.checkTrait(tokenActor, 'di', 'healing') || mba.totalDamageType(tokenActor, ditem.damageDetail[0], 'radiant') > 0 || mba.totalDamageType(tokenActor, ditem.damageDetail[0], 'none')) return;
-    let selection = await mba.dialog(originItem.name, constants.yesNo, 'Use ' + originItem.name + '?');
+    let selection = await mba.dialog(originItem.name, constants.yesNo, `Use <b>${originItem.name}</b>?`);
     if (!selection || selection === false) return;
     let queueSetup = await queue.setup(workflow.uuid, 'strengthOfTheGrave', 389);
     if (!queueSetup) return;

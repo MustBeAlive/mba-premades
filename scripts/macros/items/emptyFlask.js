@@ -11,13 +11,13 @@ export async function emptyFlask({ speaker, actor, token, character, item, args,
         return;
     }
     choices.push(["Cancel", "cancel"]);
-    let type = await mba.dialog("What would you like to do?", choices);
+    let type = await mba.dialog(`Empty Container`, choices, `<b>What would you like to do?</b>`);
     if (!type || type === "cancel") return;
     let liquids = [
         [`Fill ${type} with Water`, "Water"],
         ["Cancel", "cancel"]
     ];
-    let selection = await mba.dialog("What would you like to do?", liquids);
+    let selection = await mba.dialog(`Empty ${type}`, liquids, `<b>Choose liquid type:</b>`);
     if (!selection || selection === "cancel") return;
 
     let choicesGM = [["Yes, proceed", "yes"], ["No, cancel", "no"]];

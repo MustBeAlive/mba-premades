@@ -1,3 +1,7 @@
+import {mba} from "../../../helperFunctions.js";
+
+//change miss part to synthetic item (or check if workflow.apply can prompt to use reaction)
+
 export async function melfAcidArrow({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let level = workflow.castData.castLevel;
@@ -12,7 +16,7 @@ export async function melfAcidArrow({ speaker, actor, token, character, item, ar
             .play();
 
         let damage = Math.floor(workflow.damageRoll.total / 2);
-        await chrisPremades.helpers.applyDamage([target], damage, "acid");
+        await mba.applyDamage([target], damage, "acid");
         return;
     }
     async function effectMacroDel() {
@@ -26,7 +30,7 @@ export async function melfAcidArrow({ speaker, actor, token, character, item, ar
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': `turn=end, damageType=acid, damageRoll=${level}d4, name=Melf's Acid Arrow: Turn End, killAnim= true`,
+                'value': `turn=end, damageType=acid, damageRoll=${level}d4, name=Melf's Acid Arrow: Turn End, killAnim=true`,
                 'priority': 20
             },
         ],
@@ -37,7 +41,7 @@ export async function melfAcidArrow({ speaker, actor, token, character, item, ar
             },
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -59,7 +63,7 @@ export async function melfAcidArrow({ speaker, actor, token, character, item, ar
         .waitUntilFinished(-1400)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(target.actor, effectData);
+            mba.createEffect(target.actor, effectData);
         })
 
         .effect()

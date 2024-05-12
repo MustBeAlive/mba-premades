@@ -9,7 +9,7 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
 		['Funeral Rite', 'Funeral'],
 		['Wedding', 'Wedding']
 	];
-	let selection = await mba.dialog('Choose one of the following rites:', choices);
+	let selection = await mba.dialog("Ceremony", choices, `<b>Choose one of the rites:</b>`);
 	if (!selection) return;
 	if (selection === "Atonement") {
 		let target = workflow.targets.first();

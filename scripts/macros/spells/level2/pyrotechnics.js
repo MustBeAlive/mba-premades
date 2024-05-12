@@ -1,7 +1,9 @@
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
 
 export async function pyrotechnics({speaker, actor, token, character, item, args, scope, workflow}) {
     let choices = [['Smoke Cloud', 'cloud'], ['Fireworks Explosion', 'explosion']];
-    let selection = await chrisPremades.helpers.dialog('Choose one of the following effects:', choices);
+    let selection = await mba.dialog("Pyrotechnics", choices, `<b>Choose one of the effects:</b>`);
     if (!selection) return;
     if (selection === "cloud") {
         let templateData = {
@@ -30,7 +32,7 @@ export async function pyrotechnics({speaker, actor, token, character, item, args
             },
             'angle': 0
         };
-        let template = await chrisPremades.helpers.placeTemplate(templateData);
+        let template = await mba.placeTemplate(templateData);
         if (!template) return;
 
 
@@ -124,7 +126,7 @@ export async function pyrotechnics({speaker, actor, token, character, item, args
             'flags': {
                 'effectmacro': {
                     'onDelete': {
-                        'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                        'script': mba.functionToString(effectMacroDel)
                     }
                 },
                 'midi-qol': {
@@ -136,7 +138,7 @@ export async function pyrotechnics({speaker, actor, token, character, item, args
                 }
             }
         };
-        await chrisPremades.helpers.createEffect(workflow.actor, templateEffectData);
+        await mba.createEffect(workflow.actor, templateEffectData);
         return;
     }
 
@@ -161,7 +163,7 @@ export async function pyrotechnics({speaker, actor, token, character, item, args
         },
         'angle': 0
     };
-    let template = await chrisPremades.helpers.placeTemplate(templateData);
+    let template = await mba.placeTemplate(templateData);
     if (!template) return;
 
     new Sequence()
@@ -269,23 +271,22 @@ export async function pyrotechnics({speaker, actor, token, character, item, args
             }
         ],
     };
-    await chrisPremades.helpers.createEffect(workflow.actor, templateEffectData);
+    await mba.createEffect(workflow.actor, templateEffectData);
 
     let targetUuids = [];
     for (let i of game.user.targets) {
-        let hasBlindImmunity = await chrisPremades.helpers.checkTrait(i.actor, 'ci', 'blinded');
-        if (hasBlindImmunity) {
+        if (mba.checkTrait(i.actor, 'ci', 'blinded')) {
             ChatMessage.create({ flavor: i.name + ' is unaffected by Pyrotechnics: Explosion (Target is immune to condition: Blinded)', speaker: ChatMessage.getSpeaker({ actor: workflow.actor }) });
             continue;
         }
         targetUuids.push(i.document.uuid);
     }
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Pyrotechnics: Explosion', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Pyrotechnics: Explosion', false);
     if (!featureData) return;
-    featureData.system.save.dc = chrisPremades.helpers.getSpellDC(workflow.item);
     delete featureData._id;
+    featureData.system.save.dc = mba.getSpellDC(workflow.item);
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions(targetUuids);
+    let [config, options] = constants.syntheticItemWorkflowOptions(targetUuids);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow.failedSaves.size) return;
     let targetEffectData = {
@@ -315,5 +316,5 @@ export async function pyrotechnics({speaker, actor, token, character, item, args
             }
         }
     };
-    for (let i of featureWorkflow.failedSaves) await chrisPremades.helpers.createEffect(i.actor, targetEffectData);
+    for (let i of featureWorkflow.failedSaves) await mba.createEffect(i.actor, targetEffectData);
 }

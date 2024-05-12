@@ -7,7 +7,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ['Orange', 'orange'],
         ['Purple', 'purple']
     ];
-    let selection = await mba.dialog('Choose Bonfire color:', choices);
+    let selection = await mba.dialog(workflow.item.name, choices, `<b>Choose color:</b>`);
     if (!selection) selection = "orange";
 
     let animation1 = "jb2a.impact.005." + selection;

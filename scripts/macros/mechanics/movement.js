@@ -1,6 +1,6 @@
-import { mba } from '../../helperFunctions.js';
-import { macros } from '../../macros.js';
-import { socket } from '../../module.js';
+import {macros} from '../../macros.js';
+import {mba} from '../../helperFunctions.js';
+import {socket} from '../../module.js';
 let triggers = {};
 
 export async function loadTriggers() {

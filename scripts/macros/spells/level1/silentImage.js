@@ -2,7 +2,7 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function silentImage({ speaker, actor, token, character, item, args, scope, workflow }) {
     let choices = [["5 ft.", 7], ["10 ft.", 14.1], ["15 ft.", 21.2]];
-    let size = await mba.dialog("Choose object size:", choices);
+    let size = await mba.dialog("Silent Image", choices, `<b>Choose object size: </b>`);
     if (!size) return;
 
     let templateData = {

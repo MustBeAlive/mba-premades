@@ -26,7 +26,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     await warpgate.wait(100);
     let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Tasha\'s Mind Whip: Damage', false);
     if (!featureData) {
-        ui.notifications.warn('Can\'t find item in compenidum! (Tasha\'s Mind Whip: Damage)');
+        ui.notifications.warn("Unable to find item in the compendium! (Tasha's Mind Whip: Damage)");
         return
     }
     let originItem = workflow.item;
@@ -50,7 +50,7 @@ async function turnStart(actor, token) {
         ['Bonus Action', 'bonus'],
         ['Movement', 'move']
     ];
-    let selection = await chrisPremades.helpers.dialog('Choose what action type you\'d like to keep:', choices);
+    let selection = await chrisPremades.helpers.dialog("Tasha's Mind Whip", choices, `<b>Choose what action you would like to keep:</b>`);
     if (!selection) {
         return;
     }

@@ -9,13 +9,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             return;
         }
         let choices = [["Yes, light the lantern", "light"], ["No, cancel", "cancel"]];
-        let selection = await mba.dialog("Would you like to light a Bullseye Lantern?", choices);
+        let selection = await mba.dialog("Bullseye Lantern", choices, `Would you like to light the <b>Bullseye Lantern</b>?`);
         if (!selection || selection === "cancel") return;
         await mbaPremades.macros.bullseyeLantern.light({ speaker, actor, token, character, item, args, scope, workflow })
         return;
     }
     let choices = [["Pour more Oil (restart duration)", "renew"], ["Extinguish Lantern", "extinguish"]];
-    let selection = await mba.dialog("What would you like to do?", choices);
+    let selection = await mba.dialog("Bullseye Lantern", choices, `<b>What would you like to do?</b>`);
     if (!selection) return;
     if (selection === "renew") {
         await mba.removeEffect(effect);

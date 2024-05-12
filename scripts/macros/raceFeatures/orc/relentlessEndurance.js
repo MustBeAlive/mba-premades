@@ -12,7 +12,7 @@ export async function relentlessEndurance(token, {item, workflow, ditem}) {
     let originItem = await fromUuid(effect.origin);
     if (!originItem) return;
     if (originItem.system.uses.value === 0) return;
-    let selection = await mba.remoteDialog(originItem.name, [['Yes', true], ['No', false]], mba.firstOwner(token.document).id, 'Use Relentless Endurance?');
+    let selection = await mba.remoteDialog(originItem.name, [['Yes', true], ['No', false]], mba.firstOwner(token.document).id, `Use <b>Relentless Endurance</b>?`);
     if (!selection) return;
     let queueSetup = await queue.setup(workflow.uuid, 'relentlessEndurance', 389);
     if (!queueSetup) return;

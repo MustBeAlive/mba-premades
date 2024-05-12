@@ -6,7 +6,7 @@ export async function gust({ speaker, actor, token, character, item, args, scope
         ['Create Blast', 'blast'],
         ['Create Harmless Effect', 'effect']
     ];
-    let selection = await mba.dialog('Choose one of the following effects', choices);
+    let selection = await mba.dialog(workflow.item.name, choices, `<b>Choose one of the following effects:</b>`);
     if (!selection) return;
     if (selection === "push") {
         let target = workflow.targets.first();

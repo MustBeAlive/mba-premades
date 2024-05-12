@@ -1,3 +1,6 @@
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
     let dagger = "jb2a.dagger.throw.01.red";
@@ -121,11 +124,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 'template': {
                     'name': 'cloudOfDaggers',
                     'castLevel': workflow.castData.castLevel,
-                    'saveDC': chrisPremades.helpers.getSpellDC(workflow.item),
+                    'saveDC': mba.getSpellDC(workflow.item),
                     'macroName': 'cloudOfDaggers',
                     'templateUuid': template.uuid,
-                    'turn': 'end',
-                    'ignoreMove': true,
                     'icon': workflow.item.img,
                     'itemUuid': workflow.item.uuid
                 }
@@ -137,7 +138,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 async function trigger(token, trigger) {
     let template = await fromUuid(trigger.templateUuid);
     if (!template) return;
-    if (chrisPremades.helpers.inCombat()) {
+    if (mba.inCombat()) {
         let turn = game.combat.round + '-' + game.combat.turn;
         let lastTurn = template.flags['mba-premades']?.spell?.cloudOfDaggers?.[token.id]?.turn;
         if (turn === lastTurn) return;
@@ -147,23 +148,24 @@ async function trigger(token, trigger) {
     if (!originUuid) return;
     let originItem = await fromUuid(originUuid);
     if (!originItem) return;
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Cloud of Daggers: Damage', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Cloud of Daggers: Damage', false);
     if (!featureData) return;
+    delete featureData._id;
     let damageDice = trigger.castLevel * 2;
     featureData.system.damage.parts = [[damageDice + 'd4[piercing]', 'piercing']];
-    delete featureData._id;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': originItem.actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([token.uuid]);
+    let [config, options] = constants.syntheticItemWorkflowOptions([token.uuid]);
     await MidiQOL.completeItemUse(feature, config, options);
     new Sequence()
 
         .effect()
-        .file("animated-spell-effects-cartoon.misc.blood splatter")
-        .atLocation(token)
-        .scaleToObject(2.5)
-        .duration(3500)
-        .noLoop(true)
-        .fadeOut(500)
+        .file("jaamod.sequencer_fx_master.blood_splat.red.2")
+        .delay(100)
+        .attachTo(token)
+        .scaleIn(0, 500, { 'ease': 'easeOutCubic' })
+        .scaleToObject(1.65 * token.document.texture.scaleX)
+        .duration(2500)
+        .fadeOut(1000)
         .belowTokens()
 
         .play()

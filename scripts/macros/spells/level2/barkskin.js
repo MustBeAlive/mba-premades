@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function barkskin({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDel() {
@@ -24,7 +26,7 @@ export async function barkskin({ speaker, actor, token, character, item, args, s
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -79,7 +81,7 @@ export async function barkskin({ speaker, actor, token, character, item, args, s
         .wait(300)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(target.actor, effectData);
+            mba.createEffect(target.actor, effectData);
         })
 
         .play()

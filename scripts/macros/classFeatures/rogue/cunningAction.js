@@ -9,12 +9,8 @@ export async function cunningAction({ speaker, actor, token, character, item, ar
 
         .play()
 
-    let choices = [
-        ["Dash", "Dash"],
-        ["Disengage", "Disengage"],
-        ["Hide", "Hide"]
-    ];
-    let actionName = await mba.dialog("Choose action type:", choices);
+    let choices = [["Dash", "Dash"],["Disengage", "Disengage"],["Hide", "Hide"]];
+    let actionName = await mba.dialog("Cunning Action", choices, `<b>Choose action type:</b>`);
     if (!actionName) return;
     let action = token.actor.items.getName(actionName);
     if (action) {
@@ -23,7 +19,7 @@ export async function cunningAction({ speaker, actor, token, character, item, ar
     }
     let actionData = await mba.getItemFromCompendium('mba-premades.MBA Actions', actionName, false);
     if (!actionData) {
-        ui.notifications.warn(`Unable to find item in compendium! (${actionName})`);
+        ui.notifications.warn(`Unable to find item in the compendium! (${actionName})`);
         return;
     }
     action = new CONFIG.Item.documentClass(actionData, {parent: token.actor});

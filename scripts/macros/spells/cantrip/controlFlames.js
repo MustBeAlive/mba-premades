@@ -1668,7 +1668,7 @@ export async function controlFlames({ speaker, actor, token, character, item, ar
             ["Apply Changes", "apply"],
             ["Cancel Changes", "cancel"]
         ];
-        let selectionType = await mba.dialog("What would you like to change?", choicesType)
+        let selectionType = await mba.dialog("Control Flames", choicesType, `<b>What would you like to change?</b>`);
         if (!selectionType) return;
         if (selectionType === "off") {
             if (lightHidden === true) lightHidden = false;
@@ -1679,7 +1679,7 @@ export async function controlFlames({ speaker, actor, token, character, item, ar
                 [`Double the light brightness (${lightBright * 2} bright/${lightDim * 2} dim)`, "double"],
                 [`Half the light brightness (${Math.min(lightBright / 2)} bright/${Math.min(lightDim / 2)} dim)`, "half"]
             ];
-            let selectionBrightness = await mba.dialog("What would you like to do?", choicesBrightness);
+            let selectionBrightness = await mba.dialog("Brightness", choicesBrightness, `<b>What would you like to do?</b>`);
             if (!selectionBrightness) return;
             if (selectionBrightness === "double") {
                 lightBright = lightBright * 2;

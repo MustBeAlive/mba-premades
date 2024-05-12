@@ -1,4 +1,6 @@
-export async function sprayOfCards({ speaker, actor, token, character, item, args, scope, workflow }) {
+import {mba} from "../../../helperFunctions.js";
+
+async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
     new Sequence()
 
@@ -151,4 +153,37 @@ export async function sprayOfCards({ speaker, actor, token, character, item, arg
         .name(`Card 15`)
 
         .play()
+}
+
+async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
+    if (!workflow.failedSaves.size) return;
+    let targets = Array.from(workflow.failedSaves);
+    const effectData = {
+        'name': workflow.item.name,
+        'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
+        'description': `
+            <p>You are blinded by a spray of spectral cards until the end of your next turn.</p>
+        `,
+        'changes': [
+            {
+                'key': "macro.CE",
+                'mode': 0,
+                'value': "Blinded",
+                'priority': 20
+            }
+        ],
+        'flags': {
+            'dae': {
+                'showIcon': true,
+                'specialDuration': ['turnEnd']
+            }
+        }
+    };
+    for (let target of targets) await mba.createEffect(target.actor, effectData);
+}
+
+export let sprayOfCards = {
+    'cast': cast,
+    'item': item
 }

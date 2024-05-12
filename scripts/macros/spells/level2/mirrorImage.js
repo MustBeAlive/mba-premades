@@ -1,3 +1,6 @@
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} Mirror Image` })
@@ -27,7 +30,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -140,7 +143,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .wait(200)
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(workflow.actor, effectData);
+            mba.createEffect(workflow.actor, effectData);
         })
 
         .effect()
@@ -163,14 +166,14 @@ async function hook(workflow) {
     if (workflow.isFumble === true) return;
     let targetToken = workflow.targets.first();
     let targetActor = targetToken.actor;
-    let targetEffect = chrisPremades.helpers.findEffect(targetActor, 'Mirror Image');
+    let targetEffect = mba.findEffect(targetActor, 'Mirror Image');
     if (!targetEffect) return;
     let attackingToken = workflow.token;
     if (!MidiQOL.canSee(attackingToken, targetToken)) return;
     if (MidiQOL.canSense(attackingToken, targetToken, ['blindsight', 'seeAll'])) return;
     let duplicates = targetActor.flags['mba-premades']?.spell?.mirrorImage;
     if (!duplicates) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'mirrorImage', 49);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'mirrorImage', 49);
     if (!queueSetup) return;
     let roll = await new Roll('1d20').roll({ 'async': true });
     roll.toMessage({
@@ -192,7 +195,7 @@ async function hook(workflow) {
             break;
     }
     if (rollTotal < rollNeeded) {
-        chrisPremades.queue.remove(workflow.item.uuid);
+        queue.remove(workflow.item.uuid);
         ChatMessage.create({
             'speaker': { 'alias': name },
             'content': `<b>${workflow.token.document.name}</b> finds real instance of <b>${targetToken.document.name}!</b>.`
@@ -209,7 +212,7 @@ async function hook(workflow) {
         if (duplicates === 3) Sequencer.EffectManager.endEffects({ name: `${targetToken.document.name} Mirror Image 3` })
         if (duplicates === 2) Sequencer.EffectManager.endEffects({ name: `${targetToken.document.name} Mirror Image 2` })
         if (duplicates === 1) {
-            await chrisPremades.helpers.removeEffect(targetEffect);
+            await mba.removeEffect(targetEffect);
             return;
         }
         let updates = {
@@ -222,7 +225,7 @@ async function hook(workflow) {
                 }
             ]
         };
-        await chrisPremades.helpers.updateEffect(targetEffect, updates);
+        await mba.updateEffect(targetEffect, updates);
 
     } else {
         ChatMessage.create({
@@ -230,7 +233,7 @@ async function hook(workflow) {
             'content': `<b>${workflow.token.document.name}'s</b> attack targeted a duplicate and missed.`
         });
     }
-    chrisPremades.queue.remove(workflow.item.uuid);
+    queue.remove(workflow.item.uuid);
 }
 
 export let mirrorImage = {

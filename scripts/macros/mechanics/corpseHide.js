@@ -1,6 +1,8 @@
+import {mba} from "../../helperFunctions.js";
+
 export async function corpseHide(combat, update, options, userId) {
     if (!combat.started) return;
-    let combatants = Array.from(game.combat.combatants).filter(i => i.isDefeated === true && i.isNPC === true && i.token.hidden != 1 && !chrisPremades.helpers.findEffect(i.actor, "Regeneration"));
+    let combatants = Array.from(game.combat.combatants).filter(i => i.isDefeated === true && i.isNPC === true && i.token.hidden != 1 && !mba.findEffect(i.actor, "Regeneration"));
     if (!combatants.length) return;
     let updates = {
         token: {

@@ -1,10 +1,12 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function vortexWarp({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
     let maxRange = 90 + (30 * (workflow.castData.castLevel - 2));
     let icon = target.document.texture.src;
     let interval = target.document.width % 2 === 0 ? 1 : -1;
-    let position = await chrisPremades.helpers.aimCrosshair(workflow.token, maxRange, icon, interval, target.document.width);
+    let position = await mba.aimCrosshair(workflow.token, maxRange, icon, interval, target.document.width);
     if (position.cancelled) return;
 
     await new Sequence()
@@ -34,7 +36,7 @@ export async function vortexWarp({ speaker, actor, token, character, item, args,
         .effect()
         .file("jb2a.portals.horizontal.vortex.yellow")
         .atLocation(target)
-        .scaleToObject(1.9)
+        .scaleToObject(2)
         .rotateIn(-360, 500, { ease: "easeOutCubic" })
         .rotateOut(360, 500, { ease: "easeOutCubic" })
         .scaleIn(0, 600, { ease: "easeInOutCirc" })
@@ -60,7 +62,7 @@ export async function vortexWarp({ speaker, actor, token, character, item, args,
         .effect()
         .file("jb2a.template_circle.vortex.intro.yellow")
         .atLocation(target)
-        .scaleToObject(1.9)
+        .scaleToObject(2)
         .rotateIn(-360, 500, { ease: "easeOutCubic" })
         .rotateOut(360, 500, { ease: "easeOutCubic" })
         .scaleIn(0, 600, { ease: "easeInOutCirc" })
@@ -80,7 +82,7 @@ export async function vortexWarp({ speaker, actor, token, character, item, args,
         .effect()
         .file("jb2a.portals.horizontal.vortex.purple")
         .atLocation(target)
-        .scaleToObject(1.9)
+        .scaleToObject(2)
         .rotateIn(-360, 500, { ease: "easeOutCubic" })
         .rotateOut(360, 500, { ease: "easeOutCubic" })
         .scaleIn(0, 600, { ease: "easeInOutCirc" })
@@ -93,7 +95,7 @@ export async function vortexWarp({ speaker, actor, token, character, item, args,
         .effect()
         .file("jb2a.template_circle.vortex.outro.purple")
         .atLocation(target)
-        .scaleToObject(1.9)
+        .scaleToObject(2)
         .rotateIn(-360, 500, { ease: "easeOutCubic" })
         .rotateOut(360, 500, { ease: "easeOutCubic" })
         .scaleIn(0, 500, { ease: "easeInOutCirc" })

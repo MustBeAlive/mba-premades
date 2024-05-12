@@ -203,7 +203,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 hgRoom = mba.checkForRoom(workflow.token, 2);
                 if (!lrgRoom.n && !lrgRoom.e && !lrgRoom.s && !lrgRoom.w) hgDirection = 'outward';
                 if (hgDirection != 'outward') hgDirection = mba.findDirection(hgRoom);
-                if (hgDirection != 'none') dCSelection = await mba.dialog(demiurgicColossus.name, [['Large', 'lg'], ['Huge', 'huge']], 'What size?') ?? 'lg';
+                if (hgDirection != 'none') dCSelection = await mba.dialog(demiurgicColossus.name, [['Large', 'lg'], ['Huge', 'huge']], `<b>Choose size:</b>`) ?? 'lg';
             }
             if (dCSelection === 'huge') await demiurgicColossus.displayCard();
             let updates2 = {
@@ -300,7 +300,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let callTheHunt = mba.getItem(workflow.actor, 'Call the Hunt');
     if (callTheHunt) {
         if (callTheHunt.system.uses.value) {
-            let selection = await mba.dialog(callTheHunt.name, constants.yesNo, 'Use ' + callTheHunt.name + '?');
+            let selection = await mba.dialog(callTheHunt.name, constants.yesNo, `Use ${callTheHunt.name}?`);
             if (selection) await callTheHunt.use();
         }
     };
@@ -373,7 +373,7 @@ async function combatStart(effect) {
 
 async function animationStart(token) {
     let choices = [["Default", "default"], ["Lightning", "lightning"]];
-    let animation = await mba.dialog("Choose animation:", choices);
+    let animation = await mba.dialog("Rage", choices, `<b>Choose animation:</b>`);
     if (!animation) animation = "default";
     switch (animation) {
         case 'default':

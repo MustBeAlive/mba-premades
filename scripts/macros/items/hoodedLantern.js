@@ -9,13 +9,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             return;
         }
         let choices = [["Yes, light the lantern", "light"], ["No, cancel", "cancel"]];
-        let selection = await mba.dialog("Would you like to light a Hooded Lantern?", choices);
+        let selection = await mba.dialog("Hooded Lantern", choices, `Would you like to light a <b>Hooded Lantern</b>?`);
         if (!selection || selection === "cancel") return;
         await mbaPremades.macros.hoodedLantern.light({ speaker, actor, token, character, item, args, scope, workflow })
         return;
     }
-    let choices = [["Raise Lantern's hood (bright light)", "bright"], ["Lower Lantern's hood (dim light)", "dim"], ["Extinguish Lantern", "extinguish"]];
-    let selection = await mba.dialog("What would you like to do?", choices);
+    let choices = [["Raise Lantern's hood (Bright Light)", "bright"], ["Lower Lantern's hood (Dim Light)", "dim"], ["Extinguish Lantern", "extinguish"]];
+    let selection = await mba.dialog("Hooded Lantern", choices, `<b>What would you like to do?</b>`);
     if (!selection) return;
     switch (selection) {
         case "bright": {

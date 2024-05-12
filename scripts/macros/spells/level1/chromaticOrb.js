@@ -30,7 +30,7 @@ export async function chromaticOrb({ speaker, actor, token, character, item, arg
         ['Poison ☠️', 'poison'],
         ['Thunder ☁️', 'thunder']
     ];
-    let selection = await mba.dialog('What damage type?', choices);
+    let selection = await mba.dialog('Chromatic Orb', choices, `<b>Choose damage type:</b>`);
     if (!selection) {
         queue.remove(workflow.item.uuid);
         return;

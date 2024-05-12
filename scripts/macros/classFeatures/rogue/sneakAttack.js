@@ -210,7 +210,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     if (!queueSetup) return;
     let sneakDialog = true;
     if (sneakDialog === true) {
-        let selection = await mba.dialog(originFeature.name, constants.yesNo, 'Use ' + originFeature.name + '?');
+        let selection = await mba.dialog(originFeature.name, constants.yesNo, `Use <b>${originFeature.name}</b>?`);
         if (!selection) {
             queue.remove(workflow.item.uuid);
             return;

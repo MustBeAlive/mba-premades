@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function aid({ speaker, actor, token, character, item, args, scope, workflow }) {
     let level = workflow.castData.castLevel;
     let healAmmount = (5 * (level - 1));
@@ -9,11 +11,13 @@ export async function aid({ speaker, actor, token, character, item, args, scope,
             await actor.update({ "system.attributes.hp.value": maxHP })
         }
     }
-    let effectData = {
+    const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
-        'description': `Your hit point maximum and current hit points are increased by <b>${healAmmount}</b> for the duration.`,
+        'description': `
+            <p>Your hit point maximum and current hit points are increased by <b>${healAmmount}</b> for the duration.</p>
+        `,
         'duration': {
             'seconds': 28800
         },
@@ -28,7 +32,7 @@ export async function aid({ speaker, actor, token, character, item, args, scope,
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -41,20 +45,20 @@ export async function aid({ speaker, actor, token, character, item, args, scope,
         }
     };
     for (let target of targets) {
-        let delay1 = 100 + Math.floor(Math.random() * (Math.floor(1000) - Math.ceil(100)) + Math.ceil(100));
+        let delay = 100 + Math.floor(Math.random() * (Math.floor(1000) - Math.ceil(100)) + Math.ceil(100));
 
         new Sequence()
 
             .effect()
             .file("animated-spell-effects-cartoon.magic.helix")
-            .delay(delay1)
             .attachTo(token)
             .stretchTo(target)
+            .delay(delay)
             .filter("ColorMatrix", { hue: 140 })
             .waitUntilFinished(-800)
 
             .thenDo(function () {
-                chrisPremades.helpers.createEffect(target.actor, effectData);
+                mba.createEffect(target.actor, effectData);
             })
 
             .effect()
@@ -69,15 +73,15 @@ export async function aid({ speaker, actor, token, character, item, args, scope,
             .playbackRate(0.8)
 
             .effect()
-            .delay(700)
             .file("animated-spell-effects-cartoon.level 01.divine favour.blue")
             .attachTo(target)
             .scaleToObject(1.3 * target.document.texture.scaleX)
+            .delay(700)
             .playbackRate(0.8)
             .repeats(3, 1200)
 
             .thenDo(function () {
-                chrisPremades.helpers.applyDamage([target], healAmmount, 'healing');
+                mba.applyDamage([target], healAmmount, 'healing');
             })
 
             .play()

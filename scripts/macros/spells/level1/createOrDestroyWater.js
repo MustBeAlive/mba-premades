@@ -7,7 +7,7 @@ export async function createOrDestroyWater({ speaker, actor, token, character, i
         ["Destroy water", "destroy"],
         ["Cancel", "cancel"]
     ];
-    let selection = await mba.dialog("What would you like to do?", choices);
+    let selection = await mba.dialog("Create or Destroy Water", choices, `<b>What would you like to do?</b>`);
     if (!selection) return;
     if (selection === "create") {
         let ammount = 10 * level;

@@ -1,3 +1,6 @@
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
     new Sequence()
@@ -129,11 +132,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 'template': {
                     'name': 'web',
                     'castLevel': workflow.castData.castLevel,
-                    'saveDC': chrisPremades.helpers.getSpellDC(workflow.item),
+                    'saveDC': mba.getSpellDC(workflow.item),
                     'macroName': 'web',
                     'templateUuid': template.uuid,
-                    'turn': 'end',
-                    'ignoreMove': true,
                     'icon': workflow.item.img,
                     'itemUuid': workflow.item.uuid
                 }
@@ -142,10 +143,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     });
     if (!workflow.failedSaves.size) return;
     let effectData = {
-        'name': "Enwebbed",
-        'icon': template.flags['mba-premades']?.template?.icon,
-        'origin': template.flags['mba-premades']?.template?.itemUuid,
-        'description': "You are stuck in a mass of thick, sticky webbing. You can use your action to make a Strength check. If you succeed, you are no longer restrained.",
+        'name': "Web: Restrain",
+        'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
+        'description': `
+            <p>You are stuck in a mass of thick, sticky webbing.</p>
+            <p>You can use your action to make a Strength ability check. If you succeed, you are no longer restrained.</p>
+        `,
         'changes': [
             {
                 'key': 'macro.CE',
@@ -156,7 +160,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': 'actionSave=true, rollType=check, saveAbility=str, saveDC=' + template.flags['mba-premades']?.template?.saveDC + ', saveMagic=true, name=Web: Action Save',
+                'value': `actionSave=true, rollType=check, saveAbility=str, saveDC=${mba.getSpellDC(workflow.item)}, saveMagic=true, name=Restrain: Action Save, killAnim=true`,
                 'priority': 20
             }
         ],
@@ -167,46 +171,45 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             'midi-qol': {
                 'castData': {
                     baseLevel: 2,
-                    castLevel: template.flags['mba-premades']?.template?.castLevel,
-                    itemUuid: template.flags['mba-premades']?.template?.itemUuid
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
                 }
             }
         }
     };
-    for (let i of Array.from(workflow.failedSaves)) {
-        await chrisPremades.helpers.createEffect(i.actor, effectData);
-    }
+    for (let i of Array.from(workflow.failedSaves)) await mba.createEffect(i.actor, effectData);
 }
 
 async function trigger(token, trigger) {
-    if (chrisPremades.helpers.findEffect(token.actor, "Enwebbed")) return;
-    if (chrisPremades.helpers.findEffect(token.actor, "Restrained")) return;
-    if (chrisPremades.helpers.checkTrait(token.actor, 'ci', 'restrained')) return;
+    if (mba.findEffect(token.actor, "Web: Restrain")) return;
+    if (mba.findEffect(token.actor, "Restrained")) return;
+    if (mba.checkTrait(token.actor, 'ci', 'restrained')) return;
     let template = await fromUuid(trigger.templateUuid);
     if (!template) return;
-    if (chrisPremades.helpers.inCombat()) {
+    if (mba.inCombat()) {
         let turn = game.combat.round + '-' + game.combat.turn;
         let lastTurn = template.flags['mba-premades']?.spell?.web?.[token.id]?.turn;
         if (turn === lastTurn) return;
         await template.setFlag('mba-premades', 'spell.web.' + token.id + '.turn', turn);
     }
-    let originUuid = template.flags.dnd5e?.origin;
-    if (!originUuid) return;
-    let originItem = await fromUuid(originUuid);
+    let originItem = await fromUuid(trigger.itemUuid);
     if (!originItem) return;
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Web: Restrain', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Web: Restrain', false);
     if (!featureData) return;
-    featureData.system.save.dc = trigger.saveDC;
     delete featureData._id;
+    featureData.system.save.dc = trigger.saveDC;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': originItem.actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([token.uuid]);
+    let [config, options] = constants.syntheticItemWorkflowOptions([token.uuid]);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow.failedSaves.size) return;
     let effectData = {
-        'name': "Enwebbed",
-        'icon': template.flags['mba-premades']?.template?.icon,
-        'origin': template.flags['mba-premades']?.template?.itemUuid,
-        'description': "You are stuck in a mass of thick, sticky webbing. You can use your action to make a Strength check. If you succeed, you are no longer restrained.",
+        'name': "Web: Restrain",
+        'icon': trigger.icon,
+        'origin': trigger.itemUuid,
+        'description': `
+            <p>You are stuck in a mass of thick, sticky webbing.</p>
+            <p>You can use your action to make a Strength ability check. If you succeed, you are no longer restrained.</p>
+        `,
         'changes': [
             {
                 'key': 'macro.CE',
@@ -217,7 +220,7 @@ async function trigger(token, trigger) {
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': 'actionSave=true, rollType=check, saveAbility=str, saveDC=' + template.flags['mba-premades']?.template?.saveDC + ', saveMagic=true, name=Web: Action Save',
+                'value': `actionSave=true, rollType=check, saveAbility=str, saveDC=${trigger.saveDC}, saveMagic=true, name=Restrain: Action Save, killAnim=true`,
                 'priority': 20
             }
         ],
@@ -228,16 +231,17 @@ async function trigger(token, trigger) {
             'midi-qol': {
                 'castData': {
                     baseLevel: 2,
-                    castLevel: template.flags['mba-premades']?.template?.castLevel,
-                    itemUuid: template.flags['mba-premades']?.template?.itemUuid
+                    castLevel: trigger.castLevel,
+                    itemUuid: trigger.itemUuid
                 }
             }
         }
 
     };
-    for (let i of Array.from(featureWorkflow.failedSaves)) {
-        await chrisPremades.helpers.createEffect(i.actor, effectData);
-    }
+    let newEffect = await mba.createEffect(token.actor, effectData);
+    let concData = originItem.actor.getFlag("midi-qol", "concentration-data.removeUuids");
+    concData.push(newEffect.uuid);
+    await originItem.actor.setFlag("midi-qol", "concentration-data.removeUuids", concData);
 }
 
 async function enter(template, token) {

@@ -16,7 +16,7 @@ export async function witchBolt({ speaker, actor, token, character, item, args, 
         }
         if (game.combat.current.tokenId != token.document.id) return;
         let choices = [['Yes!', 'yes'], ['No, stop concentrating!', 'no']];
-        let selection = await mba.dialog('Use action to sustain Witch Bolt?', choices);
+        let selection = await mba.dialog("Witch Bolt", choices, `<b>Do you want to spend your Action to sustain Witch Bolt?</b>`);
         if (!selection) return;
         if (selection === "no") {
             await mba.removeCondition(actor, 'Concentrating');
@@ -60,7 +60,7 @@ export async function witchBolt({ speaker, actor, token, character, item, args, 
         ['Red', 'red'],
         ['Yellow', 'yellow']
     ];
-    let selection = await mba.dialog("Choose animation color:", color);
+    let selection = await mba.dialog("Witch Bolt", color, `<b>Choose color:</b>`);
     if (!selection) selection = "blue";
     let animation1 = "jb2a.impact.012." + selection;
     if (selection === "dark_green") animation1 = "jb2a.impact.012.green02";

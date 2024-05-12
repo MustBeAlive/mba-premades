@@ -1165,6 +1165,12 @@
           "mode": 0,
           "value": "1",
           "priority": 0
+        },
+        {
+          "key": "macro.CE",
+          "mode": 0,
+          "value": "Incapacitated",
+          "priority": 20
         }
       ],
       "description": "<ul><li><p>A stunned creature is incapacitated (see the condition), can't move, and can speak only falteringly.</p></li><li><p>The creature automatically fails Strength and Dexterity saving throws.</p></li><li><p>Attack rolls against the creature have advantage.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Ошеломлённое существо недееспособно, не способно перемещаться и говорит, запинаясь.</span></p></li><li><p><span style=\"font-family:Signika\">Существо автоматически проваливает спасброски Силы и Ловкости.</span></p></li><li><p><span style=\"font-family:Signika\">Броски атаки по существу совершаются с преимуществом.</span></p></li></ul>",
@@ -1436,6 +1442,12 @@
           "mode": 0,
           "value": "0",
           "priority": 25
+        },
+        {
+          "key": "macro.CE",
+          "mode": 0,
+          "value": "Incapacitated",
+          "priority": 20
         }
       ],
       "description": "<ul><li><p>An unconscious creature is incapacitated (See the condition) can't move or speak, and is unaware of its surroundings.</p></li><li><p>The creature drops whatever its holding and falls prone (See the condition).</p></li><li><p>The creature automatically fails Strength and Dexterity saving throws.</p></li><li><p>Attack rolls against the creature have advantage.</p></li><li><p>Any attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Находящееся без сознания существо недееспособно, не способно перемещаться и говорить, а также не осознаёт своё окружение.</span></p></li><li><p><span style=\"font-family:Signika\">Существо роняет всё, что держит, и падает ничком.</span></p></li><li><p><span style=\"font-family:Signika\">Существо автоматически проваливает спасброски Силы и Ловкости. Броски атаки по существу совершаются с преимуществом.</span></p></li><li><p><span style=\"font-family:Signika\">Любая атака, попавшая по такому существу, считается критическим попаданием, если нападающий находится в пределах 5 футов от него.</span></p></li></ul>",
@@ -1593,6 +1605,12 @@
           "mode": 0,
           "value": "0",
           "priority": 25
+        },
+        {
+          "key": "macro.CE",
+          "mode": 0,
+          "value": "Incapacitated",
+          "priority": 20
         }
       ],
       "description": "<ul><li><p>A paralyzed creature is incapacitated (see the condition) and can't move or speak.</p></li><li><p>The creature automatically fails Strength and Dexterity saving throws.</p></li><li><p>Attack rolls against the creature have advantage.</p></li><li><p>Any attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Парализованное существо недееспособно (incapacitated) и не способно перемещаться и говорить.</span></p></li><li><p><span style=\"font-family:Signika\">Существо автоматически проваливает спасброски Силы и Ловкости.</span></p></li><li><p><span style=\"font-family:Signika\">Броски атаки по парализованному существу совершаются с преимуществом.</span></p></li><li><p><span style=\"font-family:Signika\">Любая атака, попавшая по такому существу, считается критическим попаданием, если нападающий находится в пределах 5 футов от существа.</span></p></li></ul>",
@@ -1699,6 +1717,12 @@
           "mode": 0,
           "value": "0",
           "priority": 25
+        },
+        {
+          "key": "macro.CE",
+          "mode": 0,
+          "value": "Incapacitated",
+          "priority": 20
         }
       ],
       "description": "<ul><li><p>A petrified creature is transformed, along with any nonmagical object it is wearing or carrying, into a solid inanimate substance (usually stone). Its weight increases by a factor of ten, and it ceases aging.</p></li><li><p>The creature is incapacitated (see the condition), can't move or speak, and is unaware of its surroundings.</p></li><li><p>Attack rolls against the creature have advantage.</p></li><li><p>The creature automatically fails Strength and Dexterity saving throws.</p></li><li><p>The creature has resistance to all damage.</p></li><li><p>The creature is immune to poison and disease, although a poison or disease already in its system is suspended, not neutralized. Remove all movement, grant advantage to all who attack, and add damage resistance to all magical and physical attacks</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Окаменевшее существо, а также все немагические предметы, которые оно несёт или носит, трансформируется в твёрдое инертное вещество (как правило, в камень). Его вес увеличивается в 10 раз, и оно перестаёт стареть.</span></p></li><li><p><span style=\"font-family:Signika\">Существо недееспособно (incapacitated), не способно двигаться и говорить, а также не осознаёт своё окружение.</span></p></li><li><p><span style=\"font-family:Signika\">Броски атаки по существу совершаются с преимуществом.</span></p></li><li><p><span style=\"font-family:Signika\">Существо автоматически проваливает спасброски Силы и Ловкости.</span></p></li><li><p><span style=\"font-family:Signika\">Существо получает сопротивление ко всем видам урона.</span></p></li><li><p><span style=\"font-family:Signika\">Существо получает иммунитет к ядам и болезням. Если яд или болезнь уже действовали на существо, их действие приостанавливается, но не исчезает.</span></p></li></ul>",
@@ -1849,7 +1873,8 @@
           "specialDuration": [
             "turnStart",
             "shortRest",
-            "longRest"
+            "longRest",
+            "combatEnd"
           ],
           "disableIncapacitated": false,
           "selfTarget": false,
@@ -2512,7 +2537,7 @@
     "systemVersion": "2.4.1",
     "coreVersion": "11.315",
     "createdTime": 1698551381684,
-    "modifiedTime": 1714086966367,
+    "modifiedTime": 1715384021949,
     "lastModifiedBy": "AaGlXPdfBCo8JJO1"
   }
 }

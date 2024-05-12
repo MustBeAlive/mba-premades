@@ -7,7 +7,7 @@ export async function shillelagh({ speaker, actor, token, character, item, args,
         return;
     }
     let selection;
-    if (weapons.length === 1) [selection] = weapons[0];
+    if (weapons.length === 1) selection = weapons[0];
     if (!selection) [selection] = await mba.selectDocument("Which weapon would you like to empower?", weapons);
     if (!selection) {
         ui.notifications.warn("Failed to select weapon");
@@ -93,7 +93,7 @@ export async function shillelagh({ speaker, actor, token, character, item, args,
 
         .effect()
         .file("jb2a.plant_growth.03.round.4x4.complete.greenyellow")
-        .attachTo(token)
+        .atLocation(token)
         .scaleToObject(2)
         .belowTokens()
         .fadeIn(500)

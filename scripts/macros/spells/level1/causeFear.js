@@ -6,12 +6,17 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 	if (workflow.targets.size > ammount) {
 		let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
 		if (!selection.buttons) {
-			ui.notifications.warn('Failed to select right ammount of targets, try again!')
+			ui.notifications.warn('Failed to select targets, try again!')
 			await mba.removeCondition(workflow.actor, "Concentrating");
 			return;
 		}
 		let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
 		mba.updateTargets(newTargets);
+		if (Array.from(game.user.targets).length > ammount) {
+            ui.notifications.warn("Too many targets selected, try again!");
+            await mba.removeCondition(workflow.actor, "Concentrating");
+            return;
+        }
 	}
 	await warpgate.wait(100);
 	let targets = Array.from(game.user.targets);
@@ -26,10 +31,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 		return
 	}
 	delete featureData._id;
-	let originItem = workflow.item;
-	if (!originItem) return;
-	featureData.system.save.dc = mba.getSpellDC(originItem);
-	setProperty(featureData, 'mba-premades.spell.castData.school', originItem.system.school);
+	featureData.system.save.dc = mba.getSpellDC(workflow.item);
+	setProperty(featureData, 'mba-premades.spell.castData.school', workflow.item.system.school);
 	let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
 	let targetUuids = [];
 	for (let i of targets) targetUuids.push(i.document.uuid);

@@ -24,7 +24,7 @@ export async function shove({ speaker, actor, token, character, item, args, scop
             if (targetRoll.total >= sourceRoll.total) return;
         }
     }
-    let selection = await mba.dialog('What do you want to do?', [['Push 5 ft.', 'move'], ['Knock Prone', 'prone']]);
+    let selection = await mba.dialog("Shove", [['Push 5 ft.', 'move'], ['Knock Prone', 'prone']], `<b>What would you like to do?</b>`);
     if (!selection) return;
     if (selection === 'prone') {
 
@@ -64,8 +64,8 @@ export async function shove({ speaker, actor, token, character, item, args, scop
             .duration(500)
 
             .effect()
-            .atLocation(target)
             .file("animated-spell-effects-cartoon.air.puff.01")
+            .atLocation(target)
             .scaleToObject(1.75)
             .belowTokens()
             .opacity(0.35)

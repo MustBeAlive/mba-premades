@@ -70,6 +70,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                     'saveDC': mba.getSpellDC(workflow.item),
                     'macroName': 'grease',
                     'templateUuid': template.uuid,
+                    'itemUuid': workflow.item.uuid
                 }
             }
         }
@@ -91,9 +92,7 @@ async function trigger(token, trigger) {
         if (turn === lastTurn) return;
         await template.setFlag('mba-premades', 'spell.grease.' + token.id + '.turn', turn);
     }
-    let originUuid = template.flags.dnd5e?.origin;
-    if (!originUuid) return;
-    let originItem = await fromUuid(originUuid);
+    let originItem = await fromUuid(trigger.itemUuid);
     if (!originItem) return;
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Grease: Fall', false);
     if (!featureData) return;

@@ -156,8 +156,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                     }
                 }
             };
-            await chrisPremades.helpers.createEffect(target.actor, effectData);
-            let newEffect = await chrisPremades.helpers.findEffect(target.actor, "Eyebite: Asleep");
+            let newEffect = await chrisPremades.helpers.createEffect(target.actor, effectData);
             let concData = workflow.actor.getFlag("midi-qol", "concentration-data.removeUuids");
             concData.push(newEffect.uuid);
             await workflow.actor.setFlag("midi-qol", "concentration-data.removeUuids", concData);

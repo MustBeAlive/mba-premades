@@ -1,9 +1,9 @@
 import {tashaSummon} from "../../generic/tashaSummon.js";
 
 export async function tenserFloatingDisk({speaker, actor, token, character, item, args, scope, workflow}) {
-    let sourceActor = game.actors.getName('MBA - Floating Disk');
+    let sourceActor = game.actors.getName('MBA: Floating Disk');
     if (!sourceActor) {
-        ui.notifications.warn('Missing actor in the side panel! (MBA - Floating Disk)');
+        ui.notifications.warn('Missing actor in the side panel! (MBA: Floating Disk)');
         return;
     }
     let tokenName = `${workflow.token.document.name} Floating Disk`;

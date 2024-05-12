@@ -1,16 +1,20 @@
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
 	if (!workflow.failedSaves.size) return;
 	let target = workflow.targets.first();
-	let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Levitate: Control Elevation', false);
+	let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Levitate: Control Elevation', false);
 	if (!featureData) {
 		ui.notifications.warn('Missing item in the compendium! (Levitate: Control Elevation)');
 		return;
 	}
+	delete featureData._id;
 	async function effectMacroSourceTurnStart() {
-		let effect = await chrisPremades.helpers.findEffect(actor, "Levitate");
+		let effect = await mbaPremades.helpers.findEffect(actor, "Levitate");
 		if (!effect) return;
 		let updates = { 'flags.mba-premades.spell.levitate.used': false };
-		await chrisPremades.helpers.updateEffect(effect, updates);
+		await mbaPremades.helpers.updateEffect(effect, updates);
 	}
 	async function effectMacroSourceDel() {
 		await warpgate.revert(token.document, 'Levitate: Control Elevation');
@@ -26,10 +30,10 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 		'flags': {
 			'effectmacro': {
 				'onTurnStart': {
-					'script': chrisPremades.helpers.functionToString(effectMacroSourceTurnStart)
+					'script': mba.functionToString(effectMacroSourceTurnStart)
 				},
 				'onDelete': {
-					'script': chrisPremades.helpers.functionToString(effectMacroSourceDel)
+					'script': mba.functionToString(effectMacroSourceDel)
 				}
 			},
 			'mba-premades': {
@@ -96,7 +100,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 		'flags': {
 			'effectmacro': {
 				'onDelete': {
-					'script': chrisPremades.helpers.functionToString(effectMacroTargetDel)
+					'script': mba.functionToString(effectMacroTargetDel)
 				}
 			},
 			'midi-qol': {
@@ -109,9 +113,9 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 		}
 	};
 	await warpgate.mutate(workflow.token.document, sourceUpdates, {}, sourceOptions);
-	await chrisPremades.helpers.createEffect(target.actor, targetEffectData);
+	await mba.createEffect(target.actor, targetEffectData);
 	let feature = workflow.actor.items.find(i => i.name === "Levitate: Control Elevation");
-	let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([target.document.uuid]);
+	let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
 	await warpgate.wait(100);
 	await game.messages.get(workflow.itemCardId).delete();
 	await MidiQOL.completeItemUse(feature, config, options);
@@ -184,7 +188,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-	let effect = await chrisPremades.helpers.findEffect(workflow.actor, "Levitate");
+	let effect = await mba.findEffect(workflow.actor, "Levitate");
 	if (!effect) return;
 	if (effect.flags['mba-premades']?.spell?.levitate?.used === true) {
 		ui.notifications.info("Cannot change elevation twice in one turn!");
@@ -225,7 +229,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 	};
 	await warpgate.mutate(target, updates, {}, options);
 	let sourceUpdates = { 'flags.mba-premades.spell.levitate.used': true };
-	await chrisPremades.helpers.updateEffect(effect, sourceUpdates);
+	await mba.updateEffect(effect, sourceUpdates);
 }
 
 export let levitate = {

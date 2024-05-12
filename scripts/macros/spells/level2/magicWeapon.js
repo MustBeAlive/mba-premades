@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function magicWeapon({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.targets.size != 1) return;
     let target = workflow.targets.first();
@@ -10,7 +12,7 @@ export async function magicWeapon({ speaker, actor, token, character, item, args
     if (weapons.length === 1) {
         selection = [weapons[0]];
     } else {
-        selection = await chrisPremades.helpers.selectDocument(workflow.item.name, weapons);
+        selection = await mba.selectDocument(workflow.item.name, weapons);
         if (!selection) return;
     }
     let castLevel = workflow.castData.castLevel;
@@ -39,7 +41,7 @@ export async function magicWeapon({ speaker, actor, token, character, item, args
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {

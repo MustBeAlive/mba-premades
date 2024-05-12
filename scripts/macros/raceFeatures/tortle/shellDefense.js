@@ -127,8 +127,8 @@ async function emerge({ speaker, actor, token, character, item, args, scope, wor
         ui.notifications.warn("You are not hiding in the shell!");
         return;
     };
-    let choices = [["Yes, emerge", "yes"], ["No, keep staying in the shell", "no"]];
-    let selection = await mba.dialog("Do you wish to emerge from the shell?", choices);
+    let choices = [["Yes, emerge", "yes"], ["No, stay in the shell", "no"]];
+    let selection = await mba.dialog("Shell Defense", choices, `<b>Do you want to emerge from the shell?</b>`);
     if (!selection || selection === "no") return;
     await mba.removeEffect(effect);
 }

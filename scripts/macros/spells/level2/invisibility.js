@@ -1,10 +1,22 @@
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
 export async function invisibility({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel - 1;
     if (workflow.targets.size > ammount) {
-        let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
-        if (!selection.buttons) return;
+        let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+        if (!selection.buttons) {
+			ui.notifications.warn('Failed to select targets, try again!')
+            await mba.removeCondition(workflow.actor, "Concentrating");
+			return;
+		}
         let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
-        chrisPremades.helpers.updateTargets(newTargets);
+        mba.updateTargets(newTargets);
+        if (Array.from(game.user.targets).length > ammount) {
+            ui.notifications.warn("Too many targets selected, try again!");
+            await mba.removeCondition(workflow.actor, "Concentrating");
+            return;
+        }
     }
     await warpgate.wait(100);
     let targets = Array.from(game.user.targets);
@@ -63,7 +75,7 @@ export async function invisibility({ speaker, actor, token, character, item, arg
             .wait(1500)
 
             .thenDo(function () {
-                chrisPremades.helpers.createEffect(target.actor, effectData)
+                mba.createEffect(target.actor, effectData)
             })
 
             .play()

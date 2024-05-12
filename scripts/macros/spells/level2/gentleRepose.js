@@ -1,7 +1,8 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function gentleRepose({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    let isDead = await chrisPremades.helpers.findEffect(target.actor, 'Dead');
-    if (!isDead) {
+    if (!mba.findEffect(target.actor, 'Dead')) {
         ui.notifications.warn("Target is not dead!");
         return;
     }
@@ -120,7 +121,7 @@ export async function gentleRepose({ speaker, actor, token, character, item, arg
         .aboveInterface()
 
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(target.actor, effectData)
+            mba.createEffect(target.actor, effectData)
         })
 
         .play();

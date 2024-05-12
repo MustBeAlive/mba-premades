@@ -113,7 +113,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     if (!effect) return;
     let queueSetup = await queue.setup(workflow.item.uuid, 'bardicInspiration', 150);
     if (!queueSetup) return;
-    let selection = await mba.dialog(effect.name, constants.yesNo, 'Use ' + effect.name + '? (Attack Total: ' + workflow.attackTotal + ' )');
+    let selection = await mba.dialog(effect.name, constants.yesNo, `Use ${effect.name}? (Attack Total: <b>${workflow.attackTotal}</b>)`);
     if (!selection) {
         queue.remove(workflow.item.uuid);
         return;
