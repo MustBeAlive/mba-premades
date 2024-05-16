@@ -1,9 +1,11 @@
 import {mba} from "../../helperFunctions.js";
 
 export async function jumping() {
-    let target = await fromUuidSync(game.user._lastSelected).object;
+    let target;
+    if (!game.user._lastSelected) target = game.user.targets.first();
+    else target = await fromUuidSync(game.user._lastSelected).object;
     if (!target) {
-        ui.notifications.warn("Select token!");
+        ui.notifications.warn("Need to select or target token!");
         return;
     }
     let choices = [["Distance Check", "check"], ["Animation", 'animation']];
@@ -12,7 +14,7 @@ export async function jumping() {
     if (selection === "animation") {
         let config = {
             size: target.w / canvas.grid.size,
-            icon: 'modules/mba-premades/icons/actions/jump.webp',
+            icon: target.document.texture.src,
             label: 'Leap',
             drawIcon: true,
             drawOutline: true,
@@ -149,11 +151,11 @@ export async function jumping() {
         ...you can reach up and grab something <span style="font-weight: bold;color: #992200;">${standingReachJump}${standingReachJumpWithStepOfTheWind}</span> feet off the ground.<br>
         <br>
         <b>If there are obstacles in the way...</b><br>
-        ...you might need to make a DC 12 [[/rollSkill ath]] check to jump over them.<br>
+        ...you might need to make a DC 12 (Athletics) check to jump over them.<br>
         ...you cannot jump over any obstacles that are taller than <span style="font-weight: bold;color: #992200;">${obstacleHeight}</span>${obstacleHeightWithStepOfTheWind} feet.<br>
         <br>
         <b>If you land in difficult terrain...</b><br>
-        ...you might need to make a DC 12 [[/rollSkill acr]] check or land prone.<br>
+        ...you might need to make a DC 12 (Acrobatics) check or land prone.<br>
         <br>
         <b>In all circumstances...</b><br>
         ...you cannot jump farther than your remaining movement. You might need to Dash to cover long distances.<br>

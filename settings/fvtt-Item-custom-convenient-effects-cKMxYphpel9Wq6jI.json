@@ -107,7 +107,7 @@
           "priority": 20
         }
       ],
-      "description": "<ul><li><p>Flanking grants +2 bonus on melee attack rolls</p></li><li><p><span style=\"font-family:Signika\">Фланкирование предоставляет +2 бонус на все атаки в ближнем бою.</span></p></li></ul>",
+      "description": "<p>Flanking grants +2 bonus on melee attack rolls</p><p></p><p>Фланкирование предоставляет +2 бонус на все атаки в ближнем бою.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -203,7 +203,7 @@
           "priority": 20
         }
       ],
-      "description": "<ul><li><p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</span></p></li></ul>",
+      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p><p></p><p>Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -296,7 +296,7 @@
           "priority": 20
         }
       ],
-      "description": "<ul><li><p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</span></p></li></ul>",
+      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p><p></p><p>Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -389,7 +389,7 @@
           "priority": 20
         }
       ],
-      "description": "<ul><li><p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</span></p></li></ul>",
+      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p><p></p><p>Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -482,7 +482,7 @@
           "priority": 20
         }
       ],
-      "description": "<ul><li><p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</span></p></li></ul>",
+      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p><p></p><p>Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -575,7 +575,7 @@
           "priority": 20
         }
       ],
-      "description": "<ul><li><p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</span></p></li></ul>",
+      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p><p></p><p>Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -636,68 +636,6 @@
       "_id": "AhAl81X9UwL0FRt3"
     },
     {
-      "changes": [],
-      "description": "<ul><li><p>You can spend GM Inspiration Token on any roll to give yourself advantage in that particular roll</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Жетон вдохновения от ГМа — его можно потратить на один любой бросок, чтобы получить в нем преимущество</span></p></li></ul>",
-      "disabled": false,
-      "duration": {
-        "rounds": null,
-        "seconds": null,
-        "turns": null,
-        "startTime": null,
-        "combat": null,
-        "startRound": null,
-        "startTurn": null
-      },
-      "flags": {
-        "dfreds-convenient-effects": {
-          "isConvenient": true,
-          "isDynamic": false,
-          "isViewable": true,
-          "nestedEffects": [],
-          "subEffects": []
-        },
-        "times-up": {
-          "isPassive": false
-        },
-        "dae": {
-          "disableIncapacitated": false,
-          "selfTarget": false,
-          "selfTargetAlways": false,
-          "dontApply": false,
-          "stackable": "noneName",
-          "showIcon": false,
-          "durationExpression": "",
-          "macroRepeat": "none",
-          "specialDuration": []
-        },
-        "ActiveAuras": {
-          "isAura": false,
-          "aura": "None",
-          "nameOverride": "",
-          "radius": "",
-          "alignment": "",
-          "type": "",
-          "customCheck": "",
-          "ignoreSelf": false,
-          "height": false,
-          "hidden": false,
-          "displayTemp": false,
-          "hostile": false,
-          "onlyOnce": false,
-          "wallsBlock": "system"
-        }
-      },
-      "icon": "icons/commodities/currency/coin-engraved-sun-smile-copper.webp",
-      "name": "GM Inspiration",
-      "origin": "Item.cKMxYphpel9Wq6jI",
-      "tint": null,
-      "transfer": false,
-      "statuses": [
-        "Convenient Effect: GM Inspiration"
-      ],
-      "_id": "Bt4dkIK9ANSu8t5d"
-    },
-    {
       "changes": [
         {
           "key": "flags.midi-qol.disadvantage.ability.save.dex",
@@ -730,7 +668,7 @@
           "priority": 20
         }
       ],
-      "description": "<ul><li><p>A restrained creature's speed becomes 0, and it can't benefit from any bonus to its speed.</p></li><li><p>Attack rolls against the creature have advantage, and the creature's attack rolls have disadvantage.</p></li><li><p>The creature has disadvantage on Dexterity saving throws.</p></li><li><p>Restrained creature cannot use somatic spell components.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Скорость опутанного существа равна 0, и оно не получает выгоды ни от каких бонусов к скорости.</span></p></li><li><p><span style=\"font-family:Signika\">Броски атаки по такому существу совершаются с преимуществом, а его броски атаки — с помехой.</span></p></li><li><p><span style=\"font-family:Signika\">Существо совершает с помехой спасброски Ловкости.</span></p></li><li><p><span style=\"font-family:Signika\">Опутанное существо не может использовать заклинания, имеющие Соматический (S) компонент.</span></p></li></ul>",
+      "description": "<p>A restrained creature's speed becomes 0, and it can't benefit from any bonus to its speed.</p><p>Attack rolls against the creature have advantage, and the creature's attack rolls have disadvantage.</p><p>The creature has disadvantage on Dexterity saving throws.</p><p>Restrained creature cannot use somatic spell components.</p><p></p><p>Скорость опутанного существа равна 0, и оно не получает выгоды ни от каких бонусов к скорости.</p><p>Броски атаки по такому существу совершаются с преимуществом, а его броски атаки — с помехой.</p><p>Существо совершает с помехой спасброски Ловкости.</p><p>Опутанное существо не может использовать заклинания, имеющие Соматический (S) компонент.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -807,7 +745,7 @@
           "priority": 0
         }
       ],
-      "description": "<ul><li><p>A blinded creature can't see and automatically fails any ability check that requires sight.</p></li><li><p>Attack rolls against the creature have advantage, and the creature's attack rolls have disadvantage.</p><p></p></li><li><p><span style=\"font-family:Signika\">Ослеплённое существо ничего не видит и автоматически проваливает все проверки характеристик, связанные со зрением.</span></p></li><li><p><span style=\"font-family:Signika\">Броски атаки по такому существу совершаются с преимуществом, а его броски атаки совершаются с помехой.</span></p></li></ul>",
+      "description": "<p>A blinded creature can't see and automatically fails any ability check that requires sight.</p><p>Attack rolls against the creature have advantage, and the creature's attack rolls have disadvantage.<br /></p><p>Ослеплённое существо ничего не видит и автоматически проваливает все проверки характеристик, связанные со зрением.</p><p>Броски атаки по такому существу совершаются с преимуществом, а его броски атаки совершаются с помехой.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -870,7 +808,7 @@
     },
     {
       "changes": [],
-      "description": "<ul><li><p>A charmed creature can't attack the charmer or target the charmer with harmful abilities or magical effects.</p></li><li><p>The charmer has advantage on any ability check to interact socially with the creature.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Очарованное существо не может атаковать того, кто его очаровал, а также делать его целью умения или магического эффекта, причиняющего вред.</span></p></li><li><p><span style=\"font-family:Signika\">Искуситель совершает с преимуществом все проверки характеристик при социальном взаимодействии с очарованным существом.</span></p></li></ul>",
+      "description": "<p>A charmed creature can't attack the charmer or target the charmer with harmful abilities or magical effects.</p><p>The charmer has advantage on any ability check to interact socially with the creature.</p><p></p><p>Очарованное существо не может атаковать того, кто его очаровал, а также делать его целью умения или магического эффекта, причиняющего вред.</p><p>Искуситель совершает с преимуществом все проверки характеристик при социальном взаимодействии с очарованным существом.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -932,7 +870,7 @@
     },
     {
       "changes": [],
-      "description": "<ul><li><p>A deafened creature can't hear and automatically fails any ability check that requires hearing.</p></li><li><p><span style=\"font-family:Signika\">Оглохшее существо ничего не слышит и автоматически проваливает все проверки характеристик, связанные со слухом.</span></p></li></ul>",
+      "description": "<p>A deafened creature can't hear and automatically fails any ability check that requires hearing.</p><p></p><p>Оглохшее существо ничего не слышит и автоматически проваливает все проверки характеристик, связанные со слухом.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -1008,7 +946,7 @@
           "priority": 0
         }
       ],
-      "description": "<ul><li><p>A frightened creature has disadvantage on ability checks and attack rolls while the source of its fear is within line of sight.</p></li><li><p>The creature can't willingly move closer to the source of its fear.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Испуганное существо совершает с помехой проверки характеристик и броски атаки, пока источник его страха находится в пределах его линии обзора.</span></p></li><li><p><span style=\"font-family:Signika\">Существо не способно добровольно приблизиться к источнику своего страха.</span></p></li></ul>",
+      "description": "<p>A frightened creature has disadvantage on ability checks and attack rolls while the source of its fear is within line of sight.</p><p>The creature can't willingly move closer to the source of its fear.</p><p></p><p>Испуганное существо совершает с помехой проверки характеристик и броски атаки, пока источник его страха находится в пределах его линии обзора.</p><p>Существо не способно добровольно приблизиться к источнику своего страха.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -1084,7 +1022,7 @@
           "priority": 0
         }
       ],
-      "description": "<ul><li><p>A poisoned creature has disadvantage on attack rolls and ability checks.</p></li><li><p><span style=\"font-family:Signika\">Отравленное существо совершает с помехой броски атаки и проверки характеристик.</span></p></li></ul>",
+      "description": "<p>A poisoned creature has disadvantage on attack rolls and ability checks.</p><p></p><p>Отравленное существо совершает с помехой броски атаки и проверки характеристик.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -1173,7 +1111,7 @@
           "priority": 20
         }
       ],
-      "description": "<ul><li><p>A stunned creature is incapacitated (see the condition), can't move, and can speak only falteringly.</p></li><li><p>The creature automatically fails Strength and Dexterity saving throws.</p></li><li><p>Attack rolls against the creature have advantage.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Ошеломлённое существо недееспособно, не способно перемещаться и говорит, запинаясь.</span></p></li><li><p><span style=\"font-family:Signika\">Существо автоматически проваливает спасброски Силы и Ловкости.</span></p></li><li><p><span style=\"font-family:Signika\">Броски атаки по существу совершаются с преимуществом.</span></p></li></ul>",
+      "description": "<p>A stunned creature is incapacitated (see the condition), can't move, and can speak only falteringly.</p><p>The creature automatically fails Strength and Dexterity saving throws.</p><p>Attack rolls against the creature have advantage.</p><p></p><p>Ошеломлённое существо недееспособно, не способно перемещаться и говорит, запинаясь.</p><p>Существо автоматически проваливает спасброски Силы и Ловкости.</p><p>Броски атаки по существу совершаются с преимуществом.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -1249,7 +1187,7 @@
           "priority": 0
         }
       ],
-      "description": "<ul><li><p>An invisible creature is impossible to see without the aid of magic or a special sense. For the purpose of hiding, the creature is heavily obscured. The creature's location can be detected by any noise it makes or any tracks it leaves.</p></li><li><p>Attack rolls against the creature have disadvantage, and the creature's attack rolls have advantage.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Невидимое существо невозможно увидеть без помощи магии или особого чувства. С точки зрения скрытности существо считается сильно заслонённым. Местонахождение существа можно определить по шуму, который оно издаёт, или по оставленным им следам.</span></p></li><li><p><span style=\"font-family:Signika\">Броски атаки по невидимому существу совершаются с помехой, а его броски атаки — с преимуществом.</span></p></li></ul>",
+      "description": "<p>An invisible creature is impossible to see without the aid of magic or a special sense. For the purpose of hiding, the creature is heavily obscured. The creature's location can be detected by any noise it makes or any tracks it leaves.</p><p>Attack rolls against the creature have disadvantage, and the creature's attack rolls have advantage.</p><p></p><p>Невидимое существо невозможно увидеть без помощи магии или особого чувства. С точки зрения скрытности существо считается сильно заслонённым. Местонахождение существа можно определить по шуму, который оно издаёт, или по оставленным им следам.</p><p>Броски атаки по невидимому существу совершаются с помехой, а его броски атаки — с преимуществом.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -1349,7 +1287,7 @@
           "priority": 25
         }
       ],
-      "description": "<ul><li><p>A prone creature's only movement option is to crawl, unless it stands up and thereby ends the condition.</p></li><li><p>The creature has disadvantage on attack rolls.</p></li><li><p>An attack roll against the creature has advantage if the attacker is within 5 feet of the creature. Otherwise, the attack roll has disadvantage.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Сбитое с ног существо способно перемещаться только ползком, пока не встанет, прервав тем самым это состояние.</span></p></li><li><p><span style=\"font-family:Signika\">Существо совершает с помехой броски атаки.</span></p></li><li><p><span style=\"font-family:Signika\">Броски атаки по существу совершаются с преимуществом, если нападающий находится в пределах 5 футов от него. В противном случае броски атаки совершаются с помехой.</span></p></li></ul>",
+      "description": "<p>A prone creature's only movement option is to crawl, unless it stands up and thereby ends the condition.</p><p>The creature has disadvantage on attack rolls.</p><p>An attack roll against the creature has advantage if the attacker is within 5 feet of the creature. Otherwise, the attack roll has disadvantage.</p><p></p><p>Сбитое с ног существо способно перемещаться только ползком, пока не встанет, прервав тем самым это состояние.</p><p>Существо совершает с помехой броски атаки.</p><p>Броски атаки по существу совершаются с преимуществом, если нападающий находится в пределах 5 футов от него. В противном случае броски атаки совершаются с помехой.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -1450,7 +1388,7 @@
           "priority": 20
         }
       ],
-      "description": "<ul><li><p>An unconscious creature is incapacitated (See the condition) can't move or speak, and is unaware of its surroundings.</p></li><li><p>The creature drops whatever its holding and falls prone (See the condition).</p></li><li><p>The creature automatically fails Strength and Dexterity saving throws.</p></li><li><p>Attack rolls against the creature have advantage.</p></li><li><p>Any attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Находящееся без сознания существо недееспособно, не способно перемещаться и говорить, а также не осознаёт своё окружение.</span></p></li><li><p><span style=\"font-family:Signika\">Существо роняет всё, что держит, и падает ничком.</span></p></li><li><p><span style=\"font-family:Signika\">Существо автоматически проваливает спасброски Силы и Ловкости. Броски атаки по существу совершаются с преимуществом.</span></p></li><li><p><span style=\"font-family:Signika\">Любая атака, попавшая по такому существу, считается критическим попаданием, если нападающий находится в пределах 5 футов от него.</span></p></li></ul>",
+      "description": "<p>An unconscious creature is incapacitated (See the condition) can't move or speak, and is unaware of its surroundings.</p><p>The creature drops whatever its holding and falls prone (See the condition).</p><p>The creature automatically fails Strength and Dexterity saving throws.</p><p>Attack rolls against the creature have advantage.</p><p>Any attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.</p><p></p><p>Находящееся без сознания существо недееспособно, не способно перемещаться и говорить, а также не осознаёт своё окружение.</p><p>Существо роняет всё, что держит, и падает ничком.</p><p>Существо автоматически проваливает спасброски Силы и Ловкости. Броски атаки по существу совершаются с преимуществом.</p><p>Любая атака, попавшая по такому существу, считается критическим попаданием, если нападающий находится в пределах 5 футов от него.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -1514,7 +1452,7 @@
     },
     {
       "changes": [],
-      "description": "<ul><li><p>An incapacitated creature can't take actions or reactions</p></li><li><p>An incapacitated creature fails all checks against being grappled or shoved</p></li><li><p>An incapacitated creature automatically loses concentration</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Недееспособное существо не может совершать действия и реакции.</span></p></li><li><p><span style=\"font-family:Signika\">Недееспособные существа автоматически проваливают проверки для сопротивления захвату или толчку.</span></p></li><li><p><span style=\"font-family:Signika\">Существо теряет концентрацию на заклинании, если становится недееспособным.</span></p></li></ul>",
+      "description": "<p>An incapacitated creature can't take actions or reactions</p><p>An incapacitated creature fails all checks against being grappled or shoved</p><p>An incapacitated creature automatically loses concentration</p><p></p><p>Недееспособное существо не может совершать действия и реакции.</p><p>Недееспособные существа автоматически проваливают проверки для сопротивления захвату или толчку.</p><p>Существо теряет концентрацию на заклинании, если становится недееспособным.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -1613,7 +1551,7 @@
           "priority": 20
         }
       ],
-      "description": "<ul><li><p>A paralyzed creature is incapacitated (see the condition) and can't move or speak.</p></li><li><p>The creature automatically fails Strength and Dexterity saving throws.</p></li><li><p>Attack rolls against the creature have advantage.</p></li><li><p>Any attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Парализованное существо недееспособно (incapacitated) и не способно перемещаться и говорить.</span></p></li><li><p><span style=\"font-family:Signika\">Существо автоматически проваливает спасброски Силы и Ловкости.</span></p></li><li><p><span style=\"font-family:Signika\">Броски атаки по парализованному существу совершаются с преимуществом.</span></p></li><li><p><span style=\"font-family:Signika\">Любая атака, попавшая по такому существу, считается критическим попаданием, если нападающий находится в пределах 5 футов от существа.</span></p></li></ul>",
+      "description": "<p>A paralyzed creature is incapacitated (see the condition) and can't move or speak.</p><p>The creature automatically fails Strength and Dexterity saving throws.</p><p>Attack rolls against the creature have advantage.</p><p>Any attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.</p><p></p><p>Парализованное существо недееспособно (incapacitated) и не способно перемещаться и говорить.</p><p>Существо автоматически проваливает спасброски Силы и Ловкости.</p><p>Броски атаки по парализованному существу совершаются с преимуществом.</p><p>Любая атака, попавшая по такому существу, считается критическим попаданием, если нападающий находится в пределах 5 футов от существа.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -1725,7 +1663,7 @@
           "priority": 20
         }
       ],
-      "description": "<ul><li><p>A petrified creature is transformed, along with any nonmagical object it is wearing or carrying, into a solid inanimate substance (usually stone). Its weight increases by a factor of ten, and it ceases aging.</p></li><li><p>The creature is incapacitated (see the condition), can't move or speak, and is unaware of its surroundings.</p></li><li><p>Attack rolls against the creature have advantage.</p></li><li><p>The creature automatically fails Strength and Dexterity saving throws.</p></li><li><p>The creature has resistance to all damage.</p></li><li><p>The creature is immune to poison and disease, although a poison or disease already in its system is suspended, not neutralized. Remove all movement, grant advantage to all who attack, and add damage resistance to all magical and physical attacks</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Окаменевшее существо, а также все немагические предметы, которые оно несёт или носит, трансформируется в твёрдое инертное вещество (как правило, в камень). Его вес увеличивается в 10 раз, и оно перестаёт стареть.</span></p></li><li><p><span style=\"font-family:Signika\">Существо недееспособно (incapacitated), не способно двигаться и говорить, а также не осознаёт своё окружение.</span></p></li><li><p><span style=\"font-family:Signika\">Броски атаки по существу совершаются с преимуществом.</span></p></li><li><p><span style=\"font-family:Signika\">Существо автоматически проваливает спасброски Силы и Ловкости.</span></p></li><li><p><span style=\"font-family:Signika\">Существо получает сопротивление ко всем видам урона.</span></p></li><li><p><span style=\"font-family:Signika\">Существо получает иммунитет к ядам и болезням. Если яд или болезнь уже действовали на существо, их действие приостанавливается, но не исчезает.</span></p></li></ul>",
+      "description": "<p>A petrified creature is transformed, along with any nonmagical object it is wearing or carrying, into a solid inanimate substance (usually stone). Its weight increases by a factor of ten, and it ceases aging.</p><p>The creature is incapacitated (see the condition), can't move or speak, and is unaware of its surroundings.</p><p>Attack rolls against the creature have advantage.</p><p>The creature automatically fails Strength and Dexterity saving throws.</p><p>The creature has resistance to all damage.</p><p>The creature is immune to poison and disease, although a poison or disease already in its system is suspended, not neutralized. Remove all movement, grant advantage to all who attack, and add damage resistance to all magical and physical attacks</p><p></p><p>Окаменевшее существо, а также все немагические предметы, которые оно несёт или носит, трансформируется в твёрдое инертное вещество (как правило, в камень). Его вес увеличивается в 10 раз, и оно перестаёт стареть.</p><p>Существо недееспособно (incapacitated), не способно двигаться и говорить, а также не осознаёт своё окружение.</p><p>Броски атаки по существу совершаются с преимуществом.</p><p>Существо автоматически проваливает спасброски Силы и Ловкости.</p><p>Существо получает сопротивление ко всем видам урона.</p><p>Существо получает иммунитет к ядам и болезням. Если яд или болезнь уже действовали на существо, их действие приостанавливается, но не исчезает.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -1788,7 +1726,7 @@
     },
     {
       "changes": [],
-      "description": "<ul><li><p>Some Spells require you to maintain Concentration in order to keep their magic active. If you lose Concentration, such a spell ends.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Некоторые заклинания требуют поддержания Концентрации, чтобы их магия продолжала действовать. Если вы теряете концентрацию, такое заклинание заканчивается.</span></p></li></ul>",
+      "description": "<p>Some Spells require you to maintain Concentration in order to keep their magic active. If you lose Concentration, such a spell ends.</p><p></p><p>Некоторые заклинания требуют поддержания Концентрации, чтобы их магия продолжала действовать. Если вы теряете концентрацию, такое заклинание заканчивается.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -1850,7 +1788,7 @@
     },
     {
       "changes": [],
-      "description": "<ul><li><p>Character has no reaction left in this turn</p></li><li><p><span style=\"font-family:Signika\">Персонаж больше не может использовать реакцию в этом раунде</span></p></li></ul>",
+      "description": "<p>Character has no reaction left in this turn</p><p></p><p>Персонаж больше не может использовать реакцию в этом раунде</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -1948,7 +1886,7 @@
           "priority": 0
         }
       ],
-      "description": "<ul><li><p>Lowers movement by 20 ft., disadvantage on all attack rolls, and disadvantage on strength, dexterity, and constitution saves</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Снижает скорость передвижения на 20 фт. Помеха на броски атаки, так же, как и на спасброски силы, ловкости и телосложения.</span></p></li></ul>",
+      "description": "<p>Lowers movement by 20 ft., disadvantage on all attack rolls, and disadvantage on strength, dexterity, and constitution saves</p><p></p><p>Снижает скорость передвижения на 20 фт. Помеха на броски атаки, так же, как и на спасброски силы, ловкости и телосложения.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -2079,7 +2017,7 @@
           "priority": 25
         }
       ],
-      "description": "<ul><li><p>Lowers movement by 10 ft.</p></li><li><p><span style=\"font-family:Signika\">Снижает скорость передвижения на 10 фт.</span></p></li></ul>",
+      "description": "<p>Lowers movement by 10 ft.</p><p></p><p>Снижает скорость передвижения на 10 фт.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -2141,7 +2079,7 @@
     },
     {
       "changes": [],
-      "description": "<p>If you're surprised, you can't move or take an action on your first turn of the combat, and you can't take a reaction until that turn ends. A member of a group can be surprised even if the other members aren't.<br /><br />Тот, кто оказывается захвачен врасплох, не может перемещаться и совершать действия в первом ходу сражения, и, пока это состояние не окончится, не можете совершать реакции.<br /><br /></p>",
+      "description": "<p>If you're surprised, you can't move or take an action on your first turn of the combat, and you can't take a reaction until that turn ends. A member of a group can be surprised even if the other members aren't.<br /><br />Тот, кто оказывается захвачен врасплох, не может перемещаться и совершать действия в первом ходу сражения, и, пока это состояние не окончится, не можете совершать реакции.</p>",
       "disabled": false,
       "duration": {
         "rounds": 1,
@@ -2286,7 +2224,7 @@
           "wallsBlock": "system"
         }
       },
-      "icon": "icons/magic/water/bubbles-air-water-blue.webp",
+      "icon": "modules/mba-premades/icons/conditions/submerged.webp",
       "name": "Submerged",
       "origin": "Item.cKMxYphpel9Wq6jI",
       "tint": null,
@@ -2329,7 +2267,7 @@
           "priority": 20
         }
       ],
-      "description": "<ul><li><p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</span></p></li></ul>",
+      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p><p></p><p>Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -2461,7 +2399,7 @@
           "priority": 25
         }
       ],
-      "description": "<ul><li><p>A grappled creature's speed becomes 0, and it can't benefit from any bonus to its speed.</p></li><li><p>The condition ends if the grappler is incapacitated.</p></li><li><p>The condition also ends if an effect removes the grappled creature from the reach of the grappler or grappling effect.</p></li></ul><p></p><ul><li><p><span style=\"font-family:Signika\">Скорость схваченного существа равна 0, и оно не получает выгоды ни от каких бонусов к скорости.</span></p></li><li><p><span style=\"font-family:Signika\">Состояние оканчивается, если схвативший становится недееспособным.</span></p></li><li><p><span style=\"font-family:Signika\">Это состояние также оканчивается, если какой-либо эффект выводит схваченное существо из зоны досягаемости того, кто его удерживает, или из зоны удерживающего эффекта. Например, когда существо отбрасывается заклинанием Волна Грома (Thunderwave).</span></p></li></ul>",
+      "description": "<p>A grappled creature's speed becomes 0, and it can't benefit from any bonus to its speed.</p><p>The condition ends if the grappler is incapacitated.</p><p>The condition also ends if an effect removes the grappled creature from the reach of the grappler or grappling effect.</p><p></p><p>Скорость схваченного существа равна 0, и оно не получает выгоды ни от каких бонусов к скорости.</p><p>Состояние оканчивается, если схвативший становится недееспособным.</p><p>Это состояние также оканчивается, если какой-либо эффект выводит схваченное существо из зоны досягаемости того, кто его удерживает, или из зоны удерживающего эффекта. Например, когда существо отбрасывается заклинанием Волна Грома (Thunderwave).</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -2537,7 +2475,7 @@
     "systemVersion": "2.4.1",
     "coreVersion": "11.315",
     "createdTime": 1698551381684,
-    "modifiedTime": 1715384021949,
+    "modifiedTime": 1715642066135,
     "lastModifiedBy": "AaGlXPdfBCo8JJO1"
   }
 }

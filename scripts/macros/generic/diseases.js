@@ -16,10 +16,11 @@ import {throatLeeches} from "./diseases/throatLeeches.js";
 import {mba} from "../../helperFunctions.js";
 
 async function creator() {
-    let target = game.user.targets.first();
-    if (!target) target = await fromUuidSync(game.user._lastSelected).object;
+    let target;
+    if (!game.user._lastSelected) target = game.user.targets.first();
+    else target = await fromUuidSync(game.user._lastSelected).object;
     if (!target) {
-        ui.notifications.warn("Unable to find target!");
+        ui.notifications.warn("Need to select or target token!");
         return;
     }
     let choices = [

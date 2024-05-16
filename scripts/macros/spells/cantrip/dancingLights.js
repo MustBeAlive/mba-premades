@@ -9,26 +9,20 @@ export async function dancingLights({ speaker, actor, token, character, item, ar
     }
     let tokenName = `${workflow.token.document.name} Dancing Light`;
     let sourceActors = [];
-    let colors = [
-        ["Blue Teal", "blueteal"],
-        ["Blue Yellow", "blueyellow"],
-        ["Green", "green"],
-        ["Pink", "pink"],
-        ["Purple Green", "purplegreen"],
-        ["Red", "red"],
-        ["Yellow", "yellow"]
-    ]
-    let selection = await mba.dialog(workflow.item.name, colors, `<b>Select color:</b>`);
-    if (!selection) selection = "blueteal";
-    let path = `jb2a.dancing_light.${selection}`;
+    let images = [
+        ["Blue Teal", "blueteal", "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_BlueTeal_Thumb.webp"],
+        ["Blue Yellow", "blueyellow", "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_BlueYellow_Thumb.webp"],
+        ["Green", "green", "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_Green_Thumb.webp"],
+        ["Pink", "pink", "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_Pink_Thumb.webp"],
+        ["Purple Green", "purplegreen", "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_PurpleGreen_Thumb.webp"],
+        ["Red", "red", "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_Red_Thumb.webp"],
+        ["Yellow", "yellow", "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_Yellow_Thumb.webp"]
+    ];
+    let selection = await mba.selectImage("Dancing Lights", images, "<b>Select color:</b>", "both");
+    if (!selection) selection = ["blueteal", "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_BlueTeal_Thumb.webp"];
+    let avatarImg = selection[1];
+    let path = `jb2a.dancing_light.${selection[0]}`;
     let selectedImg = await Sequencer.Database.getEntry(path).file;
-    let avatarImg = "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_BlueTeal_Thumb.webp";
-    if (selection === "blueyellow") avatarImg = "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_BlueYellow_Thumb.webp";
-    else if (selection === "green") avatarImg = "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_Green_Thumb.webp";
-    else if (selection === "pink") avatarImg = "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_Pink_Thumb.webp";
-    else if (selection === "purplegreen") avatarImg = "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_PurpleGreen_Thumb.webp";
-    else if (selection === "red") avatarImg = "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_Red_Thumb.webp";
-    else if (selection === "yellow") avatarImg = "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_Yellow_Thumb.webp";
     for (let i = 0; i < 4; i++) sourceActors.push(sourceActor);
     let updates = {
         'actor': {

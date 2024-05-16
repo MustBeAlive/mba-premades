@@ -1,27 +1,33 @@
-// Original animation by EskieMoh#2969
+import {mba} from "../../../helperFunctions.js";
+
 export async function suggestion({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
-    let charmImmune = chrisPremades.helpers.checkTrait(target.actor, 'ci', 'charmed');
-    if (charmImmune) {
-        ui.notifications.warn('Target is unaffected by Suggestion!(target is immune to condition: Charmed)');
-        await chrisPremades.helpers.removeCondition(workflow.actor, 'Concentrating');
+    if (mba.checkTrait(target.actor, 'ci', 'charmed')) {
+        ui.notifications.info('Target is unaffected by Suggestion! (immune to condition: Charmed)');
+        await mba.removeCondition(workflow.actor, 'Concentrating');
+        return;
     }
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Suggestion` })
-    }
+    };
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
-        'description': "",
+        'description': `
+            <p>You are affected by <b>Suggestion</b>.</p>
+            <p>You must pursue the course of actions you were suggested by the caster of the spell to the best of your ability.</p>
+            <p>If the suggested activity can be completed in a shorter time, the spell ends when you finish what you were asked to do.</p>
+            <p>If caster or any of caster's companions deal damage to you, the spell ends.</p>
+        `,
         'duration': {
             'seconds': 28800
         },
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -42,51 +48,50 @@ export async function suggestion({ speaker, actor, token, character, item, args,
         { x: 0.5, y: -0.15 }
     ];
     
-    await new Sequence()
+    new Sequence()
     
         .effect()
-        .atLocation(token)
         .file(`jb2a.magic_signs.circle.02.enchantment.loop.pink`)
+        .atLocation(token)
         .scaleToObject(1.5)
-        .rotateIn(180, 600, { ease: "easeOutCubic" })
         .scaleIn(0, 600, { ease: "easeOutCubic" })
+        .rotateIn(180, 600, { ease: "easeOutCubic" })
         .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
         .belowTokens()
         .fadeOut(2000)
         .zIndex(0)
     
         .effect()
-        .atLocation(token)
         .file(`jb2a.magic_signs.circle.02.enchantment.loop.pink`)
+        .atLocation(token)
         .scaleToObject(1.5)
-        .rotateIn(180, 600, { ease: "easeOutCubic" })
-        .scaleIn(0, 600, { ease: "easeOutCubic" })
-        .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-        .belowTokens(true)
-        .filter("ColorMatrix", { saturate: -1, brightness: 2 })
-        .filter("Blur", { blurX: 5, blurY: 10 })
-        .zIndex(1)
         .duration(1200)
         .fadeIn(200, { ease: "easeOutCirc", delay: 500 })
         .fadeOut(300, { ease: "linear" })
+        .scaleIn(0, 600, { ease: "easeOutCubic" })
+        .rotateIn(180, 600, { ease: "easeOutCubic" })
+        .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
+        .filter("ColorMatrix", { saturate: -1, brightness: 2 })
+        .filter("Blur", { blurX: 5, blurY: 10 })
+        .belowTokens()
+        .zIndex(1)
     
         .wait(1500)
     
         .thenDo(function () {
             for (let i = 0; i < offset.length; i++) {
-    
                 new Sequence()
     
                     .effect()
-                    .delay(250)
                     .file("jb2a.icon.runes.green02")
                     .attachTo(target, { offset: offset[i], gridUnits: true, followRotation: false })
                     .scaleToObject(0.4)
+                    .delay(250)
+                    .duration(1150)
                     .scaleIn(0, 250, { ease: "easeOutBack" })
                     .animateProperty("sprite", "position.x", { from: -0, to: -offset[i].x, duration: 500, gridUnits: true, delay: 500, ease: "easeInBack" })
                     .animateProperty("sprite", "position.y", { from: -0, to: -offset[i].y, duration: 500, gridUnits: true, delay: 500, ease: "easeInBack" })
                     .zIndex(1)
-                    .duration(1150)
     
                     .effect()
                     .file("jb2a.template_circle.out_pulse.02.burst.bluewhite")
@@ -106,12 +111,12 @@ export async function suggestion({ speaker, actor, token, character, item, args,
         .file("jb2a.energy_attack.01.blue")
         .attachTo(target, { followRotation: false })
         .scaleToObject(2.25)
-        .belowTokens()
         .startTime(500)
         .endTime(2050)
         .fadeOut(400)
         .filter("ColorMatrix", { hue: 280 })
         .randomRotation()
+        .belowTokens()
     
         .effect()
         .file("jb2a.impact.010.green")
@@ -121,7 +126,7 @@ export async function suggestion({ speaker, actor, token, character, item, args,
         .waitUntilFinished(-1000)
     
         .thenDo(function () {
-            chrisPremades.helpers.createEffect(target.actor, effectData);
+            mba.createEffect(target.actor, effectData);
         })
     
         .effect()
@@ -139,9 +144,9 @@ export async function suggestion({ speaker, actor, token, character, item, args,
         .file("jb2a.extras.tmfx.outflow.circle.01")
         .attachTo(target, { cacheLocation: true, offset: { y: 0 }, gridUnits: true, bindAlpha: false })
         .scaleToObject(1.55, { considerTokenScale: true })
-        .randomRotation()
         .fadeIn(500)
         .fadeOut(1000)
+        .randomRotation()
         .belowTokens()
         .opacity(0.45)
         .loopProperty("alphaFilter", "alpha", { from: 0.75, to: 1, duration: 1500, pingPong: true, ease: "easeOutSine" })
@@ -152,9 +157,9 @@ export async function suggestion({ speaker, actor, token, character, item, args,
         .effect()
         .from(target)
         .attachTo(target, { bindAlpha: false })
+        .scaleToObject(1, { considerTokenScale: true })
         .belowTokens()
         .mirrorX(token.document.data.mirrorX)
-        .scaleToObject(1, { considerTokenScale: true })
         .loopProperty("alphaFilter", "alpha", { from: 0.75, to: 1, duration: 1500, pingPong: true, ease: "easeOutSine" })
         .filter("Glow", { color: 0x3efd30, distance: 3, outerStrength: 4, innerStrength: 0 })
         .fadeIn(500)

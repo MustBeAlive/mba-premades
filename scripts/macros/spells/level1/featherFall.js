@@ -29,7 +29,7 @@ export async function featherFall({ speaker, actor, token, character, item, args
         }
     };
     for (let target of targets) {
-        let delay1 = 500 + Math.floor(Math.random() * (Math.floor(1500) - Math.ceil(50)) + Math.ceil(50));
+        let delay = 500 + Math.floor(Math.random() * (Math.floor(1500) - Math.ceil(50)) + Math.ceil(50));
 
         new Sequence()
 
@@ -37,7 +37,7 @@ export async function featherFall({ speaker, actor, token, character, item, args
             .file("jb2a.energy_strands.range.multiple.orange.01")
             .atLocation(token)
             .stretchTo(target)
-            .delay(delay1)
+            .delay(delay)
             .waitUntilFinished(-750)
 
             .thenDo(function () {

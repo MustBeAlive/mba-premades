@@ -1,0 +1,32 @@
+:root {
+    --color-dracula-accent: hsl(250, 100%, 75%);
+    --color-dracula-accent-secondary: hsla(10, 100%, 75%);
+    --color-dracula-accent-tertiary: hsl(330, 100%, 75%);
+    --color-dracula-accent-highlight: hsl(170, 100%, 75%);
+    --color-dracula-inactive: hsl(230, 15%, 50%);
+  
+    --color-dracula-border: hsla(230, 15%, 15%, 15%);
+    --color-dracula-border-secondary: hsl(250, 100%, 75%, 25%);
+    --color-dracula-border-tertiary: var(--color-dracula-inactive)
+    --color-dracula-border-highlight: var(--color-dracula-accent-highlight);
+  
+    --color-dracula-content: hsla(240, 7%, 14%, 0.85);
+    --color-dracula-content-window: hsl(230, 15%, 0.3);
+  
+    --color-dracula-glow: hsla(0, 0%, 100%, 0.2);
+    --color-dracula-shadow: hsla(0, 0%, 0%, 0.9);
+  
+    --color-dracula-text-highlight: var(--color-dracula-accent-highlight);
+    --color-dracula-text-primary: hsla(0, 0%, 90%, 0.9);
+    --color-dracula-text-secondary: hsla(0, 0%, 100%, 0.8);
+    --color-dracula-text-tertiary: hsl(230, 15%, 70%);
+    --color-dracula-text-dark: hsl(230, 15%, 30%);
+    --color-dracula-text-inactive: var(--color-dracula-inactive);
+  
+    --color-dracula-failure: hsl(0, 26%, 49%);
+    --color-dracula-failure-secondary: hsl(10, 100%, 75%);
+    --color-dracula-success: hsl(136, 37%, 53%);
+    --color-dracula-success-secondary: hsl(115, 100%, 75%);
+  
+    --filter-dracula-backdrop: none;
+}

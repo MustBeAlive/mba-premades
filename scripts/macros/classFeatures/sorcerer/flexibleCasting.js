@@ -55,7 +55,7 @@ export async function flexibleCasting({ speaker, actor, token, character, item, 
         // Slot Evaluation
         let path = `system.spells.spell${slotLevel}.value`;
         let newValue = foundry.utils.getProperty(workflow.actor, path) + 1;
-
+        if (isNaN(newValue)) return;
         // Final Update
         await workflow.actor.update({ [path]: newValue });
         await pointsItem.update({ "system.uses.value": points });
@@ -80,6 +80,7 @@ export async function flexibleCasting({ speaker, actor, token, character, item, 
         // Slot Evaluation
         let path = `system.spells.spell${pointsAmmount}.value`;
         let newValue = foundry.utils.getProperty(workflow.actor, path) - 1;
+        if (isNaN(newValue)) return;
 
         // Final Update
         await workflow.actor.update({ [path]: newValue });

@@ -4,7 +4,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
     let conc = await mba.findEffect(workflow.actor, "Concentrating");
     let saveDC = await mba.getSpellDC(workflow.item);
     let choicesType = [["Creature", "creature"], ["Location", "location"]];
-    let selectionType = await mba.dialog("What are you scrying?", choicesType);
+    let selectionType = await mba.dialog("Scrying", choicesType, "<b>What are you scrying?</b>");
     if (!selectionType) {
         if (conc) await mba.removeEffect(conc);
         return;

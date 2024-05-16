@@ -6,7 +6,7 @@ export async function light({ speaker, actor, token, character, item, args, scop
     let color;
     await Dialog.wait({
         title: "Pick color:",
-        content: `<form><div class="form-group"><label for="color" style="line-height: 26px;">Color:</label><div class="form-fields"><input type="color" value="${game.user.color}" id="color"></div></div></form>`,
+        content: `<form><div class="form-group"><label for="color" style="line-height: 26px;">Color:</label><div class="form-fields"><input type="color" class="dialogImg" value="${game.user.color}" id="color"></div></div></form>`,
         buttons: {
             color: {
                 label: "Apply",

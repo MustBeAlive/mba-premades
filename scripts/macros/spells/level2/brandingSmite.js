@@ -14,7 +14,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         let target = await fromUuid(targetUuid);
         await Sequencer.EffectManager.endEffects({ name: `${target.name} Branding Smite` })
         await mbaPremades.helpers.removeEffect(targetEffect);
-    }
+    };
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
@@ -122,12 +122,12 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         if (!originEffect) return;
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Branding Smite` });
         await mba.removeEffect(originEffect);
-    }
+    };
     let effectData = {
         'name': 'Branding Smite: Brand',
         'icon': effect.icon,
-        'description': "You are branded by Branding Smite. Until the spell ends, you can't become invisible and shed dim light in a 5-foot radius.",
         'origin': effect.uuid,
+        'description': "You are branded by Branding Smite. Until the spell ends, you can't become invisible and shed dim light in a 5-foot radius.",
         'duration': {
             'seconds': effect.duration.seconds
         },
@@ -168,10 +168,10 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .shake({ duration: 1000, strength: 1, rotation: false, fadeOutDuration: 1000 })
 
         .effect()
-        .delay(300)
         .file("jb2a.impact.ground_crack.01.blue")
         .atLocation(target)
         .size(2.3 * token.document.width, { gridUnits: true })
+        .delay(300)
         .filter("ColorMatrix", { saturate: -0.5, hue: -160 })
         .belowTokens()
         .playbackRate(0.85)
@@ -180,8 +180,8 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .effect()
         .file("jb2a.divine_smite.target.yellowwhite")
         .atLocation(target)
-        .rotateTowards(token)
         .scaleToObject(3)
+        .rotateTowards(token)
         .spriteOffset({ x: -1.5 * token.document.width, y: -0 * token.document.width }, { gridUnits: true })
         .mirrorY()
         .rotate(90)

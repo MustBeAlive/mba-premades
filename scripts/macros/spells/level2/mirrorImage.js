@@ -4,8 +4,8 @@ import {queue} from "../../mechanics/queue.js";
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} Mirror Image` })
-    }
-    let effectData = {
+    };
+    const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
@@ -97,7 +97,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .animateProperty("spriteContainer", "rotation", { from: 180, to: -10, duration: 500 })
         .loopProperty("sprite", "position.x", { from: -5, to: 5, duration: 2500, pingPong: true })
         .zeroSpriteRotation()
-        .opacity(0.75)
+        .opacity(0.85)
         .tint("#d0c2ff")
         .loopProperty("alphaFilter", "alpha", { from: 0.75, to: 0.5, duration: 2000, pingPong: true })
         .zIndex(4)
@@ -114,7 +114,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .animateProperty("spriteContainer", "rotation", { from: 0, to: 190, duration: 500 })
         .loopProperty("sprite", "position.x", { from: -5, to: 5, duration: 2500, pingPong: true, delay: 250 })
         .zeroSpriteRotation()
-        .opacity(0.75)
+        .opacity(0.85)
         .tint("#d0c2ff")
         .loopProperty("alphaFilter", "alpha", { from: 0.75, to: 0.5, duration: 2000, pingPong: true })
         .zIndex(4)
@@ -131,7 +131,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .animateProperty("spriteContainer", "rotation", { from: 0, to: 90, duration: 250 })
         .loopProperty("sprite", "position.x", { from: -5, to: 5, duration: 2500, pingPong: true })
         .zeroSpriteRotation()
-        .opacity(0.75)
+        .opacity(0.85)
         .tint("#d0c2ff")
         .loopProperty("alphaFilter", "alpha", { from: 0.75, to: 0.5, duration: 2000, pingPong: true })
         .delay(100)
@@ -164,14 +164,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 async function hook(workflow) {
     if (workflow.targets.size != 1) return;
     if (workflow.isFumble === true) return;
-    let targetToken = workflow.targets.first();
-    let targetActor = targetToken.actor;
-    let targetEffect = mba.findEffect(targetActor, 'Mirror Image');
+    let target = workflow.targets.first();
+    let targetEffect = mba.findEffect(target.actor, 'Mirror Image');
     if (!targetEffect) return;
     let attackingToken = workflow.token;
-    if (!MidiQOL.canSee(attackingToken, targetToken)) return;
-    if (MidiQOL.canSense(attackingToken, targetToken, ['blindsight', 'seeAll'])) return;
-    let duplicates = targetActor.flags['mba-premades']?.spell?.mirrorImage;
+    if (!MidiQOL.canSee(attackingToken, target)) return;
+    if (MidiQOL.canSense(attackingToken, target, ['blindsight', 'seeAll'])) return;
+    let duplicates = target.actor.flags['mba-premades']?.spell?.mirrorImage;
     if (!duplicates) return;
     let queueSetup = await queue.setup(workflow.item.uuid, 'mirrorImage', 49);
     if (!queueSetup) return;
@@ -181,7 +180,6 @@ async function hook(workflow) {
         'speaker': { 'alias': name },
         'flavor': 'Mirror Image'
     });
-    let rollTotal = roll.total;
     let rollNeeded;
     switch (duplicates) {
         case 3:
@@ -194,23 +192,23 @@ async function hook(workflow) {
             rollNeeded = 11;
             break;
     }
-    if (rollTotal < rollNeeded) {
+    if (roll.total < rollNeeded) {
         queue.remove(workflow.item.uuid);
         ChatMessage.create({
             'speaker': { 'alias': name },
-            'content': `<b>${workflow.token.document.name}</b> finds real instance of <b>${targetToken.document.name}!</b>.`
+            'content': `<b>${workflow.token.document.name}</b> finds real instance of <b>${target.document.name}!</b>.`
         });
         return;
     }
-    let duplicateAC = 10 + targetActor.system.abilities.dex.mod;
+    let duplicateAC = 10 + target.actor.system.abilities.dex.mod;
     if (workflow.attackTotal >= duplicateAC) {
         workflow.hitTargets.delete(workflow.targets.first());
         ChatMessage.create({
             'speaker': { 'alias': name },
             'content': `<b>${workflow.token.document.name}'s</b> attack hit a duplicate and destroyed it.`
         });
-        if (duplicates === 3) Sequencer.EffectManager.endEffects({ name: `${targetToken.document.name} Mirror Image 3` })
-        if (duplicates === 2) Sequencer.EffectManager.endEffects({ name: `${targetToken.document.name} Mirror Image 2` })
+        if (duplicates === 3) Sequencer.EffectManager.endEffects({ name: `${target.document.name} Mirror Image 3` })
+        if (duplicates === 2) Sequencer.EffectManager.endEffects({ name: `${target.document.name} Mirror Image 2` })
         if (duplicates === 1) {
             await mba.removeEffect(targetEffect);
             return;

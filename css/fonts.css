@@ -1,0 +1,60 @@
+@font-face {
+    font-family: "Geologica";
+    font-style: normal;
+    font-weight: 300;
+    src: url("fonts/Geologica/Geologica-Light.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Geologica";
+    font-style: normal;
+    font-weight: 400;
+    src: url("fonts/Geologica/Geologica-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Geologica";
+    font-style: normal;
+    font-weight: 500;
+    src: url("fonts/Geologica/Geologica-Medium.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Geologica";
+    font-style: normal;
+    font-weight: 600;
+    src: url("fonts/Geologica/Geologica-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Geologica";
+    font-style: normal;
+    font-weight: 700;
+    src: url("fonts/Geologica/Geologica-Bold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Geologica";
+    font-style: normal;
+    font-weight: 900;
+    src: url("fonts/Geologica/Geologica-Black.ttf") format("truetype");
+}
+
+/* Fix for user messages font size */
+.chat-message { font-size: 100% !important; }
+
+/* Fix for core dnd5e item chat card */
+.dnd5e.chat-card .card-header h3 {
+    font-family: var(--font-sans-condensed);
+    font-weight: 600;
+    font-size: var(--text-xl);
+}
+
+/* Fix for Spotlight Omnisearch  */
+#spotlight { font-family: "Geologica" !important; }
+
+/* Fix for Smalltime */
+#smalltime-app #dateDisplay { font-family: "Geologica" !important; }
+
+/* Fix for Character Monitor */
+.message.dnd5e-cm-message { font-size: 12px !important; }

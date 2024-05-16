@@ -39,7 +39,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     if (flaskItem.system.quantity > 1) {
         flaskItem.update({ "system.quantity": flaskItem.system.quantity - 1 });
     } else {
-        workflow.actor.deleteEmbeddedDocuments("Item", [flaskItem.id]);
+        await workflow.actor.deleteEmbeddedDocuments("Item", [flaskItem.id]);
     }
     if (selection === "splash") {
         let emptyFlaskItem = mba.getItem(workflow.actor, "Empty Flask");

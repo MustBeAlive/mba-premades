@@ -88,8 +88,8 @@ export async function potionOfResistance({ speaker, actor, token, character, ite
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-        <p>You have resistance to ${type} damage for the duration.</p>
-    `,
+            <p>You have resistance to ${type} damage for the duration.</p>
+        `,
         'duration': {
             'seconds': 3600
         },

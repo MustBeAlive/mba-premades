@@ -12,6 +12,7 @@ export async function enhanceAbility({ speaker, actor, token, character, item, a
     ];
     let selection = await mba.dialog("Enhance Ability", choices, `<b>Choose ability to enhance:</b>`);
     if (!selection) {
+        await mba.removeCondition(workflow.actor, "Concentrating");
         return;
     }
     let effectData;

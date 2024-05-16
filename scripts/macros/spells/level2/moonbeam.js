@@ -65,8 +65,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     };
     let options = {
         'permanent': false,
-        'name': effectData.name,
-        'description': effectData.name
+        'name': "Moonbeam",
+        'description': "Moonbeam"
     };
 
     new Sequence()

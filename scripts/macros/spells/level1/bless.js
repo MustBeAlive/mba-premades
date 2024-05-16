@@ -4,8 +4,12 @@ import {mba} from "../../../helperFunctions.js";
 export async function bless({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel + 2;
     if (workflow.targets.size > ammount) {
-        let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
-        if (!selection.buttons) return;
+        let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected.<br>Choose which targets to keep (Max: ' + ammount + ')');
+        if (!selection.buttons) {
+            ui.notifications.warn("Failed to select targets!");
+            await mba.removeCondition(workflow.actor, "Concentrating");
+            return;
+        }
         let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
         mba.updateTargets(newTargets);
     }

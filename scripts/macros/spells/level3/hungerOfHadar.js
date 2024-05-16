@@ -1,3 +1,6 @@
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
     if (!template) return;
@@ -99,11 +102,12 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 'template': {
                     'name': 'hungerOfHadar',
                     'castLevel': workflow.castData.castLevel,
-                    'saveDC': chrisPremades.helpers.getSpellDC(workflow.item),
+                    'saveDC': mba.getSpellDC(workflow.item),
                     'templateUuid': template.uuid
                 }
             },
             'walledtemplates': {
+                'hideBorder': "alwaysHide",
                 'wallRestriction': 'move',
                 'wallsBlock': 'walled'
             }
@@ -132,7 +136,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+    await mba.createEffect(workflow.actor, effectData);
 }
 
 async function turnStart(template, token) {
@@ -142,12 +146,12 @@ async function turnStart(template, token) {
     if (!originUuid) return;
     let originItem = await fromUuid(originUuid);
     if (!originItem) return;
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Hunger of Hadar: Bitter Cold', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Hunger of Hadar: Bitter Cold', false);
     if (!featureData) return;
     featureData.system.save.dc = trigger.saveDC;
     delete featureData._id;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': originItem.actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([token.document.uuid]);
+    let [config, options] = constants.syntheticItemWorkflowOptions([token.document.uuid]);
     await MidiQOL.completeItemUse(feature, config, options);
 }
 
@@ -158,12 +162,12 @@ async function turnEnd(template, token) {
     if (!originUuid) return;
     let originItem = await fromUuid(originUuid);
     if (!originItem) return;
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Hunger of Hadar: Milky Tentacles', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Hunger of Hadar: Milky Tentacles', false);
     if (!featureData) return;
-    featureData.system.save.dc = trigger.saveDC;
     delete featureData._id;
+    featureData.system.save.dc = trigger.saveDC;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': originItem.actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([token.document.uuid]);
+    let [config, options] = constants.syntheticItemWorkflowOptions([token.document.uuid]);
     await MidiQOL.completeItemUse(feature, config, options);
 }
 

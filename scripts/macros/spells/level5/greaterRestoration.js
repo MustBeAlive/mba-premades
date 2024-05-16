@@ -11,7 +11,7 @@ export async function greaterRestoration({ speaker, actor, token, character, ite
         ['Hit Point Maximum Reduction', 'health'],
         ['Up to 3 levels of Exhaustion', 'exhaustion']
     ];
-    let selection = await mba.dialog('Which condition do you wish to remove?', choices);
+    let selection = await mba.dialog('Greater Restoration', choices, "<b>Which condition do you wish to remove?</b>");
     if (!selection) return;
     if (selection === "charm") {
         effect = await mba.findEffect(target.actor, "Charmed");

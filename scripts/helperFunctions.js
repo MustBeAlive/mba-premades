@@ -1,5 +1,6 @@
 import {socket} from "./module.js";
 import {summonEffects} from "./macros/animations/summonEffects.js";
+
 export let mba = {
     'addCondition': async function _addCondition(actor, name, overlay, origin) {
         await game.dfreds.effectInterface.addEffect(
@@ -809,7 +810,7 @@ export let mba = {
         await warpgate.revert(tokenDoc, mutationName, options);
         return true;
     },
-    'selectDocument': async function selectDocument(title, documents, useUuids) {
+    'selectDocument': async function _selectDocument(title, documents, useUuids) {
         return await new Promise(async (resolve) => {
             let buttons = {},
                 dialog;
@@ -825,7 +826,7 @@ export let mba = {
                     }
                 }
             }
-            let height = (Object.keys(buttons).length * 56 + 46);
+            let height = (Object.keys(buttons).length * 58 + 48);
             if (Object.keys(buttons).length > 14) height = 850;
             dialog = new Dialog(
                 {
@@ -843,7 +844,7 @@ export let mba = {
             })
         });
     },
-    'selectDocuments': async function selectDocuments(title, documents, useUuids) {
+    'selectDocuments': async function _selectDocuments(title, documents, useUuids) {
         return await new Promise(async (resolve) => {
             let buttons = { cancel: { 'label': `Cancel`, callback: () => resolve(false) }, 'confirm': { 'label': `Confirm`, callback: (html) => getDocuments(html, documents) } },
                 dialog;
@@ -897,6 +898,81 @@ export let mba = {
             }
         });
     },
+    'selectEffect': async function _selectEffect(title, effects, content, useUuids) {
+        return await new Promise(async (resolve) => {
+            if (content) content = "<center>" + content + "</center>";
+            let buttons = {},
+                dialog;
+            for (let i of effects) {
+                buttons[i.name] = {
+                    label: `<img src='${i.icon}' width='50' height='50' style='border: 0px; float: left'><p style='padding: 1%; font-size: 18px'> ${i.name} </p>`,
+                    callback: () => {
+                        if (useUuids) {
+                            resolve(i.uuid);
+                        } else {
+                            resolve(i)
+                        }
+                    }
+                }
+            }
+            let height = (Object.keys(buttons).length * 58 + 68);
+            if (Object.keys(buttons).length > 14) height = 850;
+            dialog = new Dialog(
+                {
+                    title: title,
+                    content: content,
+                    buttons,
+                    close: () => resolve(false)
+                },
+                {
+                    height: height
+                }
+            );
+            await dialog._render(true);
+            dialog.element.find(".dialog-buttons").css({
+                "flex-direction": 'column',
+            })
+        });
+    },
+    'selectImage': async function _selectImage(title, images, content, type) {
+        return await new Promise(async (resolve) => {
+            if (content) content = "<center>" + content + "</center>";
+            let options = images.map(([name, value, path]) => ({ name, value, path}));
+            let buttons = {},
+                dialog;
+            for (let i of options) {
+                buttons[i.name] = {
+                    label: `<img src='${i.path}' width='50' height='50' style='border: 0px; float: left'><p style='padding: 1%; font-size: 18px'> ${i.name} </p>`,
+                    callback: () => {
+                        if (type === "value") {
+                            resolve(i.value);
+                        } else if (type === "path") {
+                            resolve(i.path)
+                        } else if (type === "both") {
+                            resolve([i.value, i.path])
+                        }
+                    }
+                }
+            }
+            let height = (Object.keys(buttons).length * 59 + 70);
+            if (Object.keys(buttons).length > 14) height = 850;
+            dialog = new Dialog(
+                {
+                    title: title,
+                    content: content,
+                    buttons,
+                    close: () => resolve(false)
+                },
+                {
+                    height: height
+                }
+            );
+            await dialog._render(true);
+            dialog.element.find(".dialog-buttons").css({
+                "flex-direction": 'column',
+            })
+        });
+    },
     'selectTarget': async function _selectTarget(title, buttons, targets, returnUuid, type, selectOptions, fixTargets, description, coverToken, reverseCover) {
         let generatedInputs = [];
         let isFirst = true;
@@ -919,7 +995,7 @@ export let mba = {
                 name += ' [' + mba.checkCover(i, coverToken, undefined, true) + ']';
             }
             let texture = i.document.texture.src;
-            let html = `<img src="` + texture + `" id="` + i.id + `" style="width:40px;height:40px;vertical-align:middle;"><span> ` + name + `</span>`;
+            let html = `<img src="` + texture + `" id="` + i.id + `" style="width:50px;height:50px;vertical-align:middle;"><span> ` + name + `</span>`;
             let value = i.id;
             if (returnUuid) value = i.document.uuid;
             if (type === 'multiple') {

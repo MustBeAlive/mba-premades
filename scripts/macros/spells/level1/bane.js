@@ -5,7 +5,10 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     let ammount = workflow.castData.castLevel + 2;
     if (workflow.targets.size <= ammount) return;
     let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
-    if (!selection.buttons) return;
+    if (!selection.buttons) {
+        ui.notifications.warn("Failed to select targets!");
+        return false;
+    }
     let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
     mba.updateTargets(newTargets);
 }

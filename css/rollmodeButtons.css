@@ -28,7 +28,6 @@
 }
 
 #chat-controls .rollmode-buttons button[data-rollmode='publicroll'].active {
-    /*background-color: #98d171;*/
     background-color: #7be436;
 }
 
@@ -37,7 +36,6 @@
     border-color: #00ff0f;
     text-shadow: 0 0 1px #00a100;
     box-shadow: 0 0 3px yellow;
-    /* background: unset; */
 }
 
 #chat-controls .rollmode-buttons button:not(.active) {
@@ -53,7 +51,6 @@
 }
 
 #chat-controls .rollmode-buttons button[data-rollmode='gmroll'].active {
-    /*background-color: #dfcb55;*/
     background-color: #fdd937;
 }
 
@@ -68,7 +65,6 @@
 }
 
 #chat-controls .rollmode-buttons button[data-rollmode='blindroll'].active {
-    /*background-color: #8f9fe7;*/
     background-color: #7489e7;
 }
 
@@ -84,7 +80,6 @@
 }
 
 #chat-controls .rollmode-buttons button[data-rollmode='selfroll'].active {
-    /*background-color: #eb7248;*/
     background-color: #db4c18;
 }
 

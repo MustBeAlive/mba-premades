@@ -8,21 +8,19 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         return;
     }
     let tokenName = `${workflow.token.document.name} Flaming Sphere`;
-    let colors = [["Blue", "blue"], ["Orange", "orange"], ["Purple", "purple"]];
-    let selection = await mba.dialog("Flaming Sphere", colors, `<b>Choose color:</b>`);
-    if (!selection) selection = "orange";
-    let path = `jb2a.flaming_sphere.400px.${selection}.02`;
+    let images = [
+        ["Blue", "blue", "modules/jb2a_patreon/Library/2nd_Level/Flaming_Sphere/FlamingSphere_02_Blue_Thumb.webp"], 
+        ["Orange", "orange", "modules/jb2a_patreon/Library/2nd_Level/Flaming_Sphere/FlamingSphere_02_Orange_Thumb.webp"], 
+        ["Purple", "purple", "modules/jb2a_patreon/Library/2nd_Level/Flaming_Sphere/FlamingSphere_02_Purple_Thumb.webp"]
+    ];
+    let selection = await mba.selectImage("Flaming Sphere", images, `<b>Choose color:</b>`, "both");
+    if (!selection) selection = ["orange", "modules/jb2a_patreon/Library/2nd_Level/Flaming_Sphere/FlamingSphere_02_Orange_Thumb.webp"];
+    let avatarImg = selection[1];
+    let path = `jb2a.flaming_sphere.400px.${selection[0]}.02`;
     let selectedImg = await Sequencer.Database.getEntry(path).file;
-    let avatarImg = "modules/jb2a_patreon/Library/2nd_Level/Flaming_Sphere/FlamingSphere_02_Orange_Thumb.webp";
     let lightColor = "#bd6500";
-    if (selection === "blue") {
-        avatarImg = "modules/jb2a_patreon/Library/2nd_Level/Flaming_Sphere/FlamingSphere_02_Blue_Thumb.webp";
-        lightColor = "#0084bd";
-    }
-    else if (selection === "purple") {
-        avatarImg = "modules/jb2a_patreon/Library/2nd_Level/Flaming_Sphere/FlamingSphere_02_Purple_Thumb.webp";
-        lightColor = "#a700bd";
-    }
+    if (selection[0] === "blue") lightColor = "#0084bd";
+    else if (selection[0] === "purple") lightColor = "#a700bd";
     let effect = sourceActor.effects.find(e => e.name === "Light");
     let effectUpdates = {
         'changes': [
@@ -48,6 +46,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 'key': 'ATL.light.animation',
                 'mode': 5,
                 'value': '{type: "smokepatch", speed: 5, intensity: 1, reverse: false }',
+                'priority': 20
+            },
+            {
+                'key': 'ATL.light.alpha',
+                'mode': 5,
+                'value': "0.25",
                 'priority': 20
             }
         ]

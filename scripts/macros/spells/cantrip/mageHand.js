@@ -13,27 +13,23 @@ export async function mageHand({ speaker, actor, token, character, item, args, s
     let telekinetic = await mba.getItem(workflow.actor, "Telekinetic");
     let maxRange = 30;
     let invisible = false;
-    let colors = [
-        ['Blue', 'blue'],
-        ['Green', 'green'],
-        ['Purple', 'purple'],
-        ['Red', 'red'],
-        ['Rainbow', 'rainbow']
+    let images = [
+        ["Blue", "blue", "modules/jb2a_patreon/Library/5th_Level/Arcane_Hand/ArcaneHand_Human_01_Idle_Blue_Thumb.webp"],
+        ["Green", "green", "modules/jb2a_patreon/Library/5th_Level/Arcane_Hand/ArcaneHand_Human_01_Idle_Green_Thumb.webp"],
+        ["Purple", "purple", "modules/jb2a_patreon/Library/5th_Level/Arcane_Hand/ArcaneHand_Human_01_Idle_Purple_Thumb.webp"],
+        ["Red", "red", "modules/jb2a_patreon/Library/5th_Level/Arcane_Hand/ArcaneHand_Human_01_Idle_Red_Thumb.webp"],
+        ["Rainbow", "rainbow", "modules/jb2a_patreon/Library/5th_Level/Arcane_Hand/ArcaneHand_Human_01_Idle_Rainbow_Thumb.webp"],
     ];
-    let selectionColor = await mba.dialog(workflow.item.name, colors, "<b>Choose color:</b>");
-    if (!selectionColor) selectionColor = "blue";
+    let selection = await mba.selectImage("Mage Hand", images, "<b>Select color:</b>", "both");
+    if (!selection) selection = ["blue", "modules/jb2a_patreon/Library/5th_Level/Arcane_Hand/ArcaneHand_Human_01_Idle_Blue_Thumb.webp"];
+    let avatarImg = selection[1];
+    let selectedName = `jb2a.arcane_hand.${selection[0]}`;
+    let selectedImg = await Sequencer.Database.getEntry(selectedName).file;
     if (telekinetic) {
         maxRange = 60;
         let choices = [["Yes", true], ["No", false]];
-        invisible = await mba.dialog(workflow.item.name, choices, "<b>Do you want to make the hand invisible? (Telekinetic Feature)</b>");
+        invisible = await mba.dialog("Mage Hand: Telekinetic", choices, "<b>Do you want to make the hand invisible? (Telekinetic Feature)</b>");
     }
-    let avatarImg = "modules/jb2a_patreon/Library/5th_Level/Arcane_Hand/ArcaneHand_Human_01_Idle_Blue_Thumb.webp";
-    let selectedName = 'jb2a.arcane_hand.' + selectionColor;
-    let selectedImg = await Sequencer.Database.getEntry(selectedName).file;
-    if (selectionColor === "green") avatarImg = "modules/jb2a_patreon/Library/5th_Level/Arcane_Hand/ArcaneHand_Human_01_Idle_Green_Thumb.webp";
-    else if (selectionColor === "purple") avatarImg = "modules/jb2a_patreon/Library/5th_Level/Arcane_Hand/ArcaneHand_Human_01_Idle_Purple_Thumb.webp";
-    else if (selectionColor === "red") avatarImg = "modules/jb2a_patreon/Library/5th_Level/Arcane_Hand/ArcaneHand_Human_01_Idle_Red_Thumb.webp";
-    else if (selectionColor === "rainbow") avatarImg = "modules/jb2a_patreon/Library/5th_Level/Arcane_Hand/ArcaneHand_Human_01_Idle_Rainbow_Thumb.webp";
     let updates = {
         'actor': {
             'img': avatarImg,

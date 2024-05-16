@@ -112,6 +112,7 @@ async function spawn(sourceActors, updates, duration, originItem, useActorOrigin
     }
     await mba.updateEffect(effect, effectUpdates);
 }
+
 export let summons = {
     'spawn': spawn,
 };

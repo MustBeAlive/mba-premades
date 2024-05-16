@@ -2,10 +2,20 @@ import {mba} from "../../../../helperFunctions.js";
 import {queue} from "../../../mechanics/queue.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
+    let CDItem = await mba.getItem(workflow.actor, "Channel Divinity");
+    if (!CDItem) {
+        ui.notifications.warn("Unable to find feature! (Channel Divinity)");
+        return;
+    }
+    let uses = CDItem.system.uses.value;
+    if (uses < 1) {
+        ui.notifications.info("You don't have any Channel Divinity uses left!");
+        return;
+    }
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Destructive Wrath`, object: token })
     }
-    let effectData = {
+    const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
@@ -184,7 +194,9 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .name(`${token.document.name} Destructive Wrath`)
 
         .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData)
+            mba.createEffect(workflow.actor, effectData);
+            uses -= 1; 
+            CDItem.update({ "system.uses.value": uses });
         })
 
         .play()

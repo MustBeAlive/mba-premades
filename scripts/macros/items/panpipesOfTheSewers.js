@@ -6,21 +6,20 @@ export async function panpipesOfTheSewers({ speaker, actor, token, character, it
         ui.notifications.warn('Missing actor in the side panel! (Sewer Pipes: Swarm of Rats)');
         return;
     }
-    let tokenName = 'Sewer Pipes: Swarm of Rats';
+    let tokenName = `${workflow.token.document.name} Swarm of Rats`;
     let updates = {
         'actor': {
             'name': tokenName,
             'prototypeToken': {
+                'disposition': workflow.token.document.disposition,
                 'name': tokenName,
-                'disposition': workflow.token.document.disposition
             }
         },
         'token': {
+            'disposition': workflow.token.document.disposition,
             'name': tokenName,
-            'disposition': workflow.token.document.disposition
         }
     };
-    let animation = 'nature';
 
     new Sequence()
     
@@ -73,5 +72,5 @@ export async function panpipesOfTheSewers({ speaker, actor, token, character, it
     
         .play();
     
-    await tashaSummon.spawn(sourceActor, updates, 86400, workflow.item, 30, workflow.token, animation);
+    await tashaSummon.spawn(sourceActor, updates, 86400, workflow.item, 30, workflow.token, "nature");
 }

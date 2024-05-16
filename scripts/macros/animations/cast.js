@@ -1,5 +1,3 @@
-import {mba} from '../../helperFunctions.js';
-
 let animations = {
     'abj': 'jb2a.magic_signs.circle.02.abjuration.loop.',
     'con': 'jb2a.magic_signs.circle.02.conjuration.loop.',
@@ -11,22 +9,11 @@ let animations = {
     'trs': 'jb2a.magic_signs.circle.02.transmutation.loop.'
 }
 
-let defaults = {
-    'abj': 'blue',
-    'con': 'yellow',
-    'div': 'blue',
-    'enc': 'pink',
-    'evo': 'red',
-    'ill': 'purple',
-    'nec': 'green',
-    'trs': 'yellow'
-};
-
 export async function cast(workflow) {
     if (!workflow.token || workflow.item?.type != 'spell') return;
     let school = workflow.item.system.school;
     if (!Object.keys(animations).includes(school)) return;
-    let color = mba.jb2aCheck() === 'patreon' ? game.settings.get('mba-premades', school + '_color') : defaults[school];
+    let color = game.settings.get('mba-premades', school + '_color');
     let animation = animations[school] + color;
     new Sequence()
 

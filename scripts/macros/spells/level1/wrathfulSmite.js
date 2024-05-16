@@ -12,14 +12,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         if (!target) return;
         await Sequencer.EffectManager.endEffects({ name: `${target.name} Wrathful Smite` })
         await mbaPremades.helpers.removeEffect(targetEffect);
-    }
+    };
     let effectData = {
+        'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'duration': {
             'seconds': 60
         },
-        'name': workflow.item.name,
         'changes': [
             {
                 'key': 'flags.midi-qol.onUseMacroName',

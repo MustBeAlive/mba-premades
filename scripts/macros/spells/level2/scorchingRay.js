@@ -1,27 +1,30 @@
-// Original macro by CPR
+import { constants } from '../../generic/constants.js';
+import { mba } from '../../../helperFunctions.js';
+import { queue } from '../../mechanics/queue.js';
+
+
 export async function scorchingRay({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.token) return;
     let maxRays = 3 + (workflow.castData.castLevel - 2);
     let skipDead = false;
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Scorching Ray: Bolt', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Scorching Ray: Bolt', false);
     if (!featureData) return;
+    delete featureData._id;
     featureData.system.ability = workflow.item.system.ability;
-    featureData.flags['chris-premades'] = {
+    featureData.flags['mba-premades'] = {
         'spell': {
             'castData': workflow.castData
         }
-    }
-    featureData.flags['chris-premades'].spell.castData.school = workflow.item.system.school;
-    delete featureData._id;
+    };
+    featureData.flags['mba-premades'].spell.castData.school = workflow.item.system.school;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
     feature.prepareData();
     feature.prepareFinalAttributes();
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([]);
-    let animation = chrisPremades.helpers.jb2aCheck() === 'patreon' ? chrisPremades.helpers.getConfiguration(workflow.item, 'animation') ?? 'complex' : 'simple';
-    let color = chrisPremades.helpers.jb2aCheck() === 'patreon' ? chrisPremades.helpers.getConfiguration(workflow.item, 'color') ?? 'orange' : 'orange';
+    let [config, options] = constants.syntheticItemWorkflowOptions([]);
+    let animation = "complex";
+    let color = "orange"; // cycle // random
     let particle = 'jb2a.particles.outward.orange.01.03';
     if (animation === 'complex') {
-        //Animations by: eskiemoh
         if (color === 'cycle' || color === 'random') await Sequencer.Preloader.preload('jb2a.scorching_ray');
         await new Sequence()
             .effect()
@@ -68,9 +71,9 @@ export async function scorchingRay({ speaker, actor, token, character, item, arg
             .zIndex(1)
             .waitUntilFinished(-200)
 
-            .play()
+            .play();
     }
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'scorchingRay', 50);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'scorchingRay', 50);
     if (!queueSetup) return;
     let colors = [
         'orange',
@@ -83,12 +86,19 @@ export async function scorchingRay({ speaker, actor, token, character, item, arg
     if (color === 'random' || color === 'cycle') {
         lastColor = Math.floor(Math.random() * colors.length);
     }
+    let firstRun = true;
     while (maxRays > 0) {
-        let nearbyTargets = chrisPremades.helpers.findNearby(workflow.token, workflow.item.system.range.value, 'enemy', true);
+        let nearbyTargets;
+        if (firstRun && workflow.targets.size) {
+            nearbyTargets = Array.from(workflow.targets);
+            firstRun = false;
+        } else {
+            nearbyTargets = mba.findNearby(workflow.token, workflow.item.system.range.value, 'enemy', true);
+        }
         let targets = skipDead ? nearbyTargets.filter(i => i.actor.system.attributes.hp.value > 0) : nearbyTargets;
-        let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, targets, true, 'number', null, true, 'Select your targets (max: ' + maxRays + '):');
+        let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, targets, true, 'number', null, true, 'Select your targets (max: ' + maxRays + '):');
         if (!selection.buttons) {
-            chrisPremades.queue.remove(workflow.item.uuid);
+            queue.remove(workflow.item.uuid);
             await Sequencer.EffectManager.endEffects({ 'name': 'Scorching Ray', 'object': workflow.token });
             return;
         }
@@ -114,15 +124,7 @@ export async function scorchingRay({ speaker, actor, token, character, item, arg
                 maxRays -= 1;
                 let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
                 rayCount += 1;
-                if (animation === 'simple') {
-                    new Sequence()
-                        .effect()
-                        .file('jb2a.scorching_ray.01.' + color)
-                        .atLocation(workflow.token)
-                        .stretchTo(target)
-                        .missed(!featureWorkflow.hitTargets.size)
-                        .play();
-                } else if (animation === 'complex') {
+                if (animation === 'complex') {
                     let path = 'jb2a.scorching_ray.{{num}}.';
                     if (color === 'random') {
                         path += colors[Math.floor((Math.random() * colors.length))];
@@ -150,14 +152,13 @@ export async function scorchingRay({ speaker, actor, token, character, item, arg
                         y: tokenCenter.y + normalizedDirectionVector.y * magicCircleDistance,
                     };
                     new Sequence()
-
                         .wait(150)
 
                         .effect()
                         .file(path)
                         .atLocation(magicCircle)
-                        .scale(0.6)
                         .stretchTo(target, { 'randomOffset': 0.75 })
+                        .scale(0.6)
                         .setMustache({
                             'num': () => {
                                 let nums = ['01', '02', '02'];
@@ -170,34 +171,34 @@ export async function scorchingRay({ speaker, actor, token, character, item, arg
                         .missed(!featureWorkflow.hitTargets.size)
 
                         .effect()
-                        .delay(200)
                         .from(target)
                         .attachTo(target)
+                        .scaleToObject(target.document.texture.scaleX)
+                        .delay(200)
+                        .duration(1800)
                         .fadeIn(200)
                         .fadeOut(500)
                         .loopProperty('sprite', 'position.x', { 'from': -0.05, 'to': 0.05, 'duration': 50, 'pingPong': true, 'gridUnits': true })
-                        .scaleToObject(target.document.texture.scaleX)
-                        .duration(1800)
                         .opacity(0.25)
                         .tint('#fb8b23')
 
                         .effect()
-                        .delay(200, 500)
                         .file(particle)
                         .attachTo(target, { 'randomOffset': 0.2 })
-                        .zIndex(1)
+                        .scaleToObject(1.5)
+                        .delay(200, 500)
+                        .duration(4500)
                         .fadeIn(500)
                         .fadeOut(1200)
-                        .duration(4500)
-                        .scaleToObject(1.5)
+                        .zIndex(1)
                         .randomRotation()
 
-                        .play()
+                        .play();
                 }
             }
         }
     }
-    chrisPremades.queue.remove(workflow.item.uuid);
+    queue.remove(workflow.item.uuid);
     if (animation === 'complex') {
         await warpgate.wait(1500);
         await Sequencer.EffectManager.endEffects({ 'name': 'Scorching Ray', 'object': workflow.token });

@@ -1,25 +1,7 @@
-import {mba} from "../../../helperFunctions.js";
+import { mba } from "../../../helperFunctions.js";
 
 export async function rayOfFrost({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    if (!workflow.hitTargets.size) {
-        let offsetX = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
-        if (offsetX === 0) offsetX = 1;
-        let offsetY = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
-        if (offsetY === 0) offsetY = 1;
-        
-        new Sequence()
-
-            .effect()
-            .file("jb2a.ray_of_frost.blue")
-            .attachTo(token)
-            .stretchTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
-            .repeats(4, 500)
-
-            .play()
-
-        return;
-    };
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} Ray of Frost`, object: token })
     };
@@ -64,8 +46,20 @@ export async function rayOfFrost({ speaker, actor, token, character, item, args,
         .file("jb2a.ray_of_frost.blue")
         .attachTo(token)
         .stretchTo(target)
+        .missed(!workflow.hitTargets.size)
+        .playIf(() => {
+            return !workflow.hitTargets.size
+        })
+
+        .effect()
+        .file("jb2a.ray_of_frost.blue")
+        .attachTo(token)
+        .stretchTo(target)
         .repeats(4, 500)
         .waitUntilFinished(-3000)
+        .playIf(() => {
+            return workflow.hitTargets.size
+        })
 
         .effect()
         .file("jb2a.impact.ground_crack.frost.01.blue")
@@ -79,9 +73,12 @@ export async function rayOfFrost({ speaker, actor, token, character, item, args,
         .persist()
         .noLoop()
         .name(`${target.document.name} Ray of Frost`)
+        .playIf(() => {
+            return workflow.hitTargets.size
+        })
 
         .thenDo(function () {
-            mba.createEffect(target.actor, effectData);
+            if (workflow.hitTargets.size) mba.createEffect(target.actor, effectData);
         })
 
         .play()

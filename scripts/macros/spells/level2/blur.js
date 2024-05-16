@@ -77,7 +77,7 @@ async function hook(workflow) {
     let queueSetup = await queue.setup(workflow.item.uuid, 'blur', 50);
     if (!queueSetup) return;
     workflow.advantage = true;
-    workflow.advReminderAttackAdvAttribution.add('ADV: Ignores disadvantage from Blur (has Blindsight/Truesight)');
+    workflow.advReminderAttackAdvAttribution.add('ADV: Ignores disadvantage from Blur (has Blindsight/Truesight)'); // Cringe
     queue.remove(workflow.item.uuid);
 }
 

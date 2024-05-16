@@ -1,7 +1,8 @@
 import {addMenuSetting, mbaSettingsAnimations, mbaSettingsClassFeats, mbaSettingsFeats, mbaSettingsGeneral, mbaSettingsInterface, mbaSettingsMechanics, mbaSettingsRaceFeats, mbaSettingsSpells, mbaSettingsSummons} from './settingsMenu.js';
 import {cast} from './macros/animations/cast.js';
-import {changeChat} from './macros/ui/changeChat.js';
+import {changeFont} from './macros/ui/changeFont.js';
 import {corpseHide} from './macros/mechanics/corpseHide.js';
+import {critFumble} from './macros/animations/critFumble.js';
 import {deathSaves} from './macros/mechanics/deathSaves.js';
 import {itemDC, noEffectAnimationCreate, noEffectAnimationDelete} from './macros/mechanics/activeEffect.js';
 import {macros, onHitMacro} from './macros.js';
@@ -171,6 +172,23 @@ export function registerSettings() {
     });
     addMenuSetting('Cast Animations', 'Animations');
 
+    game.settings.register(moduleName, 'Crit and Fumble Animations', {
+        'name': 'Анимации критических Успехов и Провалов (атаки)',
+        'hint': 'Включает автоматический проигрыш анимаций от JB2A при выпадении 1 и 20 на бросках атаки.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.AttackRollComplete', critFumble);
+            } else {
+                Hooks.off('midi-qol.AttackRollComplete', critFumble);
+            }
+        }
+    });
+    addMenuSetting('Crit and Fumble Animations', 'Animations');
+
     game.settings.register(moduleName, 'abj_color', {
         'name': 'Abjuration',
         'hint': 'Цвет для заклинаний школы abjuration',
@@ -316,8 +334,8 @@ export function registerSettings() {
     addMenuSetting('trs_color', 'Animations');
 
     game.settings.register(moduleName, 'Strength of the Grave', {
-        'name': 'Strength of the Grave',
-        'hint': 'Включает автоматизацию способности Strength of the Grave (Shadow Sorcerer) через Midi-Qol hooks.',
+        'name': 'Sorcerer (Shadow): Strength of the Grave',
+        'hint': 'Включает автоматизацию способности Strength of the Grave через Midi-Qol hooks.',
         'scope': 'world',
         'config': false,
         'type': Boolean,
@@ -431,8 +449,8 @@ export function registerSettings() {
     addMenuSetting('Corpse Hider', 'Mechanics');
 
     game.settings.register(moduleName, 'Relentless Endurance', {
-        'name': 'Relentless Endurance',
-        'hint': 'Включает автоматизацию спобности орков Relentless Endurance через Midi-QoL hooks.',
+        'name': 'Orc: Relentless Endurance',
+        'hint': 'Включает автоматизацию спобности Relentless Endurance через Midi-QoL hooks.',
         'scope': 'world',
         'config': false,
         'type': Boolean,
@@ -676,18 +694,27 @@ export function registerSettings() {
     });
     addMenuSetting('Companions Initiative', 'Summons');
 
-    game.settings.register(moduleName, 'Dark Chat', {
-        'name': 'Dark Chat',
-        'hint': "Включает альтернативную (темную) версию чата.",
+    game.settings.register(moduleName, 'Dark Theme', {
+        'name': 'Dark Theme',
+        'hint': "Включает альтернативную версию UI.",
         'scope': 'world',
         'config': false,
         'type': Boolean,
         'default': false,
-        'onChange': value => {
-            changeChat(value, 'darkChat');
-        }
+        'onChange': () => debouncedReload()
     });
-    addMenuSetting("Dark Chat", "User Interface")
+    addMenuSetting("Dark Theme", "User Interface")
+
+    game.settings.register(moduleName, 'Font Change', {
+        'name': 'Font Change',
+        'hint': "Включает альтернативный стиль шрифтов (Geologica). Поддерживает Кириллицу.",
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': () => debouncedReload()
+    });
+    addMenuSetting("Font Change", "User Interface")
 
     game.settings.register(moduleName, 'Rollmode Buttons', {
         'name': 'Rollmode Buttons',
@@ -696,6 +723,7 @@ export function registerSettings() {
         'config': false,
         'type': Boolean,
         'default': false,
+        'onChange': () => debouncedReload()
     });
     addMenuSetting("Rollmode Buttons", "User Interface")
 
@@ -713,7 +741,7 @@ export function registerSettings() {
         'hint': 'Настройки автоматизации анимаций.',
         'icon': 'fas fa-film',
         'type': mbaSettingsAnimations,
-        'restricted': false
+        'restricted': true
     });
     game.settings.registerMenu(moduleName, 'Class Features', {
         'name': 'Class Features',
@@ -769,6 +797,17 @@ export function registerSettings() {
         'hint': 'Настройки интерфейса.',
         'icon': 'fas fa-display',
         'type': mbaSettingsInterface,
-        'restricted': true
+        'restricted': false
+    });
+
+    
+    game.keybindings.register(moduleName, "modeChange", {
+        'name': "Game Master Helper",
+        'editable': [{ key: 'KeyQ', modifiers: [KeyboardManager.MODIFIER_KEYS.ALT] }],
+        //'restricted': true,
+        'onDown': () => {
+            if(!game.user.isGM) return;
+            else macros.gameMasterHelper();
+        }
     });
 }

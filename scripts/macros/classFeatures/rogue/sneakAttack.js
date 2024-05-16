@@ -1,6 +1,6 @@
-import {mba} from "../../../helperFunctions.js";
-import {constants} from "../../generic/constants.js";
-import {queue} from "../../mechanics/queue.js";
+import { mba } from "../../../helperFunctions.js";
+import { constants } from "../../generic/constants.js";
+import { queue } from "../../mechanics/queue.js";
 
 async function animation(target, token, attackType) {
     let hitSeq = new Sequence()
@@ -178,8 +178,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     if (!(workflow.item.system.actionType === 'rwak' || workflow.item.system.properties.fin === true)) return;
     let originFeature = mba.getItem(workflow.actor, "Sneak Attack");
     if (!originFeature) return;
-    let currentTurn = game.combat.round + '-' + game.combat.turn;
-    if (currentTurn === originFeature.flags['mba-premades']?.feature?.sneakAttack?.turn) return;
+    if (!mba.perTurnCheck(originFeature, "feature", "sneakAttack")) return
     let doSneak = false;
     let displayRakish = false;
     if (workflow.advantage) doSneak = true;
@@ -216,6 +215,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
             return;
         }
     }
+    await mba.setTurnCheck(originFeature, "feature", "sneakAttack");
     let defaultDamageType = workflow.defaultDamageType;
     let oldFormula = workflow.damageRoll._formula;
     let bonusDamageFormula;
@@ -253,7 +253,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     if (mba.getDistance(workflow.token, target) > 5) animationType = 'ranged';
     if (!animationType) animationType = defaultDamageType;
     await animation(target, workflow.token, animationType);
-    if (mba.inCombat()) await originFeature.setFlag('mba-premades', 'feature.sneakAttack.turn', game.combat.round + '-' + game.combat.turn);
+    //if (mba.inCombat()) await originFeature.setFlag('mba-premades', 'feature.sneakAttack.turn', game.combat.round + '-' + game.combat.turn);
 }
 
 async function combatEnd(origin) {

@@ -6,8 +6,12 @@ async function reroll({ speaker, actor, token, character, item, args, scope, wor
     if (workflow.hitTargets.size === 0 || !workflow.damageRoll || !['mwak', 'rwak', 'msak', 'rsak'].includes(workflow.item.system.actionType)) return;
     let originItem = mba.getItem(workflow.actor, 'Piercer: Reroll Damage');
     if (!originItem) return;
-    let currentTurn = game.combat.round + '-' + game.combat.turn;
-    if (currentTurn === originItem.flags['mba-premades']?.feat?.piercer?.turn) return;
+    let doExtraDamage = mba.perTurnCheck(originItem, "feat", "piercer", false, workflow.token.id);
+    if (!doExtraDamage) return;
+    if (mba.inCombat()) {
+        let currentTurn = game.combat.round + '-' + game.combat.turn;
+        if (currentTurn === originItem.flags['mba-premades']?.feat?.piercer?.turn) return;
+    }
     let queueSetup = await queue.setup(workflow.item.uuid, 'piercerReroll', 390);
     if (!queueSetup) return;
     let damageTypes = mba.getRollDamageTypes(workflow.damageRoll);

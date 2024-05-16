@@ -4,6 +4,7 @@ export async function help({ speaker, actor, token, character, item, args, scope
     let target = workflow.targets.first();
     if (target.id === workflow.token.id) {
         ui.notifications.warn("You can't help yourself!");
+        await game.messages.get(workflow.itemCardId).delete();
         return;
     }
     let effect = await mba.findEffect(target.actor, "Help");

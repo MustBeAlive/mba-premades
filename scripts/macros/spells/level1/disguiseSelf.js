@@ -2280,27 +2280,24 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
     const tokenSelection = Object.keys(selection).map((type) => generateEnergyBox(type)).join("\n");
     const content = `
     <style>
-        .disguiseSelf 
-        .form-group {
+        .disguiseSelf .form-group {
             display: flex;
             flex-wrap: wrap;
             width: 100%;
             align-items: flex-start;
         }
-        .disguiseSelf 
-            .radio-label {
+        .disguiseSelf .radio-label {
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
                 text-align: center;
                 justify-items: center;
-                flex: 1 0 80px;
+                flex: 0 1 25%;
                 line-height: normal;
-            }
-        .disguiseSelf 
-            .radio-label input {
+        }
+        .disguiseSelf .radio-label input {
             display: none;
-            }
+        }
         .disguiseSelf img {
             border: 0px;
             width: 80px;
@@ -2310,7 +2307,7 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
         }
         /* CHECKED STYLES */
         .disguiseSelf [type="radio"]:checked + img {
-            outline: 2px solid #005c8a;
+            outline: 2px solid #9580FF;
         }
     </style>
     <form class="disguiseSelf">
@@ -2398,6 +2395,9 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
     let updates = {
         'token': {
             'flags': {
+                'autorotate': {
+                    'enabled': false
+                },
                 'image-hover': {
                     'specificArt': tokenPath
                 }

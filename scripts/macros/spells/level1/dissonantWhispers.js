@@ -1,11 +1,11 @@
-import { constants } from "../../generic/constants.js";
-import { mba } from "../../../helperFunctions.js";
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     if (!mba.findEffect(target.actor, 'Deafened')) return;
     ChatMessage.create({
-        flavor: target.document.name + ' is deafened and automatically succeeds on the save',
+        flavor: `<b>${target.document.name}</b> is <b>deafened</b> and automatically succeeds on the save.`,
         speaker: ChatMessage.getSpeaker({ actor: workflow.actor })
     });
     await mba.createEffect(target.actor, constants.immunityEffectData);
@@ -13,24 +13,6 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    if (!workflow.failedSaves.size) {
-        new Sequence()
-
-            .effect()
-            .file("jb2a.cast_generic.sound.01.pinkteal.0")
-            .attachTo(target)
-            .scaleToObject(1.8 * target.document.texture.scaleX)
-            .waitUntilFinished(-1000)
-
-            .effect()
-            .file("jb2a.impact_themed.music_note.pink")
-            .attachTo(target)
-            .scaleToObject(1.5 * target.document.texture.scaleX)
-
-            .play()
-
-        return;
-    }
     if (!workflow.failedSaves.size || mba.findEffect(target.actor, 'Reaction')) {
         new Sequence()
 
@@ -47,20 +29,20 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
             .play()
 
-        ui.notifications.info("Target has no reaction available!");
-        return;
+        if (!workflow.failedSaves.size) {
+            ui.notifications.warn("Target saves!");
+            return;
+        }
+        else if (mba.findEffect(target.actor, 'Reaction')) {
+            ui.notifications.info("Target has no reaction available!");
+            return;
+        }
     }
     async function effectMacroCreate() {
-        await new Dialog({
-            title: "Dissonant Whispers",
-            content: `
-                <p>You must immediately use your reaction to move as far as your speed allows away from the caster of the spell.</p>
-                <p>You don't have to move into obviously dangerous ground, such as a fire or a pit.</p>
-            `,
-            buttons: {
-                ok: { label: "Ok!", }
-            }
-        }).render(true);
+        await mbaPremades.helpers.dialog("Dissonant Whispers", [["Gotcha", "ok"]], `                
+            <p>You must immediately use your reaction to move as far as your speed allows away from the caster of the spell.</p>
+            <p>You don't have to move into obviously dangerous ground, such as a fire or a pit.</p>
+        `);
     };
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Dissonant Whispers`, object: token })

@@ -305,7 +305,7 @@
 		{
 			"name": "MustBeAlive Premades",
 			"sorting": "a",
-			"color": "#005c8a",
+			"color": "#9580FF",
 			"packs": [
 				"MBA Actions",
 				"MBA Class Features",
@@ -328,7 +328,6 @@
 		"scripts/module.js"
 	],
 	"styles": [
-		"/css/darkChat.css",
 		"/css/rollmodeButtons.css"
 	],
 	"url": "#{URL}#",

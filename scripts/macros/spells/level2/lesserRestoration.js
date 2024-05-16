@@ -1,350 +1,209 @@
 import {mba} from "../../../helperFunctions.js";
 
 export async function lesserRestoration({ speaker, actor, token, character, item, args, scope, workflow }) {
-    const target = workflow.targets.first();
-    let choices1 = [['Condition', 'condition'], ['Disease', 'disease']];
-    let selection1 = await mba.dialog('Lesser Restoration: Type', choices1, `<b>Choose type of effect to remove:</b>`);
-    if (!selection1) return;
-    if (selection1 === 'condition') {
-        let choices2 = [
-            ['Blindned', 'blindness'],
-            ['Deafened', 'deafness'],
-            ['Paralyzed', 'paralyzed'],
-            ['Poisoned', 'poisoned'],
-            ['Level of Exhaustion', 'exhaustion']
-        ];
-        let effect;
-        let selection2 = await mba.dialog("Lesser Restoration: Condition", choices2, `<b>Which condition would you like to remove?</b>`);
-        if (!selection2) return;
-        switch (selection2) {
-            case 'blindness': {
-                effect = await mba.findEffect(target.actor, "Blinded");
-                if (!effect) {
-                    ui.notifications.warn("Target is not blinded!");
-                    return;
-                }
-                await mba.removeEffect(effect);
-                break;
+    
+const target = workflow.targets.first();
+let resorationType = await mba.dialog('Lesser Restoration: Type', [['Condition', 'condition'], ['Disease', 'disease']], `<b>Choose type of effect to remove:</b>`);
+if (!resorationType) return;
+if (resorationType === 'condition') {
+    let conditions = [
+        ['Blindned', 'blindness'],
+        ['Deafened', 'deafness'],
+        ['Paralyzed', 'paralyzed'],
+        ['Poisoned', 'poisoned'],
+        ['Level of Exhaustion', 'exhaustion']
+    ];
+    let effect;
+    let conditionType = await mba.dialog("Lesser Restoration: Condition", conditions, `<b>Which condition would you like to remove?</b>`);
+    if (!conditionType) return;
+    switch (conditionType) {
+        case 'blindness': {
+            effect = await mba.findEffect(target.actor, "Blinded");
+            if (!effect) {
+                ui.notifications.warn("Target is not blinded!");
+                return;
             }
-            case 'deafness': {
-                effect = await mba.findEffect(target.actor, "Deafened");
-                if (!effect) {
-                    ui.notifications.warn("Target is not deafened!");
-                    return;
-                }
-                await mba.removeEffect(effect);
-                break;
+            await mba.removeEffect(effect);
+            break;
+        }
+        case 'deafness': {
+            effect = await mba.findEffect(target.actor, "Deafened");
+            if (!effect) {
+                ui.notifications.warn("Target is not deafened!");
+                return;
             }
-            case 'paralyzed': {
-                effect = await mba.findEffect(target.actor, "Paralyzed");
-                if (!effect) {
-                    ui.notifications.warn("Target is not paralyzed!");
-                    return;
-                }
-                await mba.removeEffect(effect);
-                break;
+            await mba.removeEffect(effect);
+            break;
+        }
+        case 'paralyzed': {
+            effect = await mba.findEffect(target.actor, "Paralyzed");
+            if (!effect) {
+                ui.notifications.warn("Target is not paralyzed!");
+                return;
             }
-            case 'poisoned': {
-                let effectsFirst = target.actor.effects.filter(i => i.name.includes("Poison"));
-                if (!effectsFirst) {
-                    ui.notifications.warn("Target is not poisoned!");
+            await mba.removeEffect(effect);
+            break;
+        }
+        case 'poisoned': {
+            let effectsFirst = target.actor.effects.filter(i => i.name.includes("Poison"));
+            if (!effectsFirst.length) {
+                ui.notifications.warn("Target is not poisoned!");
+                return;
+            }
+            if (effectsFirst.length < 2) {
+                let poison = await mba.findEffect(target.actor, effectsFirst[0].name);
+                if (!poison) {
+                    ui.notifications.warn(`Unable to find Poison: ${effectsFirst[0].name}`);
                     return;
                 }
-                if (effectsFirst.length < 2) {
-                    let poison = await mba.findEffect(target.actor, effectsFirst[0].name);
+                await mba.removeEffect(poison);
+            } else {
+                let effects = effectsFirst.filter(i => i.name != "Poisoned");
+                if (effects.length < 2) {
+                    let poison = await mba.findEffect(target.actor, effects[0].name);
                     if (!poison) {
-                        ui.notifications.warn(`Unable to find Poison: ${effectsFirst[0].name}`);
+                        ui.notifications.warn(`Unable to find Poison: ${effects[0].name}`);
                         return;
                     }
                     await mba.removeEffect(poison);
                 } else {
-                    let effects = effectsFirst.filter(i => i.name != "Poisoned");
-                    if (effects.length < 2) {
-                        let poison = await mba.findEffect(target.actor, effects[0].name);
-                        if (!poison) {
-                            ui.notifications.warn(`Unable to find Poison: ${effects[0].name}`);
-                            return;
-                        }
-                        await mba.removeEffect(poison);
-                    } else {
-                        let selection = [];
-                        for (let i = 0; i < effects.length; i++) {
-                            let effect = effects[i];
-                            let name = effect.name;
-                            let icon = effect.icon;
-                            selection.push([name, icon]);
-                        };
-                        function generateEnergyBox(type) {
-                            return `
-                            <label class="radio-label">
-                            <input type="radio" name="type" value="${selection[type]}" />
-                            <img src="${selection[type].slice(1)}" style="border: 0px; width: 50px; height: 50px"/>
-                            ${selection[type].slice(0, -1)}
-                            </label>
-                        `;
-                        }
-                        const effectSelection = Object.keys(selection).map((type) => generateEnergyBox(type)).join("\n");
-                        const content = `
-                        <style>
-                            .dispelMagic 
-                                .form-group {
-                                    display: flex;
-                                    flex-wrap: wrap;
-                                    width: 100%;
-                                    align-items: flex-start;
-                                }
-                            .dispelMagic 
-                                .radio-label {
-                                display: flex;
-                                flex-direction: column;
-                                align-items: center;
-                                text-align: center;
-                                justify-items: center;
-                                flex: 1 0 20%;
-                                line-height: normal;
-                                }
-                            .dispelMagic 
-                                .radio-label input {
-                                display: none;
-                            }
-                            .dispelMagic img {
-                                border: 0px;
-                                width: 50px;
-                                height: 50px;
-                                flex: 0 0 50px;
-                                cursor: pointer;
-                            }
-                            /* CHECKED STYLES */
-                            .dispelMagic [type="radio"]:checked + img {
-                                outline: 2px solid #005c8a;
-                            }
-                        </style>
-                        <form class="dispelMagic">
-                            <div class="form-group" id="types">
-                                ${effectSelection}
-                            </div>
-                        </form>
-                    `;
-                        const effectToRemove = await new Promise((resolve) => {
-                            new Dialog({
-                                title: "Choose poison to remove:",
-                                content,
-                                buttons: {
-                                    ok: {
-                                        label: "Ok",
-                                        callback: async (html) => {
-                                            const element = html.find("input[type='radio'][name='type']:checked").val();
-                                            resolve(element);
-                                        },
-                                    },
-                                    cancel: {
-                                        label: "Cancel",
-                                        callback: async (html) => {
-                                            return;
-                                        }
-                                    }
-                                }
-                            }).render(true);
-                        });
-                        let effectToRemoveName = effectToRemove.split(",")[0];
-                        let removeEffect = await mba.findEffect(target.actor, effectToRemoveName);
-                        if (!removeEffect) {
-                            ui.notifications.warn("Something went wrong, unable to find the effect!");
-                            return;
-                        }
-                        await mba.removeEffect(removeEffect);
-                    }
+                    let effectToRemove = await mba.selectEffect("Lesser Restoration: Poison", effects, "<b>Choose one effect:</b>", false);
+                    if (effectToRemove === false) return;
+                    await mba.removeEffect(effectToRemove);
                 }
-                break;
             }
-            case 'exhaustion': {
-                let exhaustion = target.actor.effects.filter(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
-                if (!exhaustion.length) {
-                    ui.notifications.warn("Target has no levels of Exhaustion!");
-                    return;
-                }
-                let level = +exhaustion[0].name.slice(-1);
-                if (level === 1) {
-                    await mba.removeCondition(target.actor, "Exhaustion 1");
-                    break;
-                }
-                level -= 1;
-                await mba.addCondition(target.actor, `Exhaustion ${level}`);
-                break
-            }
+            break;
         }
-    }
-    else if (selection1 === "disease") {
-        let curable = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true).filter(e => e.flags['mba-premades']?.lesserRestoration === true);
-        if (!curable.length) {
-            let uncurable = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true).filter(e => !e.flags['mba-premades']?.lesserRestoration === true);
-            if (!uncurable.length) {
-                ui.notifications.info('Target is not affected by any disease!');
+        case 'exhaustion': {
+            let exhaustion = target.actor.effects.filter(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
+            if (!exhaustion.length) {
+                ui.notifications.warn("Target has no levels of Exhaustion!");
                 return;
             }
-            ui.notifications.info('Targeted creature is affected by a disease which can not be cured with Lesser Restoration!');
+            let level = +exhaustion[0].name.slice(-1);
+            if (level === 1) {
+                await mba.removeCondition(target.actor, "Exhaustion 1");
+                break;
+            }
+            level -= 1;
+            await mba.addCondition(target.actor, `Exhaustion ${level}`);
+            break
+        }
+    }
+}
+else if (resorationType === "disease") {
+    let curable = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true).filter(e => e.flags['mba-premades']?.lesserRestoration === true);
+    if (!curable.length) {
+        let uncurable = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true).filter(e => !e.flags['mba-premades']?.lesserRestoration === true);
+        if (!uncurable.length) {
+            ui.notifications.warn('Target is not affected by any disease!');
             return;
         }
-        let selection = []
-        for (let i = 0; i < curable.length; i++) {
-            let effect = curable[i];
-            let name = effect.flags['mba-premades']?.name;
-            let description = effect.flags['mba-premades']?.description[0].toString();
-            let icon = "modules/mba-premades/icons/conditions/nauseated.webp";
-            selection.push([name, description, icon]);
-        }
-        function generateEnergyBox(type) {
-            return `
-                <label class="radio-label">
-                <input type="radio" name="type" value="${selection[type]}" />
-                <img src="${selection[type].slice(2)}" style="border: 0px; width: 50px; height: 50px"/>
-                ${selection[type].slice(0, -2)}
-                </label>
-            `;
-        }
-        const effectSelection = Object.keys(selection).map((type) => generateEnergyBox(type)).join("\n");
-        const content = `
-            <style>
-                .lesserRestoration 
-                    .form-group {
-                        display: flex;
-                        flex-wrap: wrap;
-                        width: 100%;
-                        align-items: flex-start;
-                    }
-                .lesserRestoration 
-                    .radio-label {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    text-align: center;
-                    justify-items: center;
-                    flex: 1 0 20%;
-                    line-height: normal;
-                    }
-                .lesserRestoration 
-                    .radio-label input {
-                    display: none;
-                }
-                .lesserRestoration img {
-                    border: 0px;
-                    width: 50px;
-                    height: 50px;
-                    flex: 0 0 50px;
-                    cursor: pointer;
-                }
-                /* CHECKED STYLES */
-                .lesserRestoration [type="radio"]:checked + img {
-                    outline: 2px solid #005c8a;
-                }
-            </style>
-            <form class="lesserRestoration">
-                <div class="form-group" id="types">
-                    ${effectSelection}
-                </div>
-            </form>
-        `;
-        const diseaseEffect = await new Promise((resolve) => {
-            new Dialog({
-                title: "Choose which disease to remove:",
-                content,
-                buttons: {
-                    ok: {
-                        label: "Ok",
-                        callback: async (html) => {
-                            const element = html.find("input[type='radio'][name='type']:checked").val();
-                            resolve(element);
-                        },
-                    },
-                    cancel: {
-                        label: "Cancel",
-                        callback: async (html) => {
-                            return;
-                        }
-                    }
-                }
-            }).render(true);
-        });
-        let diseaseFlagName = diseaseEffect.split(",")[0];
-        let diseaseToRemoveName;
-        for (let i = 0; i < curable.length; i++) {
-            let effect = curable[i];
-            if (effect.flags['mba-premades']?.name === diseaseFlagName) diseaseToRemoveName = effect.name;
-        }
-        let diseaseToRemove = await mba.findEffect(target.actor, diseaseToRemoveName);
-        await mba.removeEffect(diseaseToRemove);
+        ui.notifications.warn('Targeted creature is affected by a disease which can not be cured with Lesser Restoration!');
+        return;
     }
+    const [diseaseEffect] = await new Promise(async (resolve) => {
+        let content = "<center><b>Choose disease to remove:</b></center>";
+        let buttons = {},
+            dialog;
+        for (let i of curable) {
+            buttons[i.name] = {
+                label: `<img src='${i.icon}' width='50' height='50' style='border: 0px; float: left'><p style='padding: 1%; font-size: 15px'> ${i.flags['mba-premades']?.name} </p>`,
+                callback: () => resolve([i])
+            }
+        }
+        let height = (Object.keys(buttons).length * 66 + 56);
+        if (Object.keys(buttons).length > 14) height = 850;
+        dialog = new Dialog(
+            {
+                title: "Lesser Restoration: Cure Disease",
+                content: content,
+                buttons,
+                close: () => resolve(false)
+            },
+            {
+                height: height
+            }
+        );
+        await dialog._render(true);
+        dialog.element.find(".dialog-buttons").css({
+            "flex-direction": 'column',
+        })
+    });
+    if (diseaseEffect === false) return;
+    await mba.removeEffect(diseaseEffect);
+}
 
-    new Sequence()
+new Sequence()
 
-        .effect()
-        .file("jb2a.extras.tmfx.inpulse.circle.01.normal")
-        .atLocation(target)
-        .scaleToObject(1)
+    .effect()
+    .file("jb2a.extras.tmfx.inpulse.circle.01.normal")
+    .atLocation(target)
+    .scaleToObject(1)
 
-        .effect()
-        .file("jb2a.misty_step.02.green")
-        .atLocation(target)
-        .scaleToObject(1)
-        .scaleOut(1, 3500, { ease: "easeOutCubic" })
+    .effect()
+    .file("jb2a.misty_step.02.green")
+    .atLocation(target)
+    .scaleToObject(1)
+    .scaleOut(1, 3500, { ease: "easeOutCubic" })
 
-        .wait(1400)
+    .wait(1400)
 
-        .effect()
-        .file("jb2a.healing_generic.burst.bluewhite")
-        .atLocation(target)
-        .scaleToObject(1.5)
-        .filter("ColorMatrix", { hue: 275 })
-        .fadeOut(1000, { ease: "easeInExpo" })
-        .belowTokens()
-        .scaleIn(0, 500, { ease: "easeOutCubic" })
-        .duration(1200)
-        .attachTo(target, { bindAlpha: false })
+    .effect()
+    .file("jb2a.healing_generic.burst.bluewhite")
+    .atLocation(target)
+    .scaleToObject(1.5)
+    .filter("ColorMatrix", { hue: 275 })
+    .fadeOut(1000, { ease: "easeInExpo" })
+    .belowTokens()
+    .scaleIn(0, 500, { ease: "easeOutCubic" })
+    .duration(1200)
+    .attachTo(target, { bindAlpha: false })
 
-        .effect()
-        .from(target)
-        .atLocation(target)
-        .filter("ColorMatrix", { saturate: -1, brightness: 10 })
-        .filter("Blur", { blurX: 5, blurY: 10 })
-        .fadeIn(100)
-        .opacity(1)
-        .fadeOut(5000)
-        .duration(6000)
-        .attachTo(target)
+    .effect()
+    .from(target)
+    .atLocation(target)
+    .filter("ColorMatrix", { saturate: -1, brightness: 10 })
+    .filter("Blur", { blurX: 5, blurY: 10 })
+    .fadeIn(100)
+    .opacity(1)
+    .fadeOut(5000)
+    .duration(6000)
+    .attachTo(target)
 
-        .effect()
-        .file("jb2a.fireflies.few.02.green")
-        .atLocation(target)
-        .scaleToObject(2)
-        .duration(10000)
-        .fadeIn(1000)
-        .fadeOut(500)
-        .attachTo(target)
+    .effect()
+    .file("jb2a.fireflies.few.02.green")
+    .atLocation(target)
+    .scaleToObject(2)
+    .duration(10000)
+    .fadeIn(1000)
+    .fadeOut(500)
+    .attachTo(target)
 
-        .effect()
-        .file("jb2a.extras.tmfx.outflow.circle.02")
-        .atLocation(target)
-        .fadeIn(200)
-        .opacity(0.25)
-        .duration(10000)
-        .scaleToObject(2)
-        .fadeOut(500)
-        .fadeIn(1000)
-        .belowTokens()
-        .attachTo(target)
+    .effect()
+    .file("jb2a.extras.tmfx.outflow.circle.02")
+    .atLocation(target)
+    .fadeIn(200)
+    .opacity(0.25)
+    .duration(10000)
+    .scaleToObject(2)
+    .fadeOut(500)
+    .fadeIn(1000)
+    .belowTokens()
+    .attachTo(target)
 
-        .effect()
-        .file("jb2a.particles.outward.greenyellow.01.03")
-        .atLocation(target)
-        .filter("ColorMatrix", { saturate: -1, brightness: 2 })
-        .fadeIn(200, { ease: "easeInExpo" })
-        .duration(10000)
-        .opacity(0.25)
-        .scaleToObject(2)
-        .fadeOut(500)
-        .fadeIn(1000)
-        .belowTokens()
-        .attachTo(target)
+    .effect()
+    .file("jb2a.particles.outward.greenyellow.01.03")
+    .atLocation(target)
+    .filter("ColorMatrix", { saturate: -1, brightness: 2 })
+    .fadeIn(200, { ease: "easeInExpo" })
+    .duration(10000)
+    .opacity(0.25)
+    .scaleToObject(2)
+    .fadeOut(500)
+    .fadeIn(1000)
+    .belowTokens()
+    .attachTo(target)
 
-        .play()
+    .play()
 }   

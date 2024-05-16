@@ -1,4 +1,5 @@
-//to do: animation??, dialog for target?
+import {mba} from "../../../helperFunctions.js";
+
 export async function counterspell({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let level = workflow.castData.castLevel;
@@ -13,7 +14,7 @@ export async function counterspell({ speaker, actor, token, character, item, arg
         ["Level 8", 8],
         ["Level 9", 9]
     ];
-    let selection = await chrisPremades.helpers.remoteDialog(workflow.item.name, choices, chrisPremades.helpers.firstOwner(target).id, "What is the level of the spell you are attempting to cast?");
+    let selection = await mba.remoteDialog(workflow.item.name, choices, mba.firstOwner(target).id, "What is the level of the spell you are attempting to cast?");
     if (!selection) {
         ui.notification.warn("Target failed to choose spell level, try again");
         return;
@@ -53,7 +54,7 @@ export async function counterspell({ speaker, actor, token, character, item, arg
         return;
     }
     let ability = workflow.actor.system.attributes.spellcasting;
-    let roll = await chrisPremades.helpers.rollRequest(workflow.token, 'abil', ability);
+    let roll = await mba.rollRequest(workflow.token, 'abil', ability);
     if (roll.total >= (10 + selection)) {
         new Sequence()
 
