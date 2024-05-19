@@ -1,116 +1,87 @@
-import {mba} from '../../../helperFunctions.js';
-import {constants} from '../../generic/constants.js';
+import { mba } from '../../../helperFunctions.js';
+import { constants } from '../../generic/constants.js';
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
+    let gridSize = canvas.grid.size;
+    let locations = [
+        { x: template.x, y: template.y },
+        { x: template.x, y: template.y - gridSize * 3 },
+        { x: template.x - gridSize * 2, y: template.y - gridSize * 2 },
+        { x: template.x - gridSize * 3, y: template.y },
+        { x: template.x - gridSize * 2, y: template.y + gridSize * 2 },
+        { x: template.x, y: template.y + gridSize * 3 },
+        { x: template.x + gridSize * 2, y: template.y + gridSize * 2 },
+        { x: template.x + gridSize * 3, y: template.y },
+        { x: template.x + gridSize * 2, y: template.y - gridSize * 2 },
+    ];
 
     new Sequence()
 
-        .wait(1000)
+        .effect()
+        .file("jb2a.cast_generic.earth.01.browngreen.1")
+        .attachTo(template)
+        .size(3, { gridUnits: true })
 
         .effect()
-        .file(`jb2a.magic_signs.circle.02.conjuration.complete.dark_blue`)
-        .atLocation(template)
+        .file("jb2a.plant_growth.02.ring.4x4.pulse.greenred")
+        .attachTo(template)
         .size(8, { gridUnits: true })
-        .fadeIn(600)
-        .rotateIn(180, 600, { ease: "easeOutCubic" })
-        .scaleIn(0, 600, { ease: "easeOutCubic" })
-        .opacity(0.66)
         .belowTokens()
-        .zIndex(1)
-        .name(`Spike Growth 1`)
-        .persist()
+        .filter("ColorMatrix", { brightness: 0 })
+        .playbackRate(1.5)
+        .opacity(0.65)
 
         .effect()
-        .file("jb2a.plant_growth.01.ring.4x4.pulse.bluepurple")
-        .atLocation(template)
-        .size(7.6, { gridUnits: true })
-        .delay(500)
-        .fadeIn(500)
-        .fadeOut(500)
-        .scaleIn(0, 500, { ease: "easeOutCubic" })
-        .randomRotation()
+        .file("jb2a.plant_growth.02.ring.4x4.pulse.greenred")
+        .attachTo(template)
+        .size(4, { gridUnits: true })
         .belowTokens()
-        .zIndex(2)
-
-        .effect()
-        .file("jb2a.swirling_leaves.outburst.01.bluepurple")
-        .atLocation(token)
-        .size(3.5, { gridUnits: true })
-        .delay(500)
-        .duration(1000)
-        .fadeOut(1000)
-        .scaleIn(0, 500, { ease: "easeOutQuint" })
-        .animateProperty("spriteContainer", "position.y", { from: 0, to: -0.15, gridUnits: true, duration: 1000 })
-        .zIndex(1)
-
-        .effect()
-        .file("jb2a.plant_growth.01.square.4x4.loop.bluepurple")
-        .atLocation(template)
-        .size(7.9, { gridUnits: true })
-        .delay(1000)
-        .fadeIn(2000)
-        .fadeOut(500)
-        .opacity(0.95)
-        .shape("circle", {
-            lineSize: 4,
-            lineColor: "#FF0000",
-            fillColor: "#FF0000",
-            radius: 1.5,
-            gridUnits: true,
-            name: "sg2",
-            isMask: true
-        })
-        .belowTokens()
-        .zIndex(1.5)
-        .name(`Spike Growth 2`)
-        .persist()
-
-        .effect()
-        .file("jb2a.plant_growth.01.square.4x4.loop.bluepurple")
-        .atLocation(template)
-        .size(7.9, { gridUnits: true })
-        .delay(1000)
-        .fadeIn(2000)
-        .fadeOut(500)
-        .opacity(0.85)
-        .shape("circle", {
-            lineSize: 4,
-            lineColor: "#FF0000",
-            fillColor: "#FF0000",
-            radius: 3.1,
-            gridUnits: true,
-            name: "sg3",
-            isMask: true
-        })
-        .belowTokens()
-        .zIndex(1.3)
-        .name(`Spike Growth 3`)
-        .persist()
-
-        .effect()
-        .file("jb2a.plant_growth.01.square.4x4.loop.bluepurple")
-        .atLocation(template)
-        .size(7.9, { gridUnits: true })
-        .delay(1000)
-        .fadeIn(2000)
-        .fadeOut(500)
-        .opacity(0.75)
-        .shape("circle", {
-            lineSize: 4,
-            lineColor: "#FF0000",
-            fillColor: "#FF0000",
-            radius: 4.1,
-            gridUnits: true,
-            name: "sg4",
-            isMask: true
-        })
-        .belowTokens()
-        .zIndex(1.2)
-        .name(`Spike Growth 4`)
-        .persist()
+        .filter("ColorMatrix", { brightness: 0 })
+        .playbackRate(1.5)
+        .opacity(0.65)
 
         .play()
+
+    for (let i = 0; i < locations.length; i++) {
+        await Sequencer.Preloader.preload('jb2a.plant_growth.02.round.4x4.loop.greenred');
+        await Sequencer.Preloader.preload('jb2a.ice_spikes.radial.burst.grey');
+
+        new Sequence()
+
+            .effect()
+            .file("jb2a.plant_growth.02.round.4x4.loop.greenred")
+            .atLocation(locations[i])
+            .size(3.8, { gridUnits: true })
+            .delay(550)
+            .fadeIn(1000)
+            .fadeOut(1000)
+            .randomRotation()
+            .opacity(0.85)
+            .zIndex(1)
+            .belowTokens()
+            .persist()
+            .name(`Spike Growth`)
+
+            .effect()
+            .file("jb2a.ice_spikes.radial.burst.grey")
+            .size(13, { gridUnits: true })
+            .atLocation(locations[i], { randomOffset: 0.25 })
+            .delay(30)
+            .fadeIn(1000, { delay: 600 })
+            .fadeOut(1000)
+            .endTime(800)
+            .playbackRate(4)
+            .scaleIn(0, 1000, { ease: "easeOutBack" })
+            .filter("Glow", { color: 0x922042, distance: 1 })
+            .filter("ColorMatrix", { brightness: 0 })
+            .belowTokens()
+            .noLoop()
+            .persist()
+            .name(`Spike Growth`)
+
+            .play()
+    }
 }
 
 async function enterLeave(data, template) {
@@ -198,7 +169,7 @@ async function staying(data, template) {
 }
 
 async function del() {
-    await Sequencer.EffectManager.endEffects({ name: "Spike Growth" })
+    await Sequencer.EffectManager.endEffects({ name: `Spike Growth` });
 }
 
 export let spikeGrowth = {

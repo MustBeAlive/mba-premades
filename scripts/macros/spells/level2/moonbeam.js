@@ -1,5 +1,5 @@
-import {constants} from "../../generic/constants.js";
-import {mba} from "../../../helperFunctions.js";
+import { constants } from "../../generic/constants.js";
+import { mba } from "../../../helperFunctions.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
@@ -196,7 +196,55 @@ async function move({ speaker, actor, token, character, item, args, scope, workf
         'x': position.x,
         'y': position.y
     };
-    await template.update(updates);
+    new Sequence()
+
+        .effect()
+        .file("jaamod.spells_effects.moonbeam.1")
+        .attachTo(token)
+        .scaleToObject(2)
+        .duration(6000)
+        .fadeIn(1000)
+        .fadeOut(1000)
+        .opacity(1)
+        .filter("ColorMatrix", { brightness: 1 })
+        .zIndex(50)
+
+        .thenDo(function () {
+            Sequencer.EffectManager.endEffects({ name: `Moonbeam` });
+        })
+
+        .effect()
+        .file("jb2a.energy_beam.normal.yellow.02")
+        .attachTo(token)
+        .stretchTo(position)
+        .scaleIn(0, 3000, { ease: "easeInOutSine" })
+        .fadeOut(500)
+        .playbackRate(0.8)
+        .zIndex(50)
+        .waitUntilFinished(-1500)
+
+        .thenDo(function () {
+            template.update(updates);
+        })
+
+        .effect()
+        .file("jb2a.moonbeam.01.intro.yellow")
+        .attachTo(template)
+        .scaleToObject(1.2)
+        .zIndex(2)
+
+        .effect()
+        .file("jb2a.moonbeam.01.loop.yellow")
+        .attachTo(template)
+        .scaleToObject(1.2)
+        .delay(2000)
+        .fadeIn(1000)
+        .fadeOut(2000)
+        .zIndex(3)
+        .persist()
+        .name(`Moonbeam`)
+
+        .play()
 }
 
 

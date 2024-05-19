@@ -9,5 +9,5 @@ export async function compendiumRender(doc, html, context) {
         'mba-premades.MBA Summon Features',
     ];
     if (!ids.includes(doc.metadata.id)) return;
-    await mba.dialog("MBA Premades: Warning", [['OK', false]], "Этот компендиум содержит внутренние (синтетические) предметы, необходимые для правильной работы множества макросов.<br><br><b>Лучше здесь ничего не трогать.</b><p></p>");
+    await mba.dialog("MBA Premades: Warning", [['OK', false]], "Этот компендиум содержит внутренние (синтетические) предметы, необходимые для правильной работы множества макросов.<br><br><b>Лучше здесь ничего не трогать.</b>");
 }

@@ -133,6 +133,7 @@ import {harm} from './macros/spells/level6/harm.js';
 import {harnessDivinePower} from './macros/classFeatures/cleric/harnessDivinePower.js';
 import {haste} from './macros/spells/level3/haste.js';
 import {heal} from './macros/spells/level6/heal.js';
+import {healingSpirit} from './macros/spells/level2/healingSpirit.js';
 import {healingWord} from './macros/spells/level1/healingWord.js';
 import {heatMetal} from './macros/spells/level2/heatMetal.js';
 import {hellishRebuke} from './macros/spells/level1/hellishRebuke.js';
@@ -445,6 +446,7 @@ export let macros = {
     'harnessDivinePower': harnessDivinePower,
     'haste': haste,
     'heal': heal,
+    'healingSpirit': healingSpirit,
     'healingWord': healingWord,
     'heatMetal': heatMetal,
     'hellishRebuke': hellishRebuke,

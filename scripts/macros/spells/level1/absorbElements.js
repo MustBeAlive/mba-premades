@@ -1,18 +1,25 @@
 import {mba} from "../../../helperFunctions.js";
 
 export async function absorbElements({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let choices = [['Acid 🧪', 'acid'], ['Cold ❄️', 'cold'], ['Fire 🔥', 'fire'], ['Lightning ⚡', 'lightning'], ['Thunder ☁️', 'thunder'], ["None of the above", "none"]];
-    let type = await mba.dialog("Absorb Elements", choices, `<b>Choose damage element (ask GM)</b>`);
-    if (!type || type === "none") return;
+    let choices = [
+        ['Acid', 'acid', "modules/mba-premades/icons/spells/level1/absorb_elements_acid.webp"], 
+        ['Cold', 'cold', "modules/mba-premades/icons/spells/level1/absorb_elements_cold.webp"], 
+        ['Fire', 'fire', "modules/mba-premades/icons/spells/level1/absorb_elements_fire.webp"], 
+        ['Lightning', 'lightning', "modules/mba-premades/icons/spells/level1/absorb_elements_lightning.webp"], 
+        ['Thunder', 'thunder', "modules/mba-premades/icons/spells/level1/absorb_elements_thunder.webp"], 
+        ["None of the above", "none", "modules/mba-premades/icons/conditions/incapacitated.webp"]
+    ];
+    let type = await mba.selectImage("Absorb Elements", choices, `<b>Choose damage element (ask GM)</b>`, "both");
+    if (!type || type[0] === "none") return;
     let level = workflow.castData.castLevel;
     let icon;
     let animation1;
     let animation2;
     let animation3;
     let animation4;
-    switch (type) {
+    switch (type[0]) {
         case "acid": {
-            icon = "modules/mba-premades/icons/spells/level1/absorb_elements_acid.webp";
+            icon = type[1];
             animation1 = "jb2a.shield.03.intro.green";
             animation2 = "jb2a.shield.03.loop.green";
             animation3 = "jb2a.shield.03.outro_explode.green";
@@ -91,13 +98,13 @@ export async function absorbElements({ speaker, actor, token, character, item, a
         'icon': icon,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You have resistance to ${type} damage type until the start of your next turn.</p>
+            <p>You have resistance to ${type[0]} damage type until the start of your next turn.</p>
         `,
         'changes': [
             {
                 'key': 'system.traits.dr.value',
                 'mode': 0,
-                'value': type,
+                'value': type[0],
                 'priority': 20
             }
         ],
@@ -125,13 +132,13 @@ export async function absorbElements({ speaker, actor, token, character, item, a
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>The first target you hit with a melee attack on your turn will take extra ${level}d6 ${type} damage.</p>
+            <p>The first target you hit with a melee attack on your turn will take extra ${level}d6 ${type[0]} damage.</p>
         `,
         'changes': [
             {
                 'key': 'system.bonuses.mwak.damage',
                 'mode': 2,
-                'value': `+${level}d6[${type}]`,
+                'value': `+${level}d6[${type[0]}]`,
                 'priority': 20
             }
         ],
@@ -155,7 +162,7 @@ export async function absorbElements({ speaker, actor, token, character, item, a
             'mba-premades': {
                 'spell': {
                     'absorbElements': {
-                        'type': type
+                        'type': type[0]
                     }
                 }
             }

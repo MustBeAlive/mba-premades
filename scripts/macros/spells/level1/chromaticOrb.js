@@ -23,26 +23,27 @@ export async function chromaticOrb({ speaker, actor, token, character, item, arg
     let queueSetup = await queue.setup(workflow.item.uuid, 'chromaticOrb', 50);
     if (!queueSetup) return;
     let choices = [
-        ['Acid 🧪', 'acid'],
-        ['Cold ❄️', 'cold'],
-        ['Fire 🔥', 'fire'],
-        ['Lightning ⚡', 'lightning'],
-        ['Poison ☠️', 'poison'],
-        ['Thunder ☁️', 'thunder']
+        ['Acid', 'acid', "modules/mba-premades/icons/spells/level1/chromatic_orb_acid.webp"],
+        ['Cold', 'cold', "modules/mba-premades/icons/spells/level1/chromatic_orb_cold.webp"],
+        ['Fire', 'fire', "modules/mba-premades/icons/spells/level1/chromatic_orb_fire.webp"],
+        ['Lightning', 'lightning', "modules/mba-premades/icons/spells/level1/chromatic_orb_lightning.webp"],
+        ['Poison', 'poison', "modules/mba-premades/icons/spells/level1/chromatic_orb_poison.webp"],
+        ['Thunder', 'thunder', "modules/mba-premades/icons/spells/level1/chromatic_orb_thunder.webp"]
     ];
-    let selection = await mba.dialog('Chromatic Orb', choices, `<b>Choose damage type:</b>`);
+    let selection = await mba.selectImage('Chromatic Orb', choices, `<b>Choose damage type:</b>`, "both");
+    console.log(selection);
     if (!selection) {
         queue.remove(workflow.item.uuid);
         return;
     }
-    let damageFormula = workflow.damageRoll._formula.replace('none', selection);
+    let damageFormula = workflow.damageRoll._formula.replace('none', selection[0]);
     let damageRoll = await new Roll(damageFormula).roll({ async: true });
     await workflow.setDamageRoll(damageRoll);
     queue.remove(workflow.item.uuid);
     let animation1;
     let animation2;
     let hue1;
-    switch (selection) {
+    switch (selection[0]) {
         case 'acid':
             animation1 = "jb2a.ranged.03.projectile.01.yellow";
             animation2 = "jb2a.impact.003.green";

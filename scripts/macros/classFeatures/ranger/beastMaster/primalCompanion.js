@@ -9,12 +9,21 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     if (!sourceActor) return;
     let rangerLevel = workflow.actor.classes?.ranger?.system?.levels;
     if (!rangerLevel) return;
-    let primalBondData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Primal Bond', false);
-    if (!primalBondData) return;
+    let primalBondData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Primal Companion: Primal Bond', false);
+    if (!primalBondData) {
+        ui.notifications.warn("Unable to find item in the compendium! (Primal Companion: Primal Bond)");
+        return;
+    }
     let commandData = await mba.getItemFromCompendium('mba-premades.MBA Class Feature Items', 'Primal Companion: Command', false);
-    if (!commandData) return;
+    if (!commandData) {
+        ui.notifications.warn("Unable to find item in the compendium! (Primal Companion: Command)");
+        return;
+    }
     let dodgeData = await mba.getItemFromCompendium('mba-premades.MBA Actions', 'Dodge', false);
-    if (!dodgeData) return;
+    if (!dodgeData) {
+        ui.notifications.warn("Unable to find item in the compendium! (Dodge)");
+        return;
+    }
     let hpFormula = 5 + (rangerLevel * 5);
     let name = `Beast of the ${selection}`;
     let meleeAttackBonus = await new Roll(workflow.actor.system.bonuses.msak.attack + ' + 0', workflow.actor.getRollData()).roll({ 'async': true });
@@ -69,11 +78,17 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let updates2 = {};
     switch (selection) {
         case 'Land':
-            let chargeData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Charge', false);
-            if (!chargeData) return;
+            let chargeData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Primal Companion: Charge', false);
+            if (!chargeData) {
+                ui.notifications.warn("Unable to find item in the compendium! (Primal Companion: Charge)");
+                return;
+            }
             chargeData.system.save.dc = mba.getSpellDC(workflow.item);
-            let maulData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Maul', false);
-            if (!maulData) return;
+            let maulData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Primal Companion: Maul', false);
+            if (!maulData) {
+                ui.notifications.warn("Unable to find item in the compendium! (Primal Companion: Maul)");
+                return;
+            }
             updates2 = {
                 'actor': {
                     'system': {
@@ -98,10 +113,16 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
             break;
         case 'Sea':
-            let amphibiousData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Amphibious', false);
-            if (!amphibiousData) return;
-            let bindingStrikeData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Binding Strike', false);
-            if (!bindingStrikeData) return;
+            let amphibiousData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Primal Companion: Amphibious', false);
+            if (!amphibiousData) {
+                ui.notifications.warn("Unable to find item in the compendium! (Primal Companion: Amphibious)");
+                return;
+            }
+            let bindingStrikeData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Primal Companion: Binding Strike', false);
+            if (!bindingStrikeData) {
+                ui.notifications.warn("Unable to find item in the compendium! (Primal Companion: Binding Strike)");
+                return;
+            }
             updates2 = {
                 'actor': {
                     'system': {
@@ -126,10 +147,16 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             break;
         case 'Sky':
             hpFormula = 4 + 4 * rangerLevel;
-            let flybyData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Flyby', false);
-            if (!flybyData) return;
-            let shredData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Shred', false);
-            if (!shredData) return;
+            let flybyData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Primal Companion: Flyby', false);
+            if (!flybyData) {
+                ui.notifications.warn("Unable to find item in the compendium! (Primal Companion: Flyby)");
+                return;
+            }
+            let shredData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Primal Companion: Shred', false);
+            if (!shredData) {
+                ui.notifications.warn("Unable to find item in the compendium! (Primal Companion: Shred)");
+                return;
+            }
             updates2 = {
                 'actor': {
                     'system': {

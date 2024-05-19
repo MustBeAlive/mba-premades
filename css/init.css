@@ -110,14 +110,12 @@ input:focus {
     box-shadow: none;
     text-shadow: none
 }
+input[type="text"]:focus, input[type="number"]:focus, input[type="password"]:focus, input[type="date"]:focus, input[type="time"]:focus, input[type="search"]:focus {
+    box-shadow: unset;
+    border: 1px solid var(--color-dracula-accent);
+}
 
-input[type=text],
-input[type=number],
-input[type=password],
-input[type=date],
-input[type=time],
-input[type=text].color,
-input[type=color][data-edit] {
+input[type=text], input[type=number], input[type=password], input[type=date], input[type=time], input[type=text].color, input[type=color][data-edit] {
     background: inherit;
     border: 1px solid var(--color-dracula-accent);
     border-radius: 1px;
@@ -130,11 +128,7 @@ input[type=color][data-edit] {
     transition: .3s ease-in-out all
 }
 
-input[type=text]:focus,
-input[type=number]:focus,
-input[type=password]:focus,
-input[type=date]:focus,
-input[type=time]:focus {
+input[type=text]:focus, input[type=number]:focus, input[type=password]:focus, input[type=date]:focus, input[type=time]:focus {
     background: var(--color-dracula-border);
     border-width: 2px;
     -webkit-box-shadow: none;
@@ -164,14 +158,12 @@ input[type=range]::-webkit-slider-thumb {
     box-shadow: none
 }
 
-input[type=checkbox],
-input[type=radio] {
+input[type=checkbox], input[type=radio] {
     background: var(--color-dracula-accent);
     color: var(--color-dracula-text-primary)
 }
 
-input[type=color][data-edit][data-edit],
-input[type=color i] {
+input[type=color][data-edit][data-edit], input[type=color i] {
     -webkit-appearance: auto;
     -moz-appearance: auto;
     appearance: auto;
@@ -221,8 +213,7 @@ table tr:nth-child(even) {
     background-color: inherit;
 }
 
-select,
-select:active {
+select, select:active {
     color: var(--color-dracula-text-secondary);
     background: var(--color-dracula-content);
     border: 1px solid var(--color-dracula-accent);
@@ -233,21 +224,18 @@ select:active {
     transition: .3s ease-in-out all
 }
 
-select:focus,
-select:active:focus {
+select:focus, select:active:focus {
     border-width: 2px;
     -webkit-box-shadow: none;
     box-shadow: none
 }
 
-optgroup,
-option {
+optgroup, option {
     background: var(--color-dracula-content);
     color: var(--color-dracula-text-secondary)
 }
 
-form .hint,
-form .notes {
+form .hint, form .notes {
     color: var(--color-dracula-inactive);
     -webkit-box-shadow: none;
     box-shadow: none;
@@ -296,8 +284,7 @@ textarea:focus {
     color: var(--color-dracula-text-primary)
 }
 
-button,
-form button {
+button, form button {
     background: inherit;
     border: 1px solid var(--color-dracula-accent);
     border-radius: 1px;
@@ -313,18 +300,17 @@ form button {
     margin: 0 0 .125rem 0
 }
 
-button:hover,
-form button:hover {
+button:hover, form button:hover {
     cursor: pointer;
-    -webkit-box-shadow: 0 .5em .5em -0.4em var(--color-dracula-accent);
-    box-shadow: 0 .5em .5em -0.4em var(--color-dracula-accent);
+    -webkit-box-shadow: 0 0.5em 0.5em -0.4em var(--color-dracula-accent);
+    box-shadow: unset;
     -webkit-transition: .25s;
-    transition: .25s
+    transition: .25s;
+    background: var(--color-dracula-accent) !important;
+    color: var(--color-dracula-shadow);
 }
 
-.layout_default .picker_editor,
-.layout_default.picker_wrapper input,
-.layout_default.picker_wrapper button {
+.layout_default .picker_editor, .layout_default.picker_wrapper input, .layout_default.picker_wrapper button {
     background: inherit;
     border: 1px solid var(--color-dracula-accent);
     border-radius: 1px;
@@ -373,15 +359,16 @@ form button:hover {
     font-size: 14px
 }
 
-.dialog .dialog-buttons button:focus,
-.dialog .dialog-buttons button:hover {
+.dialog .dialog-buttons button:focus, .dialog .dialog-buttons button:hover {
     cursor: pointer;
     -webkit-box-shadow: 0 .5em .5em -0.4em var(--color-dracula-accent);
     box-shadow: 0 .5em .5em -0.4em var(--color-dracula-accent);
     -webkit-transition: .25s;
     transition: .25s;
     -webkit-box-shadow: none;
-    box-shadow: none
+    box-shadow: none;
+    background: var(--color-dracula-accent);
+    color: var(--color-dracula-shadow);
 }
 
 .app {
@@ -414,7 +401,8 @@ form button:hover {
 .window-app .window-header {
     border-radius: 6px 6px 0 0;
     background: var(--color-dracula-content);
-    border: 1px solid transparent
+    border: 1px solid transparent;
+    overflow: unset;
 }
 
 .window-app .dialogue {
@@ -432,10 +420,15 @@ form button:hover {
     text-shadow: 0 0 4px var(--color-dracula-glow)
 }
 
+#navigation.collapsed #nav-toggle {
+    background: var(--color-dracula-shadow);
+    border: 1px solid var(--color-dracula-accent);
+}
+
 #navigation #scene-list .nav-item {
-    border: 1px solid var(--color-dracula-border);
+    border: 1px solid var(--color-dracula-accent);
     border-radius: 1px;
-    background: var(--color-dracula-content)
+    background: var(--color-dracula-shadow)
 }
 
 #navigation #scene-list .scene.gm {
@@ -486,14 +479,14 @@ form button:hover {
 
 #controls ol .scene-control.active {
     --shadow-color: 232deg 22% 2%;
-    -webkit-box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38);
-    box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38);
+    -webkit-box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38) !important;
+    box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38) !important;
     text-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.31), 0 1.1px 1.3px -0.3px hsl(var(--shadow-color)/0.32), 0 2px 2.3px -0.6px hsl(var(--shadow-color)/0.33), 0 3.3px 3.9px -0.9px hsl(var(--shadow-color)/0.35), -0.1px 5.1px 6px -1.3px hsl(var(--shadow-color)/0.36), -0.1px 7.9px 9.2px -1.6px hsl(var(--shadow-color)/0.37), -0.2px 11.9px 13.9px -1.9px hsl(var(--shadow-color)/0.38), -0.2px 17.4px 20.4px -2.2px hsl(var(--shadow-color)/0.39);
-    border: 1px solid;
-    border-image-slice: 1;
-    border-image-source: linear-gradient(135deg, var(--color-dracula-accent-secondary) 0%, var(--color-dracula-accent-tertiary) 100%);
+    border: 1px solid !important;
+    border-image-slice: 1 !important;
+    border-image-source: linear-gradient(135deg, var(--color-dracula-accent-secondary) 0%, var(--color-dracula-accent-tertiary) 100%) !important;
     border-radius: 1px;
-    -webkit-filter: none;
+    -webkit-filter: none !important;
     filter: none
 }
 
@@ -554,7 +547,7 @@ form button:hover {
     border: 1px solid;
     border-image-slice: 1;
     border-image-source: linear-gradient(135deg, var(--color-dracula-accent) 0%, var(--color-dracula-accent-highlight) 100%);
-    background: linear-gradient(135deg, var(--color-dracula-accent) 0%, var(--color-dracula-accent-highlight) 100%);
+    background: linear-gradient(135, var(--color-dracula-accent) 0%, var(--color-dracula-accent-highlight) 100%);
     --shadow-color: 171deg 61% 33%;
     -webkit-filter: none;
     filter: none
@@ -601,10 +594,14 @@ form button:hover {
     border-radius: 1px
 }
 
+#hotbar.locked #macro-list {
+    border: 1px solid var(--color-dracula-accent);
+}
+
 #hotbar #hotbar-directory-controls,
 #hotbar #hotbar-page-controls {
-    background: -webkit-gradient(linear, left top, left bottom, from(rgba(33, 34, 44, 0.9)), color-stop(50%, rgba(33, 34, 44, 0.75)), to(rgba(33, 34, 44, 0.5)));
-    background: linear-gradient(180deg, rgba(33, 34, 44, 0.9) 0%, rgba(33, 34, 44, 0.75) 50%, rgba(33, 34, 44, 0.5) 100%);
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
     --shadow-color: 0deg 0% 48%;
     text-shadow: 0 .1px .2px hsl(var(--shadow-color)/0), 0 0 .3px hsl(var(--shadow-color)/0.18), 0 0 .6px hsl(var(--shadow-color)/0.35), 0 0 1.2px hsl(var(--shadow-color)/0.52), 0 0 2px hsl(var(--shadow-color)/0.7)
 }
@@ -654,7 +651,8 @@ form button:hover {
 }
 
 #hotbar .bar-controls {
-    background: var(--color-dracula-border);
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
     border-radius: 1px;
     --shadow-color: 0deg 0% 48%;
     text-shadow: 0 .1px .2px hsl(var(--shadow-color)/0), 0 0 .3px hsl(var(--shadow-color)/0.18), 0 0 .6px hsl(var(--shadow-color)/0.35), 0 0 1.2px hsl(var(--shadow-color)/0.52), 0 0 2px hsl(var(--shadow-color)/0.7)
@@ -998,6 +996,10 @@ form button:hover {
     padding: 2px
 }
 
+#chat-form {
+    margin: 0px 6px 20px;
+}
+
 #chat-form textarea {
     background: inherit;
     border: 1px solid var(--color-dracula-accent);
@@ -1213,7 +1215,7 @@ nav.list-filters a.filter:hover {
 }
 
 .filepicker input[type=text] {
-    color: var(--color-dracula-text-secondary);
+    color: var(--color-dracula-text-secondary) !important;
 }
 
 #keybindings .filters {
@@ -1237,13 +1239,17 @@ nav.list-filters a.filter:hover {
 }
 
 #keybindings .binding .key {
-    background: var(--color-dracula-accent);
-    border-color: var(--color-dracula-accent)
+    background: var(--color-dracula-content);
+    border-color: var(--color-dracula-accent);
 }
 
 #keybindings .binding .key.uneditable {
     background: var(--color-dracula-inactive);
-    border-color: var(--color-dracula-inactive)
+    border-color: var(--color-dracula-accent);
+}
+
+#keybindings .binding .binding-controls .control.conflicts {
+    color: var(--color-dracula-accent-secondary);
 }
 
 #keybindings .category .category-header {
@@ -1450,11 +1456,10 @@ nav.list-filters a.filter:hover {
     box-shadow: inset 0 0 0 .5px var(--color-dracula-accent)
 }
 
-.dnd5e input[type=checkbox]:hover,
-.dnd5e input[type=checkbox]:focus {
+.dnd5e input[type=checkbox]:hover, .dnd5e input[type=checkbox]:focus {
     border: 1px solid var(--color-dracula-border-secondary);
     -webkit-box-shadow: 0 0 8px var(--color-dracula-accent-tertiary);
-    box-shadow: 0 0 8px var(--color-dracula-accent-tertiary)
+    box-shadow: unset;
 }
 
 .dnd5e input:disabled {
@@ -1536,17 +1541,17 @@ nav.list-filters a.filter:hover {
 
 .dnd5e.chat-card .card-header h3 {
     color: var(--color-dracula-text-primary);
-    font-family: "Signika", serif;
-    font-weight: bold;
-    font-size: 14px
+    font-family: unset !important;
+    font-weight: bold !important;
+    font-size: 14px !important;
 }
 
 .dnd5e.chat-card .card-header h3:hover {
     color: var(--color-dracula-text-primary);
-    font-family: "Signika", serif;
-    font-weight: bold;
-    font-size: 14px;
-    text-shadow: 0 0 8px var(--color-dracula-accent)
+    font-family: unset !important;
+    font-weight: bold !important;
+    font-size: 14px !important;
+    text-shadow: 0 0 8px var(--color-dracula-accent) !important;
 }
 
 .dnd5e.chat-card .card-header img {
@@ -3021,21 +3026,19 @@ aside .read-aloud-text p * {
     border-top: 2px solid var(--color-dracula-failure);
     border-bottom: 2px solid var(--color-dracula-failure)
 }
-
 .dice-tray button {
     border: 1px solid var(--color-dracula-border);
+    border-radius: unset;
     -webkit-box-shadow: 0 0 2px var(--color-dracula-accent);
     box-shadow: 0 0 2px var(--color-dracula-accent);
-    margin: 0 2px 2px 2px
+    margin: 0 2px 2px 2px;
 }
-
 .dice-tray button:hover {
-    color: var(--color-dracula-accent-secondary);
-    border-color: var(--color-dracula-accent-secondary);
-    -webkit-box-shadow: 0 0 6px var(--color-dracula-accent-secondary);
-    box-shadow: 0 0 6px var(--color-dracula-accent-secondary)
+    border-color: var(--color-dracula-accent);
+    -webkit-box-shadow: unset;
+    box-shadow: unset;
+    color: var(--color-dracula-shadow);
 }
-
 .dice-tray button.dice-tray__advantage {
     cursor: pointer;
     border-color: var(--color-dracula-success);
@@ -3044,7 +3047,12 @@ aside .read-aloud-text p * {
     color: var(--color-dracula-success);
     border-color: var(--color-dracula-success)
 }
-
+.dice-tray button.dice-tray__advantage:hover {
+    color: var(--color-dracula-shadow);
+    background: var(--color-dracula-success) !important;
+    border-color: var(--color-dracula-success);
+    box-shadow: 0 0 6px inset var(--color-dracula-success);
+}
 .dice-tray button.dice-tray__disadvantage {
     cursor: pointer;
     border-color: var(--color-dracula-accent-secondary);
@@ -3053,9 +3061,53 @@ aside .read-aloud-text p * {
     color: var(--color-dracula-accent-secondary);
     border-color: var(--color-dracula-accent-secondary)
 }
-
+.dice-tray button.dice-tray__disadvantage:hover {
+    color: var(--color-dracula-shadow);
+    background: var(--color-dracula-failure) !important;
+    border-color: var(--color-dracula-failure);
+    box-shadow: 0 0 6px inset var(--color-dracula-failure);
+}
+.dice-tray button.dice-tray__roll:hover {
+    color: var(--color-dracula-shadow);
+}
+.dice-tray button.dice-tray__math--add:hover {
+    background: var(--color-dracula-accent) !important;
+    box-shadow: unset;
+    border-color: var(--color-dracula-accent);
+    color: var(--color-dracula-shadow);
+}
+.dice-tray button.dice-tray__math--sub:hover {
+    background: var(--color-dracula-accent) !important;
+    box-shadow: unset;
+    border-color: var(--color-dracula-accent);
+    color: var(--color-dracula-shadow);
+}
+.dice-tray input[type='text']:hover, .dice-tray input[type='text']:focus {
+    border: 1px solid var(--color-dracula-accent);
+    box-shadow: 0 0 6px inset var(--color-dracula-accent);
+}
 .dice-tray button .dice-tray__flag {
-    background-color: var(--color-dracula-accent)
+    position: absolute;
+    bottom: calc(100% - -1px);
+    left: 0;
+    right: 0;
+    font-size: 14px;
+    height: 18px;
+    width: 38px;
+    margin-left: -1px;
+    line-height: 1;
+    background-color: var(--color-dracula-accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    border-radius: unset;
+    max-height: 18px;
+    transition: all ease-in-out 0.15s;
+    justify-content: center;
+}
+.dice-tray button .dice-tray__flag:hover, .dice-tray button .dice-tray__flag:focus {
+    background-color: var(--color-dracula-accent);
+    color: var(--color-dracula-shadow);
 }
 
 .dice-tray button input[type=text] {
@@ -3231,6 +3283,7 @@ aside .read-aloud-text p * {
 #requestsavingthrow .request-header {
     background: var(--color-dracula-border);
     border: 2px solid var(--color-dracula-border-secondary);
+    border-radius: unset;
     -webkit-box-shadow: none;
     box-shadow: none
 }
@@ -3315,14 +3368,13 @@ aside .read-aloud-text p * {
     border: none
 }
 
-#requestsavingthrow .request-grid>div.selected,
-#requestsavingthrow .request-grid>div:hover {
+#requestsavingthrow .request-grid>div.selected, #requestsavingthrow .request-grid>div:hover {
     color: var(--color-dracula-text-primary);
     background: var(--color-dracula-content);
-    border: var(--color-dracula-accent);
-    border-radius: 6px;
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
     -webkit-box-shadow: 0 0 10px var(--color-dracula-accent);
-    box-shadow: 0 0 10px var(--color-dracula-accent)
+    box-shadow: unset;
 }
 
 #pdf-export {
@@ -3424,21 +3476,42 @@ aside .read-aloud-text p * {
 
 
 
-/* МОИ КОСТЫЛИ
+/* МОИ КОСТЫЛИ */
+/**********************************************************************************************************/
+/**********************************************************************************************************/
+/**********************************************************************************************************/
 
-/* Advantage Reminder */
-.dialog .dialog-buttons button.default.normal:hover,
-.dialog .dialog-buttons button.default.normal:focus,
-.dialog .dialog-buttons button.default.advantage:hover,
-.dialog .dialog-buttons button.default.advantage:focus,
-.dialog .dialog-buttons button.default.disadvantage:hover,
-.dialog .dialog-buttons button.default.disadvantage:focus,
-.dialog .dialog-buttons button.default.critical:hover,
-.dialog .dialog-buttons button.default.critical:focus {
-    outline: none;
-    box-shadow: 0 0.2px 0.2px hsl(var(--shadow-color)/0.32), 0 0.3px 0.4px -1.1px hsl(var(--shadow-color)/0.35), 0 0.7px 0.8px -2.2px hsl(var(--shadow-color)/0.38);
+/* Core Notifications */
+.notification {
+    box-shadow: unset;
+}
+.notification.info {
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+}
+.notification.warning {
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent-secondary);
+    border-radius: unset;
+}
+.notification.error {
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent-tertiary);
+    border-radius: unset;
 }
 
+
+/* Core Left-Side Panel */
+
+
+/* Advantage Reminder */
+.dialog .dialog-buttons button.default.normal:hover, .dialog .dialog-buttons button.default.normal:focus, .dialog .dialog-buttons button.default.advantage:hover, .dialog .dialog-buttons button.default.advantage:focus, .dialog .dialog-buttons button.default.disadvantage:hover, .dialog .dialog-buttons button.default.disadvantage:focus, .dialog .dialog-buttons button.default.critical:hover, .dialog .dialog-buttons button.default.critical:focus {
+    outline: none;
+    box-shadow: 0 0.2px 0.2px hsl(var(--shadow-color)/0.32), 0 0.3px 0.4px -1.1px hsl(var(--shadow-color)/0.35), 0 0.7px 0.8px -2.2px hsl(var(--shadow-color)/0.38);
+    background: var(--color-dracula-accent-secondary);
+    color: var(--color-dracula-shadow);
+}
 .dialog .dialog-buttons button.default.normal,
 .dialog .dialog-buttons button.default.advantage,
 .dialog .dialog-buttons button.default.disadvantage,
@@ -3448,7 +3521,6 @@ aside .read-aloud-text p * {
     color: inherit;
     font-weight: inherit;
 }
-
 .dialog .dialog-content .adv-reminder-messages {
     color: var(--color-dracula-text-secondary);
     border: 1px groove var(--color-dracula-accent-secondary);
@@ -3457,16 +3529,15 @@ aside .read-aloud-text p * {
 
 /* Always HP Restyle */
 #always-hp {
-    background: rgba(0, 0, 0, 0.65);
+    background: var(--color-dracula-content);
     width: 100% !important;
 	max-width: 320px !important;
 	height: auto !important;
 	max-width: 300px;
 	border: 1px solid var(--color-dracula-accent);
 	padding: 4px 6px;
-	box-shadow: 0 0 5px #444 inset;
+	box-shadow: unset;
 }
-
 #always-hp .window-header {
     display: flex;
     align-items: center;
@@ -3477,30 +3548,25 @@ aside .read-aloud-text p * {
     padding: 2px 2px 0 4px;
     box-sizing: border-box;
 }
-
 #always-hp .window-title {
 	font-size: 16px;
     align-items: center;
 }
-
 #always-hp .window-header .character-name.single {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 	line-height: inherit; 
 }
-
 #always-hp .window-header .token-stats {
     font-size: 16px;
     gap: 2px;
     padding: 0;
     height: 24px;
 }
-
 #always-hp .stat {
 	text-shadow: 1px 1px 4px #000;
 }
-
 #always-hp .resource {
 	flex-basis: 100%;
     position: relative;
@@ -3513,12 +3579,10 @@ aside .read-aloud-text p * {
 	border: 1px solid rgb(0 0 0 / 80%);
 	border-radius: 0;
 }
-
 #always-hp .resource .bar, #always-hp .resource .temp-bar {
     border-radius: 0;
 	border: 0;
 }
-
 #always-hp .resource .temp-bar {
 	border: 0;
 	border-bottom: 1px solid  rgb(0 0 0 / 80%);
@@ -3528,46 +3592,43 @@ aside .read-aloud-text p * {
     left: 0;
     height: 6px; /* set to 16px to match hp bar */
 }
-
 #always-hp .good-ones {
-    border: 1px solid rgb(77 225 90); /* green hp */
+    border: 1px solid var(--color-dracula-success);
 }
-
 #always-hp .good-ones i {
-    color: rgb(77 225 90); /* green hp */
+    color: var(--color-dracula-success);
 }
-
 #always-hp .good-ones:hover {
-    background-color: #66ccff;
-    background-color: rgb(77 225 90); /* green hp */
+    /*background-color: #66ccff;*/
+    background-color: var(--color-dracula-success);
 }
-
+#always-hp .bad-ones {
+    border: 1px solid var(--color-dracula-failure-secondary)
+}
+#always-hp .bad-ones i {
+    color: var(--color-dracula-failure-secondary)
+}
 #always-hp .bad-ones:hover {
-    background-color: #d30708;
+    background-color: var(--color-dracula-failure-secondary)
 }
-
 #always-hp .alwayshp-btn:hover i {
     color: black;
 }
-
 #always-hp .window-content {
     border-top: none;
 }
-
 #always-hp .alwayshp-content {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
 	justify-content: center;
 }
-
 #always-hp #alwayshp-hp {
     border-radius: 0;
 	border: 1px solid var(--color-dracula-accent);
 	background: rgb(255 255 255 / 5%);
 	color: white;
 }
-
 #always-hp #alwayshp-hp,
 .alwayshp-btn {
     flex: 0 0 auto;
@@ -3575,13 +3636,11 @@ aside .read-aloud-text p * {
     box-shadow: none;
     border-radius: 0;
 }
-
 #always-hp .death-savingthrow {
     width: auto;
 	flex-grow: 1;
 
 }
-
 #always-hp .death-savingthrow > div {
     width: 12px;
     border-radius: 0;
@@ -3589,14 +3648,348 @@ aside .read-aloud-text p * {
 	border: 1px solid rgb(255 255 255 / 66%);
 	background: rgb(255 255 255 / 5%);
 }
-
 #always-hp .death-savingthrow > div:hover {
 	background: rgb(255 255 255 / 20%);
 }
-
 #always-hp .death-savingthrow.save > div.active {
     border: 1px solid #158d25; /* green saving thows */
     background-color: rgb(77 225 90); /* green saving thows */
+}
+#always-hp .window-header .token-stats .stat {
+    color: var(--color-dracula-text-secondary);
+    background-color: #6c757d;
+}
+
+
+/* Automated Animations */
+#AA-autorec-settings .window-content > *, #AA-item-settings .window-content > *, #AA-ae-settings .window-content > * {
+    background: var(--color-dracula-content);
+}
+.aa-SliderBox.svelte-auto-34arqj button[aria-checked="true"].svelte-auto-34arqj {
+    background-color: var(--color-dracula-success);
+}
+.aa-green {
+    color: var(--color-dracula-accent-tertiary);
+    transition: color 0.5s;
+}
+footer.svelte-auto-1iu6c13 button.svelte-auto-1iu6c13 {
+    border-radius: unset;
+    background: var(--color-dracula-content) !important;
+    border: 1px solid var(--color-dracula-accent);
+    margin-left: 5px;
+    margin-right: 20px;
+}
+.sectionBorder.svelte-auto-1iu6c13.svelte-auto-1iu6c13 {
+    background: var(--color-dracula-glow);
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+    margin-top: 10px;
+}
+footer.svelte-auto-1iu6c13.svelte-auto-1iu6c13 {
+    border-top: 1px solid var(--color-dracula-accent);
+}
+header.svelte-auto-1iu6c13.svelte-auto-1iu6c13 {
+    border-bottom: 1px solid var(--color-dracula-accent)
+}
+#AA-autorec-settings .animation select, #AA-item-settings .animation select, #AA-ae-settings .animation select {
+    background-color: var(--color-dracula-content) !important;
+    font-family: unset;
+    color: var(--color-dracula-text-secondary);
+    border-radius: unset;
+}
+.label.svelte-auto-xu2oc2.svelte-auto-xu2oc2 {
+    color: var(--color-dracula-text-secondary);
+}
+.sectionBorder.svelte-auto-1cwie9g {
+    background: var(--color-dracula-content);
+    border: 2px solid var(--color-dracula-accent);
+    border-radius: unset;
+    margin-top: 5px;
+}
+.aa-autorec-headerButton.svelte-auto-18s2cti label.svelte-auto-18s2cti {
+    color: var(--color-dracula-text-primary);
+}
+.aa-primary-border {
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+    background: var(--color-dracula-content);
+}
+.aa-SectionHeader.svelte-auto-1rha2ro label.svelte-auto-1rha2ro {
+    color: var(--color-dracula-text-primary);
+    font-family: unset;
+    font-size: 20px;
+}
+.aa-SectionHeader.svelte-auto-1rha2ro.svelte-auto-1rha2ro {
+    border-bottom: 2px solid var(--color-dracula-accent);
+}
+summary.svelte-auto-xu2oc2.svelte-auto-xu2oc2 {
+    background: unset;
+    border-radius: unset;
+}
+.aa-soundOnly-border.svelte-auto-18n1thr {
+    border: 2px solid var(--color-dracula-accent);
+    border-radius: unset;
+    background: var(--color-dracula-content);
+}
+#AA-autorec-settings .animation table input[type=number], #AA-item-settings .animation table input[type=number], #AA-ae-settings .animation table input[type=number] {
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
+    color: var(--color-dracula-text-secondary);
+}
+#AA-autorec-settings .animation table td, #AA-item-settings .animation table td, #AA-ae-settings .animation table td {
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+}
+.sectionButton.svelte-auto-18s2cti.svelte-auto-18s2cti {
+    background: var(--color-dracula-content);
+    border-radius: unset;
+    border: 1px solid var(--color-dracula-accent);
+    margin-top: 5px;
+}
+.sectionButton.svelte-auto-18s2cti.svelte-auto-18s2cti:hover {
+    text-shadow: 0 0 5px var(--color-dracula-accent);
+}
+header.svelte-auto-1g5ic18 ul li.svelte-auto-1g5ic18 {
+    color: var(--color-dracula-text-primary);
+    font-family: unset;
+    font-size: 0.8em;
+}
+header.svelte-auto-1g5ic18 ul li.active.svelte-auto-1g5ic18 {
+    text-shadow: 0 0 10px var(--color-dracula-accent);
+}
+.aa-tabs.svelte-auto-1gugmsw.svelte-auto-1gugmsw {
+    border: 1px inset var(--color-dracula-accent);
+    background: var(--color-dracula-content);
+    border-radius: unset;
+}
+.aa-tabs.svelte-auto-1gugmsw button.svelte-auto-1gugmsw {
+    border-radius: unset;
+    border: 1px groove var(--color-dracula-accent);
+    color: var(--color-dracula-text-secondary);
+    font-family: unset;
+}
+.aa-orange.svelte-auto-1gugmsw.svelte-auto-1gugmsw {
+    background-color: var(--color-dracula-content);
+}
+.aa-green.svelte-auto-1gugmsw.svelte-auto-1gugmsw {
+    background-color: var(--color-dracula-content);
+}
+.aa-red.svelte-auto-1gugmsw.svelte-auto-1gugmsw {
+    background-color: var(--color-dracula-content);
+}
+.aa-blue.svelte-auto-1gugmsw.svelte-auto-1gugmsw {
+    background-color: var(--color-dracula-content);
+}
+details.svelte-auto-xu2oc2.svelte-auto-xu2oc2 {
+    background: var(--color-dracula-content);
+    margin-left: unset;
+    padding-left: unset;
+}
+.aa-section-border {
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+    background: var(--color-dracula-content);
+}
+#AA-autorec-settings .animation input, #AA-item-settings .animation input, #AA-ae-settings .animation input {
+    color: var(--color-dracula-text-secondary);
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
+}
+div.svelte-auto-r7wy3l {
+    background: unset;
+    border: unset;
+    border-radius: unset; 
+    --tjs-input-border-radius: unset; 
+}
+#AA-autorec-settings .animation table input[type=text], #AA-item-settings .animation table input[type=text], #AA-ae-settings .animation table input[type=text] {
+    color: var(--color-dracula-text-primary);
+}
+section.svelte-auto-m1gb0h {
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+}
+div.svelte-auto-6s7r6c {
+    background: var(--color-dracula-content);
+    border-top: 1px solid var(--color-dracula-accent);
+}
+.aa-SectionHeader.svelte-auto-kmbw2l label.svelte-auto-kmbw2l {
+    color: var(--color-dracula-text-primary);
+}
+.aa-autorec-headerButton02.svelte-auto-1pixf6p.svelte-auto-1pixf6p {
+    color: var(--color-dracula-text-primary);
+}
+.aa-pickAnim.svelte-auto-1rxi4rw label.svelte-auto-1rxi4rw {
+    color: var(--color-dracula-text-primary);
+}
+.aa-SectionHeader.svelte-auto-kmbw2l.svelte-auto-kmbw2l {
+    border-bottom: 2px solid var(--color-dracula-accent);
+}
+.window-app:not(.monarch) .window-header a:not(.close):not(.document-id-link) {
+    background: var(--color-dracula-content) !important;
+    border: 1px solid var(--color-dracula-accent) !important;
+    border-bottom: 1px solid var(--color-dracula-accent) !important;
+    border-top-left-radius: unset !important;
+    border-top-right-radius: unset !important;
+    margin: unset !important;
+    margin-left: 1px !important;
+    height: 30px !important;
+}
+.window-app:not(.monarch) .window-header a:not(.close):not(.document-id-link):hover {
+    background: var(--color-dracula-accent) !important;
+}
+header.svelte-auto-1iu6c13 .autorecLabel.svelte-auto-1iu6c13 {
+    border-radius: unset;
+}
+.aa-SliderBox.svelte-auto-34arqj button[aria-checked="false"].svelte-auto-34arqj::before {
+    color: var(--color-dracula-text-primary);
+    box-shadow: unset;
+}
+#options-table.svelte-auto-o1b2bf td.svelte-auto-o1b2bf, #options-table.svelte-auto-o1b2bf th.svelte-auto-o1b2bf {
+    border: 1px solid var(--color-dracula-accent);
+    background: var(--color-dracula-content);
+    color: var(--color-dracula-text-secondary);
+}
+.sectionButton.svelte-auto-1pixf6p.svelte-auto-1pixf6p {
+    background: unset;
+    padding: 0.2em;
+    border-radius: unset;
+    border: 1px solid var(--color-dracula-accent);
+}
+.aaIsSelected.svelte-auto-bsgjrv {
+    color: var(--color-dracula-text-secondary);
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+}
+.aaLabelBorder.svelte-auto-bsgjrv {
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+}
+.aa-options-border {
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+    background: var(--color-dracula-content);
+}
+.aa-effect-border {
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+    background: var(--color-dracula-content);
+}
+.aa-sound-border {
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+    background: var(--color-dracula-content);
+}
+header.svelte-auto-10ilu8l.svelte-auto-10ilu8l {
+    background: var(--color-dracula-content);
+    border-bottom: 1px solid var(--color-dracula-accent);
+}
+header.svelte-auto-10ilu8l ul li.svelte-auto-10ilu8l {
+    color: var(--color-dracula-text-primary);
+    font-family: unset;
+    font-size: 0.9em;
+}
+header.svelte-auto-10ilu8l ul li.active.svelte-auto-10ilu8l {
+    text-shadow: 0 0 5px var(--color-dracula-accent);
+}
+main.svelte-auto-10ilu8l.svelte-auto-10ilu8l {
+    background: var(--color-dracula-content);
+}
+#OptionsInformation table th {
+    background-color: var(--color-dracula-content);
+    color: var(--color-dracula-text-secondary);
+    border: 1px solid var(--color-dracula-accent);
+}
+#OptionsInformation table td {
+    border: 1px solid var(--color-dracula-accent);
+    background: var(--color-dracula-content);
+    color: var(--color-dracula-text-secondary);
+}
+header.svelte-auto-fs6c3j.svelte-auto-fs6c3j {
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+}
+header.svelte-auto-fs6c3j ul li.svelte-auto-fs6c3j {
+    color: var(--color-dracula-text-primary);
+    font-family: unset;
+    font-size: 1.1em;
+}
+header.svelte-auto-fs6c3j ul li.active.svelte-auto-fs6c3j {
+    text-shadow: 0 0 5px var(--color-dracula-accent)
+}
+#AA-autorec-settings .tjs-settings, #AA-item-settings .tjs-settings, #AA-ae-settings .tjs-settings {
+    --tjs-input-border-radius: unset;
+}
+select.svelte-auto-1q83byg.svelte-auto-1q83byg {
+    border: 1px solid var(--color-dracula-accent);
+}
+select.svelte-auto-1q83byg option.svelte-auto-1q83byg {
+    background: var(--color-dracula-content);
+    color: var(--color-dracula-text-secondary);
+}
+.sectionButton.svelte-auto-1pixf6p.svelte-auto-1pixf6p:hover {
+    background: var(--color-dracula-content);
+    text-shadow: 0 0 5px var(--color-dracula-accent);
+    zoom: 1.05;
+}
+.aa-macro-border.svelte-auto-104qrpg.svelte-auto-104qrpg {
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+    background: var(--color-dracula-content);
+}
+i.svelte-auto-1pmmjvy {
+    width: 80%;
+    height: 80%;
+    border: 1px solid var(--color-dracula-accent);
+}
+i.svelte-auto-f8994r {
+    width: 80%;
+    height: 80%;
+    border: 1px solid var(--color-dracula-accent);
+}
+#AA-autorec-settings .animation .aaSelect table.aaMenu td label, 
+#AA-item-settings .animation .aaSelect table.aaMenu td label, 
+#AA-ae-settings .animation .aaSelect table.aaMenu td label {
+    font-size: 13px;
+    font-family: unset;
+}
+table.c.svelte-auto-aftvs4 label.svelte-auto-aftvs4 {
+    margin-top: 0.4em;
+}
+.aa-customFont.svelte-auto-aftvs4.svelte-auto-aftvs4 {
+    font-family: unset;
+    font-size: 0.90em;
+}
+#AA-autorec-settings .animation table.c input[type=checkbox],
+#AA-item-settings .animation table.c input[type=checkbox],
+#AA-item-settings .animation table.c input[type=checkbox],
+#AA-ae-settings .animation table.c input[type=checkbox] {
+    appearance: unset !important;
+    display: unset !important;
+}
+#AA-autorec-settings .window-content, #AA-item-settings .window-content, #AA-ae-settings .window-content {
+    background: var(--color-dracula-content);
+    background: var(--color-dracula-content);
+}
+header.svelte-auto-1g5ic18.svelte-auto-1g5ic18 {
+    border-bottom: 1px solid var(--color-dracula-accent);
+}
+header.svelte-auto-1vbjp39 {
+    border-bottom: 1px solid var(--color-dracula-accent);
+    padding: 0.3em 0.3em;
+}
+footer.svelte-auto-1g5ic18.svelte-auto-1g5ic18 {
+    background: var(--color-dracula-content);
+    border-top: 2px solid var(--color-dracula-accent);
+}
+footer.svelte-auto-1g5ic18.svelte-auto-1g5ic18:hover {
+    text-shadow: 0 0 5px var(--color-dracula-accent);
+}
+.aa-pickAnim.svelte-auto-11wacwj label.svelte-auto-11wacwj {
+    align-self: center;
+    color: var(--color-dracula-text-primary);
+    font-family: "Geologica";
 }
 
 
@@ -3605,6 +3998,28 @@ aside .read-aloud-text p * {
     background: var(--dnd5e-cm-slots);
     border: unset;
 }
+#chat-log .message.chatmsg__trim-bottom {
+    margin-bottom: unset !important;
+    border-bottom-width: unset !important;
+    border-bottom-style: unset !important;
+    margin-left: 3px !important;
+    margin-right: 3px !important;
+}
+#chat-log .message.chatmsg__trim-top {
+    margin-left: 3px !important;
+    margin-right: 3px !important;
+}
+
+
+/* Combat Chat */
+.combat-chat #chat-form {
+    margin: 0 6px 20px;
+}
+.combat-chat #chat-form {
+    height: 42px;
+    flex-basis: 50px;
+}
+
 
 /* Dice Tray */
 .dice-tray input[type='text'] {
@@ -3614,11 +4029,33 @@ aside .read-aloud-text p * {
     box-shadow: unset;
 }
 
+
 /* FX-Master */
 .fxmaster-form-footer__button {
     background-color: inherit;
     border: 1px solid var(--color-dracula-accent-secondary);
 }
+
+
+/* Midi? */
+.midi-qol-box {
+    border: 1px solid var(--color-dracula-accent);
+    padding: 5px;
+}
+.midi-qol-disable-damage-button {
+    color: var(--color-dracula-success);
+}
+.midi-qol-enable-damage-button {
+    color: var(--color-dracula-failure);
+}
+
+
+
+/* Monk's Active Tiles */
+.monks-active-tiles.sheet .items-list .item-header {
+    border: 2px groove var(--color-dracula-accent);
+}
+
 
 /* Monk's Enhanced Journal */
 .monks-enhanced-journal .enhanced-journal .sheet.journal-entry .journal-entry-content {
@@ -3626,123 +4063,133 @@ aside .read-aloud-text p * {
     background: var(--color-dracula-content);
     color: var(--color-dracula-text-primary);
 }
-
 .monks-enhanced-journal .enhanced-journal-header .bookmark-bar {
     color: var(--color-dracula-text-secondary);
 }
-
 .monks-enhanced-journal .enhanced-journal-header .bookmark-bar .bookmark-button {
     border: 1px solid var(--color-dracula-accent);
     background: var(--color-dracula-content);
 }
-
 .monks-enhanced-journal .enhanced-journal-header .bookmark-bar .bookmark-button.add-bookmark {
     border: 1px solid var(--color-dracula-accent);
     background: var(--color-dracula-content);
     color: var(--color-dracula-text-secondary);
 }
-
 .monks-enhanced-journal .enhanced-journal-header > * {
     background: var(--color-dracula-content);
     border-bottom: 1px solid var(--color-dracula-accent);
 }
-
 .monks-enhanced-journal .enhanced-journal-header .navigation {
     color: var(--color-dracula-text-secondary);
     background: var(--color-dracula-content);
 }
-
 .monks-enhanced-journal .enhanced-journal-header .navigation .nav-button {
     border: 1px solid var(--color-dracula-accent);
     background: var(--color-dracula-content);
 }
-
 .monks-enhanced-journal .enhanced-journal-header .navigation .nav-button:not(.disabled):hover {
     box-shadow: 0 0 5px var(--color-dracula-accent);
     cursor: pointer;
     background: var(--color-dracula-accent);
 }
-
 .monks-enhanced-journal .enhanced-journal-header .navigation hr.vertical {
     border-right: 2px groove var(--color-dracula-accent);
 }
-
 .monks-enhanced-journal .tab-bar {
     background: var(--color-dracula-content);
     color: var(--color-dracula-text-secondary)
 }
-
 .monks-enhanced-journal .tab-bar .tab-row {
     background: var(--color-dracula-content);
 }
-
+.monks-enhanced-journal .tab-bar .journal-tab {
+    background: var(--color-dracula-content);
+}
 .monks-enhanced-journal .tab-bar .journal-tab.active {
     background: var(--color-dracula-content);
     border: 1px solid var(--color-dracula-accent);
 }
-
 .monks-enhanced-journal .enhanced-journal.collapse .enhanced-journal-footer {
     background: var(--color-dracula-content);
+    border-top: unset;
 }
-
 .monks-enhanced-journal .enhanced-journal-footer .nav-button.navigate {
     background: unset;
     border: 1px solid var(--color-dracula-accent);
+    color: var(--color-dracula-text-secondary);
 }
-
+.monks-enhanced-journal .directory-sidebar {
+    background: var(--color-dracula-content);
+    border-left: 1px solid var(--color-dracula-accent);
+}
+.monks-enhanced-journal .directory .action-buttons {
+    background: var(--color-dracula-content);
+}
+.monks-enhanced-journal .directory .directory-header .header-actions.action-buttons button {
+    background: var(--color-dracula-content);
+    border: 2px groove var(--color-dracula-accent);
+}
+.monks-enhanced-journal .directory-sidebar > section .directory-header {
+    background-color: var(--color-dracula-content);
+    border-bottom: 1px solid var(--color-dracula-accent);
+    color: var(--color-dracula-text-secondary);
+}
+.monks-enhanced-journal .directory .directory-header .header-search input {
+    height: var(--form-field-height);
+    border: 1px solid var(--color-dracula-accent);
+    background: var(--color-dracula-content);
+}
+.monks-enhanced-journal .enhanced-journal-footer {
+    color: var(--color-dracula-text-secondary);
+    background-color: var(--color-dracula-content);
+}
+.monks-enhanced-journal .directory .directory-item.journalentry .permissions {
+    background-color: unset;
+}
+.monks-journal-sheet .items-list .item-controls a {
+    color: var(--color-dracula-text-secondary);
+}
 .monks-journal-sheet.sheet .sheet-container {
     color: var(--color-dracula-content);
 }
-
 .monks-enhanced-journal .content {
     background: var(--color-dracula-content);
 }
-
 .monks-journal-sheet .items-list .item-header {
     background: var(--color-dracula-content);
     border: 1px groove var(--color-dracula-accent);
     color: var(--color-dracula-text-secondary);
 }
-
 .monks-journal-sheet .items-list .item-header h3 {
     color: var(--color-dracula-text-secondary);
 }
-
 .monks-journal-sheet.sheet .journal-sheet-header .header-details .form-group label {
     color: var(--color-dracula-text-secondary);
 }
-
 .monks-journal-sheet.sheet .loot-container .loot-characters .loot-character-list {
     color: var(--color-dracula-text-secondary);
 }
-
 .monks-journal-sheet.sheet .journal-sheet-header .header-details .form-group select {
     border: var(--color-dracula-accent);
     color: var(--color-dracula-text-secondary);
     background: var(--color-dracula-content);
 }
-
 .monks-journal-sheet.sheet .journal-sheet-header .sheet-image img.profile {
     background: var(--color-dracula-content);
 }
-
 .monks-journal-sheet .items-list .item-control.text {
     color: var(--color-dracula-text-secondary);
 }
-
 .monks-journal-sheet .items-list .item-header .item-control {
     border: 1px solid var(--color-dracula-accent);
     background: var(--color-dracula-content);
 }
-
 .monks-journal-sheet .currency-group .form-fields label {
     color: var(--color-dracula-text-secondary);
 }
-
 .monks-journal-sheet .currency-group .currency-row :nth-child(even) {
     background: var(--color-dracula-content);
 }
-
 .monks-journal-sheet .currency-group .form-fields {
     margin-left: 1px;
     padding: unset;
@@ -3750,134 +4197,394 @@ aside .read-aloud-text p * {
     background: var(--color-dracula-content);
     border: 1px solid var(--color-dracula-accent);
 }
-
 .monks-journal-sheet .currency-group .form-fields input {
     color: var(--color-text-dark-primary);
     background: var(--color-dracula-content);
     border: 1px solid var(--color-dracula-accent);
 }
-
 .monks-journal-sheet .items-list .item .item-name {
     color: var(--color-text-dark-primary);
 }
-
 .monks-journal-sheet .items-list .item input {
     border-color: var(--color-dracula-accent);
     color: var(--color-text-dark-primary);
     background-color: var(--color-dracula-content);
 }
-
 .monks-journal-sheet.sheet .loot-container header.journal-sheet-header {
     background: var(--color-dracula-content);
 }
-
 .monks-journal-sheet .items-list .item-list {
     background: var(--color-dracula-content);
 }
+.journal-entry.journal-sheet .directory .directory-list {
+    background: var(--color-dracula-content);
+}
+
 
 /* Monk's Tokenbar */
 #tokenbar .bar-controls div#tokenbar-move-handle {
-    background: transparent;
+    background: var(--color-dracula-content);
     border: 1px solid var(--color-dracula-accent);
 }
-
 #tokenbar .bar-controls .tokenbar-buttons {
     border-right: 1px solid var(--color-dracula-accent);
     border-top: 1px solid var(--color-dracula-accent);
     border-bottom: 1px solid var(--color-dracula-accent);
+    background: var(--color-dracula-content);
 }
-
 .monks-tokenbar .sheet select {
     border: 1px solid var(--color-dracula-accent);
     color: var(--color-dracula-text-secondary);
 }
-
 #tokenbar .token .token-stats {
     background: var(--color-dracula-content);
 }
-
 #tokenbar .token .token-icon {
     background: var(--color-dracula-content);
     box-shadow: unset;
 }
-
 #tokenbar .bar-controls .tokenbar-buttons div i {
     color: var(--color-dracula-text-secondary);
+}
+.tah-action-button.active {
+    background: var(--tah-button-active-background-color);
+    box-shadow: var(--color-dracula-accent)
+}
+.tah-action-button.toggle:not(.disabled):hover {
+    background: var(--tah-button-toggle-hover-background-color);
+    box-shadow: var(--color-dracula-accent)
+}
+.tah-action-button.disabled:hover {
+    box-shadow: var(--color-dracula-accent)
+}
+.journal-select {
+    background: transparent;
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+    color: var(--color-dracula-text-secondary);
+}
+.journal-select > div > i {
+    color: inherit
+}
+.journal-select:focus {
+    box-shadow: none;
+    border-width: 2px;
+}
+#tokenbar .token {
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+    background: var(--color-dracula-content);
+}
+#tokenbar:not(.hidectrl) .bar-controls .tokenbar-buttons div:not(.disabled):hover {
+        filter: unset;
+        background: var(--color-dracula-accent);
 }
 
 
 /* Player Window */
 #players {
     opacity: var(--opacity);
-    background: var(--color-dracula-shadow);
+    background: var(--color-dracula-content);
     box-shadow: unset;
     border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
 }
+
+
+/* Plutonium */
+input.form-control, textarea.form-control {
+    border: 1px solid var(--color-dracula-accent);
+    background: transparent;
+}
+.btn-group>input.form-control:first-child, .btn-group>label:first-child, .btn-group>button:first-child, .btn-group>select:first-child, .btn-group>a.btn:first-child, .btn-group>div.btn:first-child, .input-group>input.form-control:first-child, .input-group>label:first-child, .input-group>button:first-child, .input-group>select:first-child, .input-group>a.btn:first-child, .input-group>div.btn:first-child {
+    background: var(--color-dracula-content) !important;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid var(--color-dracula-accent);
+    max-width: 143px;
+    border-radius: unset;
+}
+.btn-group>input.form-control:first-child, .btn-group>label:first-child, .btn-group>button:first-child:hover, .btn-group>select:first-child, .btn-group>a.btn:first-child, .btn-group>div.btn:first-child, .input-group>input.form-control:first-child, .input-group>label:first-child, .input-group>button:first-child, .input-group>select:first-child, .input-group>a.btn:first-child, .input-group>div.btn:first-child {
+    background: var(--color-dracula-accent) !important;
+    color: var(--color-dracula-shadow);
+}
+.btn-group>input.form-control:last-child, .btn-group>label:last-child, .btn-group>button:last-child, .btn-group>select:last-child, .btn-group>a.btn:last-child, .btn-group>div.btn:last-child, .input-group>input.form-control:last-child, .input-group>label:last-child, .input-group>button:last-child, .input-group>select:last-child, .input-group>a.btn:last-child, .input-group>div.btn:last-child {
+    background: var(--color-dracula-content) !important;
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+    color: var(--color-dracula-text-secondary);
+    margin-left: 4px !important;
+}
+.btn-group>input.form-control:last-child, .btn-group>label:last-child, .btn-group>button:last-child:hover, .btn-group>select:last-child, .btn-group>a.btn:last-child, .btn-group>div.btn:last-child, .input-group>input.form-control:last-child, .input-group>label:last-child, .input-group>button:last-child, .input-group>select:last-child, .input-group>a.btn:last-child, .input-group>div.btn:last-child {
+    background: var(--color-dracula-accent) !important;
+    color: var(--color-dracula-shadow);
+}
+.imp-wiz__spc-panels {
+    background-color: var(--color-dracula-accent);
+}
+.imp-wiz__tab-config {
+    border-top: 1px solid var(--color-dracula-accent);
+}
+.imp-folder__row:nth-child(1)::before {
+    border-bottom: 1px solid var(--color-dracula-accent);
+    border-left: 1px solid var(--color-dracula-accent);
+}
+.imp-folder__row:nth-child(2)::before {
+    border-bottom: 1px solid var(--color-dracula-accent);
+    border-left: 1px solid var(--color-dracula-accent);
+}
+.imp-folder__row:nth-child(3)::before {
+    border-bottom: 1px solid var(--color-dracula-accent);
+    border-left: 1px solid var(--color-dracula-accent);
+}
+.imp-folder__row:nth-child(4)::before {
+    border-bottom: 1px solid var(--color-dracula-accent);
+    border-left: 1px solid var(--color-dracula-accent);
+}
+.window-app:not(.monarch) .window-header a.close {
+    margin: unset;
+    border-bottom-right-radius: unset !important;
+    border-bottom-left-radius: unset !important;
+    border-top-left-radius: unset !important;
+    border-top-right-radius: unset !important;
+    background: var(--color-dracula-content) !important;
+    border: 1px solid var(--color-dracula-accent-tertiary) !important;
+    margin: unset !important;
+    margin-left: 1px !important;
+    height: 30px !important;
+}
+.window-app:not(.monarch) .window-header a.close:hover {
+    background: var(--color-dracula-accent-tertiary) !important;
+}
+.btn-group>input.form-control, .input-group>input.form-control {
+    background: var(--color-dracula-content);
+}
+select.form-control {
+    border: 1px solid var(--color-dracula-accent);
+}
+input.form-control:hover, input.form-control:focus, input.form-control:active, textarea.form-control:hover, textarea.form-control:focus, textarea.form-control:active {
+    outline: 0;
+    box-shadow: 0 0 10px var(--color-dracula-accent);
+}
+a.btn:hover, a.btn:focus, label.btn:hover, label.btn:focus, div.btn:hover, div.btn:focus {
+    box-shadow: 0 0 10px var(--color-dracula-accent);
+}
+.fltr__pill {
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
+}
+.fltr__pill:hover {
+    background-color: var(--color-dracula-content);
+    box-shadow: 0 0 10px var(--color-dracula-accent);
+}
+.fltr__pill[state=yes] {
+    background: var(--color-dracula-accent);
+    color: var(--color-dracula-text-secondary);
+    border-color: var(--color-dracula-accent);
+}
+.fltr__pill[state=yes]:hover {
+    background: var(--color-dracula-accent);
+}
+.fltr__pill[state=no] {
+    background: var(--color-dracula-failure);
+    color: #fff;
+    border-color: var(--color-dracula-failure);
+}
+.fltr__pill[state=no]:hover {
+    background: var(--color-dracula-failure);
+}
+.fltr__mini-view {
+    background: var(--color-dracula-content);
+}
+.fltr__btn_nest:hover {
+    background-color: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
+}
+.ve-window * {
+    background: unset;
+    color: var(--color-dracula-text-secondary);
+}
+select.ve-foundry-button {
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+    font-family: unset;
+}
+.cfg__btn-tab-header--active {
+    box-shadow: 0 0 10px var(--color-dracula-accent);
+    border-color: var(--color-dracula-accent);
+}
+.stripe-odd:nth-child(odd), .stripe-even:nth-child(even), .stripe-odd-table>tbody>tr:nth-child(odd), .stripe-even-table>tbody>tr:nth-child(even) {
+    background: unset;
+}
+.action-buttons .create-document {
+    background: var(--color-dracula-content);
+    height: 24px !important;
+}
+.sidebar-tab .action-buttons .create-entity, .sidebar-tab .action-buttons .create-document {
+    color: var(--color-dracula-text-secondary);
+}
+.sidebar-tab .action-buttons .create-entity, .sidebar-tab .action-buttons .create-document:hover {
+    background: var(--color-dracula-accent);
+    color: var(--color-dracula-shadow);
+}
+.sidebar-tab .action-buttons .create-entity, .sidebar-tab .action-buttons .create-folder {
+    color: var(--color-dracula-text-secondary);
+}
+.sidebar-tab .action-buttons .create-entity, .sidebar-tab .action-buttons .create-folder:hover {
+    background: var(--color-dracula-accent);
+    color: var(--color-dracula-shadow);
+}
+.sidebar-tab .action-buttons .create-entity, .sidebar-tab .action-buttons .create-document:hover {
+    background: var(--color-dracula-accent);
+}
+.sidebar-tab .action-buttons button, .dir__btn-header {
+    height: 24px !important;
+    line-height: 18px;
+    background: var(--color-dracula-content);
+}
+/*
+.sidebar-tab .action-buttons button, .dir__btn-header:hover {
+    color: var(--color-dracula-shadow);
+}*/
+
 
 /* Rollmode Buttons */
 #chat-controls .rollmode-buttons button[data-rollmode='publicroll'].active {
-    background-color: transparent;
+    background-color: var(--color-dracula-accent);
     border: 1px solid var(--color-dracula-accent);
     box-shadow: unset;
+    color: var(--color-dracula-shadow);
+    text-shadow: unset;
+}
+#chat-controls .rollmode-buttons button[data-rollmode='publicroll']:hover {
+    background-color: var(--color-dracula-accent);
+    border: 1px solid var(--color-dracula-accent);
+    box-shadow: unset;
+    color: var(--color-dracula-shadow);
     text-shadow: unset;
 }
 #chat-controls .rollmode-buttons button[data-rollmode='gmroll'].active {
-    background-color: transparent;
+    background-color: var(--color-dracula-accent);
     border: 1px solid var(--color-dracula-accent);
     box-shadow: unset;
+    color: var(--color-dracula-shadow);
+    text-shadow: unset;
+}
+#chat-controls .rollmode-buttons button[data-rollmode='gmroll']:hover {
+    background-color: var(--color-dracula-accent);
+    border: 1px solid var(--color-dracula-accent);
+    box-shadow: unset;
+    color: var(--color-dracula-shadow);
     text-shadow: unset;
 }
 #chat-controls .rollmode-buttons button[data-rollmode='blindroll'].active {
-    background-color: transparent;
+    background-color: var(--color-dracula-accent);
     border: 1px solid var(--color-dracula-accent);
     box-shadow: unset;
+    color: var(--color-dracula-shadow);
+    text-shadow: unset;
+}
+#chat-controls .rollmode-buttons button[data-rollmode='blindroll']:hover {
+    background-color: var(--color-dracula-accent);
+    border: 1px solid var(--color-dracula-accent);
+    box-shadow: unset;
+    color: var(--color-dracula-shadow);
     text-shadow: unset;
 }
 #chat-controls .rollmode-buttons button[data-rollmode='selfroll'].active {
-    background-color: transparent;
+    background-color: var(--color-dracula-accent);
     border: 1px solid var(--color-dracula-accent);
     box-shadow: unset;
+    color: var(--color-dracula-shadow);
     text-shadow: unset;
 }
-
-#chat-controls .rollmode-buttons button:hover {
-    color: unset;
+#chat-controls .rollmode-buttons button[data-rollmode='selfroll']:hover {
+    background-color: var(--color-dracula-accent);
+    border: 1px solid var(--color-dracula-accent);
+    box-shadow: unset;
+    color: var(--color-dracula-shadow);
+    text-shadow: unset;
 }
+#chat-controls .rollmode-buttons button:not(.active) {
+    color: var(--color-dracula-text-tertiary);
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
+}
+#chat-controls .rollmode-buttons button:hover {
+    color: var(--color-dracula-border);
+}
+
 
 /* Sequencer Database Viewer */
 .database-player.svelte-ese-gdt8h0.svelte-ese-gdt8h0 {
     background-color: unset;
 }
+.sequencer-database-header.svelte-ese-gdt8h0>select.svelte-ese-gdt8h0 {
+    border-radius: unset;
+    border-right: 1px solid var(--color-dracula-accent)
+}
+.sequencer-database-header.svelte-ese-gdt8h0>input[type=text].svelte-ese-gdt8h0 {
+    border-radius: unset;
+}
+.item.active.svelte-ese-123fyp {
+    text-shadow: 0 0 10px var(--color-dracula-accent);
+}
+.active.svelte-ese-o0yoxs.svelte-ese-o0yoxs {
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
+}
+.first.svelte-ese-o0yoxs.svelte-ese-o0yoxs {
+    background: var(--color-dracula-content);
+}
+.second.svelte-ese-o0yoxs.svelte-ese-o0yoxs {
+    background: var(--color-dracula-content);
+}
+
 
 /* Smalltime */
+#smalltime-app {
+    border-radius: unset;
+    scroll-behavior: unset;
+}
+#smalltime-app .window-content {
+    border-radius: unset;
+}
 #smalltime-app .window-content > form {
     border: 1px solid var(--color-dracula-accent);
 }
-
 #smalltime-app #dragHandle {
-    background: var(--color-dracula-shadow);
+    background: var(--color-dracula-content);
     background-blend-mode: screen;
-    background-color: var(--color-dracula-shadow);
+    background-color: var(--color-dracula-content);
 }
-
 #smalltime-app #dateDisplay {
-    background: var(--color-dracula-shadow);
+    background: var(--color-dracula-content);
+    padding: unset;
+    box-shadow: unset;
+    border-radius: unset;
 }
-
 #smalltime-app #displayContainer {
     position: unset;
-    background: var(--color-dracula-shadow);
+    background: var(--color-dracula-content);
+    box-shadow: unset;
 }
-
 #smalltime-app .arrow, .arrow-left, .arrow-right {
-    color: var(--color-dracula-text-secondary);
-    background: var(--color-dracula-shadow);
+
+    background: var(--color-dracula-content);
     box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.3);
     border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+    color: var(--color-dracula-text-secondary);
+    font-size: 16px;
 }
-
 #smalltime-app.show-date #dateDisplay {
     position: unset;
+}
+#smalltime-app .arrow:hover {
+        border: 1px solid var(--color-dracula-accent);
+        background: var(--color-dracula-accent);
+        color: var(--color-dracula-shadow);
 }
 
 
@@ -3885,19 +4592,16 @@ aside .read-aloud-text p * {
 form .form-group.spell-lvl-btn .form-fields .spell-lvl-btn__label .available-slots {
     background: var(--color-dracula-accent);
 }
-
 form .form-group.spell-lvl-btn .form-fields .spell-lvl-btn__label .spell-lvl-btn__btn:hover,
 form .form-group.spell-lvl-btn .form-fields .spell-lvl-btn__label .spell-lvl-btn__btn:focus {
     cursor: pointer;
     outline: none;
     box-shadow: 0 0 15px var(--color-dracula-accent);
 }
-
 form .form-group.spell-lvl-btn .form-fields .spell-lvl-btn__label input:checked+.spell-lvl-btn__btn {
-    border: 1px groove var(--color-dracula-accent);
-    box-shadow: 0 0 15px var(--color-dracula-accent);
+    border: 1px solid var(--color-dracula-accent-secondary);
+    box-shadow: 0 0 10px var(--color-dracula-accent-secondary);
 }
-
 form .form-group.spell-lvl-btn .form-fields .spell-lvl-btn__label .spell-lvl-btn__btn {
     background: var(--color-dracula-content);
     border: 1px groove var(--color-dracula-accent);
@@ -3914,7 +4618,6 @@ form .form-group.spell-lvl-btn .form-fields .spell-lvl-btn__label .spell-lvl-btn
     transition: box-shadow .3s ease;
     color: var(--t5e-primary-font-color);
 }
-
 .tidy5e-sheet:where(.actor) input[type=checkbox]:not(:focus-visible),
 .tidy5e-sheet:where(.actor) input[type=radio]:not(:focus-visible),
 .tidy5e-sheet:where(.actor) button:not(:focus-visible),
@@ -3922,17 +4625,80 @@ form .form-group.spell-lvl-btn .form-fields .spell-lvl-btn__label .spell-lvl-btn
     box-shadow: none;
     border: none;
 }
-
 .tidy5e-sheet.item .sheet-header .summary li select {
     width: 100%;
     height: 1.25rem;
     text-transform: capitalize;
     background: transparent;
 }
+.tidy-tabs.svelte-18up2de .tab-option.svelte-18up2de:hover {
+    background: var(--t5e-tab-background) !important;
+    color: var(--t5e-primary-accent-color);
+}
+.tidy5e-sheet.sheet form .transparent-button:hover, .tidy5e-sheet.application-shell .transparent-button:hover {
+    background: transparent !important;
+}
+
+
 
 /* Token Action Hud */
+.tagify {
+    --placeholder-color: var(--color-dracula-text-primary);
+    --placeholder-color-focus: var(--color-dracula-text-secondary);
+}
 .tah-action-button, .tah-group-button {
     border: 1px solid var(--color-dracula-accent);
-    background-color: var(--color-dracula-shadow);
+    background-color: var(--color-dracula-content);
     box-shadow: unset;
+}
+#tah-expand-hud, #tah-expand-hud:focus, .tah-action-button, .tah-action-button:focus, .tah-group-button, .tah-group-button:focus {
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
+    box-shadow: var(--color-dracula-accent);
+    border-radius: unset;
+}
+.tah-dialog-light-button {
+    background: transparent;
+    border: 1px solid var(--color-dracula-accent);
+}
+.tah-dialog-tags-dropdown .tagify__dropdown__item {
+    border: 1px solid var(--color-dracula-accent);
+    color: var(--color-dracula-text-secondary)
+}
+.tagify__tag {
+    z-index: unset;
+    border: 1px solid var(--color-dracula-accent);
+}
+.tagify__tag>div {
+    color: inherit;
+}
+.tagify__tag__removeBtn {
+    color: inherit
+}
+.tah-dialog-detail {
+    border-bottom: 1 px solid var(--color-dracula-accent);
+}
+.tagify.tah-dialog-tagify {
+    border: 1px solid var(--color-dracula-accent);
+}
+.tagify.tah-dialog-tagify:hover {
+    border-radius: 2px;
+    border: 1px solid var(--color-dracula-accent);
+}
+.tagify.tagify--focus {
+    border: 1px solid var(--color-dracula-accent);
+}
+.tagify__input:focus {
+    color: var(--color-dracula-text-secondary)
+}
+.tah-dialog-tags-dropdown .tagify__dropdown__wrapper {
+    border: 1px solid var(--color-dracula-accent);
+}
+#tah-expand-hud:hover, .tah-action-button:active, .tah-action-button:not(.disabled):hover, .tah-group-button:not(.disabled):hover {
+    color: var(--color-dracula-shadow);
+    box-shadow: unset;
+    border: 1px solid var(--color-dracula-accent);
+    text-shadow: unset;
+    border-radius: unset;
+    font-weight: 400;
 }

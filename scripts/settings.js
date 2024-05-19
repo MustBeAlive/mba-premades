@@ -1,6 +1,5 @@
 import {addMenuSetting, mbaSettingsAnimations, mbaSettingsClassFeats, mbaSettingsFeats, mbaSettingsGeneral, mbaSettingsInterface, mbaSettingsMechanics, mbaSettingsRaceFeats, mbaSettingsSpells, mbaSettingsSummons} from './settingsMenu.js';
 import {cast} from './macros/animations/cast.js';
-import {changeFont} from './macros/ui/changeFont.js';
 import {corpseHide} from './macros/mechanics/corpseHide.js';
 import {critFumble} from './macros/animations/critFumble.js';
 import {deathSaves} from './macros/mechanics/deathSaves.js';
@@ -800,11 +799,9 @@ export function registerSettings() {
         'restricted': false
     });
 
-    
     game.keybindings.register(moduleName, "modeChange", {
         'name': "Game Master Helper",
         'editable': [{ key: 'KeyQ', modifiers: [KeyboardManager.MODIFIER_KEYS.ALT] }],
-        //'restricted': true,
         'onDown': () => {
             if(!game.user.isGM) return;
             else macros.gameMasterHelper();
