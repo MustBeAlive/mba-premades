@@ -1,5 +1,5 @@
-import { mba } from "../../helperFunctions.js";
-import { constants } from "../generic/constants.js";
+import {constants} from "../generic/constants.js";
+import {mba} from "../../helperFunctions.js";
 
 //think of a way to implement template case
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -29,7 +29,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
         if (!featureWorkflow) return;
     }
-    if (selection === "shatter") {
+    else if (selection === "shatter") {
         let target = workflow.targets.first();
         if (!target) {
             ui.notifications.warn("No target selected!");
@@ -47,7 +47,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
         if (!featureWorkflow) return;
     }
-    if (selection === "pour") {
+    else if (selection === "pour") {
         let templateData = {
             't': "circle",
             'user': game.user,
@@ -141,9 +141,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
     let flaskItem = mba.getItem(workflow.actor, workflow.item.name);
     if (flaskItem.system.quantity > 1) {
-        flaskItem.update({ "system.quantity": flaskItem.system.quantity - 1 });
+        await flaskItem.update({ "system.quantity": flaskItem.system.quantity - 1 });
     } else {
-        workflow.actor.deleteEmbeddedDocuments("Item", [flaskItem.id]);
+        await workflow.actor.deleteEmbeddedDocuments("Item", [flaskItem.id]);
     }
     if (selection === "splash" || selecion === "pour") {
         let emptyFlaskItem = mba.getItem(workflow.actor, "Empty Flask");
@@ -155,7 +155,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
             await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
         } else {
-            emptyFlaskItem.update({ "system.quantity": emptyFlaskItem.system.quantity + 1 });
+            await emptyFlaskItem.update({ "system.quantity": emptyFlaskItem.system.quantity + 1 });
         }
     }
 }

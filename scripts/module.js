@@ -112,6 +112,7 @@ Hooks.once('ready', async function() {
     Hooks.on('createToken', addActions);
     Hooks.on('renderCompendium', compendiumRender);
     Hooks.on("dnd5e.preRollHitDie", diseases.diseaseHitDie);
+    Hooks.on("dnd5e.preRollHitDie", macros.potionOfVitality.hitDie);
     //Hooks.on("dnd5e.preLongRest", macros.diseases.diseaseLongRest1);
     //Hooks.on("dnd5e.restCompleted", macros.diseases.diseaseLongRest2);
 });

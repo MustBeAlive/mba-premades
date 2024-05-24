@@ -1,5 +1,5 @@
-import {mba} from "../../helperFunctions.js";
 import {constants} from "../generic/constants.js";
+import {mba} from "../../helperFunctions.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     const target = workflow.targets.first();
@@ -87,9 +87,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
     let flaskItem = mba.getItem(workflow.actor, workflow.item.name);
     if (flaskItem.system.quantity > 1) {
-        flaskItem.update({ "system.quantity": flaskItem.system.quantity - 1 });
+        await flaskItem.update({ "system.quantity": flaskItem.system.quantity - 1 });
     } else {
-        workflow.actor.deleteEmbeddedDocuments("Item", [flaskItem.id]);
+        await workflow.actor.deleteEmbeddedDocuments("Item", [flaskItem.id]);
     }
 }
 

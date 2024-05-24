@@ -1,5 +1,5 @@
-import { mba } from "../../helperFunctions.js";
-import { constants } from "../generic/constants.js";
+import {constants} from "../generic/constants.js";
+import {mba} from "../../helperFunctions.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     const target = workflow.targets.first();
@@ -22,7 +22,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             return
         }
     }
-    if (selection === "shatter") {
+    else if (selection === "shatter") {
         featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Holy Water: Throw Flask', false);
         if (!featureData) {
             ui.notifications.warn("Unable to find item in compenidum! (Holy Water: Throw Flask)");
@@ -37,7 +37,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     if (!featureWorkflow) return;
     let flaskItem = mba.getItem(workflow.actor, workflow.item.name);
     if (flaskItem.system.quantity > 1) {
-        flaskItem.update({ "system.quantity": flaskItem.system.quantity - 1 });
+        await flaskItem.update({ "system.quantity": flaskItem.system.quantity - 1 });
     } else {
         await workflow.actor.deleteEmbeddedDocuments("Item", [flaskItem.id]);
     }
@@ -51,7 +51,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
             await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
         } else {
-            emptyFlaskItem.update({ "system.quantity": emptyFlaskItem.system.quantity + 1 });
+            await emptyFlaskItem.update({ "system.quantity": emptyFlaskItem.system.quantity + 1 });
         }
     }
 }

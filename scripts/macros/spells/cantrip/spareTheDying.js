@@ -1,8 +1,8 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
 
 export async function spareTheDying({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    if (target.document.uuid === token.document.uuid) {
+    if (target.document.uuid === workflow.token.document.uuid) {
         ui.notifications.warn('Wrong target selected!');
         return;
     }
@@ -22,7 +22,7 @@ export async function spareTheDying({ speaker, actor, token, character, item, ar
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
-        'description': 'You are stable and no longer have to make death saving throws',
+        'description': 'You are stable and no longer have to make death saving throws.',
         'duration': {
             'seconds': 86400
         },

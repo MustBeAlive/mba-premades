@@ -1,5 +1,5 @@
-import { mba } from "../../helperFunctions.js";
-import { constants } from "../generic/constants.js";
+import {constants} from "../generic/constants.js";
+import {mba} from "../../helperFunctions.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     const target = workflow.targets.first();
@@ -22,7 +22,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             return
         }
     }
-    if (selection === "shatter") {
+    else if (selection === "shatter") {
         featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Acid Vial: Throw Vial', false);
         if (!featureData) {
             ui.notifications.warn("Unable to find item in compenidum! (Acid Vial: Throw Vial)");
@@ -38,9 +38,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
     let vialItem = mba.getItem(workflow.actor, workflow.item.name);
     if (vialItem.system.quantity > 1) {
-        vialItem.update({ "system.quantity": vialItem.system.quantity - 1 });
+        await vialItem.update({ "system.quantity": vialItem.system.quantity - 1 });
     } else {
-        workflow.actor.deleteEmbeddedDocuments("Item", [vialItem.id]);
+        await workflow.actor.deleteEmbeddedDocuments("Item", [vialItem.id]);
     }
     
     if (selection === "splash") {
@@ -53,7 +53,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
             await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
         } else {
-            emptyVialItem.update({ "system.quantity": emptyVialItem.system.quantity + 1 });
+            await emptyVialItem.update({ "system.quantity": emptyVialItem.system.quantity + 1 });
         }
     }
 }

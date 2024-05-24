@@ -3,37 +3,37 @@ import {mba} from "../../helperFunctions.js";
 export async function potionOfResistance({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let type = workflow.item.name.substring(workflow.item.name.indexOf(" ") + 1).split(" ")[1].toLowerCase();
-    let potioncolor;
+    let potionColor;
     switch (type) {
         case 'acid':
-            potioncolor = "green";
+            potionColor = "green";
             break;
         case 'cold':
-            potioncolor = "blue";
+            potionColor = "blue";
             break;
         case 'fire':
-            potioncolor = "red";
+            potionColor = "red";
             break;
         case 'force':
-            potioncolor = "red";
+            potionColor = "red";
             break;
         case 'lightning':
-            potioncolor = "blue";
+            potionColor = "blue";
             break;
         case 'necrotic':
-            potioncolor = "green";
+            potionColor = "green";
             break;
         case 'poison':
-            potioncolor = "green";
+            potionColor = "green";
             break;
         case 'psychic':
-            potioncolor = "purple";
+            potionColor = "purple";
             break;
         case 'radiant':
-            potioncolor = "yellow";
+            potionColor = "yellow";
             break;
         case 'thunder':
-            potioncolor = "purple";
+            potionColor = "purple";
     };
     let defaults = {
         "blue": {
@@ -82,7 +82,7 @@ export async function potionOfResistance({ speaker, actor, token, character, ite
             "saturate": 1
         },
     };
-    let config = defaults[potioncolor];
+    let config = defaults[potionColor];
     const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
@@ -104,8 +104,6 @@ export async function potionOfResistance({ speaker, actor, token, character, ite
     };
 
     await new Sequence()
-
-        .wait(500)
 
         .effect()
         .file("animated-spell-effects-cartoon.water.05")
@@ -159,9 +157,9 @@ export async function potionOfResistance({ speaker, actor, token, character, ite
 
     let vialItem = mba.getItem(workflow.actor, workflow.item.name);
     if (vialItem.system.quantity > 1) {
-        vialItem.update({ "system.quantity": vialItem.system.quantity - 1 });
+        await vialItem.update({ "system.quantity": vialItem.system.quantity - 1 });
     } else {
-        workflow.actor.deleteEmbeddedDocuments("Item", [vialItem.id]);
+        await workflow.actor.deleteEmbeddedDocuments("Item", [vialItem.id]);
     }
     let emptyVialItem = mba.getItem(workflow.actor, "Empty Vial");
     if (!emptyVialItem) {
@@ -172,6 +170,6 @@ export async function potionOfResistance({ speaker, actor, token, character, ite
         }
         await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
     } else {
-        emptyVialItem.update({ "system.quantity": emptyVialItem.system.quantity + 1 });
+        await emptyVialItem.update({ "system.quantity": emptyVialItem.system.quantity + 1 });
     }
 }

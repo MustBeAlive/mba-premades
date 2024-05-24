@@ -25,7 +25,7 @@ export async function invisibility({ speaker, actor, token, character, item, arg
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are invisible until the spell ends.</p>
+            <p>You and anything you wear or carry is invisible until the spell ends.</p>
             <p>This effect ends early if you make an attack or cast a spell.</p>
         `,
         'duration': {

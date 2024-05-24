@@ -29,13 +29,13 @@ export async function bless({ speaker, actor, token, character, item, args, scop
         },
         'changes': [
             {
-                'key': 'system.bonuses.abilities.save',
+                'key': 'system.bonuses.All-Attacks',
                 'mode': 2,
                 'value': "+1d4",
                 'priority': 20
             },
             {
-                'key': 'system.bonuses.All-Attacks',
+                'key': 'system.bonuses.abilities.save',
                 'mode': 2,
                 'value': "+1d4",
                 'priority': 20

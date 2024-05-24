@@ -130,7 +130,7 @@ input[type=text], input[type=number], input[type=password], input[type=date], in
 
 input[type=text]:focus, input[type=number]:focus, input[type=password]:focus, input[type=date]:focus, input[type=time]:focus {
     background: var(--color-dracula-border);
-    border-width: 2px;
+    /*border-width: 2px;*/
     -webkit-box-shadow: none;
     box-shadow: none
 }
@@ -225,7 +225,7 @@ select, select:active {
 }
 
 select:focus, select:active:focus {
-    border-width: 2px;
+    /*border-width: 2px;*/
     -webkit-box-shadow: none;
     box-shadow: none
 }
@@ -416,165 +416,108 @@ button:hover, form button:hover {
     background: none;
 }
 
-#navigation #nav-toggle:hover {
-    text-shadow: 0 0 4px var(--color-dracula-glow)
-}
 
 #navigation.collapsed #nav-toggle {
-    background: var(--color-dracula-shadow);
+    background: var(--color-dracula-content);
     border: 1px solid var(--color-dracula-accent);
+    color: var(--color-dracula-text-secondary);
+}
+#navigation #nav-toggle:hover {
+    background: var(--color-dracula-accent) !important;
+    color: var(--color-dracula-shadow) !important;
+}
+#navigation #nav-toggle {
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+    background: var(--color-dracula-accent);
+    box-shadow: unset;
+    color: var(--color-dracula-shadow);
 }
 
 #navigation #scene-list .nav-item {
     border: 1px solid var(--color-dracula-accent);
-    border-radius: 1px;
+    border-radius: unset;
     background: var(--color-dracula-shadow)
 }
-
 #navigation #scene-list .scene.gm {
     background: inherit;
     border: 1px solid var(--color-dracula-accent);
-    border-radius: 1px;
+    border-radius: unset;
     border-width: 1px;
     background: var(--color-dracula-content)
 }
-
-#navigation #scene-list .scene.view,
-#navigation #scene-list .scene.view.gm {
-    border: 1px solid;
-    border-image-slice: 1;
-    border-image-source: linear-gradient(135deg, var(--color-dracula-accent-secondary) 0%, var(--color-dracula-accent-tertiary) 100%);
-    background: var(--color-dracula-content);
-    -webkit-box-shadow: inset 0 0 .1px .25px var(--color-dracula-accent-tertiary);
-    box-shadow: inset 0 0 .1px .25px var(--color-dracula-accent-tertiary)
+#navigation #scene-list .scene.view, #navigation #scene-list .scene.view.gm {
+    border: 1px solid var(--color-dracula-accent-tertiary);
 }
-
 #navigation #scene-list .scene-context {
     background: inherit;
     border: 1px solid var(--color-dracula-accent);
-    border-radius: 1px;
+    border-radius: unset;
     border-width: 1px;
     background: var(--color-dracula-content)
 }
 
-#controls .control-tool {
-    --shadow-color: 232deg 22% 2%;
-    -webkit-box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38);
-    box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38);
-    text-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.31), 0 1.1px 1.3px -0.3px hsl(var(--shadow-color)/0.32), 0 2px 2.3px -0.6px hsl(var(--shadow-color)/0.33), 0 3.3px 3.9px -0.9px hsl(var(--shadow-color)/0.35), -0.1px 5.1px 6px -1.3px hsl(var(--shadow-color)/0.36), -0.1px 7.9px 9.2px -1.6px hsl(var(--shadow-color)/0.37), -0.2px 11.9px 13.9px -1.9px hsl(var(--shadow-color)/0.38), -0.2px 17.4px 20.4px -2.2px hsl(var(--shadow-color)/0.39)
-}
-
-#controls ol .scene-control {
-    --shadow-color: 232deg 22% 2%;
-    -webkit-box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38);
-    box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38);
-    text-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.31), 0 1.1px 1.3px -0.3px hsl(var(--shadow-color)/0.32), 0 2px 2.3px -0.6px hsl(var(--shadow-color)/0.33), 0 3.3px 3.9px -0.9px hsl(var(--shadow-color)/0.35), -0.1px 5.1px 6px -1.3px hsl(var(--shadow-color)/0.36), -0.1px 7.9px 9.2px -1.6px hsl(var(--shadow-color)/0.37), -0.2px 11.9px 13.9px -1.9px hsl(var(--shadow-color)/0.38), -0.2px 17.4px 20.4px -2.2px hsl(var(--shadow-color)/0.39);
-    border: 1px solid;
-    border-image-slice: 1;
-    border-image-source: linear-gradient(135deg, var(--color-dracula-accent-secondary) 0%, var(--color-dracula-accent-tertiary) 100%);
+#controls > ol.main-controls > li.scene-control, #controls > ol.sub-controls > li {
     background: var(--color-dracula-content);
-    -webkit-filter: opacity(75%);
-    filter: opacity(75%)
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+    box-shadow: unset;
+    color: var(--color-dracula-text-secondary);
 }
-
-#controls ol .scene-control.active {
-    --shadow-color: 232deg 22% 2%;
-    -webkit-box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38) !important;
-    box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38) !important;
-    text-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.31), 0 1.1px 1.3px -0.3px hsl(var(--shadow-color)/0.32), 0 2px 2.3px -0.6px hsl(var(--shadow-color)/0.33), 0 3.3px 3.9px -0.9px hsl(var(--shadow-color)/0.35), -0.1px 5.1px 6px -1.3px hsl(var(--shadow-color)/0.36), -0.1px 7.9px 9.2px -1.6px hsl(var(--shadow-color)/0.37), -0.2px 11.9px 13.9px -1.9px hsl(var(--shadow-color)/0.38), -0.2px 17.4px 20.4px -2.2px hsl(var(--shadow-color)/0.39);
-    border: 1px solid !important;
-    border-image-slice: 1 !important;
-    border-image-source: linear-gradient(135deg, var(--color-dracula-accent-secondary) 0%, var(--color-dracula-accent-tertiary) 100%) !important;
-    border-radius: 1px;
-    -webkit-filter: none !important;
-    filter: none
-}
-
 #controls ol .scene-control:hover {
-    --shadow-color: 232deg 22% 2%;
-    -webkit-box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38);
-    box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38);
-    text-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.31), 0 1.1px 1.3px -0.3px hsl(var(--shadow-color)/0.32), 0 2px 2.3px -0.6px hsl(var(--shadow-color)/0.33), 0 3.3px 3.9px -0.9px hsl(var(--shadow-color)/0.35), -0.1px 5.1px 6px -1.3px hsl(var(--shadow-color)/0.36), -0.1px 7.9px 9.2px -1.6px hsl(var(--shadow-color)/0.37), -0.2px 11.9px 13.9px -1.9px hsl(var(--shadow-color)/0.38), -0.2px 17.4px 20.4px -2.2px hsl(var(--shadow-color)/0.39);
-    border: 1px solid;
-    border-image-slice: 1;
-    border-image-source: linear-gradient(135deg, var(--color-dracula-accent-secondary) 0%, var(--color-dracula-accent-tertiary) 100%);
-    border-radius: 1px;
-    -webkit-filter: none;
-    filter: none
+    background: var(--color-dracula-accent) !important;
+    color: var(--color-dracula-shadow) !important;
+}
+#controls ol .scene-control.active {
+    background: var(--color-dracula-accent) !important;
+    color: var(--color-dracula-shadow) !important;
+}
+#controls ol.control-tools > li.active, #controls ol.control-tools > li:hover {
+    background: var(--color-dracula-accent);
+    border: 1px solid var(--color-dracula-accent);
+    color: var(--color-dracula-shadow);
+    box-shadow: unset;
+    text-shadow: unset;
+}
+#controls ol.control-tools > li.active {
+    background: var(--color-dracula-accent);
+    border-color: var(--color-dracula-accent);
+    color: var(--color-dracula-shadow);
+    box-shadow: unset;
+    text-shadow: unset;
+}
+#controls ol.control-tools > li.toggle {
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent-tertiary);
+    color: var(--color-dracula-text-secondary);
+}
+#controls ol.control-tools > li.toggle.active, #controls ol.control-tools > li.toggle:hover {
+    background: var(--color-dracula-accent-tertiary);
+    border-color: var(--color-dracula-accent-tertiary);
+    color: var(--color-dracula-shadow);
+    box-shadow: unset;
+    text-shadow: unset;
+}
+#controls ol.control-tools > li.toggle.active {
+    background: var(--color-dracula-accent-tertiary);
+    color: var(--color-dracula-shadow);
 }
 
-#controls ol.sub-controls .control-tool {
-    --shadow-color: 232deg 22% 2%;
-    -webkit-box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38);
-    box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38);
-    text-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.31), 0 1.1px 1.3px -0.3px hsl(var(--shadow-color)/0.32), 0 2px 2.3px -0.6px hsl(var(--shadow-color)/0.33), 0 3.3px 3.9px -0.9px hsl(var(--shadow-color)/0.35), -0.1px 5.1px 6px -1.3px hsl(var(--shadow-color)/0.36), -0.1px 7.9px 9.2px -1.6px hsl(var(--shadow-color)/0.37), -0.2px 11.9px 13.9px -1.9px hsl(var(--shadow-color)/0.38), -0.2px 17.4px 20.4px -2.2px hsl(var(--shadow-color)/0.39);
-    border: 1px solid;
-    border-image-slice: 1;
-    border-image-source: linear-gradient(135deg, var(--color-dracula-accent-secondary) 0%, var(--color-dracula-accent-tertiary) 100%);
-    -webkit-filter: opacity(75%);
-    filter: opacity(75%);
-    background: var(--color-dracula-content)
-}
 
-#controls ol.sub-controls .control-tool.toggle {
-    --shadow-color: 232deg 22% 2%;
-    -webkit-box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38);
-    box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38);
-    text-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.31), 0 1.1px 1.3px -0.3px hsl(var(--shadow-color)/0.32), 0 2px 2.3px -0.6px hsl(var(--shadow-color)/0.33), 0 3.3px 3.9px -0.9px hsl(var(--shadow-color)/0.35), -0.1px 5.1px 6px -1.3px hsl(var(--shadow-color)/0.36), -0.1px 7.9px 9.2px -1.6px hsl(var(--shadow-color)/0.37), -0.2px 11.9px 13.9px -1.9px hsl(var(--shadow-color)/0.38), -0.2px 17.4px 20.4px -2.2px hsl(var(--shadow-color)/0.39);
-    border: 1px solid;
-    border-image-slice: 1;
-    border-image-source: linear-gradient(135deg, var(--color-dracula-accent) 0%, var(--color-dracula-accent-highlight) 100%)
+#hotbar #hotbar-directory-controls, #hotbar #hotbar-page-controls {
+    background: var(--color-dracula-content);
+        border: 1px solid var(--color-dracula-accent);
+    box-shadow: unset;
+    --shadow-color: unset;
+    text-shadow: unset;
 }
-
-#controls ol.sub-controls .control-tool.toggle.active {
-    --shadow-color: $shadow-color;
-    -webkit-box-shadow: 0 .1px .2px hsl(var(--shadow-color)/0), 0 0 .9px hsl(var(--shadow-color)/0.08), 0 0 1.7px hsl(var(--shadow-color)/0.16), 0 0 2.4px hsl(var(--shadow-color)/0.24), 0 0 3.3px hsl(var(--shadow-color)/0.33), 0 0 4.2px hsl(var(--shadow-color)/0.41), 0 0 5.6px hsl(var(--shadow-color)/0.49), 0 0 7.1px hsl(var(--shadow-color)/0.57), 0 0 9.1px hsl(var(--shadow-color)/0.65), 0 0 11.7px hsl(var(--shadow-color)/0.73);
-    box-shadow: 0 .1px .2px hsl(var(--shadow-color)/0), 0 0 .9px hsl(var(--shadow-color)/0.08), 0 0 1.7px hsl(var(--shadow-color)/0.16), 0 0 2.4px hsl(var(--shadow-color)/0.24), 0 0 3.3px hsl(var(--shadow-color)/0.33), 0 0 4.2px hsl(var(--shadow-color)/0.41), 0 0 5.6px hsl(var(--shadow-color)/0.49), 0 0 7.1px hsl(var(--shadow-color)/0.57), 0 0 9.1px hsl(var(--shadow-color)/0.65), 0 0 11.7px hsl(var(--shadow-color)/0.73);
-    text-shadow: 0 .1px .2px hsl(var(--shadow-color)/0), 0 0 .3px hsl(var(--shadow-color)/0.18), 0 0 .6px hsl(var(--shadow-color)/0.35), 0 0 1.2px hsl(var(--shadow-color)/0.52), 0 0 2px hsl(var(--shadow-color)/0.7);
-    border: 1px solid;
-    border-image-slice: 1;
-    border-image-source: linear-gradient(135deg, var(--color-dracula-accent) 0%, var(--color-dracula-accent-highlight) 100%);
-    background: linear-gradient(135deg, var(--color-dracula-accent) 0%, var(--color-dracula-accent-highlight) 100%);
-    -webkit-filter: none;
-    filter: none
-}
-
-#controls ol.sub-controls .control-tool.toggle:hover {
-    --shadow-color: $shadow-color;
-    -webkit-box-shadow: 0 .1px .2px hsl(var(--shadow-color)/0), 0 0 .9px hsl(var(--shadow-color)/0.08), 0 0 1.7px hsl(var(--shadow-color)/0.16), 0 0 2.4px hsl(var(--shadow-color)/0.24), 0 0 3.3px hsl(var(--shadow-color)/0.33), 0 0 4.2px hsl(var(--shadow-color)/0.41), 0 0 5.6px hsl(var(--shadow-color)/0.49), 0 0 7.1px hsl(var(--shadow-color)/0.57), 0 0 9.1px hsl(var(--shadow-color)/0.65), 0 0 11.7px hsl(var(--shadow-color)/0.73);
-    box-shadow: 0 .1px .2px hsl(var(--shadow-color)/0), 0 0 .9px hsl(var(--shadow-color)/0.08), 0 0 1.7px hsl(var(--shadow-color)/0.16), 0 0 2.4px hsl(var(--shadow-color)/0.24), 0 0 3.3px hsl(var(--shadow-color)/0.33), 0 0 4.2px hsl(var(--shadow-color)/0.41), 0 0 5.6px hsl(var(--shadow-color)/0.49), 0 0 7.1px hsl(var(--shadow-color)/0.57), 0 0 9.1px hsl(var(--shadow-color)/0.65), 0 0 11.7px hsl(var(--shadow-color)/0.73);
-    text-shadow: 0 .1px .2px hsl(var(--shadow-color)/0), 0 0 .3px hsl(var(--shadow-color)/0.18), 0 0 .6px hsl(var(--shadow-color)/0.35), 0 0 1.2px hsl(var(--shadow-color)/0.52), 0 0 2px hsl(var(--shadow-color)/0.7);
-    border: 1px solid;
-    border-image-slice: 1;
-    border-image-source: linear-gradient(135deg, var(--color-dracula-accent) 0%, var(--color-dracula-accent-highlight) 100%);
-    background: linear-gradient(135, var(--color-dracula-accent) 0%, var(--color-dracula-accent-highlight) 100%);
-    --shadow-color: 171deg 61% 33%;
-    -webkit-filter: none;
-    filter: none
-}
-
-#controls ol.sub-controls .control-tool.active {
-    --shadow-color: 232deg 22% 2%;
-    -webkit-box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38);
-    box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38);
-    text-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.31), 0 1.1px 1.3px -0.3px hsl(var(--shadow-color)/0.32), 0 2px 2.3px -0.6px hsl(var(--shadow-color)/0.33), 0 3.3px 3.9px -0.9px hsl(var(--shadow-color)/0.35), -0.1px 5.1px 6px -1.3px hsl(var(--shadow-color)/0.36), -0.1px 7.9px 9.2px -1.6px hsl(var(--shadow-color)/0.37), -0.2px 11.9px 13.9px -1.9px hsl(var(--shadow-color)/0.38), -0.2px 17.4px 20.4px -2.2px hsl(var(--shadow-color)/0.39);
-    border: 1px solid;
-    border-image-slice: 1;
-    border-image-source: linear-gradient(135deg, var(--color-dracula-accent-secondary) 0%, var(--color-dracula-accent-tertiary) 100%);
-    -webkit-filter: none;
-    filter: none
-}
-
-#controls ol.sub-controls .control-tool:hover {
-    --shadow-color: 232deg 22% 2%;
-    -webkit-box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38);
-    box-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.32), 0 .3px .4px -1.1px hsl(var(--shadow-color)/0.35), 0 .7px .8px -2.2px hsl(var(--shadow-color)/0.38);
-    text-shadow: 0 .2px .2px hsl(var(--shadow-color)/0.31), 0 1.1px 1.3px -0.3px hsl(var(--shadow-color)/0.32), 0 2px 2.3px -0.6px hsl(var(--shadow-color)/0.33), 0 3.3px 3.9px -0.9px hsl(var(--shadow-color)/0.35), -0.1px 5.1px 6px -1.3px hsl(var(--shadow-color)/0.36), -0.1px 7.9px 9.2px -1.6px hsl(var(--shadow-color)/0.37), -0.2px 11.9px 13.9px -1.9px hsl(var(--shadow-color)/0.38), -0.2px 17.4px 20.4px -2.2px hsl(var(--shadow-color)/0.39);
-    border: 1px solid;
-    border-image-slice: 1;
-    border-image-source: linear-gradient(135deg, var(--color-dracula-accent-secondary) 0%, var(--color-dracula-accent-tertiary) 100%);
-    -webkit-filter: none;
-    filter: none
+#hotbar .bar-controls {
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+    box-shadow: unset;
+    --shadow-color: unset;
+    text-shadow: unset;
 }
 
 #hotbar #macro-list {
@@ -598,13 +541,6 @@ button:hover, form button:hover {
     border: 1px solid var(--color-dracula-accent);
 }
 
-#hotbar #hotbar-directory-controls,
-#hotbar #hotbar-page-controls {
-    background: var(--color-dracula-content);
-    border: 1px solid var(--color-dracula-accent);
-    --shadow-color: 0deg 0% 48%;
-    text-shadow: 0 .1px .2px hsl(var(--shadow-color)/0), 0 0 .3px hsl(var(--shadow-color)/0.18), 0 0 .6px hsl(var(--shadow-color)/0.35), 0 0 1.2px hsl(var(--shadow-color)/0.52), 0 0 2px hsl(var(--shadow-color)/0.7)
-}
 
 #hotbar .macro {
     border: 1px solid var(--color-dracula-content);
@@ -650,13 +586,6 @@ button:hover, form button:hover {
     border-radius: 90%
 }
 
-#hotbar .bar-controls {
-    background: var(--color-dracula-content);
-    border: 1px solid var(--color-dracula-accent);
-    border-radius: 1px;
-    --shadow-color: 0deg 0% 48%;
-    text-shadow: 0 .1px .2px hsl(var(--shadow-color)/0), 0 0 .3px hsl(var(--shadow-color)/0.18), 0 0 .6px hsl(var(--shadow-color)/0.35), 0 0 1.2px hsl(var(--shadow-color)/0.52), 0 0 2px hsl(var(--shadow-color)/0.7)
-}
 
 #players h3 {
     border-bottom: 1px solid var(--color-dracula-border)
@@ -736,11 +665,11 @@ button:hover, form button:hover {
     -webkit-transition: .3s ease-in-out all;
     transition: .3s ease-in-out all
 }
-
+/*
 .directory .directory-header .header-search input:focus {
     border-width: 2px
 }
-
+*/
 #chat-log {
     background: inherit;
     border: 1px solid transparent;
@@ -759,6 +688,7 @@ button:hover, form button:hover {
     margin-bottom: 5px
 }
 
+/*
 .chat-message.whisper {
     border: 1px solid;
     border-image-slice: 1;
@@ -766,11 +696,22 @@ button:hover, form button:hover {
     background: var(--color-dracula-content);
     color: var(--color-dracula-text-secondary)
 }
-
 .chat-message.blind {
     border: 1px solid;
     border-image-slice: 1;
     border-image-source: linear-gradient(135deg, var(--color-dracula-accent-tertiary) 0%, var(--color-dracula-accent) 100%);
+    background: var(--color-dracula-content);
+    color: var(--color-dracula-text-secondary)
+}
+*/
+
+.chat-message.whisper {
+    border: 1px solid var(--color-dracula-accent-secondary);
+    background: var(--color-dracula-content);
+    color: var(--color-dracula-text-secondary)
+}
+.chat-message.blind {
+    border: 1px solid var(--color-dracula-accent-tertiary);
     background: var(--color-dracula-content);
     color: var(--color-dracula-text-secondary)
 }
@@ -787,14 +728,12 @@ button:hover, form button:hover {
     color: var(--color-dracula-inactive)
 }
 
-.chat-message .message-header,
-.chat-message .message-metadata {
+.chat-message .message-header, .chat-message .message-metadata {
     color: var(--color-dracula-text-secondary);
     text-shadow: none
 }
 
-.chat-message .message-header .message-sender,
-.chat-message .message-metadata .message-sender {
+.chat-message .message-header .message-sender, .chat-message .message-metadata .message-sender {
     color: var(--color-dracula-text-secondary)
 }
 
@@ -940,8 +879,7 @@ button:hover, form button:hover {
     transition: .25s
 }
 
-.chat-message .dice-roll .dice-result .dice-tooltip .dice .roll.failure,
-.chat-message .dice-roll .dice-result .dice-tooltip .dice .roll.min {
+.chat-message .dice-roll .dice-result .dice-tooltip .dice .roll.failure, .chat-message .dice-roll .dice-result .dice-tooltip .dice .roll.min {
     border: 1px solid;
     border-image-slice: 1;
     border-image-source: linear-gradient(135deg, var(--color-dracula-failure-secondary) 0%, var(--color-dracula-failure) 100%);
@@ -954,8 +892,7 @@ button:hover, form button:hover {
     filter: none
 }
 
-.chat-message .dice-roll .dice-result .dice-tooltip .dice .roll.max,
-.chat-message .dice-roll .dice-result .dice-tooltip .dice .roll.success {
+.chat-message .dice-roll .dice-result .dice-tooltip .dice .roll.max, .chat-message .dice-roll .dice-result .dice-tooltip .dice .roll.success {
     border: 1px solid;
     border-image-slice: 1;
     border-image-source: linear-gradient(135deg, var(--color-dracula-success-secondary) 0%, var(--color-dracula-success) 100%);
@@ -1049,8 +986,7 @@ button:hover, form button:hover {
     color: var(--color-dracula-inactive)
 }
 
-#playlists .sound-control[data-action=sound-stop],
-#playlists .sound-control[data-action=playlist-stop] {
+#playlists .sound-control[data-action=sound-stop], #playlists .sound-control[data-action=playlist-stop] {
     color: var(--color-dracula-accent-tertiary)
 }
 
@@ -1434,22 +1370,19 @@ nav.list-filters a.filter:hover {
     color: var(--color-dracula-accent)
 }
 
-.dnd5e input[type=text],
-.dnd5e input[type=number] {
+.dnd5e input[type=text], .dnd5e input[type=number] {
     background: transparent;
     border-color: var(--color-dracula-border-secondary);
     color: var(--color-dracula-accent)
 }
 
-.dnd5e input[type=text]:hover,
-.dnd5e input[type=number]:hover {
+.dnd5e input[type=text]:hover, .dnd5e input[type=number]:hover {
     border: 1px solid var(--color-dracula-border-secondary);
     -webkit-box-shadow: 0 0 8px var(--color-dracula-accent-tertiary);
     box-shadow: 0 0 8px var(--color-dracula-accent-tertiary)
 }
 
-.dnd5e input[type=text]:focus,
-.dnd5e input[type=number]:focus {
+.dnd5e input[type=text]:focus, .dnd5e input[type=number]:focus {
     cursor: pointer;
     border-color: var(--color-dracula-accent);
     -webkit-box-shadow: inset 0 0 0 .5px var(--color-dracula-accent);
@@ -1478,8 +1411,7 @@ nav.list-filters a.filter:hover {
     margin: 2px
 }
 
-.dnd5e button:focus,
-.dnd5e button:hover {
+.dnd5e button:focus, .dnd5e button:hover {
     cursor: pointer;
     -webkit-box-shadow: 0 .5em .5em -0.4em var(--color-dracula-accent);
     box-shadow: 0 .5em .5em -0.4em var(--color-dracula-accent);
@@ -1834,7 +1766,7 @@ nav.list-filters a.filter:hover {
 }
 
 .dnd5e.sheet.actor.character .sheet-header .xpbar .bar {
-    background: var(--color-dracula-accent-highlight);
+    background: var(--color-dracula-accent);
     border: 1px solid var(--color-dracula-content-window)
 }
 
@@ -1858,12 +1790,12 @@ nav.list-filters a.filter:hover {
 }
 
 .dnd5e.sheet.actor.character .inventory-list .item .item-name.rollable:hover .item-image {
-    background-image: url("../assets/icons/svg/dice-d20-solid-color.svg") !important;
+    background-image: url("/css/icons/dice-d20-solid-color.svg") !important;
     border: inherit
 }
 
 .dnd5e.sheet.actor.character .inventory-list .item .item-name.rollable .item-image:hover {
-    background-image: url("../assets/icons/svg/dice-d20-solid-alt.svg") !important;
+    background-image: url("/css/icons/dice-d20-solid-alt.svg") !important;
     border: inherit
 }
 
@@ -3469,7 +3401,9 @@ aside .read-aloud-text p * {
     border: 1px solid;
     border-color: var(--color-dracula-accent);
 }
-
+.prosemirror menu button:hover, .prosemirror menu button.active {
+    background: var(--color-dracula-accent);
+}
 .editor.prosemirror menu .pm-dropdown {
     background: none;
 }
@@ -3502,28 +3436,36 @@ aside .read-aloud-text p * {
 }
 
 
-/* Core Left-Side Panel */
-
-
 /* Advantage Reminder */
-.dialog .dialog-buttons button.default.normal:hover, .dialog .dialog-buttons button.default.normal:focus, .dialog .dialog-buttons button.default.advantage:hover, .dialog .dialog-buttons button.default.advantage:focus, .dialog .dialog-buttons button.default.disadvantage:hover, .dialog .dialog-buttons button.default.disadvantage:focus, .dialog .dialog-buttons button.default.critical:hover, .dialog .dialog-buttons button.default.critical:focus {
-    outline: none;
-    box-shadow: 0 0.2px 0.2px hsl(var(--shadow-color)/0.32), 0 0.3px 0.4px -1.1px hsl(var(--shadow-color)/0.35), 0 0.7px 0.8px -2.2px hsl(var(--shadow-color)/0.38);
-    background: var(--color-dracula-accent-secondary);
-    color: var(--color-dracula-shadow);
-}
-.dialog .dialog-buttons button.default.normal,
-.dialog .dialog-buttons button.default.advantage,
-.dialog .dialog-buttons button.default.disadvantage,
-.dialog .dialog-buttons button.default.critical {
-    background-color: var(--color-dracula-content);
-    border-color: var(--color-dracula-accent-secondary);
-    color: inherit;
-    font-weight: inherit;
-}
 .dialog .dialog-content .adv-reminder-messages {
     color: var(--color-dracula-text-secondary);
     border: 1px groove var(--color-dracula-accent-secondary);
+}
+.dialog .dialog-buttons button.default.normal, 
+.dialog .dialog-buttons button.default.advantage, 
+.dialog .dialog-buttons button.default.disadvantage, 
+.dialog .dialog-buttons button.default.critical {
+    background-color: var(--color-dracula-content);
+    border-color: var(--color-dracula-accent);
+    color: var(--color-dracula-text-secondary);
+    font-weight: bold;
+}
+.dialog .dialog-buttons button.default.normal:focus,
+.dialog .dialog-buttons button.default.advantage:focus,
+.dialog .dialog-buttons button.default.disadvantage:focus,
+.dialog .dialog-buttons button.default.critical:focus {
+    background: var(--color-dracula-accent-secondary);
+    border-color: var(--color-dracula-accent-secondary);
+    box-shadow: unset;
+    color: var(--color-dracula-shadow);
+}
+.dialog .dialog-buttons button.default.normal:hover,
+.dialog .dialog-buttons button.default.advantage:hover,
+.dialog .dialog-buttons button.default.disadvantage:hover,
+.dialog .dialog-buttons button.default.critical:hover {
+    border-color: inherit;
+    box-shadow: inherit;
+    color: var(--color-dracula-shadow);
 }
 
 
@@ -3535,6 +3477,7 @@ aside .read-aloud-text p * {
 	height: auto !important;
 	max-width: 300px;
 	border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
 	padding: 4px 6px;
 	box-shadow: unset;
 }
@@ -3991,6 +3934,12 @@ footer.svelte-auto-1g5ic18.svelte-auto-1g5ic18:hover {
     color: var(--color-dracula-text-primary);
     font-family: "Geologica";
 }
+.tjs-menu.svelte-auto-7526ak.svelte-auto-7526ak {
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+}
+
 
 
 /* Character Monitor */
@@ -4030,10 +3979,124 @@ footer.svelte-auto-1g5ic18.svelte-auto-1g5ic18:hover {
 }
 
 
+/* DFreds Effect Panel */
+.effect-panel .effect-item .effect-info a.content-link {
+    color: var(--color-dracula-accent-tertiary);
+}
+
+
+/* Escape Menu */
+#menu {
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+    box-shadow: unset;
+    color: var(--color-dracula-text-secondary);
+}
+
+/* Epic Rolls */
+#epic-rolls-5e-get-roll-data .window-header {
+    background: var(--color-dracula-content);
+}
+#epic-rolls-5e-get-roll-data .window-content {
+    background: var(--color-dracula-content);
+}
+#epic-rolls-5e-get-roll-data .roll-actor-list ul li {
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+}
+#epic-rolls-5e-get-roll-data .roll-actor-list ul li .actor-info {
+    border-right: 1px solid var(--color-bg-btn-minor-active);
+}
+#epic-rolls-5e-get-roll-data .selected {
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
+    border-bottom: 1px solid var(--color-dracula-accent) !important;
+    border-radius: unset;
+}
+#epic-rolls-5e-get-roll-data .roll-options .contest-info {
+    color: var(--color-dracula-accent-highlight); /* tentative color */
+}
+#epic-rolls-5e-get-roll-data .contestant {
+    color: var(--color-dracula-accent-highlight);
+    border: 1px solid var(--color-dracula-accent-highlight) !important;
+    border-radius: unset;
+}
+#epic-rolls-5e-get-roll-data .contestant span, #epic-rolls-5e-get-roll-data .contestant i {
+    filter: invert(0);
+}
+#epic-rolls-5e-get-roll-data .roll-types ul li {
+    border-bottom: unset;
+}
+#epic-rolls-5e-get-roll-data .grid-container > div {
+    background: var(--color-dracula-content);
+    overflow: auto;
+}
+#epic-roll-5e .epic-roll-container .actor-cards .actor-card:not(.vs) .roll-badge span {
+    background: var(--color-dracula-content);
+    border-radius: unset;
+    border: 1px solid var(--color-dracula-accent);
+    color: var(--color-dracula-text-secondary);
+    cursor: pointer;
+    font-family: var(--dnd5e-font-roboto);
+    font-weight: bold;
+    min-width: 5ch;
+    opacity: 0;
+    text-transform: uppercase;
+    transition: all 0.2s ease-in-out;
+}
+#epic-roll-5e .epic-roll-container .actor-cards .actor-card:not(.vs) .roll-badge {
+    background: transparent;
+    color: var(--color-dracula-text-secondary);
+}
+#epic-roll-5e .epic-roll-container .actor-cards .actor-card:not(.vs) .roll-badge span:hover {
+    background: var(--color-dracula-accent);
+    color: var(--color-dracula-shadow);
+    text-shadow: unset;
+    box-shadow: unset;
+    filter: unset;
+}
+#epic-roll-5e .epic-roll-container .actor-cards .actor-card:not(.vs) .roll-badge span.active {
+    background: var(--color-dracula-accent);
+    color: var(--color-dracula-shadow);
+    text-shadow: unset;
+    box-shadow: unset;
+    filter: unset;
+}
+.epic-rolls-chat-recap .epic-rolls-dice-result.success {
+    color: var(--color-dracula-success);
+    border-color: var(--color-dracula-success);
+}
+.epic-rolls-chat-recap .epic-rolls-dice-result.failure {
+    color: var(--color-dracula-failure); 
+    border-color: var(--color-dracula-failure);
+}
+
+
+
 /* FX-Master */
 .fxmaster-form-footer__button {
     background-color: inherit;
     border: 1px solid var(--color-dracula-accent-secondary);
+}
+
+
+/* HUD */
+.placeable-hud .control-icon.active {
+    border: 1px solid var(--color-dracula-accent);
+}
+
+
+/* Macro Key Autocomplete window */
+.awesomplete > ul {
+    background: var(--color-dracula-content);
+}
+
+
+/* Manual Rolls */
+.real-roll .real-roll-input {
+    color: var(--color-dracula-accent-highlight);
 }
 
 
@@ -4054,6 +4117,18 @@ footer.svelte-auto-1g5ic18.svelte-auto-1g5ic18:hover {
 /* Monk's Active Tiles */
 .monks-active-tiles.sheet .items-list .item-header {
     border: 2px groove var(--color-dracula-accent);
+}
+.monks-active-tiles div[data-tab="triggers"] .action-items .entity-style {
+    color: var(--color-dracula-text-secondary);
+}
+.monks-active-tiles div[data-tab="triggers"] .action-items .action-style {
+    color: var(--color-dracula-text-secondary);
+}
+.monks-active-tiles div[data-tab="triggers"] .action-items .details-style {
+    color: var(--color-dracula-accent);
+}
+.monks-active-tiles div[data-tab="triggers"] .action-items .value-style {
+    color: var(--color-dracula-accent);
 }
 
 
@@ -4301,7 +4376,7 @@ input.form-control, textarea.form-control {
     font-size: 12px;
     font-weight: 500;
     border: 1px solid var(--color-dracula-accent);
-    max-width: 143px;
+    /*max-width: 143px;*/
     border-radius: unset;
 }
 .btn-group>input.form-control:first-child, .btn-group>label:first-child, .btn-group>button:first-child:hover, .btn-group>select:first-child, .btn-group>a.btn:first-child, .btn-group>div.btn:first-child, .input-group>input.form-control:first-child, .input-group>label:first-child, .input-group>button:first-child, .input-group>select:first-child, .input-group>a.btn:first-child, .input-group>div.btn:first-child {
@@ -4342,16 +4417,15 @@ input.form-control, textarea.form-control {
     border-left: 1px solid var(--color-dracula-accent);
 }
 .window-app:not(.monarch) .window-header a.close {
-    margin: unset;
     border-bottom-right-radius: unset !important;
     border-bottom-left-radius: unset !important;
     border-top-left-radius: unset !important;
     border-top-right-radius: unset !important;
     background: var(--color-dracula-content) !important;
     border: 1px solid var(--color-dracula-accent-tertiary) !important;
+    height: 30px !important;
     margin: unset !important;
     margin-left: 1px !important;
-    height: 30px !important;
 }
 .window-app:not(.monarch) .window-header a.close:hover {
     background: var(--color-dracula-accent-tertiary) !important;
@@ -4542,6 +4616,41 @@ select.ve-foundry-button {
 }
 
 
+/* Simple Calendar */
+body.game .simple-calendar.window-app header.window-header a.header-button, body.game .simple-calendar.window-app header.window-header a.header-button.close {
+    color: var(--app-header-color) !important;
+    margin-top: 0 !important;
+    margin-right: 0 !important;
+    background: unset !important;
+    height: unset !important;
+    width: unset !important;
+    max-width: unset !important;
+    display: block !important;
+    border: unset !important;
+}
+body.game .simple-calendar.window-app.fsc-vf .window-content .fsc-qf .fsc-qj .fsc-rj .fsc-yb.fsc-kf:hover {
+    background-color: var(--btn-grey-bg-color) !important;
+}
+body.game .simple-calendar.window-app.fsc-vf .window-content .fsc-qf .fsc-qj .fsc-rj .fsc-yb.fsc-tc:hover {
+    background-color: var(--btn-save-bg-color) !important;
+}
+body.game .simple-calendar.window-app .window-content button.fsc-yb.fsc-zb:hover, body.game .simple-calendar.window-app .window-content button.fsc-yb.fsc-zb.active, body.game .simple-calendar.window-app .window-content button.fsc-yb.fsc-zb:focus {
+    background-color: var(--btn-primary-bg-hover-color) !important;
+}
+body.game .simple-calendar.window-app .window-content button.fsc-yb.fsc-dc:hover, body.game .simple-calendar.window-app .window-content button.fsc-yb.fsc-dc.active, body.game .simple-calendar.window-app .window-content button.fsc-yb.fsc-dc:focus {
+    background-color: var(--btn-secondary-bg-hover-color) !important;
+}
+body.game .simple-calendar.window-app .window-content button.fsc-yb.fsc-tc:hover, body.game .simple-calendar.window-app .window-content button.fsc-yb.fsc-tc.active, body.game .simple-calendar.window-app .window-content button.fsc-yb.fsc-tc:focus {
+    background-color: var(--btn-save-bg-hover-color) !important;
+    border-color: var(--btn-save-border-color) !important;
+    color: var(--btn-save-color) !important;
+}
+body.game .simple-calendar.window-app .window-content button.fsc-yb.fsc-kf:hover, body.game .simple-calendar.window-app .window-content button.fsc-yb.fsc-kf.active, body.game .simple-calendar.window-app .window-content button.fsc-yb.fsc-kf:focus {
+    background-color: var(--btn-grey-bg-hover-color) !important;
+    border-color: var(--btn-grey-border-color) !important;
+}
+
+
 /* Smalltime */
 #smalltime-app {
     border-radius: unset;
@@ -4609,19 +4718,13 @@ form .form-group.spell-lvl-btn .form-fields .spell-lvl-btn__label .spell-lvl-btn
 
 
 /* Tidy-5e sheet */
-.tidy5e-sheet:where(.actor) [contenteditable],
-.tidy5e-sheet:where(.actor) input[type=text],
-.tidy5e-sheet:where(.actor) input[type=number],
-.tidy5e-sheet:where(.actor) textarea {
+.tidy5e-sheet:where(.actor) [contenteditable], .tidy5e-sheet:where(.actor) input[type=text], .tidy5e-sheet:where(.actor) input[type=number], .tidy5e-sheet:where(.actor) textarea {
     border: none;
     box-shadow: 0 0 0 .1875rem transparent inset;
     transition: box-shadow .3s ease;
     color: var(--t5e-primary-font-color);
 }
-.tidy5e-sheet:where(.actor) input[type=checkbox]:not(:focus-visible),
-.tidy5e-sheet:where(.actor) input[type=radio]:not(:focus-visible),
-.tidy5e-sheet:where(.actor) button:not(:focus-visible),
-.tidy5e-sheet:where(.actor) select:not(:focus-visible) {
+.tidy5e-sheet:where(.actor) input[type=checkbox]:not(:focus-visible), .tidy5e-sheet:where(.actor) input[type=radio]:not(:focus-visible), .tidy5e-sheet:where(.actor) button:not(:focus-visible), .tidy5e-sheet:where(.actor) select:not(:focus-visible) {
     box-shadow: none;
     border: none;
 }
@@ -4636,6 +4739,13 @@ form .form-group.spell-lvl-btn .form-fields .spell-lvl-btn__label .spell-lvl-btn
     color: var(--t5e-primary-accent-color);
 }
 .tidy5e-sheet.sheet form .transparent-button:hover, .tidy5e-sheet.application-shell .transparent-button:hover {
+    background: transparent !important;
+}
+.tidy5e-sheet.sheet form .item-list-button, .tidy5e-sheet.application-shell .item-list-button {
+    background: transparent !important;
+    color: var(--t5e-secondary-color) !important;
+}
+.tidy5e-sheet.sheet form .icon-button:hover, .tidy5e-sheet.sheet form .icon-button:focus-visible, .tidy5e-sheet.application-shell .icon-button:hover, .tidy5e-sheet.application-shell .icon-button:focus-visible {
     background: transparent !important;
 }
 

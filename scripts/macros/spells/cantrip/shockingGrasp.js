@@ -52,7 +52,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     if (!workflow.hitTargets.size) return;
     let reaction = mba.findEffect(target.actor, 'Reaction');
     if (!reaction) mba.addCondition(target.actor, 'Reaction', false, workflow.item.uuid);
-
 }
 
 export let shockingGrasp = {

@@ -136,9 +136,9 @@ async function light({ speaker, actor, token, character, item, args, scope, work
 
     let oilFlaskItem = mba.getItem(workflow.actor, "Oil Flask");
     if (oilFlaskItem.system.quantity > 1) {
-        oilFlaskItem.update({ "system.quantity": oilFlaskItem.system.quantity - 1 });
+        await oilFlaskItem.update({ "system.quantity": oilFlaskItem.system.quantity - 1 });
     } else {
-        workflow.actor.deleteEmbeddedDocuments("Item", [oilFlaskItem.id]);
+        await workflow.actor.deleteEmbeddedDocuments("Item", [oilFlaskItem.id]);
     }
     let emptyFlaskItem = mba.getItem(workflow.actor, "Empty Flask");
     if (!emptyFlaskItem) {
@@ -149,7 +149,7 @@ async function light({ speaker, actor, token, character, item, args, scope, work
         }
         await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
     } else {
-        emptyFlaskItem.update({ "system.quantity": emptyFlaskItem.system.quantity + 1 });
+        await emptyFlaskItem.update({ "system.quantity": emptyFlaskItem.system.quantity + 1 });
     }
 }
 

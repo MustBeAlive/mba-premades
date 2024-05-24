@@ -128,9 +128,9 @@ export async function potionOfHealing({ speaker, actor, token, character, item, 
 
     let vialItem = mba.getItem(workflow.actor, workflow.item.name);
     if (vialItem.system.quantity > 1) {
-        vialItem.update({ "system.quantity": vialItem.system.quantity - 1 });
+        await vialItem.update({ "system.quantity": vialItem.system.quantity - 1 });
     } else {
-        workflow.actor.deleteEmbeddedDocuments("Item", [vialItem.id]);
+        await workflow.actor.deleteEmbeddedDocuments("Item", [vialItem.id]);
     }
     let emptyVialItem = mba.getItem(workflow.actor, "Empty Vial");
     if (!emptyVialItem) {
@@ -141,7 +141,6 @@ export async function potionOfHealing({ speaker, actor, token, character, item, 
         }
         await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
     } else {
-        emptyVialItem.update({ "system.quantity": emptyVialItem.system.quantity + 1 });
+        await emptyVialItem.update({ "system.quantity": emptyVialItem.system.quantity + 1 });
     }
-
 }

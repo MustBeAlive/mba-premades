@@ -9,7 +9,8 @@ import {alchemistFire} from './macros/items/alchemistFire.js';
 import {alterSelf} from './macros/spells/level2/alterSelf.js';
 import {animalFriendship} from './macros/spells/level1/animalFriendship.js';
 import {animalMessenger} from './macros/spells/level2/animalMessenger.js';
-import {arcaneCultivation} from './macros/items/arcaneCultivation.js';
+import {antitoxin} from './macros/items/antitoxin.js';
+import {arcaneArmor} from './macros/classFeatures/artificer/armorer/arcaneArmor.js';
 import {arcaneRecovery} from './macros/classFeatures/wizard/arcaneRecovery.js';
 import {armorOfAgathys} from './macros/spells/level1/armorOfAgathys.js';
 import {armsOfHadar} from './macros/spells/level1/armsOfHadar.js';
@@ -88,6 +89,8 @@ import {earthTremor} from './macros/spells/level1/earthTremor.js';
 import {eldritchBlast} from './macros/spells/cantrip/eldritchBlast.js';
 import {elementalBane} from './macros/spells/level4/elementalBane.js';
 import {elementalWeapon} from './macros/spells/level3/elementalWeapon.js';
+import {elixirOfArcaneCultivation} from './macros/items/elixirOfArcaneCultivation.js';
+import {elixirOfHealth} from './macros/items/elixirOfHealth.js';
 import {enhanceAbility} from './macros/spells/level2/enhanceAbility.js';
 import {enlargeReduce} from './macros/spells/level2/enlargeReduce.js';
 import {ensnaringStrike} from './macros/spells/level1/ensnaringStrike.js';
@@ -101,6 +104,7 @@ import {favoredFoe} from './macros/classFeatures/ranger/favoredFoe.js';
 import {featherFall} from './macros/spells/level1/featherFall.js';
 import {fear} from './macros/spells/level3/fear.js';
 import {findFamiliar} from './macros/spells/level1/findFamiliar.js';
+import {findTraps} from './macros/spells/level2/findTraps.js';
 import {fingerOfDeath} from './macros/spells/level7/fingerOfDeath.js';
 import {fireball} from './macros/spells/level3/fireball.js';
 import {fireBolt} from './macros/spells/cantrip/firebolt.js';
@@ -133,6 +137,7 @@ import {harm} from './macros/spells/level6/harm.js';
 import {harnessDivinePower} from './macros/classFeatures/cleric/harnessDivinePower.js';
 import {haste} from './macros/spells/level3/haste.js';
 import {heal} from './macros/spells/level6/heal.js';
+import {healersKit} from './macros/items/healersKit.js';
 import {healingSpirit} from './macros/spells/level2/healingSpirit.js';
 import {healingWord} from './macros/spells/level1/healingWord.js';
 import {heatMetal} from './macros/spells/level2/heatMetal.js';
@@ -161,6 +166,8 @@ import {levitate} from './macros/spells/level2/levitate.js';
 import {light} from './macros/spells/cantrip/light.js';
 import {lightningBolt} from './macros/spells/level3/lightningBolt.js';
 import {lightningLure} from './macros/spells/cantrip/lightningLure.js';
+import {locateAnimalsOrPlants} from './macros/spells/level2/locateAnimalsOrPlants.js';
+import {locateObject} from './macros/spells/level2/locateObject.js';
 import {longstrider} from './macros/spells/level1/longstrider.js';
 import {maelstrom} from './macros/spells/level5/maelstrom.js';
 import {mageArmor} from './macros/spells/level1/mageArmor.js';
@@ -190,8 +197,16 @@ import {panpipesOfTheSewers} from './macros/items/panpipesOfTheSewers.js';
 import {phantasmalForce} from './macros/spells/level2/phantasmalForce.js';
 import {piercer} from './macros/feats/piercer.js';
 import {poisonSpray} from './macros/spells/cantrip/poisonSpray.js';
+import {potionOfClimbing} from './macros/items/potionOfClimbing.js';
+import {potionOfFireBreath} from './macros/items/potionOfFireBreath.js';
+import {potionOfGiantStrength} from './macros/items/potionOfGiantStrength.js';
+import {potionOfInvisibility} from './macros/items/potionOfInvisibility.js';
+import {potionOfInvulnerability} from './macros/items/potionOfInvulnerability.js';
 import {potionOfHealing} from './macros/items/potionOfHealing.js';
+import {potionOfHeroism} from './macros/items/potionOfHeroism.js';
 import {potionOfResistance} from './macros/items/potionOfResistance.js';
+import {potionOfVitality} from './macros/items/potionOfVitality.js';
+import {potionOfWaterBreathing} from './macros/items/potionOfWaterBreathing.js';
 import {powerWordHeal} from './macros/spells/level9/powerWordHeal.js';
 import {powerWordKill} from './macros/spells/level9/powerWordKill.js';
 import {powerWordPain} from './macros/spells/level7/powerWordPain.js';
@@ -320,7 +335,8 @@ export let macros = {
     'alterSelf': alterSelf,
     'animalFriendship': animalFriendship,
     'animalMessenger': animalMessenger,
-    'arcaneCultivation': arcaneCultivation,
+    'antitoxin': antitoxin,
+    'arcaneArmor': arcaneArmor,
     'arcaneRecovery': arcaneRecovery,
     'armorOfAgathys': armorOfAgathys,
     'armsOfHadar': armsOfHadar,
@@ -401,6 +417,8 @@ export let macros = {
     'eldritchBlast': eldritchBlast,
     'elementalBane': elementalBane,
     'elementalWeapon': elementalWeapon,
+    'elixirOfArcaneCultivation': elixirOfArcaneCultivation,
+    'elixirOfHealth': elixirOfHealth,
     'enhanceAbility': enhanceAbility,
     'enlargeReduce': enlargeReduce,
     'ensnaringStrike': ensnaringStrike,
@@ -414,6 +432,7 @@ export let macros = {
     'featherFall': featherFall,
     'fear': fear,
     'findFamiliar': findFamiliar,
+    'findTraps': findTraps,
     'fingerOfDeath': fingerOfDeath,
     'fireball': fireball,
     'fireBolt': fireBolt,
@@ -446,6 +465,7 @@ export let macros = {
     'harnessDivinePower': harnessDivinePower,
     'haste': haste,
     'heal': heal,
+    'healersKit': healersKit,
     'healingSpirit': healingSpirit,
     'healingWord': healingWord,
     'heatMetal': heatMetal,
@@ -474,6 +494,8 @@ export let macros = {
     'light': light,
     'lightningBolt': lightningBolt,
     'lightningLure': lightningLure,
+    'locateAnimalsOrPlants': locateAnimalsOrPlants,
+    'locateObject': locateObject,
     'longstrider': longstrider,
     'maelstrom': maelstrom,
     'mageArmor': mageArmor,
@@ -503,8 +525,16 @@ export let macros = {
     'phantasmalForce': phantasmalForce,
     'piercer': piercer,
     'poisonSpray': poisonSpray,
+    'potionOfClimbing': potionOfClimbing,
+    'potionOfFireBreath': potionOfFireBreath,
+    'potionOfGiantStrength': potionOfGiantStrength,
+    'potionOfInvisibility': potionOfInvisibility,
+    'potionOfInvulnerability': potionOfInvulnerability,
     'potionOfHealing': potionOfHealing,
+    'potionOfHeroism': potionOfHeroism,
     'potionOfResistance': potionOfResistance,
+    'potionOfVitality': potionOfVitality,
+    'potionOfWaterBreathing': potionOfWaterBreathing,
     'powerWordHeal': powerWordHeal,
     'powerWordKill': powerWordKill,
     'powerWordPain': powerWordPain,

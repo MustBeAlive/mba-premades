@@ -56,9 +56,9 @@ async function creator() {
 }
 
 async function diseaseHitDie(actor, config, denom) {
-    //console.log(actor); actor rolling
-    //console.log(config); roll formula
-    //console.log(denom); die number
+    //console.log(actor);// actor rolling
+    //console.log(config);// roll formula
+    //console.log(denom);// die number
     let effects = actor.effects.filter(e => e.flags['mba-premades']?.name === "Sewer Plague" || e.flags['mba-premades']?.name === "Shivering Sickness");
     if (!effects.length) return;
     config.formula = `max(0, ceil((1${denom} + @abilities.con.mod)/2))`;

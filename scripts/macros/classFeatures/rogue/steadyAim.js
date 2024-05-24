@@ -39,7 +39,7 @@ export async function steadyAim({ speaker, actor, token, character, item, args, 
         }
     };
 
-    let enemyTokens = game.canvas.scene.tokens.filter(t => t.disposition != workflow.token.document.disposition);
+    let enemyTokens = game.canvas.scene.tokens.filter(t => t.disposition != workflow.token.document.disposition && t.disposition != 0);
     let targets = [];
     for (let i of enemyTokens) targets.push(i.object);
 
