@@ -1,10 +1,130 @@
 import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
-async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
+async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
-    let dagger = "jb2a.dagger.throw.01.red";
-    let daggerScale = 0.4;
+    if (!template) return;
+    await template.update({
+        'flags': {
+            'mba-premades': {
+                'template': {
+                    'castLevel': workflow.castData.castLevel,
+                    'icon': workflow.item.img,
+                    'itemUuid': workflow.item.uuid,
+                    'macroName': 'cloudOfDaggers',
+                    'name': 'cloudOfDaggers',
+                    'saveDC': mba.getSpellDC(workflow.item),
+                    'templateUuid': template.uuid
+                }
+            }
+        }
+    });
+
+    let animation1;
+    let animation2;
+    let animation3 = "jb2a.cloud_of_daggers.";
+    let throwHue;
+    let hue2;
+    let choicesColor;
+    let choicesType = [
+        ["Daggers", "daggers", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_01_Light_Yellow_Thumb.webp"],
+        ["Kunai", "kunai", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_Kunai_01_Light_Yellow_Thumb.webp"]
+    ]
+    let selectionType = await mbaPremades.helpers.selectImage("Cloud of Daggers: Type", choicesType, "Choose animation type:", "value");
+    if (!selectionType) selectionType === "daggers";
+    if (selectionType === "daggers") {
+        animation3 += "daggers.";
+        choicesColor = [
+            ["Blue", "blue", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_01_Light_Blue_Thumb.webp"],
+            ["Dark Purple", "dark_purple", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_01_Dark_Purple_Thumb.webp"],
+            ["Dark Red", "dark_red", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_01_Dark_Red_Thumb.webp"],
+            ["Green", "green", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_01_Light_Green_Thumb.webp"],
+            ["Orange", "orange", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_01_Light_Orange_Thumb.webp"],
+            ["Purple", "purple", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_01_Light_Purple_Thumb.webp"],
+            ["Red", "red", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_01_Light_Red_Thumb.webp"],
+            ["Yellow", "yellow", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_01_Light_Yellow_Thumb.webp"],
+        ];
+    }
+    else if (selectionType === "kunai") {
+        animation3 += "kunai.";
+        choicesColor = [
+            ["Blue", "blue", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_Kunai_01_Light_Blue_Thumb.webp"],
+            ["Dark Purple", "dark_purple", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_Kunai_01_Dark_Purple_Thumb.webp"],
+            ["Dark Red", "dark_red", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_Kunai_01_Dark_Red_Thumb.webp"],
+            ["Green", "green", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_Kunai_01_Light_Green_Thumb.webp"],
+            ["Orange", "orange", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_Kunai_01_Light_Orange_Thumb.webp"],
+            ["Purple", "purple", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_Kunai_01_Light_Purple_Thumb.webp"],
+            ["Red", "red", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_Kunai_01_Light_Red_Thumb.webp"],
+            ["Yellow", "yellow", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_Kunai_01_Light_Yellow_Thumb.webp"],
+        ];
+    }
+    let selectionColor = await mbaPremades.helpers.selectImage("Cloud of Daggers: Color", choicesColor, "Choose animation color:", "value");
+    if (!selectionColor) selectionColor === "yellow";
+    if (selectionColor === "blue") {
+        if (selectionType === "kunai") animation1 = "jb2a.kunai.throw.01";
+        else animation1 = "jb2a.dagger.throw.01.blue";
+        animation2 = "jb2a.impact.blue.0";
+        animation3 += "blue";
+        throwHue = 0;
+        hue2 = 140;
+    }
+    else if (selectionColor === "dark_purple") {
+        if (selectionType === "kunai") animation1 = "jb2a.kunai.throw.01";
+        else animation1 = "jb2a.dagger.throw.01.dark_purple";
+        animation2 = "jb2a.impact.dark_purple.2";
+        animation3 += "dark_purple";
+        throwHue = 0;
+        hue2 = 200;
+    }
+    else if (selectionColor === "dark_red") {
+        if (selectionType === "kunai") animation1 = "jb2a.kunai.throw.01";
+        else animation1 = "jb2a.dagger.throw.01.red";
+        animation2 = "jb2a.impact.dark_red.3";
+        animation3 += "dark_red";
+        throwHue = 0;
+        hue2 = 320;
+    }
+    else if (selectionColor === "green") {
+        if (selectionType === "kunai") animation1 = "jb2a.kunai.throw.01";
+        else animation1 = "jb2a.dagger.throw.01.blue";
+        animation2 = "jb2a.impact.green.0";
+        animation3 += "green";
+        throwHue = 280;
+        hue2 = 75;
+    }
+    else if (selectionColor === "orange") {
+        if (selectionType === "kunai") animation1 = "jb2a.kunai.throw.01";
+        else animation1 = "jb2a.dagger.throw.01.red";
+        animation2 = "jb2a.impact.orange.0";
+        animation3 += "orange";
+        throwHue = 25;
+        hue2 = 350;
+    }
+    else if (selectionColor === "purple") {
+        if (selectionType === "kunai") animation1 = "jb2a.kunai.throw.01";
+        else animation1 = "jb2a.dagger.throw.01.red";
+        animation2 = "jb2a.impact.purple.0";
+        animation3 += "purple";
+        throwHue = 300;
+        hue2 = 200;
+    }
+    else if (selectionColor === "red") {
+        if (selectionType === "kunai") animation1 = "jb2a.kunai.throw.01";
+        else animation1 = "jb2a.dagger.throw.01.red";
+        animation2 = "jb2a.impact.red.0";
+        animation3 += "red";
+        throwHue = 0;
+        hue2 = 320;
+    }
+    else if (selectionColor === "yellow") {
+        if (selectionType === "kunai") animation1 = "jb2a.kunai.throw.01";
+        else animation1 = "jb2a.dagger.throw.01.red";
+        animation2 = "jb2a.impact.orange.0";
+        animation3 += "yellow";
+        throwHue = 50;
+        hue2 = 20;
+    }
+
     let offset = [
         { x: 0, y: -0.55 },
         { x: -0.5, y: -0.15 },
@@ -12,85 +132,86 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         { x: 0.3, y: 0.45 },
         { x: 0.5, y: -0.15 }
     ];
+
     await new Sequence()
 
         .wait(100)
 
         .effect()
-        .file(dagger)
+        .file(animation1)
         .attachTo(token, { offset: offset[2], gridUnits: true, followRotation: false })
         .stretchTo(template, { offset: offset[2], gridUnits: true, followRotation: false })
-        .scale(daggerScale)
+        .scale(0.4)
         .fadeIn(200)
-        .filter("ColorMatrix", { hue: 25 })
+        .filter("ColorMatrix", { hue: throwHue })
         .name(`${token.document.name} Dagger 3`)
 
         .effect()
-        .file("jb2a.impact.orange.0")
+        .file(animation2)
         .delay(1100)
         .scaleToObject(2)
         .attachTo(template, { offset: offset[2], gridUnits: true, followRotation: false })
 
         .effect()
-        .file(dagger)
+        .file(animation1)
         .delay(100)
         .attachTo(token, { offset: offset[0], gridUnits: true, followRotation: false })
         .stretchTo(template, { offset: offset[0], gridUnits: true, followRotation: false })
-        .scale(daggerScale)
+        .scale(0.4)
         .fadeIn(200)
-        .filter("ColorMatrix", { hue: 25 })
+        .filter("ColorMatrix", { hue: throwHue })
         .name(`${token.document.name} Dagger 1`)
 
         .effect()
-        .file("jb2a.impact.orange.0")
+        .file(animation2)
         .delay(1200)
         .scaleToObject(2)
         .attachTo(template, { offset: offset[0], gridUnits: true, followRotation: false })
 
         .effect()
-        .file(dagger)
+        .file(animation1)
         .delay(200)
         .attachTo(token, { offset: offset[3], gridUnits: true, followRotation: false })
         .stretchTo(template, { offset: offset[3], gridUnits: true, followRotation: false })
-        .scale(daggerScale)
+        .scale(0.4)
         .fadeIn(200)
-        .filter("ColorMatrix", { hue: 25 })
+        .filter("ColorMatrix", { hue: throwHue })
         .name(`${token.document.name} Dagger 4`)
 
         .effect()
-        .file("jb2a.impact.orange.0")
+        .file(animation2)
         .delay(1300)
         .scaleToObject(2)
         .attachTo(template, { offset: offset[3], gridUnits: true, followRotation: false })
 
         .effect()
-        .file(dagger)
+        .file(animation1)
         .delay(300)
         .attachTo(token, { offset: offset[1], gridUnits: true, followRotation: false })
         .stretchTo(template, { offset: offset[1], gridUnits: true, followRotation: false })
-        .scale(daggerScale)
+        .scale(0.4)
         .fadeIn(200)
-        .filter("ColorMatrix", { hue: 25 })
+        .filter("ColorMatrix", { hue: throwHue })
         .name(`${token.document.name} Dagger 2`)
 
         .effect()
-        .file("jb2a.impact.orange.0")
+        .file(animation2)
         .delay(1400)
         .scaleToObject(2)
         .attachTo(template, { offset: offset[1], gridUnits: true, followRotation: false })
 
         .effect()
-        .file(dagger)
+        .file(animation1)
         .delay(400)
         .attachTo(token, { offset: offset[4], gridUnits: true, followRotation: false })
         .stretchTo(template, { offset: offset[4], gridUnits: true, followRotation: false })
-        .scale(daggerScale)
+        .scale(0.4)
         .fadeIn(200)
-        .filter("ColorMatrix", { hue: 25 })
+        .filter("ColorMatrix", { hue: throwHue })
         .name(`${token.document.name} Dagger 5`)
 
         .effect()
-        .file("jb2a.impact.orange.0")
+        .file(animation2)
         .delay(1500)
         .scaleToObject(2)
         .attachTo(template, { offset: offset[4], gridUnits: true, followRotation: false })
@@ -101,9 +222,10 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .attachTo(template)
         .scaleToObject(2)
         .fadeOut(200)
+        .filter("ColorMatrix", { hue: hue2 })
 
         .effect()
-        .file("jb2a.cloud_of_daggers.daggers.yellow")
+        .file(animation3)
         .delay(1400)
         .attachTo(template)
         .scaleToObject(1.66)
@@ -115,24 +237,10 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .play()
 }
 
-async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let template = canvas.scene.collections.templates.get(workflow.templateId);
-    if (!template) return;
-    await template.update({
-        'flags': {
-            'mba-premades': {
-                'template': {
-                    'name': 'cloudOfDaggers',
-                    'castLevel': workflow.castData.castLevel,
-                    'saveDC': mba.getSpellDC(workflow.item),
-                    'macroName': 'cloudOfDaggers',
-                    'templateUuid': template.uuid,
-                    'icon': workflow.item.img,
-                    'itemUuid': workflow.item.uuid
-                }
-            }
-        }
-    });
+async function enter(template, token) {
+    let trigger = template.flags['mba-premades']?.template;
+    if (!trigger) return;
+    await cloudOfDaggers.trigger(token.document, trigger);
 }
 
 async function trigger(token, trigger) {
@@ -163,7 +271,7 @@ async function trigger(token, trigger) {
         .delay(100)
         .attachTo(token)
         .scaleIn(0, 500, { 'ease': 'easeOutCubic' })
-        .scaleToObject(1.65 * token.document.texture.scaleX)
+        .scaleToObject(1.8)
         .duration(2500)
         .fadeOut(1000)
         .belowTokens()
@@ -171,20 +279,8 @@ async function trigger(token, trigger) {
         .play()
 }
 
-async function enter(template, token) {
-    let trigger = template.flags['mba-premades']?.template;
-    if (!trigger) return;
-    await cloudOfDaggers.trigger(token.document, trigger);
-}
-
-async function del() {
-    await Sequencer.EffectManager.endEffects({ name: `Cloud of Daggers` })
-}
-
 export let cloudOfDaggers = {
-    'cast': cast,
     'item': item,
     'trigger': trigger,
-    'enter': enter,
-    'del': del
+    'enter': enter
 }

@@ -1,9 +1,7 @@
 import {mba} from "../../../helperFunctions.js";
 
-async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
+export async function animalMessenger({ speaker, actor, token, character, item, args, scope, workflow }) {
      let target = workflow.targets.first();
-     let effect = await mba.findEffect(target.actor, 'Animal Messenger');
-     if (!effect) return;
      if (mba.raceOrType(target.actor) != 'beast') {
           ui.notifications.warn('Animal Messenger can only affect beasts!');
           return;
@@ -12,16 +10,9 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
           ui.notifications.warn('Animal Messenger can only affect tiny creatures!');
           return;
      }
-}
-
-async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-     let target = workflow.targets.first();
      let castLevel = workflow.castData.castLevel;
-     let duration;
+     let duration = 86400;
      switch (castLevel) {
-          case 2:
-               duration = 86400;
-               break;
           case 3:
                duration = 86400 * 3;
                break;
@@ -133,9 +124,4 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
      await warpgate.wait(4000);
      await mba.createEffect(target.actor, effectData);
-}
-
-export let animalMessenger = {
-     'item': item,
-     'cast': cast
 }

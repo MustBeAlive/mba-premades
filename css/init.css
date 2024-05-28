@@ -4074,7 +4074,6 @@ footer.svelte-auto-1g5ic18.svelte-auto-1g5ic18:hover {
 }
 
 
-
 /* FX-Master */
 .fxmaster-form-footer__button {
     background-color: inherit;
@@ -4085,6 +4084,18 @@ footer.svelte-auto-1g5ic18.svelte-auto-1g5ic18:hover {
 /* HUD */
 .placeable-hud .control-icon.active {
     border: 1px solid var(--color-dracula-accent);
+}
+
+
+/* Item Descriptions: Compendium Link */
+.jlnk__entity-link {
+    background: var(--color-dracula-content);
+}
+
+
+/* Levels */
+#levels-ui-controls i.active {
+    color: var(--color-dracula-accent);
 }
 
 
@@ -4111,7 +4122,6 @@ footer.svelte-auto-1g5ic18.svelte-auto-1g5ic18:hover {
 .midi-qol-enable-damage-button {
     color: var(--color-dracula-failure);
 }
-
 
 
 /* Monk's Active Tiles */
@@ -4475,7 +4485,7 @@ a.btn:hover, a.btn:focus, label.btn:hover, label.btn:focus, div.btn:hover, div.b
     border: 1px solid var(--color-dracula-accent);
 }
 .ve-window * {
-    background: unset;
+    background: var(--color-dracula-content);
     color: var(--color-dracula-text-secondary);
 }
 select.ve-foundry-button {
@@ -4517,10 +4527,9 @@ select.ve-foundry-button {
     line-height: 18px;
     background: var(--color-dracula-content);
 }
-/*
-.sidebar-tab .action-buttons button, .dir__btn-header:hover {
-    color: var(--color-dracula-shadow);
-}*/
+.veapp-task-runner__disp-progress-number {
+    background: var(--color-dracula-accent) !important;
+}
 
 
 /* Rollmode Buttons */
@@ -4700,16 +4709,22 @@ body.game .simple-calendar.window-app .window-content button.fsc-yb.fsc-kf:hover
 /* Spell Slot Buttons */
 form .form-group.spell-lvl-btn .form-fields .spell-lvl-btn__label .available-slots {
     background: var(--color-dracula-accent);
+    color: var(--color-dracula-shadow);
 }
 form .form-group.spell-lvl-btn .form-fields .spell-lvl-btn__label .spell-lvl-btn__btn:hover,
 form .form-group.spell-lvl-btn .form-fields .spell-lvl-btn__label .spell-lvl-btn__btn:focus {
+    background: var(--color-dracula-accent-tertiary);
+    border: 1px solid var(--color-dracula-accent-tertiary);
+    box-shadow: unset;
+    color: var(--color-dracula-shadow);
     cursor: pointer;
     outline: none;
-    box-shadow: 0 0 15px var(--color-dracula-accent);
 }
 form .form-group.spell-lvl-btn .form-fields .spell-lvl-btn__label input:checked+.spell-lvl-btn__btn {
-    border: 1px solid var(--color-dracula-accent-secondary);
-    box-shadow: 0 0 10px var(--color-dracula-accent-secondary);
+    background: var(--color-dracula-accent-tertiary);
+    border: 1px solid var(--color-dracula-accent-tertiary);
+    box-shadow: unset;
+    color: var(--color-dracula-shadow);
 }
 form .form-group.spell-lvl-btn .form-fields .spell-lvl-btn__label .spell-lvl-btn__btn {
     background: var(--color-dracula-content);

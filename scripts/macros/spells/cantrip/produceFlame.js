@@ -1,4 +1,4 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let level = workflow.actor.system.details.level ?? workflow.actor.system.details.cr;
@@ -8,6 +8,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     delete featureData._id;
     featureData.system.damage.parts[0][0] = dice + 'd8[fire]';
     async function effectMacroDel() {
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Produce Flame`, object: token })
         await warpgate.revert(token.document, 'Produce Flame: Hurl');
     }
     let effectData = {
@@ -90,9 +91,9 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("animated-spell-effects-cartoon.fire.27")
-        .delay(500)
         .attachTo(token, { offset: { x: -0.325 * token.document.width, y: -0.15 * token.document.width }, gridUnits: true, followRotation: false })
         .scaleToObject(0.9, { considerTokenScale: true })
+        .delay(500)
         .belowTokens(false)
         .mirrorY(true)
         .rotate(145)
@@ -102,9 +103,9 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("animated-spell-effects-cartoon.fire.27")
-        .delay(500)
         .attachTo(token, { offset: { x: -0.325 * token.document.width, y: -0.25 * token.document.width }, gridUnits: true, followRotation: false })
         .scaleToObject(0.9, { considerTokenScale: true })
+        .delay(500)
         .belowTokens(false)
         .mirrorY(true)
         .rotate(145)
@@ -112,11 +113,11 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jaamod.fire.candle_flame.1")
+        .attachTo(token, { offset: { x: 0.4 * token.document.width }, gridUnits: true, followRotation: false })
+        .scaleToObject(0.8, { considerTokenScale: true })
         .delay(700)
         .fadeIn(500)
         .fadeOut(1000)
-        .attachTo(token, { offset: { x: 0.4 * token.document.width }, gridUnits: true, followRotation: false })
-        .scaleToObject(0.8, { considerTokenScale: true })
         .persist()
         .name(`${token.document.name} Produce Flame`)
 

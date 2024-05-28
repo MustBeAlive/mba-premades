@@ -38,7 +38,7 @@ export async function dispelMagic({ speaker, actor, token, character, item, args
         return;
     }
     let dispelLevel = workflow.castData.castLevel;
-    let effects = target.actor.effects.filter(e => e.isTemporary == 1 && e.active === true && e.flags['midi-qol']?.castData?.castLevel >= 0);
+    let effects = target.actor.effects.filter(e => e.active === true && e.flags['midi-qol']?.castData?.castLevel >= 0);
     if (!effects.length) {
         ui.notifications.warn('No effects to dispel!');
         return;

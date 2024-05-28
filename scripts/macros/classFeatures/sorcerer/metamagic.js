@@ -18,7 +18,7 @@ async function animation(token) {
         .effect()
         .file("jb2a.particle_burst.01.rune.bluepurple")
         .attachTo(token)
-        .scaleToObject(1.5 * token.document.texture.scaleX)
+        .scaleToObject(2 * token.document.texture.scaleX)
         .delay(2000)
         .fadeIn(1000)
         .playbackRate(0.9)

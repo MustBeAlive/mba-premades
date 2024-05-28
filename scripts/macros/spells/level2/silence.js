@@ -1,4 +1,3 @@
-// Animation by EskieMoh#2969
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
     await new Sequence()
@@ -13,19 +12,19 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .filter("ColorMatrix", { saturate: -1 })
 
         .effect()
-        .delay(750)
         .file("jb2a.extras.tmfx.border.circle.outpulse.01.normal")
         .atLocation(template)
         .size(5, { gridUnits: true })
+        .delay(750)
         .opacity(0.5)
         .filter("ColorMatrix", { brightness: 0 })
         .belowTokens()
 
         .effect()
-        .delay(750)
         .file("jb2a.extras.tmfx.border.circle.outpulse.01.normal")
         .atLocation(template)
         .size(9, { gridUnits: true })
+        .delay(750)
         .opacity(0.75)
         .filter("ColorMatrix", { brightness: 0 })
         .belowTokens()
@@ -49,12 +48,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.markers.bubble.complete.blue")
-        .atLocation(template)
+        .attachTo(template)
         .size(9, { gridUnits: true })
-        .opacity(0.2)
         .fadeIn(500)
         .fadeOut(2000)
         .scaleIn(0.1, 1000, { ease: "easeOutBack" })
+        .opacity(0.2)
         .zIndex(2)
         .filter("ColorMatrix", { saturate: -1, brightness: 0 })
         .belowTokens()
@@ -63,7 +62,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.wall_of_force.sphere.grey")
-        .atLocation(template)
+        .attachTo(template)
         .size(9, { gridUnits: true })
         .opacity(0.2)
         .fadeIn(500)
@@ -78,7 +77,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.extras.tmfx.runes.circle.simple.illusion")
-        .atLocation(template)
+        .attachTo(template)
         .size(2, { gridUnits: true })
         .scaleIn(0, 500, { ease: "easeOutElastic" })
         .fadeOut(2000)
@@ -92,11 +91,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .play()
 }
 
-async function del() {
-    await Sequencer.EffectManager.endEffects({ name: "Silence" })
-}
-
 export let silence = {
-    'item': item,
-    'del': del
+    'item': item
 }

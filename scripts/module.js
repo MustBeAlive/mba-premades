@@ -52,6 +52,7 @@ Hooks.once('socketlib.ready', async function() {
     socket.register('remoteDocumentDialog', remoteDocumentDialog);
     socket.register('remoteDocumentsDialog', remoteDocumentsDialog);
     socket.register('remoteMenu', remoteMenu);
+    socket.register('removeEffect', runAsGM.removeEffect);
     socket.register('rollItem', runAsUser.rollItem);
     socket.register('updateCombatant', runAsGM.updateCombatant);
     socket.register('updateDoc', runAsGM.updateDoc);

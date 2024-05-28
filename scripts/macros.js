@@ -2,6 +2,7 @@ import {absorbElements} from './macros/spells/level1/absorbElements.js';
 import {acidSplash} from './macros/spells/cantrip/acidSplash.js';
 import {acidVial} from './macros/items/acidVial.js';
 import {actions} from './macros/actions/actions.js';
+import {actionSurge} from './macros/classFeatures/fighter/actionSurge.js';
 import {aganazzarScorcher} from './macros/spells/level2/aganazzarScorcher.js';
 import {aid} from './macros/spells/level2/aid.js';
 import {alarm} from './macros/spells/level1/alarm.js';
@@ -23,9 +24,11 @@ import {bardicInspiration} from './macros/classFeatures/bard/bardicInspiration.j
 import {barkskin} from './macros/spells/level2/barkskin.js';
 import {basicPoison} from './macros/items/basicPoison.js';
 import {beastBond} from './macros/spells/level1/beastBond.js';
+import {beastSense} from './macros/spells/level2/beastSense.js';
 import {bestowCurse} from './macros/spells/level3/bestowCurse.js';
 import {bladeWard} from './macros/spells/cantrip/bladeWard.js';
 import {bless} from './macros/spells/level1/bless.js';
+import {blessedStrikes} from './macros/classFeatures/cleric/blessedStrikes.js';
 import {blindingSmite} from './macros/spells/level3/blindingSmite.js';
 import {blindnessDeafness} from './macros/spells/level2/blindnessDeafness.js';
 import {blur} from './macros/spells/level2/blur.js';
@@ -42,6 +45,7 @@ import {chaosBolt} from './macros/spells/level1/chaosBolt.js';
 import {charmPerson} from './macros/spells/level1/charmPerson.js';
 import {chillTouch} from './macros/spells/cantrip/chillTouch.js';
 import {chromaticOrb} from './macros/spells/level1/chromaticOrb.js';
+import {circletOfBlasting} from './macros/items/circletOfBlasting.js';
 import {cloudOfDaggers} from './macros/spells/level2/cloudOfDaggers.js';
 import {colorSpray} from './macros/spells/level1/colorSpray.js';
 import {confusion} from './macros/spells/level4/confusion.js';
@@ -51,6 +55,7 @@ import {comprehendLanguages} from './macros/spells/level1/comprehendLanguages.js
 import {conditionResistanceEarly, conditionResistanceLate} from './macros/mechanics/conditionResistance.js';
 import {conditionVulnerabilityEarly, conditionVulnerabilityLate} from './macros/mechanics/conditionVulnerability.js';
 import {coneOfCold} from './macros/spells/level5/coneOfCold.js';
+import {continualFlame} from './macros/spells/level2/continualFlame.js';
 import {controlFlames} from './macros/spells/cantrip/controlFlames.js';
 import {cordonOfArrows} from './macros/spells/level2/cordonOfArrows.js';
 import {counterspell} from './macros/spells/level3/counterspell.js';
@@ -78,6 +83,8 @@ import {disguiseSelf} from './macros/spells/level1/disguiseSelf.js';
 import {dispelMagic} from './macros/spells/level3/dispelMagic.js';
 import {dissonantWhispers} from './macros/spells/level1/dissonantWhispers.js';
 import {divineFavor} from './macros/spells/level1/divineFavor.js';
+import {divineIntervention} from './macros/classFeatures/cleric/divineIntervention.js';
+import {divineStrike} from './macros/classFeatures/cleric/divineStrike.js';
 import {divineWord} from './macros/spells/level7/divineWord.js';
 import {dragonsBreath} from './macros/spells/level2/dragonsBreath.js';
 import {drawCard} from './macros/generic/drawCard.js';
@@ -103,6 +110,7 @@ import {falseLife} from './macros/spells/level1/falseLife.js';
 import {favoredFoe} from './macros/classFeatures/ranger/favoredFoe.js';
 import {featherFall} from './macros/spells/level1/featherFall.js';
 import {fear} from './macros/spells/level3/fear.js';
+import {fightingSpirit} from './macros/classFeatures/fighter/samurai/fightingSpirit.js';
 import {findFamiliar} from './macros/spells/level1/findFamiliar.js';
 import {findTraps} from './macros/spells/level2/findTraps.js';
 import {fingerOfDeath} from './macros/spells/level7/fingerOfDeath.js';
@@ -120,6 +128,7 @@ import {friends} from './macros/spells/cantrip/friends.js';
 import {frostbite} from './macros/spells/cantrip/frostbite.js';
 import {frostFingers} from './macros/spells/level1/frostFingers.js';
 import {gameMasterHelper} from './macros/generic/gameMasterHelper.js';
+import {gaseousForm} from './macros/spells/level3/gaseousForm.js';
 import {gemOfBrightness} from './macros/items/gemOfBrightness.js';
 import {gentleRepose} from './macros/spells/level2/gentleRepose.js';
 import {goodberry} from './macros/spells/level1/goodberry.js';
@@ -189,21 +198,27 @@ import {mirrorImage} from './macros/spells/level2/mirrorImage.js';
 import {mistyStep} from './macros/spells/level2/mistyStep.js';
 import {moldEarth} from './macros/spells/cantrip/moldEarth.js';
 import {moonbeam} from './macros/spells/level2/moonbeam.js';
+import {nathairMischief} from './macros/spells/level2/nathairMischief.js';
 import {net} from './macros/items/weapons/net.js';
 import {nondetection} from './macros/spells/level3/nondetection.js';
 import {oilFlask} from './macros/items/oilFlask.js';
 import {ottoIrresistibleDance} from './macros/spells/level6/ottoIrresistibleDance.js';
 import {panpipesOfTheSewers} from './macros/items/panpipesOfTheSewers.js';
+import {pearlOfPower} from './macros/items/pearlOfPower.js';
 import {phantasmalForce} from './macros/spells/level2/phantasmalForce.js';
 import {piercer} from './macros/feats/piercer.js';
 import {poisonSpray} from './macros/spells/cantrip/poisonSpray.js';
 import {potionOfClimbing} from './macros/items/potionOfClimbing.js';
+import {potionOfDiminution} from './macros/items/potionOfDiminution.js';
 import {potionOfFireBreath} from './macros/items/potionOfFireBreath.js';
+import {potionOfFlying} from './macros/items/potionOfFlying.js';
 import {potionOfGiantStrength} from './macros/items/potionOfGiantStrength.js';
+import {potionOfGrowth} from './macros/items/potionOfGrowth.js';
 import {potionOfInvisibility} from './macros/items/potionOfInvisibility.js';
 import {potionOfInvulnerability} from './macros/items/potionOfInvulnerability.js';
 import {potionOfHealing} from './macros/items/potionOfHealing.js';
 import {potionOfHeroism} from './macros/items/potionOfHeroism.js';
+import {potionOfSpeed} from './macros/items/potionOfSpeed.js';
 import {potionOfResistance} from './macros/items/potionOfResistance.js';
 import {potionOfVitality} from './macros/items/potionOfVitality.js';
 import {potionOfWaterBreathing} from './macros/items/potionOfWaterBreathing.js';
@@ -235,11 +250,13 @@ import {removeTemplate} from './macros/generic/removeTemplate.js';
 import {resistance} from './macros/spells/cantrip/resistance.js';
 import {returning} from './macros/animations/returning.js';
 import {revivify} from './macros/spells/level3/revivify.js';
+import {rimeBindingIce} from './macros/spells/level2/rimeBindingIce.js';
 import {sacredFlame} from './macros/spells/cantrip/sacredFlame.js';
 import {sanctuary} from './macros/spells/level1/sanctuary.js';
 import {scorchingRay} from './macros/spells/level2/scorchingRay.js';
 import {scrying} from './macros/spells/level5/scrying.js';
 import {searingSmite} from './macros/spells/level1/searingSmite.js';
+import {secondWind} from './macros/classFeatures/fighter/secondWind.js';
 import {seeInvisibility} from './macros/spells/level2/seeInvisibility.js';
 import {sending} from './macros/spells/level3/sending.js';
 import {shadowBlade} from './macros/spells/level2/shadowBlade.js';
@@ -257,6 +274,7 @@ import {sleep} from './macros/spells/level1/sleep.js';
 import {slow} from './macros/spells/level3/slow.js';
 import {snare} from './macros/spells/level1/snare.js';
 import {sneakAttack} from './macros/classFeatures/rogue/sneakAttack.js';
+import {snillocSnowballSwarm} from './macros/spells/level2/snillocSnowballSwarm.js';
 import {spareTheDying} from './macros/spells/cantrip/spareTheDying.js';
 import {speakWithAnimals} from './macros/spells/level1/speakWithAnimals.js';
 import {speakWithDead} from './macros/spells/level3/speakWithDead.js';
@@ -283,9 +301,11 @@ import {telekinetic} from './macros/feats/telekinetic.js';
 import {tenserFloatingDisk} from './macros/spells/level1/tenserFloatingDisk.js';
 import {thaumaturgy} from './macros/spells/cantrip/thaumaturgy.js';
 import {thornWhip} from './macros/spells/cantrip/thornWhip.js';
+import {thunderboltStrike} from './macros/classFeatures/cleric/tempestDomain/thunderboltStrike.js';
 import {thunderClap} from './macros/spells/cantrip/thunderClap.js';
 import {thunderousSmite} from './macros/spells/level1/thunderousSmite.js';
 import {thunderwave} from './macros/spells/level1/thunderwave.js';
+import {tirelessSpirit} from './macros/classFeatures/fighter/samurai/tirelessSpirit.js';
 import {tollTheDead} from './macros/spells/cantrip/tollTheDead.js';
 import {tongues} from './macros/spells/level3/tongues.js';
 import {torch} from './macros/items/torch.js';
@@ -298,6 +318,7 @@ import {vortexWarp} from './macros/spells/level2/vortexWarp.js';
 import {waterBreathing} from './macros/spells/level3/waterBreathing.js';
 import {web} from './macros/spells/level2/web.js';
 import {witchBolt} from './macros/spells/level1/witchBolt.js';
+import {witherAndBloom} from './macros/spells/level2/witherAndBloom.js';
 import {wordOfRadiance} from './macros/spells/cantrip/wordOfRadiance.js';
 import {wrathfulSmite} from './macros/spells/level1/wrathfulSmite.js';
 import {wrathOfTheStorm} from './macros/classFeatures/cleric/tempestDomain/wrathOfTheStorm.js';
@@ -328,6 +349,7 @@ export let macros = {
     'acidSplash': acidSplash,
     'acidVial': acidVial,
     'actions': actions,
+    'actionSurge': actionSurge,
     'aganazzarScorcher': aganazzarScorcher,
     'aid': aid,
     'alarm': alarm,
@@ -349,9 +371,11 @@ export let macros = {
     'barkskin': barkskin,
     'basicPoison': basicPoison,
     'beastBond': beastBond,
+    'beastSense': beastSense,
     'bestowCurse': bestowCurse,
     'bladeWard': bladeWard,
     'bless': bless,
+    'blessedStrikes': blessedStrikes,
     'blindingSmite': blindingSmite,
     'blindnessDeafness': blindnessDeafness,
     'blur': blur,
@@ -368,6 +392,7 @@ export let macros = {
     'charmPerson': charmPerson,
     'chillTouch': chillTouch,
     'chromaticOrb': chromaticOrb,
+    'circletOfBlasting': circletOfBlasting,
     'cloudOfDaggers': cloudOfDaggers,
     'colorSpray': colorSpray,
     'confusion': confusion,
@@ -379,6 +404,7 @@ export let macros = {
     'conditionVulnerabilityEarly': conditionVulnerabilityEarly,
     'conditionVulnerabilityLate': conditionVulnerabilityLate,
     'coneOfCold': coneOfCold,
+    'continualFlame': continualFlame,
     'controlFlames': controlFlames,
     'cordonOfArrows': cordonOfArrows,
     'counterspell': counterspell,
@@ -406,6 +432,8 @@ export let macros = {
     'dispelMagic': dispelMagic,
     'dissonantWhispers': dissonantWhispers,
     'divineFavor': divineFavor,
+    'divineIntervention': divineIntervention,
+    'divineStrike': divineStrike,
     'divineWord': divineWord,
     'dragonsBreath': dragonsBreath,
     'drawCard': drawCard,
@@ -431,6 +459,7 @@ export let macros = {
     'favoredFoe': favoredFoe,
     'featherFall': featherFall,
     'fear': fear,
+    'fightingSpirit': fightingSpirit,
     'findFamiliar': findFamiliar,
     'findTraps': findTraps,
     'fingerOfDeath': fingerOfDeath,
@@ -448,6 +477,7 @@ export let macros = {
     'frostbite': frostbite,
     'frostFingers': frostFingers,
     'gameMasterHelper': gameMasterHelper,
+    'gaseousForm': gaseousForm,
     'gemOfBrightness': gemOfBrightness,
     'gentleRepose': gentleRepose,
     'goodberry': goodberry,
@@ -517,21 +547,27 @@ export let macros = {
     'mistyStep': mistyStep,
     'moldEarth': moldEarth,
     'moonbeam': moonbeam,
+    'nathairMischief': nathairMischief,
     'net': net,
     'nondetection': nondetection,
     'oilFlask': oilFlask,
     'ottoIrresistibleDance': ottoIrresistibleDance,
     'panpipesOfTheSewers': panpipesOfTheSewers,
+    'pearlOfPower': pearlOfPower,
     'phantasmalForce': phantasmalForce,
     'piercer': piercer,
     'poisonSpray': poisonSpray,
     'potionOfClimbing': potionOfClimbing,
+    'potionOfDiminution': potionOfDiminution,
     'potionOfFireBreath': potionOfFireBreath,
+    'potionOfFlying': potionOfFlying,
     'potionOfGiantStrength': potionOfGiantStrength,
+    'potionOfGrowth': potionOfGrowth,
     'potionOfInvisibility': potionOfInvisibility,
     'potionOfInvulnerability': potionOfInvulnerability,
     'potionOfHealing': potionOfHealing,
     'potionOfHeroism': potionOfHeroism,
+    'potionOfSpeed': potionOfSpeed,
     'potionOfResistance': potionOfResistance,
     'potionOfVitality': potionOfVitality,
     'potionOfWaterBreathing': potionOfWaterBreathing,
@@ -563,11 +599,13 @@ export let macros = {
     'resistance': resistance,
     'returning': returning,
     'revivify': revivify,
+    'rimeBindingIce': rimeBindingIce,
     'sacredFlame': sacredFlame,
     'sanctuary': sanctuary,
     'scorchingRay': scorchingRay,
     'scrying': scrying,
     'searingSmite': searingSmite,
+    'secondWind': secondWind,
     'seeInvisibility': seeInvisibility,
     'sending': sending,
     'shadowBlade': shadowBlade,
@@ -585,6 +623,7 @@ export let macros = {
     'slow': slow,
     'snare': snare,
     'sneakAttack': sneakAttack,
+    'snillocSnowballSwarm': snillocSnowballSwarm,
     'spareTheDying': spareTheDying,
     'speakWithAnimals': speakWithAnimals,
     'speakWithDead': speakWithDead,
@@ -611,9 +650,11 @@ export let macros = {
     'tenserFloatingDisk': tenserFloatingDisk,
     'thaumaturgy': thaumaturgy,
     'thornWhip': thornWhip,
+    'thunderboltStrike': thunderboltStrike,
     'thunderClap': thunderClap,
     'thunderousSmite': thunderousSmite,
     'thunderwave': thunderwave,
+    'tirelessSpirit': tirelessSpirit,
     'tollTheDead': tollTheDead,
     'tongues': tongues,
     'torch': torch,
@@ -626,6 +667,7 @@ export let macros = {
     'waterBreathing': waterBreathing,
     'web': web,
     'witchBolt': witchBolt,
+    'witherAndBloom': witherAndBloom,
     'wordOfRadiance': wordOfRadiance,
     'wrathfulSmite': wrathfulSmite,
     'wrathOfTheStorm': wrathOfTheStorm,

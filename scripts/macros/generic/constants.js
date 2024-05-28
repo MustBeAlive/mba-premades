@@ -127,24 +127,24 @@ const yesNo = [
 
 const okCancel = [
     {
+        'label': 'Ok',
+        'value': true
+    },
+    {
         'label': 'Cancel',
         'value': false
     },
-    {
-        'label': 'Ok',
-        'value': true
-    }
 ];
 
 const yesNoButton = [
     {
+        'label': 'Yes',
+        'value': true
+    },
+    {
         'label': 'No',
         'value': false
     },
-    {
-        'label': 'Yes',
-        'value': true
-    }
 ];
 
 const nonDamageTypes = [

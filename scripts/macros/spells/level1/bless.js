@@ -75,7 +75,7 @@ export async function bless({ speaker, actor, token, character, item, args, scop
             .effect()
             .file("jb2a.bless.200px.loop.yellow")
             .attachTo(target)
-            .scaleToObject(2.1 * target.document.texture.scaleX)
+            .scaleToObject(1.9 * target.document.texture.scaleX)
             .delay(delay2)
             .scaleIn(0, 1500, {ease: "easeOutCubic"})
             .fadeOut(1000)

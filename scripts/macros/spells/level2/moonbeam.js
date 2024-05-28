@@ -8,10 +8,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'mba-premades': {
                 'template': {
-                    'name': 'moonbeam',
                     'castLevel': workflow.castData.castLevel,
-                    'saveDC': mba.getSpellDC(workflow.item),
                     'macroName': 'moonbeam',
+                    'name': 'moonbeam',
+                    'saveDC': mba.getSpellDC(workflow.item),
                     'templateUuid': template.uuid,
                 }
             }

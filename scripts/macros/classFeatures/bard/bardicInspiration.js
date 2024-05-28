@@ -125,7 +125,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     let moteOfPotential = effect.flags['mba-premades'].feature.moteOfPotential;
     if (moteOfPotential) {
         let bardDie = updatedRoll.terms[updatedRoll.terms.length - 1].total;
-        let featureData = await mba.getItemFromCompendium('mba-premades.MBA Class Feature Items', 'Mote of Potential Attack', false);
+        let featureData = await mba.getItemFromCompendium('mba-premades.MBA Class Feature Items', 'Mote of Potential: Attack', false);
         if (!featureData) {
             queue.remove(workflow.item.uuid);
             return;

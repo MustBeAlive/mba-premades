@@ -54,14 +54,16 @@ export async function dodge({ speaker, actor, token, character, item, args, scop
         .file("jb2a.cast_shape.circle.single01.blue")
         .atLocation(token)
         .scaleToObject(1.5 * token.document.texture.scaleX)
-        .filter("ColorMatrix", { hue: 145 })
+        .filter("ColorMatrix", { hue: 140 })
 
         .effect()
-        .file("jb2a.markers.shield_rampart.complete.01.dark_red")
+        .file("jb2a.template_circle.symbol.normal.shield.green")
         .attachTo(token)
         .scaleToObject(1.5 * token.document.texture.scaleX)
         .playbackRate(0.8)
         .delay(500)
+        .filter("ColorMatrix", { hue: 260 })
+        .mask()
         .persist()
         .name(`${token.document.name} Dodge`)
 

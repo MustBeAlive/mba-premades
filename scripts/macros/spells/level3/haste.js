@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function haste({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDel() {
@@ -8,7 +10,10 @@ export async function haste({ speaker, actor, token, character, item, args, scop
         const effectData = {
             'name': "Haste: Lethargic",
             'icon': "modules/mba-premades/icons/conditions/downed.webp",
-            'description': "You are swept by a wave of lethargy. You can't move or take actions until the end of your next turn.",
+            'description': `
+                <p>You are swept by a wave of lethargy.</p>
+                <p>You can't move or take actions until the end of your next turn.</p>
+            `,
             'flags': {
                 'dae': {
                     'showIcon': true,
@@ -16,7 +21,7 @@ export async function haste({ speaker, actor, token, character, item, args, scop
                 },
                 'effectmacro': {
                     'onDelete': {
-                        'script': chrisPremades.helpers.functionToString(effectMacroLethargic)
+                        'script': mbaPremades.helpers.functionToString(effectMacroLethargic)
                     }
                 }
             }
@@ -38,7 +43,7 @@ export async function haste({ speaker, actor, token, character, item, args, scop
 
             .play()
 
-        await chrisPremades.helpers.createEffect(actor, effectData);
+        await mbaPremades.helpers.createEffect(actor, effectData);
     }
     const effectData = {
         'name': workflow.item.name,
@@ -75,7 +80,7 @@ export async function haste({ speaker, actor, token, character, item, args, scop
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -90,7 +95,7 @@ export async function haste({ speaker, actor, token, character, item, args, scop
 
     new Sequence()
 
-        .wait(1000)
+        .wait(750)
 
         .effect()
         .file("animated-spell-effects-cartoon.air.portal")
@@ -183,5 +188,5 @@ export async function haste({ speaker, actor, token, character, item, args, scop
         .play()
 
     await warpgate.wait(1400);
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
+    await mba.createEffect(target.actor, effectData);
 }

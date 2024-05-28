@@ -80,7 +80,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .delay(delay2)
             .attachTo(target)
             .scaleIn(0, 1500, { ease: "easeOutCubic" })
-            .scaleToObject(2.1 * target.document.texture.scaleX)
+            .scaleToObject(1.9 * target.document.texture.scaleX)
             .opacity(0.8)
             .playbackRate(0.8)
             .belowTokens()

@@ -37,9 +37,34 @@ export async function arcaneRecovery({ speaker, actor, token, character, item, a
                         let path = `system.spells.${i[0]}.value`;
                         let newValue = foundry.utils.getProperty(workflow.actor, path) + 1;
                         if (isNaN(newValue)) return;
-                        workflow.actor.update({ [path]: newValue });
-                        ammount -= +i[0].slice(-1);
-                        resolve(ammount)
+                        new Sequence()
+
+                            .effect()
+                            .file("jb2a.icosahedron.rune.below.blueyellow")
+                            .attachTo(token)
+                            .scaleToObject(2.5 * token.document.texture.scaleX)
+                            .duration(4000)
+                            .fadeIn(1000)
+                            .fadeOut(500)
+                            .belowTokens()
+                            .filter("ColorMatrix", { hue: 150 })
+
+                            .effect()
+                            .file("jb2a.particle_burst.01.circle.bluepurple")
+                            .attachTo(token)
+                            .scaleToObject(2 * token.document.texture.scaleX)
+                            .delay(2000)
+                            .fadeIn(1000)
+                            .filter("ColorMatrix", { hue: 330 })
+                            .playbackRate(0.9)
+
+                            .thenDo(function () {
+                                workflow.actor.update({ [path]: newValue });
+                                ammount -= +i[0].slice(-1);
+                                resolve(ammount)
+                            })
+    
+                            .play()
                     }
                 }
             }

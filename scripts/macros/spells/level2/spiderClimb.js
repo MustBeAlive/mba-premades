@@ -1,14 +1,18 @@
-// Animation by EskieMoh#2969
+import {mba} from "../../../helperFunctions.js";
+
 export async function spiderClimb({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: "SpiderLeg", object: token })
     }
-    let effectData = {
+    const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
-        'description': "You gain the ability to move up, down, and across vertical surfaces and upside down along ceilings, while leaving your hands free. You also gain a climbing speed equal to your walking speed.",
+        'description': `
+            <p>You gain the ability to move up, down, and across vertical surfaces and upside down along ceilings, while leaving your hands free.</p>
+            <p>You also gain a climbing speed equal to your walking speed.</p>
+        `,
         'duration': {
             'seconds': 3600
         },
@@ -23,7 +27,7 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -36,21 +40,16 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         }
     };
 
-    let eightLegs = true;
-    let casting = true;
     let hue = -50;
-
-    let legSpeed1 = Math.random() * (600) + 300
-    let legSpeed2 = Math.random() * (600) + 300
-    let legSpeed3 = Math.random() * (600) + 300
-    let legSpeed4 = Math.random() * (600) + 300
-    let legSpeed5 = Math.random() * (800) + 200
-    let legSpeed6 = Math.random() * (800) + 200
-    let legSpeed7 = Math.random() * (800) + 200
-    let legSpeed8 = Math.random() * (800) + 200
-
-    let sizeMod = target.w / canvas.grid.size
-
+    let legSpeed1 = Math.random() * (600) + 150;
+    let legSpeed2 = Math.random() * (600) + 150;
+    let legSpeed3 = Math.random() * (600) + 150;
+    let legSpeed4 = Math.random() * (600) + 150;
+    let legSpeed5 = Math.random() * (800) + 100;
+    let legSpeed6 = Math.random() * (800) + 100;
+    let legSpeed7 = Math.random() * (800) + 100;
+    let legSpeed8 = Math.random() * (800) + 100;
+    let sizeMod = target.w / canvas.grid.size;
     let delay1 = Math.random() * (500 - 0) + 0;
     let delay2 = Math.random() * (500 - 0) + 0;
     let delay3 = Math.random() * (500 - 0) + 0;
@@ -62,52 +61,7 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
 
     await new Sequence()
 
-        .effect()
-        .atLocation(workflow.token)
-        .file(`jb2a.magic_signs.circle.02.transmutation.loop.green`)
-        .scaleToObject(1.25)
-        .rotateIn(180, 600, { ease: "easeOutCubic" })
-        .scaleIn(0, 600, { ease: "easeOutCubic" })
-        .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-        .belowTokens()
-        .fadeOut(2000)
-        .zIndex(0)
-        .playIf(() => {
-            return casting == true;
-        })
-
-        .effect()
-        .atLocation(workflow.token)
-        .file(`jb2a.magic_signs.circle.02.transmutation.loop.green`)
-        .scaleToObject(1.25)
-        .rotateIn(180, 600, { ease: "easeOutCubic" })
-        .scaleIn(0, 600, { ease: "easeOutCubic" })
-        .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-        .belowTokens(true)
-        .filter("ColorMatrix", { saturate: -1, brightness: 2 })
-        .filter("Blur", { blurX: 5, blurY: 10 })
-        .zIndex(1)
-        .duration(1200)
-        .fadeIn(200, { ease: "easeOutCirc", delay: 500 })
-        .fadeOut(300, { ease: "linear" })
-        .playIf(() => {
-            return casting == true;
-        })
-
-        .effect()
-        .file("jb2a.token_border.circle.static.blue.008")
-        .fadeIn(500)
-        .fadeOut(500)
-        .atLocation(target)
-        .duration(2000)
-        .filter("ColorMatrix", { hue: -90 + hue })
-        .scaleToObject(2)
-        .zIndex(1)
-        .playIf(() => {
-            return casting == true;
-        })
-        .waitUntilFinished(-500)
-        ////////////////////
+        .wait(1000)
 
         .effect()
         .file("jb2a.liquid.splash.green")
@@ -121,17 +75,13 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         .rotate(125)
         .zIndex(2)
 
-        .play()
-
-    new Sequence()
-
         .wait(250)
 
         //top left leg
         .effect()
         .name("SpiderLeg")
         .delay(delay1)
-        .file("https://i.imgur.com/RXNznBp.png")
+        .file("modules/mba-premades/icons/spells/level2/spider_climb/spiderleg1.webp")
         .atLocation(target)
         .attachTo(target, { offset: { x: target.document.texture.scaleX, y: 0.25 }, align: "top-left", bindAlpha: false, bindVisibility: false, followRotation: false })
         .scaleToObject(target.document.texture.scaleX * 0.55)
@@ -145,12 +95,12 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         .scaleOut(0, 500, { ease: "easeOutCubic" })
         .belowTokens()
         .zIndex(1.05)
-        .private()
+        .fadeOut(1000)
 
         .effect()
         .name("SpiderLeg")
         .delay(delay1)
-        .file("https://i.imgur.com/181474z.png")
+        .file("modules/mba-premades/icons/spells/level2/spider_climb/spiderleg2.webp")
         .atLocation(target)
         .attachTo(target, { offset: { x: target.document.texture.scaleX, y: 0.25 }, align: "top-left", bindAlpha: false, bindVisibility: false, followRotation: false })
         .scaleToObject(target.document.texture.scaleX * 0.55)
@@ -165,13 +115,13 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         .scaleOut(0, 500, { ease: "easeOutCubic" })
         .belowTokens()
         .zIndex(1)
-        .private()
+        .fadeOut(1000)
 
         //botttom left leg
         .effect()
         .name("SpiderLeg")
         .delay(delay2)
-        .file("https://i.imgur.com/RXNznBp.png")
+        .file("modules/mba-premades/icons/spells/level2/spider_climb/spiderleg1.webp")
         .atLocation(target)
         .attachTo(target, { offset: { x: target.document.texture.scaleX, y: 0.25 }, align: "bottom-left", bindAlpha: false, bindVisibility: false, followRotation: false })
         .scaleToObject(target.document.texture.scaleX * 0.55)
@@ -185,12 +135,12 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .scaleOut(0, 500, { ease: "easeOutCubic" })
         .zIndex(1.25)
-        .private()
+        .fadeOut(1000)
 
         .effect()
         .name("SpiderLeg")
         .delay(delay2)
-        .file("https://i.imgur.com/181474z.png")
+        .file("modules/mba-premades/icons/spells/level2/spider_climb/spiderleg2.webp")
         .atLocation(target)
         .attachTo(target, { offset: { x: target.document.texture.scaleX, y: 0.25 }, align: "bottom-left", bindAlpha: false, bindVisibility: false, followRotation: false })
         .scaleToObject(target.document.texture.scaleX * 0.55)
@@ -205,13 +155,13 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .scaleOut(0, 500, { ease: "easeOutCubic" })
         .zIndex(1.2)
-        .private()
+        .fadeOut(1000)
 
         //top right leg
         .effect()
         .name("SpiderLeg")
         .delay(delay3)
-        .file("https://i.imgur.com/RXNznBp.png")
+        .file("modules/mba-premades/icons/spells/level2/spider_climb/spiderleg1.webp")
         .atLocation(target)
         .attachTo(target, { offset: { x: -target.document.texture.scaleX, y: 0.25 }, align: "top-right", bindAlpha: false, bindVisibility: false, followRotation: false })
         .scaleToObject(target.document.texture.scaleX * 0.55)
@@ -226,12 +176,12 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         .scaleOut(0, 500, { ease: "easeOutCubic" })
         .mirrorX()
         .zIndex(1.05)
-        .private()
+        .fadeOut(1000)
 
         .effect()
         .name("SpiderLeg")
         .delay(delay3)
-        .file("https://i.imgur.com/181474z.png")
+        .file("modules/mba-premades/icons/spells/level2/spider_climb/spiderleg2.webp")
         .atLocation(target)
         .attachTo(target, { offset: { x: -target.document.texture.scaleX, y: 0.25 }, align: "top-right", bindAlpha: false, bindVisibility: false, followRotation: false })
         .scaleToObject(target.document.texture.scaleX * 0.55)
@@ -247,13 +197,13 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         .scaleOut(0, 500, { ease: "easeOutCubic" })
         .mirrorX()
         .zIndex(1)
-        .private()
+        .fadeOut(1000)
 
         //bottom right leg
         .effect()
         .name("SpiderLeg")
         .delay(delay4)
-        .file("https://i.imgur.com/RXNznBp.png")
+        .file("modules/mba-premades/icons/spells/level2/spider_climb/spiderleg1.webp")
         .atLocation(target)
         .attachTo(target, { offset: { x: -target.document.texture.scaleX, y: 0.25 }, align: "bottom-right", bindAlpha: false, bindVisibility: false, followRotation: false })
         .scaleToObject(target.document.texture.scaleX * 0.55)
@@ -268,12 +218,12 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .scaleOut(0, 500, { ease: "easeOutCubic" })
         .zIndex(1.25)
-        .private()
+        .fadeOut(1000)
 
         .effect()
         .name("SpiderLeg")
         .delay(delay4)
-        .file("https://i.imgur.com/181474z.png")
+        .file("modules/mba-premades/icons/spells/level2/spider_climb/spiderleg2.webp")
         .atLocation(target)
         .attachTo(target, { offset: { x: -target.document.texture.scaleX, y: 0.25 }, align: "bottom-right", bindAlpha: false, bindVisibility: false, followRotation: false })
         .scaleToObject(target.document.texture.scaleX * 0.55)
@@ -289,15 +239,6 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .scaleOut(0, 500, { ease: "easeOutCubic" })
         .zIndex(1.2)
-        .waitUntilFinished()
-
-        .thenDo(function () {
-            Sequencer.EffectManager.endEffects({ name: "SpiderLeg", object: target })
-        })
-
-        .play()
-
-    new Sequence()
 
         .wait(500)
 
@@ -305,7 +246,7 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         .effect()
         .name("SpiderLeg")
         .delay(delay5)
-        .file("https://i.imgur.com/RXNznBp.png")
+        .file("modules/mba-premades/icons/spells/level2/spider_climb/spiderleg1.webp")
         .atLocation(target)
         .attachTo(target, { offset: { x: target.document.texture.scaleX, y: 0.25 }, align: "top-left", bindAlpha: false, bindVisibility: false, followRotation: false })
         .scaleToObject(target.document.texture.scaleX * 0.55)
@@ -318,16 +259,13 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .scaleOut(0, 500, { ease: "easeOutCubic" })
         .belowTokens()
-        .playIf(() => {
-            return eightLegs == true;
-        })
         .zIndex(1.15)
-        .private()
+        .fadeOut(1000)
 
         .effect()
         .name("SpiderLeg")
         .delay(delay5)
-        .file("https://i.imgur.com/181474z.png")
+        .file("modules/mba-premades/icons/spells/level2/spider_climb/spiderleg2.webp")
         .atLocation(target)
         .attachTo(target, { offset: { x: target.document.texture.scaleX, y: 0.25 }, align: "top-left", bindAlpha: false, bindVisibility: false, followRotation: false })
         .scaleToObject(target.document.texture.scaleX * 0.55)
@@ -341,17 +279,14 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .scaleOut(0, 500, { ease: "easeOutCubic" })
         .belowTokens()
-        .playIf(() => {
-            return eightLegs == true;
-        })
         .zIndex(1.1)
-        .private()
+        .fadeOut(1000)
 
         //additional botttom left leg
         .effect()
         .name("SpiderLeg")
         .delay(delay6)
-        .file("https://i.imgur.com/RXNznBp.png")
+        .file("modules/mba-premades/icons/spells/level2/spider_climb/spiderleg1.webp")
         .atLocation(target)
         .attachTo(target, { offset: { x: target.document.texture.scaleX, y: 0.25 }, align: "bottom-left", bindAlpha: false, bindVisibility: false, followRotation: false })
         .scaleToObject(target.document.texture.scaleX * 0.55)
@@ -364,16 +299,13 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         .filter("ColorMatrix", { hue: hue })
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .scaleOut(0, 500, { ease: "easeOutCubic" })
-        .playIf(() => {
-            return eightLegs == true;
-        })
         .zIndex(1.35)
-        .private()
+        .fadeOut(1000)
 
         .effect()
         .name("SpiderLeg")
         .delay(delay6)
-        .file("https://i.imgur.com/181474z.png")
+        .file("modules/mba-premades/icons/spells/level2/spider_climb/spiderleg2.webp")
         .atLocation(target)
         .attachTo(target, { offset: { x: target.document.texture.scaleX, y: 0.25 }, align: "bottom-left", bindAlpha: false, bindVisibility: false, followRotation: false })
         .scaleToObject(target.document.texture.scaleX * 0.55)
@@ -387,17 +319,14 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         .filter("ColorMatrix", { hue: hue })
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .scaleOut(0, 500, { ease: "easeOutCubic" })
-        .playIf(() => {
-            return eightLegs == true;
-        })
         .zIndex(1.3)
-        .private()
+        .fadeOut(1000)
 
         //additional top right leg
         .effect()
         .name("SpiderLeg")
         .delay(delay7)
-        .file("https://i.imgur.com/RXNznBp.png")
+        .file("modules/mba-premades/icons/spells/level2/spider_climb/spiderleg1.webp")
         .atLocation(target)
         .attachTo(target, { offset: { x: -target.document.texture.scaleX, y: 0.25 }, align: "top-right", bindAlpha: false, bindVisibility: false, followRotation: false })
         .scaleToObject(target.document.texture.scaleX * 0.55)
@@ -411,16 +340,13 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .scaleOut(0, 500, { ease: "easeOutCubic" })
         .mirrorX()
-        .playIf(() => {
-            return eightLegs == true;
-        })
         .zIndex(1.15)
-        .private()
+        .fadeOut(1000)
 
         .effect()
         .name("SpiderLeg")
         .delay(delay7)
-        .file("https://i.imgur.com/181474z.png")
+        .file("modules/mba-premades/icons/spells/level2/spider_climb/spiderleg2.webp")
         .atLocation(target)
         .attachTo(target, { offset: { x: -target.document.texture.scaleX, y: 0.25 }, align: "top-right", bindAlpha: false, bindVisibility: false, followRotation: false })
         .scaleToObject(target.document.texture.scaleX * 0.55)
@@ -435,17 +361,14 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .scaleOut(0, 500, { ease: "easeOutCubic" })
         .mirrorX()
-        .playIf(() => {
-            return eightLegs == true;
-        })
         .zIndex(1.1)
-        .private()
+        .fadeOut(1000)
 
         //additional bottom right leg
         .effect()
         .name("SpiderLeg")
         .delay(delay8)
-        .file("https://i.imgur.com/RXNznBp.png")
+        .file("modules/mba-premades/icons/spells/level2/spider_climb/spiderleg1.webp")
         .atLocation(target)
         .attachTo(target, { offset: { x: -target.document.texture.scaleX, y: 0.25 }, align: "bottom-right", bindAlpha: false, bindVisibility: false, followRotation: false })
         .scaleToObject(target.document.texture.scaleX * 0.55)
@@ -459,16 +382,13 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         .filter("ColorMatrix", { hue: hue })
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .scaleOut(0, 500, { ease: "easeOutCubic" })
-        .playIf(() => {
-            return eightLegs == true;
-        })
         .zIndex(1.35)
-        .private()
+        .fadeOut(1000)
 
         .effect()
         .name("SpiderLeg")
         .delay(delay8)
-        .file("https://i.imgur.com/181474z.png")
+        .file("modules/mba-premades/icons/spells/level2/spider_climb/spiderleg2.webp")
         .atLocation(target)
         .attachTo(target, { offset: { x: -target.document.texture.scaleX, y: 0.25 }, align: "bottom-right", bindAlpha: false, bindVisibility: false, followRotation: false })
         .scaleToObject(target.document.texture.scaleX * 0.55)
@@ -483,12 +403,10 @@ export async function spiderClimb({ speaker, actor, token, character, item, args
         .filter("ColorMatrix", { hue: hue })
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .scaleOut(0, 500, { ease: "easeOutCubic" })
-        .playIf(() => {
-            return eightLegs == true;
-        })
         .zIndex(1.3)
-        .private()
+        .fadeOut(1000)
 
         .play()
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
+
+    await mba.createEffect(target.actor, effectData);
 }

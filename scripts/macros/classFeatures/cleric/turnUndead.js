@@ -36,7 +36,6 @@ export async function turnUndead({ speaker, actor, token, character, item, args,
     await game.messages.get(workflow.itemCardId).delete();
     uses -= 1;
     await CDItem.update({ "system.uses.value": uses });
-    let lightMap = true;
     new Sequence()
 
         .effect()
@@ -72,9 +71,6 @@ export async function turnUndead({ speaker, actor, token, character, item, args,
         .filter("ColorMatrix", { brightness: 1.5 })
         .spriteOffset({ x: -0 }, { gridUnits: true })
         .belowTokens()
-        .playIf(() => {
-            return lightMap == true;
-        })
 
         .effect()
         .file(`jb2a.particles.outward.orange.01.03`)
