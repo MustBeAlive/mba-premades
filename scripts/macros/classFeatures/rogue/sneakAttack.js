@@ -178,7 +178,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     if (!(workflow.item.system.actionType === 'rwak' || workflow.item.system.properties.fin === true)) return;
     let originFeature = mba.getItem(workflow.actor, "Sneak Attack");
     if (!originFeature) return;
-    if (!mba.perTurnCheck(originFeature, "feature", "sneakAttack")) return
+    if (!mba.perTurnCheck(originFeature, "feature", "sneakAttack")) return;
     let doSneak = false;
     let displayRakish = false;
     if (workflow.advantage) doSneak = true;
@@ -207,13 +207,10 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     if (!doSneak) return;
     let queueSetup = await queue.setup(workflow.item.uuid, 'sneakAttack', 215);
     if (!queueSetup) return;
-    let sneakDialog = true;
-    if (sneakDialog === true) {
-        let selection = await mba.dialog(originFeature.name, constants.yesNo, `Use <b>${originFeature.name}</b>?`);
-        if (!selection) {
-            queue.remove(workflow.item.uuid);
-            return;
-        }
+    let selection = await mba.dialog(originFeature.name, constants.yesNo, `Use <b>${originFeature.name}</b>?`);
+    if (!selection) {
+        queue.remove(workflow.item.uuid);
+        return;
     }
     await mba.setTurnCheck(originFeature, "feature", "sneakAttack");
     let defaultDamageType = workflow.defaultDamageType;

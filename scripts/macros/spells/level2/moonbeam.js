@@ -9,8 +9,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             'mba-premades': {
                 'template': {
                     'castLevel': workflow.castData.castLevel,
-                    'macroName': 'moonbeam',
-                    'name': 'moonbeam',
                     'saveDC': mba.getSpellDC(workflow.item),
                     'templateUuid': template.uuid,
                 }
@@ -19,7 +17,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     });
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Moonbeam: Move', false);
     if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Moonbeam: Move)")
+        ui.notifications.warn("Unable to find item in the compendium! (Moonbeam: Move)");
+        return;
     }
     async function effectMacroDel() {
         await warpgate.revert(token.document, 'Moonbeam');
@@ -117,8 +116,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .persist()
         .name(`Moonbeam`)
 
-        .thenDo(function () {
-            warpgate.mutate(workflow.token.document, updates, {}, options);
+        .thenDo(async () => {
+            await warpgate.mutate(workflow.token.document, updates, {}, options);
         })
 
         .play()
@@ -209,7 +208,7 @@ async function move({ speaker, actor, token, character, item, args, scope, workf
         .filter("ColorMatrix", { brightness: 1 })
         .zIndex(50)
 
-        .thenDo(function () {
+        .thenDo(async () => {
             Sequencer.EffectManager.endEffects({ name: `Moonbeam` });
         })
 
@@ -223,8 +222,8 @@ async function move({ speaker, actor, token, character, item, args, scope, workf
         .zIndex(50)
         .waitUntilFinished(-1500)
 
-        .thenDo(function () {
-            template.update(updates);
+        .thenDo(async () => {
+            await template.update(updates);
         })
 
         .effect()

@@ -47,6 +47,7 @@ export async function counterspell({ speaker, actor, token, character, item, arg
             .scaleToObject(2.2)
 
             .play()
+
         ChatMessage.create({
             content: `<p><b>${workflow.token.document.name}'s</b> counterspell is successful against <b>${target.document.name}'s</b> spell!</p>`,
             speaker: { actor: workflow.actor }
@@ -119,6 +120,7 @@ export async function counterspell({ speaker, actor, token, character, item, arg
         .scaleToObject(2.2)
 
         .play()
+        
     ChatMessage.create({
         content: `<p><b>${workflow.token.document.name}'s</b> failed to counterspell <b>${target.document.name}'s</b> spell!</p>`,
         speaker: { actor: workflow.actor }

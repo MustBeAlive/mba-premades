@@ -34,8 +34,8 @@ export async function disengage({ speaker, actor, token, character, item, args, 
 
         .wait(600)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
         })
 
         .play()

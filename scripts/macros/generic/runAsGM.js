@@ -63,6 +63,7 @@ async function rollItem(itemUuid, config, options) {
     if (!item) return;
     return await mba.rollItem(item, config, options);
 }
+
 export let runAsUser = {
     'rollItem': rollItem
 };

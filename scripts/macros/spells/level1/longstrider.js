@@ -6,6 +6,11 @@ export async function longstrider({ speaker, actor, token, character, item, args
     if (workflow.targets.size > ammount) {
         let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
         if (!selection.buttons) return;
+        let check = selection.inputs.filter(i => i != false);
+        if (check.length > ammount) {
+            ui.notifications.warn("Too many targets selected, try again!");
+            return;
+        }
         let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
         mba.updateTargets(newTargets);
     }
@@ -68,8 +73,8 @@ export async function longstrider({ speaker, actor, token, character, item, args
 
             .effect()
             .file("jb2a.energy_field.02.below.yellow")
-            .scaleToObject(1.55 * target.document.texture.scaleX)
             .attachTo(target)
+            .scaleToObject(1.55 * target.document.texture.scaleX)
             .delay(4000)
             .fadeIn(1000)
             .fadeOut(1000)
@@ -78,8 +83,8 @@ export async function longstrider({ speaker, actor, token, character, item, args
 
             .wait(2000)
 
-            .thenDo(function () {
-                mba.createEffect(target.actor, effectData);
+            .thenDo(async () => {
+                await mba.createEffect(target.actor, effectData);
             })
 
             .play()

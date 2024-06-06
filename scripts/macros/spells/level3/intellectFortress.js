@@ -1,37 +1,36 @@
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
 export async function intellectFortress({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel - 2;
-    let concEffect = await chrisPremades.helpers.findEffect(workflow.actor, 'Concentrating');
     if (workflow.targets.size > ammount) {
-        let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+        let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
         if (!selection.buttons) {
             ui.notifications.warn('Failed to select right ammount of targets, try again!')
-            await chrisPremades.helpers.removeEffect(concEffect);
+            await mba.removeCondition(workflow.actor, "Concentrating");
+            return;
+        }
+        let check = selection.inputs.filter(i => i != false);
+        if (check.length > ammount) {
+            ui.notifications.warn("Too many targets selected, try again!");
+            await mba.removeCondition(workflow.actor, "Concentrating");
             return;
         }
         let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
-        await chrisPremades.helpers.updateTargets(newTargets);
-    }
-    let targets = Array.from(game.user.targets);
-    const distanceArray = [];
-    for (let i = 0; i < targets.length; i++) {
-        for (let k = i + 1; k < targets.length; k++) {
-            let target1 = fromUuidSync(targets[i].document.uuid).object;
-            let target2 = fromUuidSync(targets[k].document.uuid).object;
-            distanceArray.push(chrisPremades.helpers.getDistance(target1, target2));
-        }
-    }
-    const found = distanceArray.some((distance) => distance > 30);
-    if (found === true) {
-        ui.notifications.warn('Targets cannot be further than 30 ft. of each other!')
-        await chrisPremades.helpers.removeEffect(concEffect);
-        return;
+        mba.updateTargets(newTargets);
     }
     await warpgate.wait(100);
+    let targets = Array.from(game.user.targets);
+    if (mba.within30(targets) === false) {
+        ui.notifications.warn('Targets cannot be further than 30 ft. of each other, try again!')
+        await mba.removeCondition(workflow.actor, "Concentrating");
+        return;
+    }
     const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
-        'description': 'You have advantage on Intelligence, Wisdom, and Charisma saving throws, as well as resistance to psychic damage.',
+        'description': 'You have advantage on Intelligence, Wisdom, and Charisma saving throws, as well as resistance to psychic damage for the duration.',
         'duration': {
             'seconds': 3600
         },
@@ -86,8 +85,5 @@ export async function intellectFortress({ speaker, actor, token, character, item
             }
         }
     };
-    for (let i = 0; i < targets.length; i++) {
-        let target = (targets[i]);
-        await chrisPremades.helpers.createEffect(target.actor, effectData);
-    }
+    for (let target of targets) await mba.createEffect(target.actor, effectData);
 }

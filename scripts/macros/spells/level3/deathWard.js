@@ -1,3 +1,6 @@
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.targets.size) return;
     let target = workflow.targets.first();
@@ -37,7 +40,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -146,26 +149,26 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .wait(700)
 
-        .thenDo(function () {
-            chrisPremades.helpers.createEffect(target.actor, effectData)
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData)
         })
 
         .play();
 }
 
 async function hook(token, { item, workflow, ditem }) {
-    let effect = chrisPremades.helpers.findEffect(token.actor, 'Death Ward');
+    let effect = mba.findEffect(token.actor, 'Death Ward');
     if (!effect) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.uuid, 'deathWard', 390);
+    let queueSetup = await queue.setup(workflow.uuid, 'deathWard', 390);
     if (!queueSetup) return;
     if (ditem.newHP != 0) {
-        chrisPremades.queue.remove(workflow.uuid);
+        queue.remove(workflow.uuid);
         return;
     }
     ditem.newHP = 1;
     ditem.hpDamage = Math.abs(ditem.newHP - ditem.oldHP);
-    await chrisPremades.helpers.removeEffect(effect);
-    chrisPremades.queue.remove(workflow.uuid);
+    await mba.removeEffect(effect);
+    queue.remove(workflow.uuid);
 }
 
 export let deathWard = {

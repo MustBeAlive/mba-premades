@@ -10,6 +10,12 @@ export async function bless({ speaker, actor, token, character, item, args, scop
             await mba.removeCondition(workflow.actor, "Concentrating");
             return;
         }
+        let check = selection.inputs.filter(i => i != false);
+        if (check.length > ammount) {
+            ui.notifications.warn("Too many targets selected, try again!");
+            await mba.removeCondition(workflow.actor, "Concentrating");
+            return;
+        }
         let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
         mba.updateTargets(newTargets);
     }

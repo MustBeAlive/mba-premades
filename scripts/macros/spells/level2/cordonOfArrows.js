@@ -17,19 +17,48 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'mba-premades': {
                 'template': {
-                    'name': 'cordonOfArrows',
+                    'ammount': ammount,
                     'castLevel': workflow.castData.castLevel,
+                    'ignoreIds': ignoreIds,
                     'saveDC': mba.getSpellDC(workflow.item),
-                    'macroName': 'cordonOfArrows',
                     'templateUuid': template.uuid,
                     'turn': 'end',
-                    'ignoreMove': true,
-                    'ammount': ammount,
-                    'ignoreIds': ignoreIds
                 }
             }
         }
     });
+    let effect = await mba.findEffect(workflow.actor, "Cordon of Arrows Template");
+    if (!effect) return;
+    let updates = {
+        'description': `<p>Arrows left: <b>${ammount}</b></p>`
+    };
+    await mba.updateEffect(effect, updates);
+}
+
+async function enter(template, token) {
+    let trigger = template.flags['mba-premades']?.template;
+    if (!trigger) return;
+    await cordonOfArrows.trigger(token.document, trigger);
+}
+
+async function end(template, token) {
+    if (mba.inCombat()) {
+        let prev = game.combat.turn;
+        let turn;
+        if (prev != 0 ) {
+            prev = game.combat.turn - 1;
+            turn = game.combat.round + '-' + prev;
+        }
+        else if (prev === 0) {
+            prev = game.combat.turns.length - 1;
+            turn = (game.combat.round - 1) + "-" + prev;
+        }
+        let lastTurn = template.flags['mba-premades']?.spell?.cordonOfArrows?.[token.id]?.turn;
+        if (turn === lastTurn) return;
+    }
+    let trigger = template.flags['mba-premades']?.template;
+    if (!trigger) return;
+    await cordonOfArrows.trigger(token.document, trigger);
 }
 
 async function trigger(token, trigger) {
@@ -53,13 +82,21 @@ async function trigger(token, trigger) {
     let ammount = template.flags['mba-premades']?.template?.ammount;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': originItem.actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([token.uuid]);
-    await MidiQOL.completeItemUse(feature, config, options);
+    let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
 
     new Sequence()
+
         .effect()
+        .file("jb2a.cast_shape.circle.single01.blue")
+        .attachTo(template)
+        .scale(0.33)
+        .waitUntilFinished(-2000)
+
+        .effect()
+        .file("jb2a.arrow.physical.blue")
         .atLocation(template)
         .stretchTo(token, { attachTo: true })
-        .file("jb2a.arrow.physical.blue")
+        .missed(!featureWorkflow.failedSaves.size)
 
         .play();
 
@@ -72,36 +109,21 @@ async function trigger(token, trigger) {
             }
         }
     });
+    let effect = await mba.findEffect(originItem.actor, "Cordon of Arrows Template");
+    if (!effect) return;
     if (template.flags['mba-premades']?.template?.ammount < 1) {
-        let effect = await mba.findEffect(originItem.actor, "Cordon of Arrows Template");
-        if (!effect) return;
         await mba.removeEffect(effect);
+        return;
     }
-}
-
-async function end(template, token) {
-    if (mba.inCombat()) {
-        let prev = game.combat.turn;
-        if (prev != 0 ) prev = game.combat.turn - 1;
-        else if (prev === 0) prev = game.combat.turns.length - 1;
-        let turn = game.combat.round + '-' + prev;
-        let lastTurn = template.flags['mba-premades']?.spell?.cordonOfArrows?.[token.id]?.turn;
-        if (turn === lastTurn) return;
-    }
-    let trigger = template.flags['mba-premades']?.template;
-    if (!trigger) return;
-    await cordonOfArrows.trigger(token.document, trigger);
-}
-
-async function enter(template, token) {
-    let trigger = template.flags['mba-premades']?.template;
-    if (!trigger) return;
-    await cordonOfArrows.trigger(token.document, trigger);
+    let updates = {
+        'description': `<p>Arrows left: <b>${ammount - 1}</b></p>`
+    };
+    await mba.updateEffect(effect, updates);
 }
 
 export let cordonOfArrows = {
     'item': item,
-    'trigger': trigger,
+    'enter': enter,
     'end': end,
-    'enter': enter
+    'trigger': trigger,
 }

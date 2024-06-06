@@ -1,6 +1,9 @@
-//Animation by EskieMoh#2969
 export async function lightningBolt({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) {
+        ui.notifications.warn("Unable to find tempalte!");
+        return;
+    }
 
     new Sequence()
 

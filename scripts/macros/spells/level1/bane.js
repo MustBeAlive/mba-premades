@@ -9,6 +9,11 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         ui.notifications.warn("Failed to select targets!");
         return false;
     }
+    let check = selection.inputs.filter(i => i != false);
+    if (check.length > ammount) {
+        ui.notifications.warn("Too many targets selected, try again!");
+        return false;
+    }
     let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
     mba.updateTargets(newTargets);
 }
@@ -67,9 +72,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
             .effect()
             .file("jb2a.particle_burst.01.circle.yellow")
-            .delay(delay1)
             .atLocation(target)
             .scaleToObject(2 * target.document.texture.scaleX)
+            .delay(delay1)
             .fadeIn(500)
             .fadeOut(500)
             .playbackRate(0.9)
@@ -77,21 +82,21 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
             .effect()
             .file("jb2a.bless.200px.loop.purple")
-            .delay(delay2)
             .attachTo(target)
+            .delay(delay2)
+            .fadeOut(1000)
             .scaleIn(0, 1500, { ease: "easeOutCubic" })
             .scaleToObject(1.9 * target.document.texture.scaleX)
             .opacity(0.8)
             .playbackRate(0.8)
             .belowTokens()
-            .fadeOut(1000)
             .persist()
             .name(`${target.document.name} Bane`)
 
             .wait(delay3)
 
-            .thenDo(function () {
-                mba.createEffect(target.actor, effectData)
+            .thenDo(async () => {
+                await mba.createEffect(target.actor, effectData)
             })
 
             .play()

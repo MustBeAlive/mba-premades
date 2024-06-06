@@ -5,33 +5,18 @@ export async function critFumble(workflow) {
     let actionType = workflow.item.system.actionType;
     if (!actionType) return;
     if (!(constants.attacks).includes(actionType)) return;
-    let type;
-    if (workflow.isCritical === true) type = "crit";
-    else if (workflow.isFumble === true) type = "fumble";
-    if (!type) return;
-    if (type === "crit") {
-        new Sequence()
+    let animation;
+    if (workflow.isCritical === true) animation = "jb2a.ui.critical.yellow";
+    else if (workflow.isFumble === true) animation = "jb2a.ui.miss.red";
+    if (!animation) return;
+    new Sequence()
 
-            .effect()
-            .file("jb2a.ui.critical.yellow")
-            .attachTo(workflow.token, { offset: { y: -0.5 }, gridUnits: true })
-            .scaleToObject(1.7)
-            .playbackRate(0.85)
-            .aboveInterface()
+        .effect()
+        .file(animation)
+        .attachTo(workflow.token, { followRotation: false, offset: { y: -0.5 }, gridUnits: true })
+        .scaleToObject(1.7)
+        .playbackRate(0.85)
+        .aboveInterface()
 
-            .play()
-    }
-    else if (type === "fumble") {
-        new Sequence()
-
-            .effect()
-            .file("jb2a.ui.miss.red")
-            .attachTo(workflow.token, { offset: { y: -0.5 }, gridUnits: true })
-            .scaleToObject(1.7)
-            .playbackRate(0.85)
-            .aboveInterface()
-
-            .play()
-    }
-
+        .play()
 }

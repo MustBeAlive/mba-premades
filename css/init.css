@@ -725,7 +725,7 @@ button:hover, form button:hover {
 }
 
 .chat-message .flavor-text {
-    color: var(--color-dracula-inactive)
+    color: var(--color-dracula-text-tertiary)
 }
 
 .chat-message .message-header, .chat-message .message-metadata {

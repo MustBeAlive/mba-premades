@@ -45,10 +45,8 @@ export async function iceKnife({ speaker, actor, token, character, item, args, s
     delete featureData._id;
     let damageDice = 1 + workflow.castData.castLevel;
     featureData.system.damage.parts = [[damageDice + 'd6[cold]', 'cold']];
-    let originItem = workflow.item;
-    if (!originItem) return;
-    featureData.system.save.dc = mba.getSpellDC(originItem);
-    setProperty(featureData, 'mba-premades.spell.castData.school', originItem.system.school);
+    featureData.system.save.dc = mba.getSpellDC(workflow.item);
+    setProperty(featureData, 'mba-premades.spell.castData.school', workflow.item.system.school);
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
     let targetUuids = [];
     for (let i of targets) targetUuids.push(i.document.uuid);

@@ -1,4 +1,4 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
 
 export async function ceremony({ speaker, actor, token, character, item, args, scope, workflow }) {
 	let choices = [

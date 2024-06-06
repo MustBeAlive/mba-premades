@@ -11,10 +11,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let queueSetup = await queue.setup(workflow.item.uuid, 'divineStrike', 250);
     if (!queueSetup) return;
     let diceNumber = 1;
-    let clericLevels = workflow.actor.classes.cleric?.system?.levels;
+    let clericLevel = workflow.actor.classes.cleric?.system?.levels;
     let subClassIdentifier = workflow.actor.classes.cleric?.subclass?.identifier;
-    if (clericLevels >= 14) diceNumber += 1;
-    if (!clericLevels || !subClassIdentifier) {
+    if (clericLevel >= 14) diceNumber += 1;
+    if (!clericLevel || !subClassIdentifier) {
         queue.remove(workflow.item.uuid);
         return;
     }

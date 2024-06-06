@@ -1,6 +1,6 @@
-import { constants } from "../../generic/constants.js";
-import { mba } from "../../../helperFunctions.js";
-import { queue } from "../../mechanics/queue.js";
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
 
 async function animation(token) {
     new Sequence()
@@ -39,7 +39,6 @@ async function carefulSpellItem({ speaker, actor, token, character, item, args, 
         ui.notifications.info("Not enough sorcery points!");
         return;
     }
-    points -= 1;
     const effectData = {
         'name': "Metamagic: Careful Spell",
         'icon': workflow.item.img,
@@ -65,7 +64,7 @@ async function carefulSpellItem({ speaker, actor, token, character, item, args, 
     };
     await animation(workflow.token);
     await mba.createEffect(workflow.actor, effectData);
-    await pointsItem.update({ "system.uses.value": points });
+    await pointsItem.update({ "system.uses.value": points -= 1 });
 }
 
 async function carefulSpellTrigger({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -106,7 +105,6 @@ async function subtleSpellItem({ speaker, actor, token, character, item, args, s
         ui.notifications.info("Not enough sorcery points!");
         return;
     }
-    points -= 1;
     const effectData = {
         'name': "Metamagic: Subtle Spell",
         'icon': workflow.item.img,
@@ -137,7 +135,7 @@ async function subtleSpellItem({ speaker, actor, token, character, item, args, s
     };
     await animation(workflow.token);
     await mba.createEffect(workflow.actor, effectData);
-    await pointsItem.update({ "system.uses.value": points });
+    await pointsItem.update({ "system.uses.value": points -= 1 });
 }
 
 async function quickenedSpellItem({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -151,7 +149,6 @@ async function quickenedSpellItem({ speaker, actor, token, character, item, args
         ui.notifications.info("Not enough sorcery points!");
         return;
     }
-    points -= 2;
     const effectData = {
         'name': "Metamagic: Quickened Spell",
         'icon': workflow.item.img,
@@ -176,7 +173,7 @@ async function quickenedSpellItem({ speaker, actor, token, character, item, args
     };
     await animation(workflow.token);
     await mba.createEffect(workflow.actor, effectData);
-    await pointsItem.update({ "system.uses.value": points });
+    await pointsItem.update({ "system.uses.value": points -= 2 });
 }
 
 async function quickenedSpellTrigger({ speaker, actor, token, character, item, args, scope, workflow }) {

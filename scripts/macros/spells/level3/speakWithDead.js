@@ -1,24 +1,23 @@
-//Animation by EskieMoh#2969
+import {mba} from "../../../helperFunctions.js";
+
 export async function speakWithDead({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    let isDead = await chrisPremades.helpers.findEffect(target.actor, 'Dead');
-    if (!isDead) {
+    if (!mba.findEffect(target.actor, 'Dead')) {
         ui.notifications.warn("Target is not dead!");
         return;
     }
-    let type = await chrisPremades.helpers.raceOrType(target.actor);
-    if (type === 'undead') {
+    if (mba.raceOrType(target.actor) === 'undead') {
         ui.notifications.warn("Unable to speak with target! (Target is undead)");
         return;
     }
     let options = [["Yes, proceed", "yes"], ["No, deny Speak with Dead", "no"]];
-    let selection = await chrisPremades.helpers.remoteDialog(workflow.item.name, options, game.users.activeGM.id, `Is <b>${target.document.name}</b> eligible to use Speak with Dead on?`);
+    let selection = await mba.remoteDialog(workflow.item.name, options, game.users.activeGM.id, `Is <b>${target.document.name}</b> eligible to use Speak with Dead on?`);
     if (!selection || selection === "no") {
         ui.notifications.info("GM has denied your request. Sorry!");
         return;
     }
     async function effectMacroCreate() {
-        let effect = await chrisPremades.helpers.findEffect(actor, 'Speak with Dead');
+        let effect = await mbaPremades.helpers.findEffect(actor, 'Speak with Dead');
         if (!effect) return;
         let count = 5;
         for (let i = 0; i != count;) {
@@ -39,7 +38,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
                 }).render(true);
             });
         };
-        await chrisPremades.helpers.removeEffect(effect);
+        await mbaPremades.helpers.removeEffect(effect);
     }
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} Speak with Dead` });
@@ -54,8 +53,8 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
             .zIndex(0.2)
             .waitUntilFinished()
 
-            .thenDo(function () {
-                chrisPremades.helpers.addCondition(actor, 'Dead', true)
+            .thenDo(async () => {
+                await mbaPremades.helpers.addCondition(actor, 'Dead', true)
             })
 
             .animation()
@@ -74,10 +73,10 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         'flags': {
             'effectmacro': {
                 'onCreate': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroCreate)
+                    'script': mba.functionToString(effectMacroCreate)
                 },
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -389,9 +388,9 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
 
         .wait(4000)
 
-        .thenDo(function () {
-            chrisPremades.helpers.removeCondition(target.actor, 'Dead');
-            chrisPremades.helpers.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            await mba.removeCondition(target.actor, 'Dead');
+            await mba.createEffect(target.actor, effectData);
         })
 
         .play()

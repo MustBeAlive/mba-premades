@@ -14,9 +14,10 @@ import {diseases} from './macros/generic/diseases.js';
 import {itemDC, noEffectAnimationCreate, noEffectAnimationDelete} from './macros/mechanics/activeEffect.js';
 import {macros, onHitMacro} from './macros.js';
 import {mba as helpers} from './helperFunctions.js';
+import {patchSaves, patchSkills} from './patching.js';
 import {queue} from './macros/mechanics/queue.js';
 import {registerSettings} from './settings.js';
-import {remoteAimCrosshair, remoteDialog, remoteDocumentDialog, remoteDocumentsDialog, remoteMenu} from './macros/generic/remoteDialog.js';
+import {remoteAimCrosshair, remoteDialog, remoteDocumentDialog, remoteDocumentsDialog, remoteMenu, remoteSelectTarget} from './macros/generic/remoteDialog.js';
 import {removeV10EffectsBlind} from './macros/mechanics/blindness.js';
 import {removeV10EffectsInvisible} from './macros/mechanics/invisibility.js';
 import {rollModeChange} from './macros/ui/rollmodeButtons.js';
@@ -52,6 +53,7 @@ Hooks.once('socketlib.ready', async function() {
     socket.register('remoteDocumentDialog', remoteDocumentDialog);
     socket.register('remoteDocumentsDialog', remoteDocumentsDialog);
     socket.register('remoteMenu', remoteMenu);
+    socket.register('remoteSelectTarget', remoteSelectTarget);
     socket.register('removeEffect', runAsGM.removeEffect);
     socket.register('rollItem', runAsUser.rollItem);
     socket.register('updateCombatant', runAsGM.updateCombatant);
@@ -97,12 +99,19 @@ Hooks.once('ready', async function() {
     if (game.settings.get('mba-premades', 'Relentless Endurance')) Hooks.on('midi-qol.preTargetDamageApplication', macros.relentlessEndurance);
     if (game.settings.get('mba-premades', 'Sanctuary')) Hooks.on('midi-qol.preItemRoll', macros.sanctuary.hook);
     if (game.settings.get('mba-premades', 'True Strike')) Hooks.on('midi-qol.preAttackRoll', macros.trueStrike.hook);
+    if (game.settings.get('mba-premades', 'Warding Bond')) {
+        Hooks.on('updateToken', macros.wardingBond.moveTarget);
+        Hooks.on('updateToken', macros.wardingBond.moveSource);
+    }
+    if (game.settings.get('mba-premades', 'Elusive')) Hooks.on('midi-qol.preAttackRoll', macros.elusive.hook);
     if (game.settings.get('mba-premades', 'Strength of the Grave')) Hooks.on('midi-qol.preTargetDamageApplication', macros.strengthOfTheGrave);
     if (game.settings.get('mba-premades', 'Active Effect Additions')) {
         Hooks.on('preCreateActiveEffect', itemDC);  
         Hooks.on('preCreateActiveEffect', noEffectAnimationCreate);
         Hooks.on('preDeleteActiveEffect', noEffectAnimationDelete);
     }
+    if (game.settings.get('mba-premades', 'Skill Patching')) patchSkills(true);
+    if (game.settings.get('mba-premades', 'Save Patching')) patchSaves(true);
     if (game.settings.get('mba-premades', 'Summons Initiative')) Hooks.on('dnd5e.rollInitiative', tashaSummon.updateSummonInitiative);
     if (game.settings.get('mba-premades', 'Companions Initiative')) Hooks.on('dnd5e.rollInitiative', tashaSummon.updateCompanionInitiative);
     if (game.settings.get('mba-premades', 'Cast Animations')) Hooks.on('midi-qol.postPreambleComplete', cast);

@@ -2,15 +2,14 @@ import {mba} from "../../helperFunctions.js";
 
 export async function shove({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.targets.size) return;
-    let skipCheck = false;
     let target = workflow.targets.first();
     if (workflow.actor.uuid === target.actor.uuid) return;
     if ((mba.getSize(target.actor)) > (mba.getSize(actor) + 1)) {
         ui.notifications.info('Target is too big to shove!');
         return;
     }
-    let effect = mba.findEffect(target.actor, 'Incapacitated');
-    if (effect) skipCheck = true;
+    let skipCheck = false;
+    if (mba.findEffect(target.actor, 'Incapacitated')) skipCheck = true;
     if (!skipCheck) {
         let options = [
             [`Acrobatics (${target.actor.system.skills.acr.total})`, 'acr'],
@@ -77,8 +76,8 @@ export async function shove({ speaker, actor, token, character, item, args, scop
             .opacity(1)
             .delay(850)
 
-            .thenDo(function () {
-                mba.addCondition(target.actor, 'Prone', false, null);
+            .thenDo(async () => {
+                await mba.addCondition(target.actor, 'Prone', false, null);
             })
 
             .play();

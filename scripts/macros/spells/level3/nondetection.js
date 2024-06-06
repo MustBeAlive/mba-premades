@@ -1,14 +1,16 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function nondetection({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let showIcon = true;
     if (game.users.current.isGM) {
         let hide = [["Yes, hide effect icon", "yes"], ["No, keep it", "no"]];
-        let hideIcon = await chrisPremades.helpers.dialog("Do you want to hide the effect icon?", hide);
+        let hideIcon = await mba.dialog("Do you want to hide the effect icon?", hide);
         if (hideIcon === "yes") showIcon = false;
     };
     async function effectMacro() {
         await game.Gametime.doIn({ hours: 8 }, async () => {
-            let effect = await chrisPremades.helpers.findEffect(actor, "Nondetection");
+            let effect = await mbaPremades.helpers.findEffect(actor, "Nondetection");
             if (effect) await warpgate.revert(token.document, "Nondetection");
         });
     };
@@ -29,10 +31,10 @@ export async function nondetection({ speaker, actor, token, character, item, arg
             },
             'effectmacro': {
                 'onCreate': {
-                    'script': chrisPremades.helpers.functionToString(effectMacro)
+                    'script': mba.functionToString(effectMacro)
                 },
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -138,8 +140,8 @@ export async function nondetection({ speaker, actor, token, character, item, arg
 
         .wait(1800)
 
-        .thenDo(function () {
-            warpgate.mutate(target.document, updates, {}, options);
+        .thenDo(async () => {
+            await warpgate.mutate(target.document, updates, {}, options);
         })
 
         .play()

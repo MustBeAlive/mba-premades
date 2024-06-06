@@ -1,6 +1,6 @@
-import { constants } from '../../generic/constants.js';
-import { mba } from '../../../helperFunctions.js';
-import { enlargeReduce } from '../../spells/level2/enlargeReduce.js';
+import {constants} from '../../generic/constants.js';
+import {mba} from '../../../helperFunctions.js';
+import {enlargeReduce} from '../../spells/level2/enlargeReduce.js';
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.actor || !workflow.token) return;
@@ -8,22 +8,27 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     if (effect) mba.removeEffect(effect);
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Class Feature Items', 'Rage: End', false);
     if (!featureData) return;
-    async function effectMacro() {
+    async function effectMacroDelete() {
         if (mbaPremades.helpers.getItem(actor, 'Call the Hunt')) await mbaPremades.macros.callTheHunt.rageEnd(effect);
         await warpgate.revert(token.document, 'Rage');
         await mbaPremades.macros.rage.animationEnd(token);
-        if (mbaPremades.helpers.getItem(actor, 'Giant\'s Havoc: Giant Stature')) await warpgate.revert(token.document, 'Giant Stature');
+        if (mbaPremades.helpers.getItem(actor, "Giant's Havoc: Giant Stature")) await warpgate.revert(token.document, 'Giant Stature');
         let effect2 = mbaPremades.helpers.findEffect(actor, 'Elemental Cleaver');
         if (effect2) await mbaPremades.helpers.removeEffect(effect2);
     };
-    async function effectMacro2() {
+    async function effectMacroCreate() {
         await mbaPremades.macros.rage.animationStart(token);
     };
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
-        'description': ``,
+        'description': `
+            <p>You have advantage on Strength checks and Strength saving throws.</p>
+            <p>When you make a melee weapon attack using Strength, you gain a +2 bonus to the damage roll. This bonus increases as you level.</p>
+            <p>You have resistance to bludgeoning, piercing, and slashing damage.</p>
+            <p>If you are able to cast spells, you can't cast them or concentrate on them while raging.</p>
+        `,
         'duration': {
             'seconds': 60
         },
@@ -66,20 +71,20 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             },
             {
                 'key': 'flags.midi-qol.fail.spell.vocal',
-                'value': '1',
                 'mode': 0,
+                'value': 1,
                 'priority': 20
             },
             {
                 'key': 'flags.midi-qol.fail.spell.somatic',
-                'value': '1',
                 'mode': 0,
+                'value': 1,
                 'priority': 20
             },
             {
                 'key': 'flags.midi-qol.fail.spell.material',
-                'value': '1',
                 'mode': 0,
+                'value': 1,
                 'priority': 20
             }
         ],
@@ -88,12 +93,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 'specialDuration': ['zeroHP']
             },
             'effectmacro': {
-                'onDelete': {
-                    'script': mba.functionToString(effectMacro)
-                },
                 'onCreate': {
-                    'script': mba.functionToString(effectMacro2)
-                }
+                    'script': mba.functionToString(effectMacroCreate)
+                },
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDelete)
+                },
             }
         }
     };
@@ -179,7 +184,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         ]);
     };
-    let crushingThrow = mba.getItem(workflow.actor, 'Giant\'s Havoc: Crushing Throw');
+    let crushingThrow = mba.getItem(workflow.actor, "Giant's Havoc: Crushing Throw");
     if (crushingThrow) {
         effectData.changes = effectData.changes.concat([
             {
@@ -190,7 +195,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         ]);
     };
-    let giantStature = mba.getItem(workflow.actor, 'Giant\'s Havoc: Giant Stature');
+    let giantStature = mba.getItem(workflow.actor, "Giant's Havoc: Giant Stature");
     let demiurgicColossus = mba.getItem(workflow.actor, 'Demiurgic Colossus');
     if (giantStature && mba.getSize(workflow.actor) < (demiurgicColossus ? 4 : 3)) {
         let lrgRoom = mba.checkForRoom(workflow.token, 1);
@@ -310,13 +315,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     if (elementalCleaver) await elementalCleaver.use();
 }
 
-async function end({ speaker, actor, token, character, item, args, scope, workflow }) {
-    if (!workflow.actor) return;
-    let effect = mba.findEffect(workflow.actor, 'Rage');
-    if (!effect) return;
-    await mba.removeEffect(effect);
-}
-
 async function attack({ speaker, actor, token, character, item, args, scope, workflow }) {
     let effect = mba.findEffect(workflow.actor, 'Rage');
     if (!effect) return;
@@ -360,11 +358,17 @@ async function turnEnd(effect, actor) {
     if (roundDiff >= 1) {
         if (currentTurn >= lastTurn) {
             let userId = mba.lastGM();
-            let selection = await mba.remoteDialog('Rage', constants.yesNo, userId, actor.name + ' has not attacked an enemy or taken damage since their last turn. Remove Rage?');
+            let selection = await mba.remoteDialog('Rage', constants.yesNo, userId, `<p><b>${actor.name}</b> has not attacked an enemy or taken damage since their last turn.</p><p>Remove Rage?</p>`);
             if (!selection) return;
             await mba.removeEffect(effect);
         }
     }
+}
+
+async function end({ speaker, actor, token, character, item, args, scope, workflow }) {
+    if (!workflow.actor) return;
+    let effect = mba.findEffect(workflow.actor, 'Rage');
+    if (effect) await mba.removeEffect(effect);
 }
 
 async function combatStart(effect) {
@@ -543,11 +547,11 @@ async function animationEnd(token) {
 
 export let rage = {
     'item': item,
-    'end': end,
-    'animationStart': animationStart,
-    'animationEnd': animationEnd,
     'attack': attack,
     'attacked': attacked,
+    'end': end,
     'turnEnd': turnEnd,
-    'combatStart': combatStart
+    'combatStart': combatStart,
+    'animationStart': animationStart,
+    'animationEnd': animationEnd,
 }

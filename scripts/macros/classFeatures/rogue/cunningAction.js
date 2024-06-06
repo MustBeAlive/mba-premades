@@ -10,13 +10,13 @@ export async function cunningAction({ speaker, actor, token, character, item, ar
 
         .effect()
         .file("jb2a.sneak_attack.dark_purple")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(2.5)
 
         .play()
 
     if (actionName === "fasthands") {
-        let item = workflow.actor.items.getName("Thieves' Tools");
+        let item = mba.getItem(workflow.actor, "Thieves' Tools");
         if (!item) {
             ui.notifications.warn("Unable to find item! (Thieves' Tools)");
             return;
@@ -24,7 +24,7 @@ export async function cunningAction({ speaker, actor, token, character, item, ar
         await item.use();
         return;
     }
-    let action = token.actor.items.getName(actionName);
+    let action = mba.getItem(workflow.actor, actionName);
     if (action) {
         await action.use();
         return;
@@ -34,14 +34,11 @@ export async function cunningAction({ speaker, actor, token, character, item, ar
         ui.notifications.warn(`Unable to find item in the compendium! (${actionName})`);
         return;
     }
-    action = new CONFIG.Item.documentClass(actionData, { parent: token.actor });
-    let targetUuids;
-    if (!game.user.targets.size) targetUuids = [token.document.uuid];
-    else targetUuids = [game.user.targets.first().document.uuid];
+    action = new CONFIG.Item.documentClass(actionData, { parent: workflow.actor });
     let options = {
         'showFullCard': false,
         'createWorkflow': true,
-        'targetUuids': targetUuids,
+        'targetUuids': [workflow.token.document.uuid],
         'configureDialog': false,
         'versatile': false,
         'consumeResource': false,

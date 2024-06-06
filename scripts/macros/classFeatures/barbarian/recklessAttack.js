@@ -1,6 +1,20 @@
+import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
 
-export async function recklessAttack({ speaker, actor, token, character, item, args, scope, workflow }) {
+async function attack({ speaker, actor, token, character, item, args, scope, workflow }) {
+    if (mba.findEffect(workflow.actor, "Reckless Attack")) return;
+    let originFeature = mba.getItem(workflow.actor, "Reckless Attack");
+    if (!originFeature) return;
+    if (!mba.perTurnCheck(originFeature, "feature", "recklessAttack")) return;
+    let queueSetup = await queue.setup(workflow.item.uuid, 'recklessAttack', 30);
+    if (!queueSetup) return;
+    let selection = await mba.dialog(originFeature.name, constants.yesNo, `Use <b>${originFeature.name}</b>?`);
+    if (!selection) {
+        await mba.setTurnCheck(originFeature, "feature", "recklessAttack");
+        queue.remove(workflow.item.uuid);
+        return;
+    }
     async function effectMacroDel() {
         new Sequence()
 
@@ -13,8 +27,8 @@ export async function recklessAttack({ speaker, actor, token, character, item, a
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Reckless Attack` })
     };
     const effectData = {
-        'name': workflow.item.name,
-        'icon': workflow.item.img,
+        'name': "Reckless Attack",
+        'icon': "modules/mba-premades/icons/class/barbarian/reckless_attack.webp",
         'origin': workflow.item.uuid,
         'description': `
             <p>You have you advantage on melee weapon attack rolls using Strength during this turn, but attack rolls against you have advantage until your next turn.</p>
@@ -86,4 +100,14 @@ export async function recklessAttack({ speaker, actor, token, character, item, a
         .play()
 
     await mba.createEffect(workflow.actor, effectData);
+    queue.remove(workflow.item.uuid);
+}
+
+async function combatEnd(origin) {
+    await origin.setFlag('mba-premades', 'feature.recklessAttack.turn', '');
+}
+
+export let recklessAttack = {
+    'attack': attack,
+    'combatEnd': combatEnd
 }

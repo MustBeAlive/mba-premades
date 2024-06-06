@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function waterBreathing({ speaker, actor, token, character, item, args, scope, workflow }) {
     let targets = Array.from(workflow.targets);
     async function effectMacroDel() {
@@ -8,16 +10,16 @@ export async function waterBreathing({ speaker, actor, token, character, item, a
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-        <p>You have the ability to breathe underwater until the spell ends.</p>
-        <p>You also retain their normal mode of respiration.</p>
-    `,
+            <p>You have the ability to breathe underwater until the spell ends.</p>
+            <p>You also retain their normal mode of respiration.</p>
+        `,
         'duration': {
             'seconds': 86400
         },
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -37,42 +39,42 @@ export async function waterBreathing({ speaker, actor, token, character, item, a
             .file("jb2a.liquid.blob.blue")
             .attachTo(target)
             .scaleToObject(1.2 * target.document.texture.scaleX)
-            .fadeIn(500)
             .duration(delay)
+            .fadeIn(500)
 
             .effect()
             .file("jb2a.energy_attack.01.blue")
-            .delay(delay)
             .attachTo(target, { followRotation: false })
             .scaleToObject(2.25)
-            .belowTokens()
+            .delay(delay)
+            .fadeOut(400)
             .startTime(500)
             .endTime(2050)
-            .fadeOut(400)
+            .belowTokens()
             .randomRotation()
 
             .effect()
             .file("jb2a.impact.010.blue")
-            .delay(delay)
             .attachTo(target)
             .scaleToObject(0.9)
+            .delay(delay)
             .zIndex(2)
             .waitUntilFinished(-1000)
 
             .effect()
             .file("jb2a.markers.bubble.02.loop.blue.0")
+            .attachTo(target)
             .scale(0.4)
             .fadeIn(300)
             .fadeOut(1000)
             .opacity(0.6)
-            .attachTo(target)
-            .mask(target)
             .playbackRate(0.9)
+            .mask(target)
             .persist()
             .name(`${target.document.name} Water Breathing`)
 
-            .thenDo(function () {
-                chrisPremades.helpers.createEffect(target.actor, effectData);
+            .thenDo(async () => {
+                await mba.createEffect(target.actor, effectData);
             })
 
             .play()

@@ -11,16 +11,24 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         return;
     }
     let multiAttackFeatureData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Bestial Spirit: Multiattack', false);
-    if (!multiAttackFeatureData) return;
+    if (!multiAttackFeatureData) {
+        ui.notifications.warn("Unable to find item in the compendium!! (Bestial Spirit: Multiattack)");
+        return;
+    }
     let attacks = Math.floor(workflow.castData.castLevel / 2);
-    multiAttackFeatureData.name = 'Multiattack (' + attacks + ' Attacks)';
+    multiAttackFeatureData.name = `Multiattack (${attacks} Attacks)`;
     let maulData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Bestial Spirit: Maul', false);
-    if (!maulData) return;
+    if (!maulData) {
+        ui.notifications.warn("Unable to find item in the compendium!! (Bestial Spirit: Maul)");
+        return;
+    }
     maulData.system.damage.parts[0][0] += ' + ' + workflow.castData.castLevel;
     let hpFormula;
     let name = `${workflow.token.document.name} Bestial Spirit`;
     let meleeAttackBonus = await new Roll(workflow.actor.system.bonuses.msak.attack + ' + 0', workflow.actor.getRollData()).roll({ 'async': true });
     let rangedAttackBonus = await new Roll(workflow.actor.system.bonuses.rsak.attack + ' + 0', workflow.actor.getRollData()).roll({ 'async': true });
+    console.log(meleeAttackBonus.total);
+    console.log(rangedAttackBonus.total);
     let updates = {
         'actor': {
             'name': name,
@@ -60,17 +68,21 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
+    /*
     let avatarImg = mba.getConfiguration(workflow.item, 'avatar-' + selection);
     let tokenImg = mba.getConfiguration(workflow.item, 'token-' + selection);
     if (avatarImg) updates.actor.img = avatarImg;
     if (tokenImg) {
         setProperty(updates, 'actor.prototypeToken.texture.src', tokenImg);
         setProperty(updates, 'token.texture.src', tokenImg);
-    }
+    }*/
     switch (selection) {
         case 'Air':
             let flybyData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Bestial Spirit: Flyby', false);
-            if (!flybyData) return;
+            if (!flybyData) {
+                ui.notifications.warn("Unable to find item in the compendium!! (Bestial Spirit: Flyby)");
+                return;
+            }
             updates.embedded.Item[flybyData.name] = flybyData;
             updates.actor.system.attributes.movement = {
                 'walk': 30,
@@ -85,7 +97,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             break;
         case 'Land':
             let packTacticsData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Bestial Spirit: Pack Tactics', false);
-            if (!packTacticsData) return;
+            if (!packTacticsData) {
+                ui.notifications.warn("Unable to find item in the compendium!! (Bestial Spirit: Pack Tactics)");
+                return;
+            }
             updates.embedded.Item[packTacticsData.name] = packTacticsData;
             updates.actor.system.attributes.movement = {
                 'walk': 30,
@@ -100,7 +115,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             break;
         case 'Water':
             let packTacticsData2 = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Bestial Spirit: Pack Tactics', false);
-            if (!packTacticsData2) return;
+            if (!packTacticsData2) {
+                ui.notifications.warn("Unable to find item in the compendium!! (Bestial Spirit: Pack Tactics)");
+                return;
+            }
             updates.embedded.Item[packTacticsData2.name] = packTacticsData2;
             updates.actor.system.attributes.movement = {
                 'walk': 30,

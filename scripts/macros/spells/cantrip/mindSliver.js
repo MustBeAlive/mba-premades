@@ -49,21 +49,28 @@ export async function mindSliver({ speaker, actor, token, character, item, args,
         .waitUntilFinished(-1200)
 
         .effect()
+        .file("jb2a.melee_generic.slashing.two_handed")
+        .attachTo(target)
+        .scaleToObject(2)
+        .spriteRotation(90)
+        .filter("ColorMatrix", { hue: 240 })
+
+        .effect()
         .file("jb2a.impact.004.dark_purple")
         .attachTo(target)
-        .delay(200)
         .scaleToObject(1.7)
-        .playbackRate(0.8)
+        .delay(400)
         .fadeOut(1000)
+        .playbackRate(0.8)
         .playIf(() => {
             return workflow.failedSaves.size
         })
 
         .effect()
         .file("jb2a.template_square.symbol.normal.stun.purple")
-        .delay(200)
         .attachTo(target)
-        .scaleToObject(1)
+        .scaleToObject(1.4)
+        .delay(200)
         .fadeIn(500)
         .fadeOut(1000)
         .mask()

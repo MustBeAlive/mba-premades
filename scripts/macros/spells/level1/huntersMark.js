@@ -107,8 +107,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         if (!targetToken) return;
         let targetActor = targetToken.actor;
         let targetEffect = mbaPremades.helpers.findEffect(targetActor, 'Marked');
-        if (!targetEffect) return;
-        await mbaPremades.helpers.removeEffect(targetEffect);
+        if (targetEffect) await mbaPremades.helpers.removeEffect(targetEffect);
     }
     let sourceEffectData = {
         'name': "Hunter's Mark",

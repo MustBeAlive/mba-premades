@@ -53,8 +53,8 @@ export async function greaterInvisibility({ speaker, actor, token, character, it
 
         .wait(1500)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
         })
 
         .play()

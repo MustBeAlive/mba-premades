@@ -1,3 +1,4 @@
+import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 import {queue} from "../../mechanics/queue.js";
 
@@ -61,16 +62,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 async function hook(workflow) {
     if (!workflow.token) return;
     if (workflow.targets.size != 1) return;
-    let validTypes = [
-        'mwak',
-        'rwak',
-        'msak',
-        'rsak'
-    ];
-    if (!validTypes.includes(workflow.item.system?.actionType)) return;
+    if (!constants.attacks.includes(workflow.item.system?.actionType)) return;
     let target = workflow.targets.first();
-    let targetEffect = mba.findEffect(target.actor, "Blur");
-    if (!targetEffect) return;
+    if (!mba.findEffect(target.actor, "Blur")) return;
     let blindsight = workflow.actor.system.attributes.senses.blindsight;
     let truesight = workflow.actor.system.attributes.senses.truesight;
     if (!blindsight && !truesight) return;

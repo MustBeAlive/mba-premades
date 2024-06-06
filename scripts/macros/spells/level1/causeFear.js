@@ -1,6 +1,29 @@
 import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
+async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
+	let targets = Array.from(workflow.targets);
+	for (let target of targets) {
+		let type = mba.raceOrType(target.actor);
+		if (type === 'undead' || type === 'construct') {
+			ChatMessage.create({
+				flavor: target.document.name + ' is unaffected by Cause Fear! (Target is undead/construct)',
+				speaker: ChatMessage.getSpeaker({ actor: workflow.actor })
+			});
+			await mba.createEffect(target.actor, constants.immunityEffectData);
+			continue;
+		}
+		if (mba.checkTrait(target.actor, 'ci', 'frightened')) {
+			ChatMessage.create({
+				flavor: target.document.name + ' is unaffected by Cause Fear! (target is immune to condition: Frightened)',
+				speaker: ChatMessage.getSpeaker({ actor: workflow.actor })
+			});
+			await mba.createEffect(target.actor, constants.immunityEffectData);
+			continue;
+		}
+	}
+}
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
 	let ammount = workflow.castData.castLevel;
 	if (workflow.targets.size > ammount) {
@@ -10,13 +33,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			await mba.removeCondition(workflow.actor, "Concentrating");
 			return;
 		}
-		let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
-		mba.updateTargets(newTargets);
-		if (Array.from(game.user.targets).length > ammount) {
+		let check = selection.inputs.filter(i => i != false);
+        if (check.length > ammount) {
             ui.notifications.warn("Too many targets selected, try again!");
-            await mba.removeCondition(workflow.actor, "Concentrating");
             return;
         }
+		let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
+		mba.updateTargets(newTargets);
 	}
 	await warpgate.wait(100);
 	let targets = Array.from(game.user.targets);
@@ -192,30 +215,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 	};
 }
 
-async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
-	let targets = Array.from(workflow.targets);
-	for (let target of targets) {
-		let type = mba.raceOrType(target.actor);
-		if (type === 'undead' || type === 'construct') {
-			ChatMessage.create({
-				flavor: target.document.name + ' is unaffected by Cause Fear! (Target is undead/construct)',
-				speaker: ChatMessage.getSpeaker({ actor: workflow.actor })
-			});
-			await mba.createEffect(target.actor, constants.immunityEffectData);
-			continue;
-		}
-		if (mba.checkTrait(target.actor, 'ci', 'frightened')) {
-			ChatMessage.create({
-				flavor: target.document.name + ' is unaffected by Cause Fear! (target is immune to condition: Frightened)',
-				speaker: ChatMessage.getSpeaker({ actor: workflow.actor })
-			});
-			await mba.createEffect(target.actor, constants.immunityEffectData);
-			continue;
-		}
-	}
-}
-
 export let causeFear = {
-	'item': item,
 	'cast': cast,
+	'item': item,
 }

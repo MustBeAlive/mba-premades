@@ -1,5 +1,5 @@
-2024/05/28-11:54:11.778 17fc Recovering log #1296
-2024/05/28-11:54:11.778 17fc Level-0 table #1298: started
-2024/05/28-11:54:11.800 17fc Level-0 table #1298: 2292 bytes OK
-2024/05/28-11:54:11.843 17fc Delete type=0 #1296
-2024/05/28-11:54:11.844 17fc Delete type=3 #1295
+2024/06/06-04:57:42.947 fec Recovering log #1343
+2024/06/06-04:57:42.947 fec Level-0 table #1345: started
+2024/06/06-04:57:42.969 fec Level-0 table #1345: 8414 bytes OK
+2024/06/06-04:57:43.019 fec Delete type=0 #1343
+2024/06/06-04:57:43.019 fec Delete type=3 #1342

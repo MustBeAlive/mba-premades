@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function tongues({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDel() {
@@ -25,7 +27,7 @@ export async function tongues({ speaker, actor, token, character, item, args, sc
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -52,7 +54,6 @@ export async function tongues({ speaker, actor, token, character, item, args, sc
 
         .thenDo(function () {
             for (let i = 0; i < offset.length; i++) {
-
                 new Sequence()
 
                     .effect()
@@ -73,7 +74,6 @@ export async function tongues({ speaker, actor, token, character, item, args, sc
                     .opacity(0.5)
 
                     .play()
-
             }
         })
 
@@ -96,8 +96,8 @@ export async function tongues({ speaker, actor, token, character, item, args, sc
         .zIndex(2)
         .waitUntilFinished(-1000)
 
-        .thenDo(function () {
-            chrisPremades.helpers.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
         })
 
         .effect()

@@ -9,12 +9,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			ui.notifications.warn('Failed to select targets, try again!')
 			return;
 		}
-		let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
-		mba.updateTargets(newTargets);
-		if (Array.from(game.user.targets).length > ammount) {
+		let check = selection.inputs.filter(i => i != false);
+        if (check.length > ammount) {
             ui.notifications.warn("Too many targets selected, try again!");
             return;
         }
+		let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
+		mba.updateTargets(newTargets);
 	}
 	await warpgate.wait(100);
 	let targets = Array.from(game.user.targets);

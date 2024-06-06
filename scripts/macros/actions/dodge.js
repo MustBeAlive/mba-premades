@@ -67,8 +67,8 @@ export async function dodge({ speaker, actor, token, character, item, args, scop
         .persist()
         .name(`${token.document.name} Dodge`)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
         })
 
         .play();

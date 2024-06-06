@@ -1,8 +1,8 @@
 import {mba} from "../../helperFunctions.js";
 
 export async function hide({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let rollResult = await workflow.actor.rollSkill('ste');
-    if (!rollResult) {
+    let hideRoll = await workflow.actor.rollSkill('ste');
+    if (!hideRoll) {
         ui.notifications.info("Roll canceled, try again!");
         return;
     }
@@ -30,7 +30,7 @@ export async function hide({ speaker, actor, token, character, item, args, scope
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
-        'description': `Stealth roll result: <b>${rollResult.total}</b>`,
+        'description': `Stealth roll result: <b>${hideRoll.total}</b>`,
         'flags': {
             'dae': {
                 'showIcon': true,
@@ -66,8 +66,8 @@ export async function hide({ speaker, actor, token, character, item, args, scope
         .persist()
         .name(`${token.document.name} Hide`)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
         })
 
         .play();

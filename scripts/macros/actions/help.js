@@ -69,7 +69,7 @@ export async function help({ speaker, actor, token, character, item, args, scope
 
         .effect()
         .file(animation)
-        .attachTo(target)
+        .attachTo(target, { followRotation: false })
         .scaleToObject(1.3 * target.document.texture.scaleX)
         .fadeIn(1000)
         .fadeOut(500)
@@ -78,8 +78,8 @@ export async function help({ speaker, actor, token, character, item, args, scope
         .persist()
         .name(`${target.document.name} Help`)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
         })
 
         .play();

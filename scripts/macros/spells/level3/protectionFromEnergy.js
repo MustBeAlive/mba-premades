@@ -1,48 +1,21 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function protectionFromEnergy({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let choices = [
-        ['Acid 🧪', 'acid'],
-        ['Cold ❄️', 'cold'],
-        ['Fire 🔥', 'fire'],
-        ['Lightning ⚡', 'lightning'],
-        ['Thunder ☁️', 'thunder']
+        ['Acid', 'Acid', "modules/mba-premades/icons/spells/level3/protection_from_energy_acid.webp"],
+        ['Cold', 'Cold', "modules/mba-premades/icons/spells/level3/protection_from_energy_cold.webp"],
+        ['Fire', 'Fire', "modules/mba-premades/icons/spells/level3/protection_from_energy_fire.webp"],
+        ['Lightning', 'Lightning', "modules/mba-premades/icons/spells/level3/protection_from_energy_lightning.webp"],
+        ['Thunder', 'Thunder', "modules/mba-premades/icons/spells/level3/protection_from_energy_thunder.webp"]
     ];
-    let selection = await chrisPremades.helpers.dialog('Choose damage type:', choices);
+    let selection = await mba.selectImage("Protection from Energy", choices, "Choose element:", "both");
     if (!selection) return;
-    let name;
-    let icon;
-    switch (selection) {
-        case 'acid': {
-            name = "Protection from Energy: Acid";
-            icon = "modules/mba-premades/icons/spells/level3/protection_from_energy_acid.webp";
-            break;
-        }
-        case 'cold': {
-            name = "Protection from Energy: Cold";
-            icon = "modules/mba-premades/icons/spells/level3/protection_from_energy_cold.webp";
-            break;
-        }
-        case 'fire': {
-            name = "Protection from Energy: Fire";
-            icon = "modules/mba-premades/icons/spells/level3/protection_from_energy_fire.webp";
-            break;
-        }
-        case 'lightning': {
-            name = "Protection from Energy: Lightning";
-            icon = "modules/mba-premades/icons/spells/level3/protection_from_energy_lightning.webp";
-            break;
-        }
-        case 'thunder': {
-            name = "Protection from Energy: Thunder";
-            icon = "modules/mba-premades/icons/spells/level3/protection_from_energy_thunder.webp";
-            break;
-        }
-    }
     const effectData = {
-        'name': name,
-        'icon': icon,
+        'name': `Protection from Energy: ${selection[0]}`,
+        'icon': selection[1],
         'origin': workflow.item.uuid,
-        'description': "You have resistance to " + selection + " damage.",
+        'description': `You have resistance to ${selection[0].toLowerCase()} damage for the duration.`,
         'duration': {
             'seconds': 3600
         },
@@ -50,7 +23,7 @@ export async function protectionFromEnergy({ speaker, actor, token, character, i
             {
                 'key': 'system.traits.dr.value',
                 'mode': 0,
-                'value': selection,
+                'value': selection[0].toLowerCase(),
                 'priority': 20
             }
         ],
@@ -64,5 +37,5 @@ export async function protectionFromEnergy({ speaker, actor, token, character, i
             }
         }
     }
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
+    await mba.createEffect(target.actor, effectData);
 }

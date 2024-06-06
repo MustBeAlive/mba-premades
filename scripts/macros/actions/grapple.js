@@ -8,8 +8,7 @@ export async function grapple({ speaker, actor, token, character, item, args, sc
         ui.notifications.info('Target is too big to attempt grapple!');
         return;
     }
-    let effect = mba.findEffect(target.actor, 'Incapacitated');
-    if (effect) skipCheck = true;
+    if (mba.findEffect(target.actor, 'Incapacitated')) skipCheck = true;
     if (!skipCheck) {
         let options = [
             [`Acrobatics (${target.actor.system.skills.acr.total})`, 'acr'],
@@ -44,8 +43,8 @@ export async function grapple({ speaker, actor, token, character, item, args, sc
     
         .wait(150)
     
-        .thenDo(function () {
-            mba.addCondition(target.actor, 'Grappled', false, workflow.item.uuid);
+        .thenDo(async () => {
+            await mba.addCondition(target.actor, 'Grappled', false, workflow.item.uuid);
         })
     
         .effect()

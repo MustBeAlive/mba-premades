@@ -1,15 +1,16 @@
 import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
-async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
+async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) return;
     new Sequence()
 
         .wait(500)
 
         .effect()
         .file(`jb2a.magic_signs.circle.02.conjuration.complete.dark_yellow`)
-        .atLocation(template)
+        .attachTo(template)
         .size(2.2, { gridUnits: true })
         .fadeIn(600)
         .rotateIn(180, 600, { ease: "easeOutCubic" })
@@ -31,7 +32,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.water_splash.circle.01.black")
-        .atLocation(template)
+        .attachTo(template)
         .size(1.5, { gridUnits: true })
         .fadeIn(500)
         .fadeOut(1000)
@@ -42,7 +43,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file('jb2a.grease.dark_brown')
-        .atLocation(template)
+        .attachTo(template)
         .size(2.2, { gridUnits: true })
         .delay(100)
         .fadeIn(5000)
@@ -56,29 +57,41 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .name(`Grease`)
 
         .play()
-}
 
-async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let template = canvas.scene.collections.templates.get(workflow.templateId);
-    if (!template) return;
     await template.update({
         'flags': {
             'mba-premades': {
                 'template': {
-                    'name': 'grease',
                     'castLevel': workflow.castData.castLevel,
+                    'itemUuid': workflow.item.uuid,
                     'saveDC': mba.getSpellDC(workflow.item),
-                    'macroName': 'grease',
                     'templateUuid': template.uuid,
-                    'itemUuid': workflow.item.uuid
                 }
             }
         }
     });
     if (!workflow.failedSaves.size) return;
-    for (let i of Array.from(workflow.failedSaves)) {
-        await mba.addCondition(i.actor, 'Prone');
+    for (let i of Array.from(workflow.failedSaves)) await mba.addCondition(i.actor, 'Prone');
+}
+
+async function enter(template, token) {
+    let trigger = template.flags['mba-premades']?.template;
+    if (!trigger) return;
+    await grease.trigger(token.document, trigger);
+}
+
+async function end(template, token) {
+    if (mba.inCombat()) {
+        let prev = game.combat.turn;
+        if (prev != 0) prev = game.combat.turn - 1;
+        else if (prev === 0) prev = game.combat.turns.length - 1;
+        let turn = game.combat.round + '-' + prev;
+        let lastTurn = template.flags['mba-premades']?.spell?.grease?.[token.id]?.turn;
+        if (turn === lastTurn) return;
     }
+    let trigger = template.flags['mba-premades']?.template;
+    if (!trigger) return;
+    await grease.trigger(token.document, trigger);
 }
 
 async function trigger(token, trigger) {
@@ -96,8 +109,8 @@ async function trigger(token, trigger) {
     if (!originItem) return;
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Grease: Fall', false);
     if (!featureData) return;
-    featureData.system.save.dc = trigger.saveDC;
     delete featureData._id;
+    featureData.system.save.dc = trigger.saveDC;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': originItem.actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([token.uuid]);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
@@ -105,35 +118,9 @@ async function trigger(token, trigger) {
     await mba.addCondition(token.actor, "Prone");
 }
 
-async function end(template, token) {
-    if (mba.inCombat()) {
-        let prev = game.combat.turn;
-        if (prev != 0) prev = game.combat.turn - 1;
-        else if (prev === 0) prev = game.combat.turns.length - 1;
-        let turn = game.combat.round + '-' + prev;
-        let lastTurn = template.flags['mba-premades']?.spell?.grease?.[token.id]?.turn;
-        if (turn === lastTurn) return;
-    }
-    let trigger = template.flags['mba-premades']?.template;
-    if (!trigger) return;
-    await grease.trigger(token.document, trigger);
-}
-
-async function enter(template, token) {
-    let trigger = template.flags['mba-premades']?.template;
-    if (!trigger) return;
-    await grease.trigger(token.document, trigger);
-}
-
-async function del() {
-    await Sequencer.EffectManager.endEffects({ name: `Grease` })
-}
-
 export let grease = {
-    'cast': cast,
     'item': item,
+    'enter': enter,
     'end': end,
     'trigger': trigger,
-    'enter': enter,
-    'del': del
 }

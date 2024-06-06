@@ -1,21 +1,19 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
 
 export async function magicWeapon({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let weapons = target.actor.items.filter(i => i.type === 'weapon' && i.system.properties.mgc != true && i.system.equipped && i.name != "Unarmed Strike");
     if (!weapons.length) {
-        ui.notifications.warn('Target has no valid non-magical equipped weapons!');
+        ui.notifications.warn('Target has no valid non-magical weapons equipped!');
         await mba.removeCondition(workflow.actor, "Concentrating");
         return;
     }
     let selection;
     if (weapons.length === 1) selection = [weapons[0]];
-    else {
-        selection = await mba.selectDocument(workflow.item.name, weapons);
-        if (!selection) {
-            await mba.removeCondition(workflow.actor, "Concentrating");
-            return;
-        }
+    else selection = await mba.selectDocument(workflow.item.name, weapons);
+    if (!selection) {
+        await mba.removeCondition(workflow.actor, "Concentrating");
+        return;
     }
     let castLevel = workflow.castData.castLevel;
     let bonus = 1;
@@ -34,7 +32,10 @@ export async function magicWeapon({ speaker, actor, token, character, item, args
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
-        'description': `Until the spell ends, one weapon of caster's choosing becomes a magic weapon with a +${bonus} bonus to attack rolls and damage rolls.`,
+        'description': `
+            <p>Until the spell ends, <b>${selection[0].name}</b> becomes a magic weapon.</p>
+            <p>It gains <b>+${bonus}</b> bonus to attack rolls and damage rolls.</p>
+        `,
         'duration': {
             'seconds': 3600
         },
@@ -105,8 +106,8 @@ export async function magicWeapon({ speaker, actor, token, character, item, args
         .persist()
         .name(`${target.document.name} Magic Weapon`)
 
-        .thenDo(function () {
-            warpgate.mutate(target.document, updates, {}, options);
+        .thenDo(async () => {
+            await warpgate.mutate(target.document, updates, {}, options);
         })
 
         .play()

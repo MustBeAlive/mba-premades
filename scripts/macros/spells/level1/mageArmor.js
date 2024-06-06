@@ -39,27 +39,27 @@ export async function mageArmor({ speaker, actor, token, character, item, args, 
         .effect()
         .file("jb2a.energy_field.01.blue")
         .attachTo(target)
+        .scaleToObject(2 * target.document.texture.scaleX)
+        .duration(10000)
         .scaleIn(0, 3500, { ease: "easeOutBack" })
         .scaleOut(0, 3500, { ease: "easeInSine" })
-        .tint("#1fdaff")
-        .scaleToObject(2 * target.document.texture.scaleX)
-        .belowTokens()
         .playbackRate(0.9)
-        .duration(10000)
+        .belowTokens()
+        .tint("#1fdaff")
         .name(`${target.document.name} Mage Armor`)
 
         .effect()
         .file("jb2a.energy_field.02.below.blue")
-        .delay(3500)
         .attachTo(target)
+        .scaleToObject(1.55 * target.document.texture.scaleX)
+        .delay(3500)
         .fadeIn(1000)
         .fadeOut(1000)
-        .scaleToObject(1.55 * target.document.texture.scaleX)
         .playbackRate(0.9)
         .name(`${target.document.name} Mage Armor`)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
         })
 
         .play()

@@ -5,34 +5,10 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     let template = canvas.scene.collections.templates.get(workflow.templateId);
     new Sequence()
 
-        .effect()
-        .atLocation(token)
-        .file(`jb2a.magic_signs.circle.02.conjuration.loop.yellow`)
-        .scaleToObject(1.25)
-        .rotateIn(180, 600, { ease: "easeOutCubic" })
-        .scaleIn(0, 600, { ease: "easeOutCubic" })
-        .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-        .belowTokens()
-        .fadeOut(2000)
-        .zIndex(0)
+        .wait(500)
 
         .effect()
-        .atLocation(token)
-        .file(`jb2a.magic_signs.circle.02.conjuration.complete.dark_yellow`)
-        .scaleToObject(1.25)
-        .rotateIn(180, 600, { ease: "easeOutCubic" })
-        .scaleIn(0, 600, { ease: "easeOutCubic" })
-        .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-        .belowTokens(true)
-        .filter("ColorMatrix", { saturate: -1, brightness: 2 })
-        .filter("Blur", { blurX: 5, blurY: 10 })
-        .zIndex(1)
-        .duration(1200)
-        .fadeIn(200, { ease: "easeOutCirc", delay: 500 })
-        .fadeOut(300, { ease: "linear" })
-
-        .effect()
-        .atLocation(template)
+        .attachTo(template)
         .file(`jb2a.magic_signs.circle.02.conjuration.complete.dark_yellow`)
         .size(4.2, { gridUnits: true })
         .fadeIn(600)
@@ -42,81 +18,81 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .belowTokens()
 
         .effect()
+        .attachTo(token)
         .file("jb2a.particles.outward.white.01.02")
-        .scaleIn(0, 500, { ease: "easeOutQuint" })
-        .delay(500)
-        .fadeOut(1000)
-        .atLocation(token)
-        .duration(1000)
         .size(1.75, { gridUnits: true })
+        .delay(500)
+        .duration(1000)
+        .fadeOut(1000)
+        .scaleIn(0, 500, { ease: "easeOutQuint" })
         .animateProperty("spriteContainer", "position.y", { from: 0, to: -0.5, gridUnits: true, duration: 1000 })
         .zIndex(1)
         .waitUntilFinished(-500)
 
         .effect()
         .file("jb2a.markers.light_orb.loop.white")
-        .atLocation(template)
-        .scaleIn(0, 1500, { ease: "easeOutCubic" })
-        .fadeIn(500)
+        .attachTo(template)
         .duration(2500)
+        .fadeIn(500)
+        .scaleIn(0, 1500, { ease: "easeOutCubic" })
         .belowTokens()
         .zIndex(2)
         .size(2, { gridUnits: true })
 
         .effect()
         .file("jb2a.shield_themed.above.eldritch_web.01.dark_green")
-        .atLocation(template)
-        .scaleIn(0, 1500, { ease: "easeOutCubic" })
-        .fadeIn(500)
+        .attachTo(template)
+        .size(0.9, { gridUnits: true })
         .duration(2500)
+        .fadeIn(500)
+        .scaleIn(0, 1500, { ease: "easeOutCubic" })
         .belowTokens()
         .zIndex(2.1)
-        .size(0.9, { gridUnits: true })
         .opacity(0.5)
         .filter("ColorMatrix", { brightness: 0 })
 
         .effect()
         .file("jb2a.shield_themed.below.eldritch_web.01.dark_green")
-        .atLocation(template)
+        .attachTo(template)
+        .size(0.9, { gridUnits: true })
+        .duration(2500)
+        .fadeIn(500)
         .scaleIn(0, 1500, { ease: "easeOutCubic" })
         .scaleOut(0, 1500, { ease: "linear" })
-        .fadeIn(500)
-        .duration(2500)
         .belowTokens()
         .zIndex(1.9)
-        .size(0.9, { gridUnits: true })
         .filter("ColorMatrix", { brightness: 0 })
         .opacity(0.5)
         .waitUntilFinished(-200)
 
         .effect()
         .file("jb2a.impact.004.yellow")
-        .atLocation(template)
+        .attachTo(template)
         .size(6, { gridUnits: true })
         .scaleIn(0, 200, { ease: "easeOutCubic" })
         .filter("ColorMatrix", { saturate: -1 })
 
         .effect()
         .file('jb2a.web.01')
-        .atLocation(template)
-        .belowTokens()
+        .attachTo(template)
+        .size(4.3, { gridUnits: true })
         .fadeIn(1500)
-        .zIndex(1)
         .fadeOut(1500)
         .scaleIn(0, 500, { ease: "easeOutCubic" })
-        .size(4.3, { gridUnits: true })
+        .zIndex(1)
+        .belowTokens()
         .persist()
         .name(`Web`)
 
         .effect()
         .file('jb2a.web.01')
-        .atLocation(template)
-        .opacity(0.3)
+        .attachTo(template)
+        .size(4.3, { gridUnits: true })
         .fadeIn(1500)
-        .zIndex(1)
         .fadeOut(1500)
         .scaleIn(0, 500, { ease: "easeOutCubic" })
-        .size(4.3, { gridUnits: true })
+        .opacity(0.3)
+        .zIndex(1)
         .persist()
         .name(`Web`)
 
@@ -130,13 +106,11 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'mba-premades': {
                 'template': {
-                    'name': 'web',
                     'castLevel': workflow.castData.castLevel,
-                    'saveDC': mba.getSpellDC(workflow.item),
-                    'macroName': 'web',
-                    'templateUuid': template.uuid,
                     'icon': workflow.item.img,
-                    'itemUuid': workflow.item.uuid
+                    'itemUuid': workflow.item.uuid,
+                    'saveDC': mba.getSpellDC(workflow.item),
+                    'templateUuid': template.uuid,
                 }
             }
         }
@@ -178,6 +152,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         }
     };
     for (let i of Array.from(workflow.failedSaves)) await mba.createEffect(i.actor, effectData);
+}
+
+async function enter(template, token) {
+    let trigger = template.flags['mba-premades']?.template;
+    if (!trigger) return;
+    await web.trigger(token.document, trigger);
 }
 
 async function trigger(token, trigger) {
@@ -236,7 +216,6 @@ async function trigger(token, trigger) {
                 }
             }
         }
-
     };
     let newEffect = await mba.createEffect(token.actor, effectData);
     let concData = originItem.actor.getFlag("midi-qol", "concentration-data.removeUuids");
@@ -244,20 +223,9 @@ async function trigger(token, trigger) {
     await originItem.actor.setFlag("midi-qol", "concentration-data.removeUuids", concData);
 }
 
-async function enter(template, token) {
-    let trigger = template.flags['mba-premades']?.template;
-    if (!trigger) return;
-    await web.trigger(token.document, trigger);
-}
-
-async function del() {
-    await Sequencer.EffectManager.endEffects({ name: `Web` })
-}
-
 export let web = {
     'cast': cast,
     'item': item,
-    'trigger': trigger,
     'enter': enter,
-    'del': del
+    'trigger': trigger,
 }

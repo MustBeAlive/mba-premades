@@ -1,5 +1,5 @@
-import {socket} from "./module.js";
-import {summonEffects} from "./macros/animations/summonEffects.js";
+import { socket } from "./module.js";
+import { summonEffects } from "./macros/animations/summonEffects.js";
 
 export let mba = {
     'addCondition': async function _addCondition(actor, name, overlay, origin) {
@@ -186,8 +186,8 @@ export let mba = {
         let lights = canvas.effects.lightSources.filter(src => !(src instanceof GlobalLightSource) && src.shape.contains(...c));
         if (!lights.length) return 'dark';
         let inBright = lights.some(light => {
-            let {'data': {x, y}, ratio} = light;
-            let bright = ClockwiseSweepPolygon.create({'x': x, 'y': y}, {
+            let { 'data': { x, y }, ratio } = light;
+            let bright = ClockwiseSweepPolygon.create({ 'x': x, 'y': y }, {
                 'type': 'light',
                 'boundaryShapes': [new PIXI.Circle(x, y, ratio * light.shape.config.radius)]
             });
@@ -645,7 +645,7 @@ export let mba = {
         while (hitsWall) {
             knockBackFactor = distance / canvas.dimensions.distance;
             newCenter = ray.project(1 + ((canvas.dimensions.size * knockBackFactor) / ray.distance));
-            hitsWall = targetToken.checkCollision(newCenter, {'origin': ray.A, 'type': 'move', 'mode': 'any'});
+            hitsWall = targetToken.checkCollision(newCenter, { 'origin': ray.A, 'type': 'move', 'mode': 'any' });
             if (hitsWall) {
                 distance += distance > 0 ? -5 : 5;
                 if (distance === 0) {
@@ -710,6 +710,10 @@ export let mba = {
     'remoteRollItem': async function _remoteRollItem(item, config, options, userId) {
         if (mba.firstOwner(item.actor).id === userId) return await mba.rollItem(item, config, options);
         return await socket.executeAsUser('rollItem', userId, item.uuid, config, options);
+    },
+    'remoteSelectTarget': async function _remoteSelectTarget(userId, title, buttons, targets, returnUuid, type, selectOptions, fixTargets, description, coverToken, reverseCover, displayDistance) {
+        if (userId === game.user.id) return await mba.selectTarget(title, buttons, targets, returnUuid, type, selectOptions, fixTargets, description, coverToken, reverseCover, displayDistance);
+        return await socket.executeAsUser('remoteSelectTarget', userId, title, buttons, targets.map(i => i.document.uuid), returnUuid, type, selectOptions, fixTargets, description, coverToken?.document?.uuid, reverseCover, displayDistance);
     },
     'removeCondition': async function _removeCondition(actor, name) {
         await game.dfreds.effectInterface.removeEffect(
@@ -937,7 +941,7 @@ export let mba = {
     'selectImage': async function _selectImage(title, images, content, type) {
         return await new Promise(async (resolve) => {
             if (content) content = "<center>" + content + "</center>";
-            let options = images.map(([name, value, path]) => ({ name, value, path}));
+            let options = images.map(([name, value, path]) => ({ name, value, path }));
             let buttons = {},
                 dialog;
             for (let i of options) {
@@ -973,7 +977,7 @@ export let mba = {
             })
         });
     },
-    'selectTarget': async function _selectTarget(title, buttons, targets, returnUuid, type, selectOptions, fixTargets, description, coverToken, reverseCover) {
+    'selectTarget': async function _selectTarget(title, buttons, targets, returnUuid, type, selectOptions, fixTargets, description, coverToken, reverseCover, displayDistance) {
         let generatedInputs = [];
         let isFirst = true;
         let number = 1;
@@ -993,6 +997,10 @@ export let mba = {
                 name += ' [' + mba.checkCover(coverToken, i, undefined, true) + ']';
             } else if (coverToken) {
                 name += ' [' + mba.checkCover(i, coverToken, undefined, true) + ']';
+            }
+            if (displayDistance && coverToken) {
+                let distance = mba.getDistance(coverToken, i);
+                name += ' [' + +distance.toFixed(2) + ' ' + canvas.scene.grid.units + ' ]';
             }
             let texture = i.document.texture.src;
             let html = `<img src="` + texture + `" id="` + i.id + `" style="width:50px;height:50px;vertical-align:middle;"><span> ` + name + `</span>`;
@@ -1047,7 +1055,7 @@ export let mba = {
                     t.style.flexFlow = 'row-reverse';
                     t.style.alignItems = 'center';
                     t.style.justifyContent = 'flex-end';
-                    if (type === 'one') t.addEventListener('click', function () { t.getElementsByTagName('input')[0].checked = true });
+                    if (type === 'one') t.addEventListener('click', function () {t.getElementsByTagName('input')[0].checked = true;});
                 }
             }
             let ths = html[0].getElementsByTagName('th');
@@ -1087,7 +1095,11 @@ export let mba = {
         let selection = await warpgate.menu({ 'inputs': generatedInputs, 'buttons': buttons }, config);
         if (!selection.buttons) return { 'buttons': false };
         if (description) selection.inputs?.shift();
-        if (type != 'number' && type != 'select') {
+        if (type == 'number') {
+            for (let i = 0; i < (!fixTargets ? selection.inputs.length : selection.inputs.length - 1); i++) {
+                if (!isNaN(selection.inputs[i])) selection.inputs[i] = Math.max(0, selection.inputs[i]);
+            }
+        } else if (type != 'select') {
             for (let i = 0; i < (!fixTargets ? selection.inputs.length : selection.inputs.length - 1); i++) {
                 if (selection.inputs[i]) selection.inputs[i] = generatedInputs[description ? i + 1 : i].value;
             }

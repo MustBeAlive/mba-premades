@@ -5,6 +5,7 @@ import {critFumble} from './macros/animations/critFumble.js';
 import {deathSaves} from './macros/mechanics/deathSaves.js';
 import {itemDC, noEffectAnimationCreate, noEffectAnimationDelete} from './macros/mechanics/activeEffect.js';
 import {macros, onHitMacro} from './macros.js';
+import {patchSaves, patchSkills} from './patching.js';
 import {removeV10EffectsBlind} from './macros/mechanics/blindness.js';
 import {removeV10EffectsInvisible} from './macros/mechanics/invisibility.js';
 import {tashaSummon} from './macros/generic/tashaSummon.js';
@@ -153,6 +154,32 @@ export function registerSettings() {
         'default': true
     });
     addMenuSetting('Show Names', 'General');
+
+    game.settings.register(moduleName, 'Save Patching', {
+        'name': 'Save Patching',
+        'hint': 'Эта настройка позволяет макросам модифицировать спасброски.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            patchSaves(value);
+        }
+    });
+    addMenuSetting('Save Patching', 'General');
+
+    game.settings.register(moduleName, 'Skill Patching', {
+        'name': 'Skill Patching',
+        'hint': 'Эта настройка позволяет макросам модифицировать проверки навыков.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            patchSkills(value);
+        }
+    });
+    addMenuSetting('Skill Patching', 'General');
 
     game.settings.register(moduleName, 'Cast Animations', {
         'name': 'Анимации Заклинаний',
@@ -331,6 +358,23 @@ export function registerSettings() {
         }
     });
     addMenuSetting('trs_color', 'Animations');
+
+    game.settings.register(moduleName, 'Elusive', {
+        'name': 'Rogue: Elusive',
+        'hint': 'Включает автоматизацию способности Elusive через Midi-Qol hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preAttackRoll', macros.elusive.hook);
+            } else {
+                Hooks.off('midi-qol.preAttackRoll', macros.elusive.hook);
+            }
+        }
+    });
+    addMenuSetting('Elusive', 'Class Features');
 
     game.settings.register(moduleName, 'Strength of the Grave', {
         'name': 'Sorcerer (Shadow): Strength of the Grave',
@@ -635,6 +679,25 @@ export function registerSettings() {
         }
     });
     addMenuSetting('True Strike', 'Spells');
+
+    game.settings.register(moduleName, 'Warding Bond', {
+        'name': 'Warding Bond',
+        'hint': 'Включает автоматизацию заклинания Warding Bond через Midi-Qol hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value && game.user.isGM) {
+                Hooks.on('updateToken', macros.wardingBond.moveTarget);
+                Hooks.on('updateToken', macros.wardingBond.moveSource);
+            } else if (game.user.isGM) {
+                Hooks.off('updateToken', macros.wardingBond.moveTarget);
+                Hooks.off('updateToken', macros.wardingBond.moveSource);
+            }
+        }
+    });
+    addMenuSetting('Warding Bond', 'Spells');
 
     game.settings.register(moduleName, 'Tasha Actors', {
         'name': 'Keep Summon Actors Updated',

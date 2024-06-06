@@ -63,9 +63,9 @@ export async function guidance({ speaker, actor, token, character, item, args, s
         .persist()
         .name(`${target.document.name} Guidance`)
 
-        .thenDo(function () {
-            if (effect) mba.removeEffect(effect); //HB, target cannot benefit from more than 1 instance of "Guidance"
-            mba.createEffect(target.actor, effectData)
+        .thenDo(async () => {
+            if (effect) await mba.removeEffect(effect); //HB, target cannot benefit from more than 1 instance of "Guidance"
+            await mba.createEffect(target.actor, effectData)
         })
 
         .play()

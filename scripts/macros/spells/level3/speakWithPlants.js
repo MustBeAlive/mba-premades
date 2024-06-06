@@ -1,3 +1,5 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function speakWithPlants({ speaker, actor, token, character, item, args, scope, workflow }) {
     const effectData = {
         'name': workflow.item.name,
@@ -40,27 +42,29 @@ export async function speakWithPlants({ speaker, actor, token, character, item, 
 
         .effect()
         .file("jb2a.particles.inward.greenyellow.01.05")
-        .delay(1000)
         .attachTo(token)
         .size(2, { gridUnits: true })
+        .delay(1000)
         .duration(8700)
         .fadeIn(1500)
         .fadeOut(1500)
-        //.scaleIn(0, 1000, { ease: "easeOutCubic" })
         .belowTokens()
 
         .effect()
         .file("jb2a.magic_signs.rune.02.complete.06.green")
-        .delay(1000)
         .attachTo(token)
         .scaleToObject(1.2)
+        .delay(1000)
+        .duration(8700)
+        .fadeOut(1500)
         .scaleIn(0, 3000, { ease: "easeOutCubic" })
         .zIndex(0.1)
-        .fadeOut(1500)
-        .duration(8700)
+
+        .wait(1500)
+
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData); 
+        })
 
         .play()
-
-    await warpgate.wait(1000);
-    await chrisPremades.helpers.createEffect(workflow.actor, effectData);
 }

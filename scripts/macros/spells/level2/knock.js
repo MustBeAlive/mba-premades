@@ -13,8 +13,7 @@ export async function knock({ speaker, actor, token, character, item, args, scop
         rememberControlled: true,
     };
     let position = await warpgate.crosshairs.show(config);
-    let effectLocation = position
-    let effectRotation = 0;
+    let effectLocation = position;
     let effectSize = 0.25;
     const captureArea = {
         x: position.x,
@@ -31,16 +30,11 @@ export async function knock({ speaker, actor, token, character, item, args, scop
     const doorX = (lockedDoor.c[0] + lockedDoor.c[2]) / 2;
     const doorY = (lockedDoor.c[1] + lockedDoor.c[3]) / 2;
     effectLocation = { x: doorX, y: doorY };
-
-    //Determine rotation of the door
-    const slope = (lockedDoor.c[3] - lockedDoor.c[1]) / (lockedDoor.c[2] - lockedDoor.c[0]);
-    const angleRadians = Math.atan(slope);
-    effectRotation = angleRadians * (180 / Math.PI);
     effectSize = lockedDoor._object.doorControl.hitArea.width / canvas.grid.size;
-
-    let updates = { 'ds': 0 };
     let options = [["Yes, door can be opened", "yes"], ["No, deny request", "no"]];
     let selection = await mba.remoteDialog("Knock", options, game.users.activeGM.id, `<b>${workflow.token.document.name}</b> attempts cast knock on the door:`);
+    if (!selection) selection = "yes";
+    let updates = { 'ds': 0 };
 
     new Sequence()
 
@@ -48,26 +42,26 @@ export async function knock({ speaker, actor, token, character, item, args, scop
         .file("icons/svg/padlock.svg")
         .atLocation(effectLocation)
         .size(effectSize, { gridUnits: true })
+        .duration(1700)
+        .fadeIn(500)
         .opacity(1)
         .filter("Glow", { color: 0xdabc25, innerStrength: 1, knockout: true })
-        .fadeIn(500)
         .aboveLighting()
         .xray()
-        .duration(1700)
 
         .effect()
         .file("jb2a.markers.chain.spectral_standard.complete.02.blue")
         .atLocation(effectLocation)
         .size(effectSize + 0.8, { gridUnits: true })
+        .duration(1700)
+        .scaleIn(0, 250, { ease: "easeOutCubic" })
+        .startTime(5500)
         .spriteRotation(-90)
         .aboveLighting()
         .filter("ColorMatrix", { hue: 230 })
         .xray()
-        .scaleIn(0, 250, { ease: "easeOutCubic" })
-        .startTime(5500)
         .randomRotation()
         .zIndex(1)
-        .duration(1700)
 
         .wait(1000)
 
@@ -90,21 +84,19 @@ export async function knock({ speaker, actor, token, character, item, args, scop
 
         .effect()
         .file("jb2a.particles.outward.white.01.03")
-        .scaleIn(0, 500, { ease: "easeOutQuint" })
-        .fadeOut(1500)
         .atLocation(position)
-        .duration(1500)
         .size(3, { gridUnits: true })
+        .duration(1500)
+        .fadeOut(1500)
+        .scaleIn(0, 500, { ease: "easeOutQuint" })
         .animateProperty("sprite", "position.y", { from: 0, to: 0.1, duration: 1500, gridUnits: true })
         .zIndex(5)
 
         .canvasPan()
         .shake({ duration: 500, strength: 2, rotation: false, fadeOut: 500 })
 
-        .thenDo(function () {
-            if (selection === "yes") {
-                mba.updateDoc(lockedDoor, updates);
-            }
+        .thenDo(async () => {
+            if (selection === "yes") mba.updateDoc(lockedDoor, updates);
         })
 
         .play()

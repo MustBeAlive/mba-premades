@@ -46,8 +46,8 @@ export async function dash({ speaker, actor, token, character, item, args, scope
 
         .wait(750)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
         })
 
         .play();

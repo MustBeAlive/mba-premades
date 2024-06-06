@@ -1,28 +1,74 @@
 import {mba} from "../../../helperFunctions.js";
 
 export async function crownOfMadness({ speaker, actor, token, character, item, args, scope, workflow }) {
-	if (!workflow.failedSaves.size) return;
 	let target = workflow.targets.first();
+	new Sequence()
+
+		.effect()
+		.file("animated-spell-effects-cartoon.level 01.bless.blue")
+		.atLocation(target, { randomOffset: 1.2, gridUnits: true })
+		.scaleToObject(0.5)
+		.repeats(8, 100, 100)
+		.filter("ColorMatrix", { saturate: 1, hue: 80 })
+		.zIndex(1)
+
+		.effect()
+		.file("animated-spell-effects-cartoon.cantrips.mending.purple")
+		.atLocation(target)
+		.scaleToObject(3)
+		.opacity(0.75)
+		.filter("ColorMatrix", { saturate: 1, brightness: 1.3, hue: -5 })
+		.zIndex(0)
+		.waitUntilFinished(-500)
+
+		.effect()
+		.file("jb2a.impact.002.pinkpurple")
+		.atLocation(target)
+		.scaleToObject(2)
+		.delay(300)
+		.opacity(1)
+		.filter("ColorMatrix", { hue: 6 })
+		.zIndex(0)
+
+		.effect()
+		.file("jb2a.particles.inward.white.02.03")
+		.atLocation(target)
+		.size(1.75, { gridUnits: true })
+		.delay(300)
+		.duration(1000)
+		.fadeOut(1000)
+		.scaleIn(0, 500, { ease: "easeOutQuint" })
+		.animateProperty("spriteContainer", "position.y", { from: 0, to: -0.5, gridUnits: true, duration: 1000 })
+		.zIndex(1)
+
+		.effect()
+		.file("animated-spell-effects-cartoon.magic.impact.01")
+		.atLocation(target)
+		.scaleToObject(2)
+		.opacity(1)
+		.filter("ColorMatrix", { saturate: 1, brightness: 1.3 })
+		.zIndex(0)
+		.belowTokens()
+
+		.play();
+
+	if (!workflow.failedSaves.size) return;
 	let effect = await mba.findEffect(workflow.actor, 'Concentrating');
 	if (mba.raceOrType(target.actor) != 'humanoid') {
-		ui.notifications.info(target.document.name + ' is unaffected by Crown of Madness! (target is not humanoid)');
+		ui.notifications.info(`${target.document.name} is unaffected by Crown of Madness! (not humanoid)`);
 		await mba.removeCondition(workflow.actor, 'Concentrating');
 		return;
 	}
 	if (mba.checkTrait(target.actor, 'ci', 'charmed')) {
-		ui.notifications.info(target.document.name + ' is unaffected by Crown of Madness! (target is immune to condition: Charmed)');
+		ui.notifications.info(`${target.document.name} is unaffected by Crown of Madness! (immune to Charmed condition)`);
 		await mba.removeCondition(workflow.actor, 'Concentrating');
 		return;
 	}
 	async function effectMacroCaster() {
 		await warpgate.wait(100);
-		let choices = [
-			['Yes!', 'yes'],
-			['No, stop concentrating!', 'no']
-		];
+		let choices = [['Yes!', 'yes'], ['No, stop concentrating!', 'no']];
 		let selection = await mbaPremades.helpers.dialog("Crown of Madness", choices, `<b>Use action to maintain Crown of Madness?</b>`);
-		if (!selection) return;
-		if (selection === "yes") return;
+		if (!selection || selection === "yes") return;
 		await mbaPremades.helpers.removeCondition(actor, 'Concentrating');
 	}
 	let updates = {
@@ -36,18 +82,13 @@ export async function crownOfMadness({ speaker, actor, token, character, item, a
 	}
 	await mba.updateEffect(effect, updates)
 	async function effectMacroStart() {
-		await new Dialog({
-			title: "Crown of Madness",
-			content: `
-				<p>You must use your action to make a melee attack against a creature other than yourself before moving (caster chooses the creature).</p>
-				<p>You can act normally if caster refuses to choose any creature or if none are within your reach.</p>
-			`,
-			buttons: {
-				ok: {
-					label: "Ok",
-				}
-			}
-		}).render(true);
+		let originItem = await fromUuid(effect.origin);
+		let originName = originItem.actor.prototypeToken.name;
+		await mbaPremades.helpers.dialog("Crown of Madness", [["Ok!", "ok"]], `
+			<p>You must use your action to make a melee attack against a creature other than yourself before moving.</p>
+			<p>(<b>${originName}</b> chooses the creature)</p>
+			<p>You can act normally if <b>${originName}</b> refuses to choose any creature or if none are within your reach.</p>
+		`);
 	}
 	async function effectMacroDel() {
 		await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Crown of Madness`, object: token })
@@ -56,7 +97,11 @@ export async function crownOfMadness({ speaker, actor, token, character, item, a
 		'name': workflow.item.name,
 		'icon': workflow.item.img,
 		'origin': workflow.item.uuid,
-		'description': "You are affected by Crown of Madness. On the start of each of your turns, you must use your action to make a melee attack against a creature other than yourself before moving (caster chooses the creature). You can act normally if caster refuses to choose any creature or if none are within your reach.",
+		'description': `
+			<p>You are affected by Crown of Madness.</p>
+			<p>On the start of each of your turns, you must use your action to make a melee attack against a creature other than yourself before moving (<b>${workflow.token.document.name}</b> chooses the creature).</p>
+			<p>You can act normally if <b>${workflow.token.document.name}</b> refuses to choose any creature or if none are within your reach.</p>
+		`,
 		'duration': {
 			'seconds': 60
 		},
@@ -64,7 +109,7 @@ export async function crownOfMadness({ speaker, actor, token, character, item, a
 			{
 				'key': 'flags.midi-qol.OverTime',
 				'mode': 0,
-				'value': 'turn=end, saveAbility=wis, saveDC=' + mba.getSpellDC(workflow.item) + ', saveMagic=true, name=Crown of Madness: Turn End',
+				'value': `turn=end, saveAbility=wis, saveDC=${mba.getSpellDC(workflow.item)}, saveMagic=true, name=Crown of Madness: Turn End`,
 				'priority': 20
 			},
 			{
@@ -93,98 +138,22 @@ export async function crownOfMadness({ speaker, actor, token, character, item, a
 		}
 	};
 
-	await new Sequence()
-
-		.effect()
-		.atLocation(token)
-		.file(`jb2a.magic_signs.circle.02.enchantment.loop.pink`)
-		.scaleToObject(1.5)
-		.rotateIn(180, 600, { ease: "easeOutCubic" })
-		.scaleIn(0, 600, { ease: "easeOutCubic" })
-		.loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-		.belowTokens()
-		.fadeOut(2000)
-		.zIndex(0)
-
-		.effect()
-		.atLocation(token)
-		.file(`jb2a.magic_signs.circle.02.enchantment.loop.pink`)
-		.scaleToObject(1.5)
-		.rotateIn(180, 600, { ease: "easeOutCubic" })
-		.scaleIn(0, 600, { ease: "easeOutCubic" })
-		.loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-		.belowTokens(true)
-		.filter("ColorMatrix", { saturate: -1, brightness: 2 })
-		.filter("Blur", { blurX: 5, blurY: 10 })
-		.zIndex(1)
-		.duration(1200)
-		.fadeIn(200, { ease: "easeOutCirc", delay: 500 })
-		.fadeOut(300, { ease: "linear" })
-
-		.wait(1500)
-
-		.effect()
-		.file("animated-spell-effects-cartoon.level 01.bless.blue")
-		.atLocation(target, { randomOffset: 1.2, gridUnits: true })
-		.scaleToObject(0.5)
-		.repeats(8, 100, 100)
-		.filter("ColorMatrix", { saturate: 1, hue: 80 })
-		.zIndex(1)
-
-		.effect()
-		.file("animated-spell-effects-cartoon.cantrips.mending.purple")
-		.atLocation(target)
-		.scaleToObject(3)
-		.opacity(0.75)
-		.filter("ColorMatrix", { saturate: 1, brightness: 1.3, hue: -5 })
-		.zIndex(0)
-		.waitUntilFinished(-500)
-
-		.effect()
-		.delay(300)
-		.file("jb2a.impact.002.pinkpurple")
-		.atLocation(target)
-		.scaleToObject(2)
-		.opacity(1)
-		.filter("ColorMatrix", { hue: 6 })
-		.zIndex(0)
-
-		.effect()
-		.file("jb2a.particles.inward.white.02.03")
-		.scaleIn(0, 500, { ease: "easeOutQuint" })
-		.delay(300)
-		.fadeOut(1000)
-		.atLocation(target)
-		.duration(1000)
-		.size(1.75, { gridUnits: true })
-		.animateProperty("spriteContainer", "position.y", { from: 0, to: -0.5, gridUnits: true, duration: 1000 })
-		.zIndex(1)
-
-		.effect()
-		.file("animated-spell-effects-cartoon.magic.impact.01")
-		.atLocation(target)
-		.scaleToObject(2)
-		.opacity(1)
-		.filter("ColorMatrix", { saturate: 1, brightness: 1.3 })
-		.zIndex(0)
-		.belowTokens()
-
-		.play();
-
 	new Sequence()
+
+		.wait(500)
 
 		.effect()
 		.file("jb2a.token_border.circle.spinning.purple.010")
 		.attachTo(target)
-		.scaleIn(0, 1500, { ease: "easeOutCubic" })
 		.scaleToObject(2)
-		.filter("ColorMatrix", { hue: 40 })
 		.fadeOut(1000)
+		.scaleIn(0, 1500, { ease: "easeOutCubic" })
+		.filter("ColorMatrix", { hue: 40 })
 		.persist()
 		.name(`${target.document.name} Crown of Madness`)
 
-		.thenDo(function () {
-			mba.createEffect(target.actor, effectData);
+		.thenDo(async () => {
+			await mba.createEffect(target.actor, effectData);
 		})
 
 		.play();
