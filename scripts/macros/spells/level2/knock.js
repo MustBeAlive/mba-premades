@@ -32,7 +32,9 @@ export async function knock({ speaker, actor, token, character, item, args, scop
     effectLocation = { x: doorX, y: doorY };
     effectSize = lockedDoor._object.doorControl.hitArea.width / canvas.grid.size;
     let options = [["Yes, door can be opened", "yes"], ["No, deny request", "no"]];
+    await mba.gmDialogMessage();
     let selection = await mba.remoteDialog("Knock", options, game.users.activeGM.id, `<b>${workflow.token.document.name}</b> attempts cast knock on the door:`);
+    await mba.clearGMDialogMessage();
     if (!selection) selection = "yes";
     let updates = { 'ds': 0 };
 

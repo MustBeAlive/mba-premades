@@ -358,7 +358,9 @@ async function turnEnd(effect, actor) {
     if (roundDiff >= 1) {
         if (currentTurn >= lastTurn) {
             let userId = mba.lastGM();
+            await mba.gmDialogMessage();
             let selection = await mba.remoteDialog('Rage', constants.yesNo, userId, `<p><b>${actor.name}</b> has not attacked an enemy or taken damage since their last turn.</p><p>Remove Rage?</p>`);
+            await mba.clearGMDialogMessage();
             if (!selection) return;
             await mba.removeEffect(effect);
         }

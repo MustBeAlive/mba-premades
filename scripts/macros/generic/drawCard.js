@@ -2,12 +2,13 @@ import {mba} from "../../helperFunctions.js";
 
 export async function drawCard({ speaker, actor, token, character, item, args, scope, workflow }) {
     let options = [["Yes, let's draw some cards", "yes"], ["No, deny card draw", "no"]];
+    await mba.gmDialogMessage();
     let selection = await mba.remoteDialog(workflow.item.name, options, game.users.activeGM.id, `<b>${game.users.current.name}</b> wants to draw some Tarokka cards`);
+    await mba.clearGMDialogMessage();
     if (!selection || selection === "no") {
         ui.notifications.info("GM has denied your request. Sorry!");
         return;
     }
-
     let deckName = 'Tarokka Deck';
     let discardPile = 'Discard Pile';
     let faceDown = true; // true = back, false = face

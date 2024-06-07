@@ -1,8 +1,9 @@
-import {addMenuSetting, mbaSettingsAnimations, mbaSettingsClassFeats, mbaSettingsFeats, mbaSettingsGeneral, mbaSettingsInterface, mbaSettingsMechanics, mbaSettingsRaceFeats, mbaSettingsSpells, mbaSettingsSummons} from './settingsMenu.js';
+import {addMenuSetting, mbaSettingsAnimations, mbaSettingsClassFeats, mbaSettingsFeats, mbaSettingsHomewbrew, mbaSettingsGeneral, mbaSettingsInterface, mbaSettingsMechanics, mbaSettingsRaceFeats, mbaSettingsSpells, mbaSettingsSummons} from './settingsMenu.js';
 import {cast} from './macros/animations/cast.js';
 import {corpseHide} from './macros/mechanics/corpseHide.js';
 import {critFumble} from './macros/animations/critFumble.js';
 import {deathSaves} from './macros/mechanics/deathSaves.js';
+import {effectAuraHooks} from './macros/mechanics/effectAuras.js';
 import {itemDC, noEffectAnimationCreate, noEffectAnimationDelete} from './macros/mechanics/activeEffect.js';
 import {macros, onHitMacro} from './macros.js';
 import {patchSaves, patchSkills} from './patching.js';
@@ -74,7 +75,7 @@ export function registerSettings() {
 
     game.settings.register(moduleName, 'Check For Updates', {
         'name': "Проверять обновления",
-        'hint': "Показывать сообщение при входе в мир если доступно обновление модуля",
+        'hint': "Показывать сообщение при входе в мир если доступно обновление модуля.",
         'scope': 'world',
         'config': false,
         'type': Boolean,
@@ -98,6 +99,37 @@ export function registerSettings() {
         }
     });
     addMenuSetting('Combat Listener', 'General');
+
+    game.settings.register(moduleName, 'Effect Auras', {
+        'name': 'Автоматизация Аур',
+        'hint': 'Включает автоматизацию аур.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value && game.user.isGM) {
+                Hooks.on('preUpdateActor', effectAuraHooks.preActorUpdate);
+                Hooks.on('updateActor', effectAuraHooks.actorUpdate);
+                Hooks.on('canvasReady', effectAuraHooks.canvasReady);
+                Hooks.on('updateToken', effectAuraHooks.updateToken);
+                Hooks.on('createToken', effectAuraHooks.createToken);
+                Hooks.on('deleteToken', effectAuraHooks.deleteToken);
+                Hooks.on('createActiveEffect', effectAuraHooks.createRemoveEffect);
+                Hooks.on('deleteActiveEffect', effectAuraHooks.createRemoveEffect);
+            } else if (game.user.isGM) {
+                Hooks.off('preUpdateActor', effectAuraHooks.preActorUpdate);
+                Hooks.off('updateActor', effectAuraHooks.actorUpdate);
+                Hooks.off('canvasReady', effectAuraHooks.canvasReady);
+                Hooks.off('updateToken', effectAuraHooks.updateToken);
+                Hooks.off('createToken', effectAuraHooks.createToken);
+                Hooks.off('deleteToken', effectAuraHooks.deleteToken);
+                Hooks.off('createActiveEffect', effectAuraHooks.createRemoveEffect);
+                Hooks.off('deleteActiveEffect', effectAuraHooks.createRemoveEffect);
+            }
+        }
+    });
+    addMenuSetting('Effect Auras', 'General');
 
     game.settings.register(moduleName, 'Movement Listener', {
         'name': 'Отслеживание Передвижения',
@@ -156,7 +188,7 @@ export function registerSettings() {
     addMenuSetting('Show Names', 'General');
 
     game.settings.register(moduleName, 'Save Patching', {
-        'name': 'Save Patching',
+        'name': 'Модификация Спасбросков',
         'hint': 'Эта настройка позволяет макросам модифицировать спасброски.',
         'scope': 'world',
         'config': false,
@@ -169,7 +201,7 @@ export function registerSettings() {
     addMenuSetting('Save Patching', 'General');
 
     game.settings.register(moduleName, 'Skill Patching', {
-        'name': 'Skill Patching',
+        'name': 'Модификация проверок Навыков',
         'hint': 'Эта настройка позволяет макросам модифицировать проверки навыков.',
         'scope': 'world',
         'config': false,
@@ -392,6 +424,26 @@ export function registerSettings() {
         }
     });
     addMenuSetting('Strength of the Grave', 'Class Features');
+
+    game.settings.register(moduleName, 'Ranged Smite', {
+        'name': 'Ranged Divine Smite',
+        'hint': 'Включает срабатывание способности Divine Smite на RWAK (Ranged Weapon Attacks).',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false
+    });
+    addMenuSetting('Ranged Smite', 'Homebrew');
+
+    game.settings.register(moduleName, 'Unarmed Strike Smite', {
+        'name': 'Unarmed Strike Divine Smite',
+        'hint': 'Включает срабатывание способности Divine Smite на Unarmed Strike.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false
+    });
+    addMenuSetting('Unarmed Strike Smite', 'Homebrew');
 
     game.settings.register(moduleName, 'Blindness Fix', {
         'name': 'Condition: Blinded (Visual Fix)',
@@ -819,6 +871,15 @@ export function registerSettings() {
         'hint': 'Настройки автоматизации фитов.',
         'icon': 'fas fa-crystal-ball',
         'type': mbaSettingsFeats,
+        'restricted': true
+    });
+    game.settings.registerMenu(moduleName, 'Homebrew', {
+        'name': 'Homebrew',
+        'label': 'Homebrew',
+        //'hint': 'Optional settings for homebrew features.',
+        'hint': 'Настройки опциональных ХБ способностей.',
+        'icon': 'fas fa-cauldron',
+        'type': mbaSettingsHomewbrew,
         'restricted': true
     });
     game.settings.registerMenu(moduleName, 'Mechanics', {

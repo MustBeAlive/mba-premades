@@ -1,3 +1,7 @@
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         await (warpgate.wait(200));
@@ -10,7 +14,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         if (!targetUuid) return;
         let target = await fromUuid(targetUuid);
         await Sequencer.EffectManager.endEffects({ name: `${target.name} Blinding Smite` })
-        await chrisPremades.helpers.removeEffect(targetEffect);
+        await mbaPremades.helpers.removeEffect(targetEffect);
     }
     let effectData = {
         'name': workflow.item.name,
@@ -31,14 +35,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             'mba-premades': {
                 'spell': {
                     'blindingSmite': {
-                        'saveDC': chrisPremades.helpers.getSpellDC(workflow.item),
+                        'saveDC': mba.getSpellDC(workflow.item),
                         'used': false
                     }
                 }
             },
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -94,9 +98,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .play();
 
-    let effect = await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+    let effect = await mba.createEffect(workflow.actor, effectData);
     let updates = { 'flags.mba-premades.spell.blindingSmite.targetEffectUuid': effect.uuid };
-    await chrisPremades.helpers.updateEffect(effect, updates);
+    await mba.updateEffect(effect, updates);
 }
 
 async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -105,23 +109,23 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     let effect = workflow.actor.effects.find(i => i.flags['mba-premades']?.spell?.blindingSmite);
     if (!effect) return;
     let target = workflow.targets.first();
-    let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'blindingSmite', 250);
+    let queueSetup = await queue.setup(workflow.item.uuid, 'blindingSmite', 250);
     if (!queueSetup) return;
     let oldFormula = workflow.damageRoll._formula;
     let bonusDamageFormula = '3d8[radiant]';
-    if (workflow.isCritical) bonusDamageFormula = chrisPremades.helpers.getCriticalFormula(bonusDamageFormula);
+    if (workflow.isCritical) bonusDamageFormula = mba.getCriticalFormula(bonusDamageFormula);
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRoll = await new Roll(damageFormula).roll({ async: true });
     await workflow.setDamageRoll(damageRoll);
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Blinding Smite: Blind');
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Blinding Smite: Blind');
     if (!featureData) {
-        chrisPremades.queue.remove(workflow.item.uuid);
+        queue.remove(workflow.item.uuid);
         return;
     }
     delete featureData._id;
     featureData.system.save.dc = effect.flags['mba-premades'].spell.blindingSmite.saveDC;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([target.document.uuid]);
+    let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
     await warpgate.wait(100);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
 
@@ -179,7 +183,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
             let originEffect = await fromUuid(effect.origin);
             if (!originEffect) return;
             await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Blinding Smite` });
-            await chrisPremades.helpers.removeEffect(originEffect);
+            await mbaPremades.helpers.removeEffect(originEffect);
         }
         let effectData = {
             'name': 'Blinding Smite: Blindness',
@@ -206,7 +210,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
             'flags': {
                 'effectmacro': {
                     'onDelete': {
-                        'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                        'script': mba.functionToString(effectMacroDel)
                     }
                 },
                 'midi-qol': {
@@ -218,7 +222,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
                 }
             }
         };
-        let targetEffect = await chrisPremades.helpers.createEffect(workflow.targets.first().actor, effectData);
+        let targetEffect = await mba.createEffect(workflow.targets.first().actor, effectData);
         let updates = {
             'flags': {
                 'mba-premades': {
@@ -232,12 +236,12 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
                 }
             }
         };
-        await chrisPremades.helpers.updateEffect(effect, updates);
-        chrisPremades.queue.remove(workflow.item.uuid);
+        await mba.updateEffect(effect, updates);
+        queue.remove(workflow.item.uuid);
         return;
     }
-    await chrisPremades.helpers.removeEffect(effect);
-    chrisPremades.queue.remove(workflow.item.uuid);
+    await mba.removeEffect(effect);
+    queue.remove(workflow.item.uuid);
 }
 
 export let blindingSmite = {

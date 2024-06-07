@@ -958,7 +958,7 @@ export let mba = {
                     }
                 }
             }
-            let height = (Object.keys(buttons).length * 59 + 70);
+            let height = (Object.keys(buttons).length * 60 + 78);
             if (Object.keys(buttons).length > 14) height = 850;
             dialog = new Dialog(
                 {

@@ -252,7 +252,9 @@ async function turnEnd(effect, token, origin) {
     if (!targetToken) return;
     let distance = mba.getDistance(token, targetToken);
     if (distance <= 30) return;
+    await mba.gmDialogMessage();
     let selection = await mba.remoteDialog(origin.name, constants.yesNo, mba.lastGM(), 'Caster has ended their turn more than 30 feet away from their target. Remove effect?');
+    await mba.clearGMDialogMessage();
     if (!selection) return;
     await mba.removeEffect(effect);
     let targetEffect = mba.findEffect(targetToken.actor, 'Compelled Duel: Target');

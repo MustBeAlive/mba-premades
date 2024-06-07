@@ -9,9 +9,11 @@ export async function dispelMagic({ speaker, actor, token, character, item, args
             [`Caster needs to roll (effect level > ${workflow.castData.castLevel})`, `roll`],
             [`Effect cannot be dispelled`, `unable`]
         ];
+        await mba.gmDialogMessage();
         let selectionGM = await mba.remoteDialog(workflow.item.name, choicesGM, game.users.activeGM.id, `
             <p><b>${workflow.token.document.name}</b> attempts to cast <b>Dispel Magic</b> at <b>Level ${workflow.castData.castLevel}</b></p>
         `);
+        await mba.clearGMDialogMessage();
         if (!selectionGM) return;
         if (selectionGM === "dispel") {
             ChatMessage.create({

@@ -250,7 +250,6 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     if (mba.getDistance(workflow.token, target) > 5) animationType = 'ranged';
     if (!animationType) animationType = defaultDamageType;
     await animation(target, workflow.token, animationType);
-    //if (mba.inCombat()) await originFeature.setFlag('mba-premades', 'feature.sneakAttack.turn', game.combat.round + '-' + game.combat.turn);
 }
 
 async function combatEnd(origin) {

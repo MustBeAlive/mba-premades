@@ -21,12 +21,13 @@ export async function emptyFlask({ speaker, actor, token, character, item, args,
     if (!selection || selection === "cancel") return;
 
     let choicesGM = [["Yes, proceed", "yes"], ["No, cancel", "no"]];
+    await mba.gmDialogMessage();
     let selectionGM = await mba.remoteDialog(workflow.item.name, choicesGM, game.users.activeGM.id, `<p><b>${workflow.token.document.name}</b> attempts to fill a <b>${type}</b> with <b>${selection}</b></p>`);
+    await mba.clearGMDialogMessage();
     if (selectionGM === "no") {
         ui.notifications.info("GM has denied your request");
         return;
     }
-
     if (selection === "Water") {
         let emptyItem = mba.getItem(workflow.actor, `Empty ${type}`);
         if (emptyItem.system.quantity > 1) {

@@ -51,8 +51,8 @@ export async function steadyAim({ speaker, actor, token, character, item, args, 
         .scaleToObject(2.5)
         .waitUntilFinished(-2100)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData)
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData)
         })
 
         .play()

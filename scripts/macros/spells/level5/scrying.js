@@ -282,10 +282,12 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
             ["Target Failed", "fail"],
             ["Don't contest (fail voluntarily)", "fail"]
         ];
+        await mba.gmDialogMessage();
         let selectionGM = await mba.remoteDialog(workflow.item.name, choicesGM, game.users.activeGM.id, `
             <p><b>${workflow.token.document.name}</b> attempts to Scry ${selectionType}.</p>
             <p>Save DC: <b>Wisdom, ${saveDC}</b></p>
         `);
+        await mba.clearGMDialogMessage();
         if (!selectionGM || selectionGM === "save") {
             ui.notifications.info(`Target succesfully saved! (Save DC: ${saveDC})`);
             if (conc) await mba.removeEffect(conc);

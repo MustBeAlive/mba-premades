@@ -1,5 +1,12 @@
-2024/06/06-04:57:43.021 3d7c Recovering log #745
-2024/06/06-04:57:43.022 3d7c Level-0 table #748: started
-2024/06/06-04:57:43.069 3d7c Level-0 table #748: 145432 bytes OK
-2024/06/06-04:57:43.118 3d7c Delete type=0 #745
-2024/06/06-04:57:43.118 3d7c Delete type=3 #743
+2024/06/06-14:09:45.997 32a0 Recovering log #749
+2024/06/06-14:09:46.055 32a0 Level-0 table #751: started
+2024/06/06-14:09:46.111 32a0 Level-0 table #751: 92028 bytes OK
+2024/06/06-14:09:46.153 32a0 Delete type=0 #749
+2024/06/06-14:09:46.153 32a0 Delete type=3 #747
+2024/06/07-00:11:46.130 d20 Compacting 2@0 + 1@1 files
+2024/06/07-00:11:46.194 d20 Generated table #753@0: 147 keys, 234169 bytes
+2024/06/07-00:11:46.194 d20 Compacted 2@0 + 1@1 files => 234169 bytes
+2024/06/07-00:11:46.222 d20 compacted to: files[ 0 1 0 0 0 0 0 ]
+2024/06/07-00:11:46.230 d20 Delete type=2 #746
+2024/06/07-00:11:46.233 d20 Delete type=2 #748
+2024/06/07-00:11:46.235 d20 Delete type=2 #751

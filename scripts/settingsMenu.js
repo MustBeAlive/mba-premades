@@ -107,6 +107,12 @@ export class mbaSettingsFeats extends mbaSettingsBase {
         this.category = 'Feats';
     }
 }
+export class mbaSettingsHomewbrew extends mbaSettingsBase {
+    constructor() {
+        super();
+        this.category = 'Homebrew';
+    }
+}
 export class mbaSettingsMechanics extends mbaSettingsBase {
     constructor() {
         super();

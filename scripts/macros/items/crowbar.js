@@ -2,7 +2,9 @@ import {mba} from "../../helperFunctions.js";
 
 export async function crowbar({ speaker, actor, token, character, item, args, scope, workflow }) {
     let options = [["Leverage can be applied, proceed", "yes"], ["Leverage cannot be applied, cancel", "no"]];
+    await mba.gmDialogMessage();
     let selection = await mba.remoteDialog(workflow.item.name, options, game.users.activeGM.id, `<b>${workflow.token.document.name}</b> wants to use crowbar`);
+    await mba.clearGMDialogMessage();
     if (!selection || selection === "no") {
         ui.notifications.info("GM has denied your request. Sorry!");
         return;

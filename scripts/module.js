@@ -11,6 +11,7 @@ import {createRollModeButtons} from './macros/ui/rollmodeButtons.js';
 import {critFumble} from './macros/animations/critFumble.js';
 import {deathSaves} from './macros/mechanics/deathSaves.js';
 import {diseases} from './macros/generic/diseases.js';
+import {effectAuraHooks, effectAuras, effectSockets} from './macros/mechanics/effectAuras.js';
 import {itemDC, noEffectAnimationCreate, noEffectAnimationDelete} from './macros/mechanics/activeEffect.js';
 import {macros, onHitMacro} from './macros.js';
 import {mba as helpers} from './helperFunctions.js';
@@ -48,11 +49,13 @@ Hooks.once('socketlib.ready', async function() {
     socket.register('createActor', runAsGM.createActor);
     socket.register('createEffect', runAsGM.createEffect);
     socket.register('createFolder', runAsGM.createFolder);
+    socket.register('remoteAddEffectAura', effectSockets.remoteAdd);
     socket.register('remoteAimCrosshair', remoteAimCrosshair);
     socket.register('remoteDialog', remoteDialog);
     socket.register('remoteDocumentDialog', remoteDocumentDialog);
     socket.register('remoteDocumentsDialog', remoteDocumentsDialog);
     socket.register('remoteMenu', remoteMenu);
+    socket.register('remoteRemoveEffectAura', effectSockets.remoteRemove);
     socket.register('remoteSelectTarget', remoteSelectTarget);
     socket.register('removeEffect', runAsGM.removeEffect);
     socket.register('rollItem', runAsUser.rollItem);
@@ -86,6 +89,17 @@ Hooks.once('ready', async function() {
     if (game.settings.get('mba-premades', 'Condition Vulnerability')) {
         Hooks.on('midi-qol.postPreambleComplete', macros.conditionVulnerabilityEarly);
         Hooks.on('midi-qol.RollComplete', macros.conditionVulnerabilityLate);
+    }
+    if (game.settings.get('mba-premades', 'Effect Auras')) {
+        Hooks.on('preUpdateActor', effectAuraHooks.preActorUpdate);
+        Hooks.on('updateActor', effectAuraHooks.actorUpdate);
+        Hooks.on('canvasReady', effectAuraHooks.canvasReady);
+        Hooks.on('updateToken', effectAuraHooks.updateToken);
+        Hooks.on('createToken', effectAuraHooks.createToken);
+        Hooks.on('deleteToken', effectAuraHooks.deleteToken);
+        Hooks.on('createActiveEffect', effectAuraHooks.createRemoveEffect);
+        Hooks.on('deleteActiveEffect', effectAuraHooks.createRemoveEffect);
+        effectAuras.registerAll();
     }
     if (game.settings.get('mba-premades', 'Blur')) Hooks.on('midi-qol.preAttackRoll', macros.blur.hook);
     if (game.settings.get('mba-premades', 'Booming Blade')) Hooks.on('updateToken', macros.boomingBlade.moved);
@@ -129,6 +143,7 @@ Hooks.once('ready', async function() {
 
 globalThis['mbaPremades'] = {
     constants,
+    effectAuras,
     helpers,
     macros,
     queue,

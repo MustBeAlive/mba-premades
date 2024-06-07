@@ -23,6 +23,10 @@ async function creator() {
         ui.notifications.warn("Need to select or target token!");
         return;
     }
+    if (mba.checkTrait(target.actor, "ci", "diseased")) {
+        ui.notifications.info("Target is immune to diseases!");
+        return;
+    }
     let choices = [
         ["Arcane Blight", "arcaneBlight"],
         ["Blinding Sickness", "blindingSickness"],

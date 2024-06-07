@@ -271,9 +271,11 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     };
     const saveDC = await mba.getSpellDC(workflow.item);
     let choicesGM1 = [["Target is Awake", "awake"], ["Target is Asleep", "asleep"], ["Target does not have a need to sleep (such as elf)", "no"]];
+    await mba.gmDialogMessage();
     let selectionGM1 = await mba.remoteDialog(workflow.item.name, choicesGM1, game.users.activeGM.id, `
         <p><b>${workflow.token.document.name}</b> attempts to cast <b>Dream</b></p>
     `);
+    await mba.clearGMDialogMessage();
     if (!selectionGM1) return;
     if (selectionGM1 === "no") {
         ui.notifications.warn("Dream is inapplicable (target does not have a need to sleep)");
@@ -350,11 +352,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 ["Target Saved", "save"],
                 ["Target Failed", "fail"]
             ];
+            await mba.gmDialogMessage();
             let selectionGM2 = await mba.remoteDialog(workflow.item.name, choicesGM2, game.users.activeGM.id, `
                 <p><b>${workflow.token.document.name}</b> attempts to cast <b>Dream</b></p>
                 <p>Save DC: <b>Wisdom: ${saveDC}</b></p>
                 <p>Disadvantage: <b>${disadvantage}</b></p>
             `);
+            await mba.clearGMDialogMessage();
             if (!selectionGM2) return;
             if (selectionGM2 === "save") {
                 ui.notifications.info(`Target succesfully saved! (Save DC: ${saveDC})`);
@@ -403,9 +407,11 @@ async function wait({ speaker, actor, token, character, item, args, scope, workf
         }
     };
     let choicesGM1 = [["Target is still Awake", "awake"], ["Target fell Asleep", "asleep"]];
+    await mba.gmDialogMessage();
     let selectionGM1 = await mba.remoteDialog(workflow.item.name, choicesGM1, game.users.activeGM.id, `
         <p><b>${workflow.token.document.name}</b> attempts to cast <b>Dream</b></p>
     `);
+    await mba.clearGMDialogMessage();
     if (!selectionGM1) return;
     if (selectionGM1 === "awake") {
         ui.notifications.info("Target is still awake!");
@@ -431,11 +437,13 @@ async function wait({ speaker, actor, token, character, item, args, scope, workf
                 ["Target Saved", "save"],
                 ["Target Failed", "fail"]
             ];
+            await mba.gmDialogMessage();
             let selectionGM2 = await mba.remoteDialog(workflow.item.name, choicesGM2, game.users.activeGM.id, `
                 <p><b>${workflow.token.document.name}</b> attempts to cast <b>Dream</b></p>
                 <p>Save DC: <b>Wisdom: ${saveDC}</b></p>
                 <p>Disadvantage: <b>${disadvantage}</b></p>
             `);
+            await mba.clearGMDialogMessage();
             if (!selectionGM2) return;
             if (selectionGM2 === "save") {
                 ui.notifications.info(`Target succesfully saved! (Save DC: ${saveDC})`);

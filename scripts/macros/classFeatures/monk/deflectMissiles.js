@@ -13,6 +13,7 @@ export async function deflectMissiles({ speaker, actor, token, character, item, 
         queue.remove(workflow.item.uuid);
         return;
     }
+    // await feature.displayCard(); // feature = orinal item on actor;
     await mba.addCondition(monk.actor, "Reaction");
     let monkLevel = monk.actor.classes.monk?.system?.levels;
     let deflectFormula = `1d10 + ${monk.actor.system.abilities.dex.mod} + ${monkLevel}`;

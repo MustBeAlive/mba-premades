@@ -72,8 +72,8 @@ export async function uncannyDodge({ speaker, actor, token, character, item, arg
         .duration(2000)
         .waitUntilFinished(-1300)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData)
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData)
         })
     
         .effect()

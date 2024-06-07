@@ -1,3 +1,5 @@
-2024/06/05-21:26:37.944 31ec Recovering log #1341
-2024/06/05-21:26:38.044 31ec Delete type=0 #1341
-2024/06/05-21:26:38.044 31ec Delete type=3 #1340
+2024/06/06-04:57:42.947 fec Recovering log #1343
+2024/06/06-04:57:42.947 fec Level-0 table #1345: started
+2024/06/06-04:57:42.969 fec Level-0 table #1345: 8414 bytes OK
+2024/06/06-04:57:43.019 fec Delete type=0 #1343
+2024/06/06-04:57:43.019 fec Delete type=3 #1342
