@@ -1,0 +1,443 @@
+{
+  "inventory": {
+    "id": "inventory",
+    "name": "Inventory",
+    "listName": "Inventory",
+    "selected": true,
+    "level": 1,
+    "order": 0,
+    "settings": {
+      "characterCount": null,
+      "customWidth": null,
+      "grid": false,
+      "image": "",
+      "showTitle": true,
+      "style": "tab"
+    },
+    "type": "custom"
+  },
+  "generic-actions": {
+    "id": "generic-actions",
+    "name": "Generic Actions",
+    "listName": "Generic Actions",
+    "selected": true,
+    "level": 1,
+    "order": 1,
+    "settings": {
+      "characterCount": null,
+      "customWidth": null,
+      "grid": false,
+      "image": "",
+      "showTitle": true,
+      "style": "tab"
+    },
+    "type": "custom"
+  },
+  "features": {
+    "id": "features",
+    "name": "Features",
+    "listName": "Features",
+    "selected": true,
+    "level": 1,
+    "order": 2,
+    "settings": {
+      "showTitle": true,
+      "style": "tab"
+    },
+    "type": "custom"
+  },
+  "spells": {
+    "id": "spells",
+    "name": "Spells",
+    "listName": "Spells",
+    "selected": true,
+    "level": 1,
+    "order": 3,
+    "settings": {
+      "characterCount": null,
+      "customWidth": null,
+      "grid": false,
+      "image": "",
+      "showTitle": true
+    },
+    "type": "custom"
+  },
+  "attributes": {
+    "id": "attributes",
+    "name": "Attributes",
+    "listName": "Attributes",
+    "selected": true,
+    "level": 1,
+    "order": 4,
+    "settings": {
+      "showTitle": true,
+      "style": "tab"
+    },
+    "type": "custom"
+  },
+  "effects": {
+    "id": "effects",
+    "name": "Effects",
+    "listName": "Effects",
+    "selected": true,
+    "level": 1,
+    "order": 5,
+    "settings": {
+      "characterCount": null,
+      "customWidth": null,
+      "grid": false,
+      "image": "",
+      "showTitle": true,
+      "style": "tab"
+    },
+    "type": "custom"
+  },
+  "conditions": {
+    "id": "conditions",
+    "name": "Conditions",
+    "listName": "Conditions",
+    "selected": true,
+    "level": 1,
+    "order": 6,
+    "settings": {
+      "characterCount": null,
+      "customWidth": null,
+      "grid": false,
+      "image": "",
+      "showTitle": true,
+      "style": "tab"
+    },
+    "type": "custom"
+  },
+  "conditions_conditions": {
+    "id": "conditions",
+    "name": "Conditions",
+    "listName": "Group: Conditions",
+    "selected": true,
+    "level": 2,
+    "order": 0,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "effects_temporary-effects": {
+    "id": "temporary-effects",
+    "name": "Temporary Effects",
+    "listName": "Group: Temporary Effects",
+    "selected": true,
+    "level": 2,
+    "order": 0,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "generic-actions_world-generic-actions": {
+    "id": "world-generic-actions",
+    "name": "Generic Actions",
+    "listName": "Group: Generic Actions",
+    "selected": true,
+    "level": 2,
+    "order": 0,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "core"
+  },
+  "inventory_weapons": {
+    "id": "weapons",
+    "name": "Weapons",
+    "listName": "Group: Weapons",
+    "selected": true,
+    "level": 2,
+    "order": 0,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "features_active-features": {
+    "id": "active-features",
+    "name": "Active Features",
+    "listName": "Group: Active Features",
+    "selected": true,
+    "level": 2,
+    "order": 1,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "spells_at-will-spells": {
+    "id": "at-will-spells",
+    "name": "At-Will Spells",
+    "listName": "Group: At-Will Spells",
+    "selected": true,
+    "level": 2,
+    "order": 11,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "attributes_abilities": {
+    "id": "abilities",
+    "name": "Abilities",
+    "listName": "Group: Abilities",
+    "selected": true,
+    "level": 2,
+    "order": 1,
+    "settings": {
+      "characterCount": null,
+      "collapse": false,
+      "customWidth": null,
+      "grid": false,
+      "image": "",
+      "showTitle": true,
+      "sort": false,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "effects_passive-effects": {
+    "id": "passive-effects",
+    "name": "Passive Effects",
+    "listName": "Group: Passive Effects",
+    "selected": true,
+    "level": 2,
+    "order": 1,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "inventory_equipment": {
+    "id": "equipment",
+    "name": "Equipment",
+    "listName": "Group: Equipment",
+    "selected": true,
+    "level": 2,
+    "order": 1,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "features_passive-features": {
+    "id": "passive-features",
+    "name": "Passive Features",
+    "listName": "Group: Passive Features",
+    "selected": true,
+    "level": 2,
+    "order": 2,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "spells_innate-spells": {
+    "id": "innate-spells",
+    "name": "Innate Spells",
+    "listName": "Group: Innate Spells",
+    "selected": true,
+    "level": 2,
+    "order": 12,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "attributes_skills": {
+    "id": "skills",
+    "name": "Skills",
+    "listName": "Group: Skills",
+    "selected": true,
+    "level": 2,
+    "order": 2,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "inventory_consumables": {
+    "id": "consumables",
+    "name": "Consumables",
+    "listName": "Group: Consumables",
+    "selected": true,
+    "level": 2,
+    "order": 2,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "spells_pact-spells": {
+    "id": "pact-spells",
+    "name": "Pact Spells",
+    "listName": "Group: Pact Spells",
+    "selected": true,
+    "level": 2,
+    "order": 1,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "inventory_tools": {
+    "id": "tools",
+    "name": "Tools",
+    "listName": "Group: Tools",
+    "selected": true,
+    "level": 2,
+    "order": 3,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "spells_cantrips": {
+    "id": "cantrips",
+    "name": "Cantrips",
+    "listName": "Group: Cantrips",
+    "selected": true,
+    "level": 2,
+    "order": 0,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "spells_1st-level-spells": {
+    "id": "1st-level-spells",
+    "name": "1st Level Spells",
+    "listName": "Group: 1st Level Spells",
+    "selected": true,
+    "level": 2,
+    "order": 2,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "spells_2nd-level-spells": {
+    "id": "2nd-level-spells",
+    "name": "2nd Level Spells",
+    "listName": "Group: 2nd Level Spells",
+    "selected": true,
+    "level": 2,
+    "order": 3,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "spells_3rd-level-spells": {
+    "id": "3rd-level-spells",
+    "name": "3rd Level Spells",
+    "listName": "Group: 3rd Level Spells",
+    "selected": true,
+    "level": 2,
+    "order": 4,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "spells_4th-level-spells": {
+    "id": "4th-level-spells",
+    "name": "4th Level Spells",
+    "listName": "Group: 4th Level Spells",
+    "selected": true,
+    "level": 2,
+    "order": 5,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "spells_5th-level-spells": {
+    "id": "5th-level-spells",
+    "name": "5th Level Spells",
+    "listName": "Group: 5th Level Spells",
+    "selected": true,
+    "level": 2,
+    "order": 6,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "spells_6th-level-spells": {
+    "id": "6th-level-spells",
+    "name": "6th Level Spells",
+    "listName": "Group: 6th Level Spells",
+    "selected": true,
+    "level": 2,
+    "order": 7,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "spells_7th-level-spells": {
+    "id": "7th-level-spells",
+    "name": "7th Level Spells",
+    "listName": "Group: 7th Level Spells",
+    "selected": true,
+    "level": 2,
+    "order": 8,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "spells_8th-level-spells": {
+    "id": "8th-level-spells",
+    "name": "8th Level Spells",
+    "listName": "Group: 8th Level Spells",
+    "selected": true,
+    "level": 2,
+    "order": 9,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  },
+  "spells_9th-level-spells": {
+    "id": "9th-level-spells",
+    "name": "9th Level Spells",
+    "listName": "Group: 9th Level Spells",
+    "selected": true,
+    "level": 2,
+    "order": 10,
+    "settings": {
+      "showTitle": true,
+      "style": "list"
+    },
+    "type": "system"
+  }
+}

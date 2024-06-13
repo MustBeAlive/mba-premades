@@ -66,8 +66,8 @@ export async function seeInvisibility({ speaker, actor, token, character, item, 
         .fadeIn(500)
         .fadeOut(1000)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData)
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData)
         })
 
         .effect()

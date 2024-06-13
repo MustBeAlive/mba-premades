@@ -57,8 +57,8 @@ export async function net({ speaker, actor, token, character, item, args, scope,
 
         .wait(1000)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData)
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData)
         })
 
         .play()

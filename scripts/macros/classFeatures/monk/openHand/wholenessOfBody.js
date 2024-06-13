@@ -27,7 +27,7 @@ export async function wholenessOfBody({ speaker, actor, token, character, item, 
         .playbackRate(0.9)
 
         .thenDo(async () => {
-            await mba.applyWorkflowDamage(workflow.token, healingRoll, "healing", [workflow.token], workflow.item.name, workflow.itemCardId);
+            await mba.applyWorkflowDamage(workflow.token, healingRoll, "healing", [workflow.token], undefined, workflow.itemCardId);
         })
 
         .play()

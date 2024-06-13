@@ -119,8 +119,8 @@ export async function sleep({ speaker, actor, token, character, item, args, scop
 				.persist()
 				.name(`${target.document.name} Sleep`)
 
-				.thenDo(function () {
-					mba.createEffect(target.actor, effectData);
+				.thenDo(async () => {
+					await mba.createEffect(target.actor, effectData);
 				})
 
 				.play();

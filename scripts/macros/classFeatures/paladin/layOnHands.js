@@ -59,7 +59,7 @@ export async function layOnHands({ speaker, actor, token, character, item, args,
             .playbackRate(0.9)
 
             .thenDo(async () => {
-                await mba.applyWorkflowDamage(workflow.token, healingRoll, "healing", [target], "Lay on Hands", workflow.itemCardId);
+                await mba.applyWorkflowDamage(workflow.token, healingRoll, "healing", [target], undefined, workflow.itemCardId);
                 await feature.update({ "system.uses.value": uses -= healAmmount });
             })
 

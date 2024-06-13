@@ -166,8 +166,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
-    let targets = Array.from(workflow.failedSaves);
-    for (let target of targets) {
+    for (let target of Array.from(workflow.failedSaves)) {
         if (mba.findEffect(target.actor, 'Reaction')) continue;
         await mba.addCondition(target.actor, 'Reaction');
     }

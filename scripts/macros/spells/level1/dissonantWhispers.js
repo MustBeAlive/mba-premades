@@ -105,9 +105,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .persist()
         .name(`${target.document.name} Dissonant Whispers`)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData);
-            mba.addCondition(target.actor, "Reaction");
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
+            await mba.addCondition(target.actor, "Reaction");
         })
 
         .play()

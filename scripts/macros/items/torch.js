@@ -3,9 +3,9 @@ import {mba} from "../../helperFunctions.js";
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let effect = await mba.findEffect(workflow.actor, "Torch");
     if (!effect) {
-        let choices = [["Yes, light the torch", "light"], ["No, cancel", "cancel"]];
+        let choices = [["Yes, light the torch", "light"], ["No, cancel", false]];
         let selection = await mba.dialog("Torch", choices, `Would you like to light a <b>Torch</b>?`);
-        if (!selection || selection === "cancel") return;
+        if (!selection) return;
         await mbaPremades.macros.torch.light({speaker, actor, token, character, item, args, scope, workflow})
         return;
     }
@@ -154,12 +154,12 @@ async function light({ speaker, actor, token, character, item, args, scope, work
 
         .wait(250)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
             if (workflow.item.system.quantity > 1) {
-                workflow.item.update({ "system.quantity": workflow.item.system.quantity - 1});
+                await workflow.item.update({ "system.quantity": workflow.item.system.quantity - 1});
             } else {
-                workflow.actor.deleteEmbeddedDocuments("Item", [workflow.item.id]);
+                await workflow.actor.deleteEmbeddedDocuments("Item", [workflow.item.id]);
             }
         })
 

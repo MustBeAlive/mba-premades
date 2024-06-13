@@ -116,8 +116,8 @@ export async function blindnessDeafness({ speaker, actor, token, character, item
             .persist()
             .name(`${target.document.name} BD`)
 
-            .thenDo(function () {
-                mba.createEffect(target.actor, effectData);
+            .thenDo(async () => {
+                await mba.createEffect(target.actor, effectData);
             })
 
             .play()

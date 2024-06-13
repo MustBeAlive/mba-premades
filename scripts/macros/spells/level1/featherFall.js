@@ -40,8 +40,8 @@ export async function featherFall({ speaker, actor, token, character, item, args
             .delay(delay)
             .waitUntilFinished(-750)
 
-            .thenDo(function () {
-                mba.createEffect(target.actor, effectData);
+            .thenDo(async () => {
+                await mba.createEffect(target.actor, effectData);
             })
 
             .effect()

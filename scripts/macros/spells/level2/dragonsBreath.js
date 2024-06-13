@@ -97,36 +97,30 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     }
     let damageType = effect.flags['mba-premades']?.spell?.dragonsBreath?.damageType;
     let animation;
-    let hue;
     let rate;
     switch (damageType) {
         case "acid": {
             animation = "jb2a.breath_weapons02.burst.cone.fire.green.01";
-            hue = 0;
             rate = 1.4;
             break;
         }
         case "cold": {
             animation = "jb2a.breath_weapons.cold.cone.blue";
-            hue = 0;
             rate = 1.8;
             break;
         }
         case "fire": {
             animation = "jb2a.breath_weapons.fire.cone.orange.02";
-            hue = 0;
             rate = 1.5;
             break;
         }
         case "lightning": {
             animation = "jb2a.template_cone_5e.lightning.01.complete.bluepurple";
-            hue = 0;
             rate = 1.5;
             break;
         }
         case "poison": {
             animation = "jb2a.breath_weapons.poison.cone.green";
-            hue = 0;
             rate = 1.5;
             break;
         }
@@ -138,11 +132,10 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
 
         .effect()
         .file(animation)
-        .atLocation(token)
+        .atLocation(workflow.token)
         .rotateTowards(template)
         .scaleToObject(1.2)
         .fadeIn(1500)
-        .filter("ColorMatrix", { hue: hue })
         .playbackRate(rate)
 
         .play()

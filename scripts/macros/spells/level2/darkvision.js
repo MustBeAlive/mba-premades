@@ -75,8 +75,8 @@ export async function darkvision({ speaker, actor, token, character, item, args,
         .fadeIn(500)
         .fadeOut(1000)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData)
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData)
         })
 
         .effect()

@@ -136,8 +136,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			.duration(3000)
 			.scaleToObject(3)
 
-			.thenDo(function () {
-				mba.createEffect(target.actor, effectData);
+            .thenDo(async () => {
+				await mba.createEffect(target.actor, effectData);
 			})
 
 			.effect()

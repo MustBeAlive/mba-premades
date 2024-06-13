@@ -54,24 +54,8 @@ export async function elixirOfArcaneCultivation({ speaker, actor, token, charact
         await game.messages.get(workflow.itemCardId).delete();
         return;
     }
-    current += 1;
-    let potioncolor = "yellow";
-    let defaults = {
-        "yellow": {
-            "color": "yellow",
-            "particles": "orange",
-            "tintColor": "0xffbb00",
-            "hue1": 230,
-            "hue2": 10,
-            "hue3": 0,
-            "saturate": 1
-        }
-    };
-    let config = defaults[potioncolor];
 
     await new Sequence()
-
-        .wait(500)
 
         .effect()
         .file("animated-spell-effects-cartoon.water.05")
@@ -79,19 +63,19 @@ export async function elixirOfArcaneCultivation({ speaker, actor, token, charact
         .scaleToObject(1.4)
         .opacity(0.9)
         .rotate(90)
-        .filter("ColorMatrix", { saturate: config.saturate, hue: config.hue1 })
+        .filter("ColorMatrix", { saturate: 1, hue: 230 })
         .zIndex(1)
 
         .wait(200)
 
         .effect()
-        .file(`jb2a.sacred_flame.source.${config.color}`)
+        .file(`jb2a.sacred_flame.source.yellow`)
         .attachTo(token, { offset: { y: 0.15 }, gridUnits: true, followRotation: false })
         .startTime(3400)
         .scaleToObject(2.2)
         .fadeOut(500)
         .animateProperty("sprite", "position.y", { from: 0, to: -0.4, duration: 1000, gridUnits: true })
-        .filter("ColorMatrix", { hue: config.hue3 })
+        .filter("ColorMatrix", { hue: 0 })
         .zIndex(1)
 
         .effect()
@@ -101,11 +85,11 @@ export async function elixirOfArcaneCultivation({ speaker, actor, token, charact
         .duration(1250)
         .fadeIn(100)
         .fadeOut(600)
-        .filter("Glow", { color: config.tintColor })
-        .tint(config.tintColor)
+        .filter("Glow", { color: "0xffbb00" })
+        .tint("0xffbb00")
 
         .effect()
-        .file(`jb2a.particles.outward.${config.particles}.01.03`)
+        .file(`jb2a.particles.outward.orange.01.03`)
         .attachTo(token, { offset: { y: 0.1 }, gridUnits: true, followRotation: false })
         .scale(0.6)
         .duration(1000)
@@ -117,13 +101,13 @@ export async function elixirOfArcaneCultivation({ speaker, actor, token, charact
         .zIndex(0.3)
         .waitUntilFinished(-500)
 
-        .thenDo(function () {
-            workflow.actor.update({ [path]: current });
+        .thenDo(async () => {
+            await workflow.actor.update({ [path]: current += 1 });
         })
 
         .play();
 
-    let vialItem = mba.getItem(workflow.actor, workflow.item.name);
+    let vialItem = await mba.getItem(workflow.actor, workflow.item.name);
     if (vialItem.system.quantity > 1) {
         await vialItem.update({ "system.quantity": vialItem.system.quantity - 1 });
     } else {

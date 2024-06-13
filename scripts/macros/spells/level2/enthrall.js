@@ -8,7 +8,6 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     mba.updateTargets(newTargets);
     await warpgate.wait(100);
     let targets = Array.from(game.user.targets);
-    console.log(mba.inCombat);
     for (let target of targets) {
         if (mba.checkTrait(target.actor, "ci", "charmed") || mba.findEffect(target.actor, "Deafened")) {
             await mba.createEffect(target.actor, constants.immunityEffectData);

@@ -4,6 +4,7 @@ export async function compendiumRender(doc, html, context) {
     let ids = [
         'mba-premades.MBA Class Feature Items',
         'mba-premades.MBA Item Features',
+        'mba-premades.MBA Monster Features',
         'mba-premades.MBA Race Feature Items',
         'mba-premades.MBA Spell Features',
         'mba-premades.MBA Summon Features',

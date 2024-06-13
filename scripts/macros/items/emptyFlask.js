@@ -10,15 +10,15 @@ export async function emptyFlask({ speaker, actor, token, character, item, args,
         ui.notifications.warn("Unable to find any empty vials or flasks!");
         return;
     }
-    choices.push(["Cancel", "cancel"]);
+    choices.push(["Cancel", false]);
     let type = await mba.dialog(`Empty Container`, choices, `<b>What would you like to do?</b>`);
-    if (!type || type === "cancel") return;
+    if (!type) return;
     let liquids = [
         [`Fill ${type} with Water`, "Water"],
-        ["Cancel", "cancel"]
+        ["Cancel", false]
     ];
     let selection = await mba.dialog(`Empty ${type}`, liquids, `<b>Choose liquid type:</b>`);
-    if (!selection || selection === "cancel") return;
+    if (!selection) return;
 
     let choicesGM = [["Yes, proceed", "yes"], ["No, cancel", "no"]];
     await mba.gmDialogMessage();

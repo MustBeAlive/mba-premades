@@ -1,28 +1,25 @@
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Telekinesis: Push Creature', false);
+    let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Telekinesis: Push Creature', false);
     if (!featureData) return;
     async function effectMacroDel() {
         await warpgate.revert(token.document, 'Telekinesis: Push Creature');
     }
     async function effectMacroStart() {
-        let effect = chrisPremades.helpers.findEffect(actor, "Telekinesis");
+        let effect = mbaPremades.helpers.findEffect(actor, "Telekinesis");
         let targetEffectUuid = effect.flags['mba-premades']?.spell?.telekinesis?.targetEffectUuid;
         if (!targetEffectUuid) return;
         let targetEffect = await fromUuid(targetEffectUuid);
         if (!targetEffect) return;
-        let choices = [
-            ['Yes', 'yes'],
-            ['No', 'no']
-        ];
-        let selection = await chrisPremades.helpers.dialog('Use action to keep the creature restrained?', choices);
+        let choices = [['Yes', 'yes'],['No', 'no']];
+        let selection = await mbaPremades.helpers.dialog('Use action to keep the creature restrained?', choices);
         if (!selection) return;
         switch (selection) {
             case 'yes': {
                 let targetUuid = effect.flags['mba-premades']?.spell?.telekinesis?.targetUuid;
                 let target = await fromUuidSync(targetUuid).object;
                 let spellAbility = actor.system.attributes.spellcasting;
-                let casterRoll = await chrisPremades.helpers.rollRequest(token, 'abil', spellAbility);
-                let targetRoll = await chrisPremades.helpers.rollRequest(target, 'abil', 'str');
+                let casterRoll = await mbaPremades.helpers.rollRequest(token, 'abil', spellAbility);
+                let targetRoll = await mbaPremades.helpers.rollRequest(target, 'abil', 'str');
                 if (casterRoll.total <= targetRoll.total) {
                     let updates = {
                         'flags': {
@@ -31,7 +28,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                             }
                         }
                     };
-                    await chrisPremades.helpers.updateEffect(targetEffect, updates)
+                    await mbaPremades.helpers.updateEffect(targetEffect, updates)
                 }
                 break;
             }
@@ -43,7 +40,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                         }
                     }
                 };
-                await chrisPremades.helpers.updateEffect(targetEffect, updates)
+                await mbaPremades.helpers.updateEffect(targetEffect, updates)
             }
         }
     };
@@ -57,10 +54,10 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'effectmacro': {
                 'onTurnStart': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroStart)
+                    'script': mbaPremades.helpers.functionToString(effectMacroStart)
                 },
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mbaPremades.helpers.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -92,20 +89,20 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    let effect = chrisPremades.helpers.findEffect(workflow.actor, "Telekinesis");
-    let size = await chrisPremades.helpers.getSize(target.actor);
+    let effect = mbaPremades.helpers.findEffect(workflow.actor, "Telekinesis");
+    let size = await mbaPremades.helpers.getSize(target.actor);
     if (size > 4) {
         ui.notifications.warn("Target is too big to push!");
         return;
     }
     let spellAbility = workflow.actor.system.attributes.spellcasting;
-    let casterRoll = await chrisPremades.helpers.rollRequest(workflow.token, 'abil', spellAbility);
-    let targetRoll = await chrisPremades.helpers.rollRequest(target, 'abil', 'str');
+    let casterRoll = await mbaPremades.helpers.rollRequest(workflow.token, 'abil', spellAbility);
+    let targetRoll = await mbaPremades.helpers.rollRequest(target, 'abil', 'str');
     if (casterRoll.total <= targetRoll.total) return;
     let distance = 30;
     while (distance > 0) {
         let choices = [["Distance left: " + distance + " ft.", 'nope'], ['Horisontally', 'hor'], ['Vertically', 'ver'], ['Stop Moving', 'stop']];
-        let selection = await chrisPremades.helpers.dialog('Which way do you wish move the target?', choices);
+        let selection = await mbaPremades.helpers.dialog('Which way do you wish move the target?', choices);
         if (!selection) return;
         switch (selection) {
             case 'hor': {
@@ -113,7 +110,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 let icon = target.document.texture.src;
                 let interval = target.document.width % 2 === 0 ? 1 : -1;
                 let oldCenter = target.center;
-                let position = await chrisPremades.helpers.aimCrosshair(target, maxRange, icon, interval, target.document.width);
+                let position = await mbaPremades.helpers.aimCrosshair(target, maxRange, icon, interval, target.document.width);
                 if (position.cancelled) return;
                 let newCenter = canvas.grid.getSnappedPosition(position.x - target.w / 2, position.y - target.h / 2, 1);
                 let targetUpdate = {
@@ -202,14 +199,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         let calc = Math.floor(elevation / 10);
         if (calc < 1) {
             tokenDoc.update({ "elevation": 0 })
-            await chrisPremades.helpers.addCondition(actor, 'Prone');
+            await mbaPremades.helpers.addCondition(actor, 'Prone');
             return;
         }
         let damageFormula = calc + "d6[bludgeoning]";
         let damageRoll = await new Roll(damageFormula).roll({ async: true });
         damageRoll.toMessage({ rollMode: 'roll', speaker: { 'alias': name }, flavor: 'Fall Damage' });
-        await chrisPremades.helpers.applyDamage([token], damageRoll.total, 'bludgeoning');
-        await chrisPremades.helpers.addCondition(actor, 'Prone');
+        await mbaPremades.helpers.applyDamage([token], damageRoll.total, 'bludgeoning');
+        await mbaPremades.helpers.addCondition(actor, 'Prone');
         tokenDoc.update({ "elevation": 0 })
     }
     let effectData = {
@@ -238,12 +235,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             },
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroElev)
+                    'script': mbaPremades.helpers.functionToString(effectMacroElev)
                 }
             }
         }
     };
-    let targetEffect = await chrisPremades.helpers.createEffect(target.actor, effectData);
+    let targetEffect = await mbaPremades.helpers.createEffect(target.actor, effectData);
     let updates = {
         'flags': {
             'mba-premades': {
@@ -256,7 +253,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     }
-    await chrisPremades.helpers.updateEffect(effect, updates)
+    await mbaPremades.helpers.updateEffect(effect, updates)
 }
 
 export let telekinesis = {

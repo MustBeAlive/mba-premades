@@ -19,7 +19,7 @@ export async function borrowedKnowledge({ speaker, actor, token, character, item
         },
         'changes': [
             {
-                'key': 'system.skills.' + selection + '.value',
+                'key': `system.skills.${selection}.value`,
                 'mode': 4,
                 'value': 1,
                 'priority': 20
@@ -62,7 +62,7 @@ export async function borrowedKnowledge({ speaker, actor, token, character, item
                     .effect()
                     .delay(250)
                     .file("jb2a.icon.runes02.yellow")
-                    .attachTo(token, { offset: offset[i], gridUnits: true, followRotation: false })
+                    .attachTo(workflow.token, { offset: offset[i], gridUnits: true, followRotation: false })
                     .scaleToObject(0.4)
                     .scaleIn(0, 250, { ease: "easeOutBack" })
                     .animateProperty("sprite", "position.x", { from: -0, to: -offset[i].x, duration: 500, gridUnits: true, delay: 500, ease: "easeInBack" })
@@ -72,7 +72,7 @@ export async function borrowedKnowledge({ speaker, actor, token, character, item
 
                     .effect()
                     .file("jb2a.template_circle.out_pulse.02.burst.yellowwhite")
-                    .attachTo(token, { offset: offset[i], gridUnits: true })
+                    .attachTo(workflow.token, { offset: offset[i], gridUnits: true })
                     .scaleToObject(0.5)
                     .opacity(0.5)
 
@@ -84,7 +84,7 @@ export async function borrowedKnowledge({ speaker, actor, token, character, item
 
         .effect()
         .file("jb2a.energy_attack.01.orange")
-        .attachTo(token, { followRotation: false })
+        .attachTo(workflow.token, { followRotation: false })
         .scaleToObject(2.25)
         .belowTokens()
         .startTime(500)
@@ -94,25 +94,25 @@ export async function borrowedKnowledge({ speaker, actor, token, character, item
 
         .effect()
         .file("jb2a.impact.010.orange")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(0.9)
         .zIndex(2)
         .waitUntilFinished(-1000)
 
         .effect()
         .file("jb2a.template_circle.symbol.normal.runes.orange")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(1.8)
         .fadeIn(500)
         .fadeOut(1000)
         .randomRotation()
-        .mask(token)
+        .mask()
         .persist()
-        .name(`${token.document.name} Borrowed Knowledge`)
+        .name(`${workflow.token.document.name} Borrowed Knowledge`)
 
         .effect()
         .file("jb2a.extras.tmfx.outflow.circle.01")
-        .attachTo(token, { cacheLocation: true, offset: { y: 0 }, gridUnits: true, bindAlpha: false })
+        .attachTo(workflow.token, { cacheLocation: true, offset: { y: 0 }, gridUnits: true, bindAlpha: false })
         .scaleToObject(1.55, { considerTokenScale: true })
         .randomRotation()
         .fadeIn(500)
@@ -122,22 +122,24 @@ export async function borrowedKnowledge({ speaker, actor, token, character, item
         .loopProperty("alphaFilter", "alpha", { from: 0.75, to: 1, duration: 1500, pingPong: true, ease: "easeOutSine" })
         .tint("#c77400")
         .persist()
-        .name(`${token.document.name} Borrowed Knowledge`)
+        .name(`${workflow.token.document.name} Borrowed Knowledge`)
 
         .effect()
-        .attachTo(token, { bindAlpha: false })
+        .attachTo(workflow.token, { bindAlpha: false })
         .scaleToObject(1, { considerTokenScale: true })
         .belowTokens()
-        .mirrorX(token.document.data.mirrorX)
+        .mirrorX(workflow.token.document.data.mirrorX)
         .loopProperty("alphaFilter", "alpha", { from: 0.75, to: 1, duration: 1500, pingPong: true, ease: "easeOutSine" })
         .filter("Glow", { color: 0xc77400, distance: 3, outerStrength: 4, innerStrength: 0 })
         .fadeIn(500)
         .fadeOut(1000)
         .zIndex(0.1)
         .persist()
-        .name(`${token.document.name} Borrowed Knowledge`)
+        .name(`${workflow.token.document.name} Borrowed Knowledge`)
+
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
+        })
 
         .play()
-
-    await mba.createEffect(workflow.actor, effectData);
 }

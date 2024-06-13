@@ -11,7 +11,6 @@ export async function animalFriendship({ speaker, actor, token, character, item,
         await warpgate.wait(100);
     }
     let targets = Array.from(game.user.targets).filter(i => (mba.raceOrType(i.actor) === "beast") && i.actor.system.abilities.int.value >= 4 && (!mba.findEffect(i.actor, "Blinded")) && (!mba.findEffect(i.actor, "Deafened")));
-    console.log(targets);
     if (!targets.length) {
         ui.notifications.info("No valid targets selected!");
         return false;
@@ -92,8 +91,8 @@ export async function animalFriendship({ speaker, actor, token, character, item,
             .persist()
             .name(`${target.document.name} Animal Friendship`)
 
-            .thenDo(function () {
-                mba.createEffect(target.actor, effectData)
+            .thenDo(async () => {
+                await mba.createEffect(target.actor, effectData)
             })
 
             .play()

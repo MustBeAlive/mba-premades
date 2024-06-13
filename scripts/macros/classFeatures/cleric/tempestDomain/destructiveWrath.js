@@ -193,10 +193,9 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .persist()
         .name(`${token.document.name} Destructive Wrath`)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData);
-            uses -= 1; 
-            CDItem.update({ "system.uses.value": uses });
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
+            await CDItem.update({ "system.uses.value": uses -= 1 });
         })
 
         .play()

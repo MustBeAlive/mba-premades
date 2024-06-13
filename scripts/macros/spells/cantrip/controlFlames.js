@@ -1729,8 +1729,8 @@ export async function controlFlames({ speaker, actor, token, character, item, ar
 
         .wait(1500)
 
-        .thenDo(function () {
-            mba.updateDoc(lightDoc, updates);
+        .thenDo(async () => {
+            await mba.updateDoc(lightDoc, updates);
         })
 
         .play()

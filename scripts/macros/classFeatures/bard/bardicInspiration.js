@@ -3,24 +3,31 @@ import {mba} from "../../../helperFunctions.js";
 import {queue} from "../../mechanics/queue.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-    if (!workflow.targets.size) return;
-    let classIdentifier = 'bard';
-    let scaleIdentifier = 'bardic-inspiration';
-    let scale = workflow.actor.system.scale[classIdentifier]?.[scaleIdentifier];
-    if (!scale) {
-        ui.notifications.warn('Actor does not appear to have a Bardic Inspiration scale set!');
+    let bardLevel = workflow.actor.classes.bard?.system?.levels;
+    if (!bardLevel) {
+        ui.notifications.warn("Actor has no Bard levels!");
         return;
     }
+    let value = 6;
+    if (bardLevel >= 5 && bardLevel < 10) value = 8;
+    else if (bardLevel >= 10 && bardLevel < 15) value = 10;
+    else if (bardLevel >= 15) value = 12;
+    let scaleFormula = `1d${value}`;
+    let scaleDie = `d${value}`;
+    async function effectMacroDel() {
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} BI`, object: token })
+    };
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You were bestowed with Bardic Inspiration <b>(Die Size: 1${scale.formula})</b>.</p>
+            <p>You were bestowed with Bardic Inspiration.</p>
             <p>Once within the next 10 minutes you can roll the die and add the number rolled to one ability check, attack roll, or saving throw.</p>
             <p>You can wait until after you roll the d20 before deciding to use the Bardic Inspiration die, but must decide before the DM says whether the roll succeeds or fails</p>
             <p>Once the Bardic Inspiration die is rolled, it is lost.</p>
             <p>You can have only one Bardic Inspiration die at a time.</p>
+            <p>Die Size: <b>${scaleFormula}</b></p>
         `,
         'duration': {
             'seconds': 600
@@ -41,14 +48,19 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             {
                 'key': 'flags.midi-qol.optional.bardicInspiration.save.all',
                 'mode': 5,
-                'value': scale.formula,
+                'value': scaleFormula,
                 'priority': 20
             }
         ],
         'flags': {
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDel)
+                }
+            },
             'mba-premades': {
                 'feature': {
-                    'bardicInspiration': scale.formula
+                    'bardicInspiration': scaleFormula
                 }
             }
         }
@@ -59,13 +71,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             {
                 'key': 'flags.midi-qol.optional.bardicInspiration.check.all',
                 'mode': 5,
-                'value': '2' + scale.die + 'kh',
+                'value': `2${scaleDie}kh`,
                 'priority': 20
             },
             {
                 'key': 'flags.midi-qol.optional.bardicInspiration.skill.all',
                 'mode': 5,
-                'value': '2' + scale.die + 'kh',
+                'value': `2${scaleDie}kh`,
                 'priority': 20
             },
             {
@@ -81,13 +93,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             {
                 'key': 'flags.midi-qol.optional.bardicInspiration.check.all',
                 'mode': 5,
-                'value': scale.formula,
+                'value': scaleFormula,
                 'priority': 20
             },
             {
                 'key': 'flags.midi-qol.optional.bardicInspiration.skill.all',
                 'mode': 5,
-                'value': scale.formula,
+                'value': scaleFormula,
                 'priority': 20
             }
         );
@@ -104,7 +116,42 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         );
     }
-    await mba.createEffect(workflow.targets.first().actor, effectData);
+    let target = workflow.targets.first();
+    new Sequence()
+
+        .effect()
+        .file("jb2a.markers.music.pink")
+        .attachTo(workflow.token)
+        .scaleToObject(1.2)
+        .fadeIn(1000)
+        .fadeOut(1000)
+        .filter("ColorMatrix", { hue: 120 })
+        .waitUntilFinished(-4000)
+
+        .effect()
+        .file("jb2a.bardic_inspiration.pink")
+        .attachTo(target)
+        .scaleToObject(1.6)
+        .filter("ColorMatrix", { hue: 120 })
+        .sound("modules/dnd5e-animations/assets/sounds/Spells/Buff/spell-lively-1.mp3")
+
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
+        })
+
+        .effect()
+        .file("jb2a.markers.music_note.purple.03")
+        .attachTo(target, { followRotation: false })
+        .scaleToObject(1.85)
+        .delay(500)
+        .fadeIn(1000)
+        .fadeOut(1000)
+        .filter("ColorMatrix", { hue: 130 })
+        .playbackRate(0.85)
+        .persist()
+        .name(`${target.document.name} BI`)
+
+        .play()
 }
 
 async function attack({ speaker, actor, token, character, item, args, scope, workflow }) {

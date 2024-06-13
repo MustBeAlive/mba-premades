@@ -27,11 +27,11 @@ async function doRollSkill(wrapped, ...args) {
             let disadvantages = selections.filter(i => i.type === 'disadvantage').map(j => ({ 'type': 'checkbox', 'label': j.label, 'options': false }));
             let generatedInputs = [];
             if (advantages.length) {
-                generatedInputs.push({ 'label': '<u><h2>Advantage:</h2></u>', 'type': 'info' });
+                generatedInputs.push({ 'label': '<u><h3>Advantage:</h3></u>', 'type': 'info' });
                 generatedInputs.push(...advantages);
             }
             if (disadvantages.length) {
-                generatedInputs.push({ 'label': '<u><h2>Disadvantage:</h2></u>', 'type': 'info' });
+                generatedInputs.push({ 'label': '<u><h3>Disadvantage:</h3></u>', 'type': 'info' });
                 generatedInputs.push(...disadvantages);
             }
             let selection = await mba.menu('Skill Roll Options', constants.okCancel, generatedInputs, true);
@@ -82,11 +82,11 @@ async function doRollSave(wrapped, ...args) {
             let disadvantages = selections.filter(i => i.type === 'disadvantage').map(j => ({ 'type': 'checkbox', 'label': j.label, 'options': false }));
             let generatedInputs = [];
             if (advantages.length) {
-                generatedInputs.push({ 'label': '<u><h2>Advantage:</h2></u>', 'type': 'info' });
+                generatedInputs.push({ 'label': '<u><h3>Advantage:</h3></u>', 'type': 'info' });
                 generatedInputs.push(...advantages);
             }
             if (disadvantages.length) {
-                generatedInputs.push({ 'label': '<u><h2>Disadvantage:</h2></u>', 'type': 'info' });
+                generatedInputs.push({ 'label': '<u><h3>Disadvantage:</h3></u>', 'type': 'info' });
                 generatedInputs.push(...disadvantages);
             }
             let selection = await mba.menu('Save Roll Options', constants.okCancel, generatedInputs, true);

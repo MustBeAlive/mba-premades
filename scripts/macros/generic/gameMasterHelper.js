@@ -2,6 +2,7 @@ import {constants} from "./constants.js";
 import {diseases} from "./diseases.js";
 import {jumping} from "./jumping.js";
 import {mba} from "../../helperFunctions.js";
+import {seanse} from "./ouija.js";
 
 export async function gameMasterHelper() {
     let choices = [
@@ -11,6 +12,7 @@ export async function gameMasterHelper() {
         ["Jumping Helper", "jump"],
         ["GM Inspiration Distributor", "inspiration"],
         ["Mass Token Show/Hide", "showhide"],
+        ["Ouija Board Seanse", "seanse"],
         ["Surprised Condition Distributor", "surprise"],
     ];
     let helperType = await mba.dialog("GM Helper: Type", choices, `<b>What would you like to do?</b>`);
@@ -106,6 +108,44 @@ export async function gameMasterHelper() {
                 <p>You can spend GM Inspiration Token on any roll to give yourself advantage in that particular roll.</p>
                 <p>Жетон вдохновения от ГМа — его можно потратить на один любой бросок (до конца сессии), чтобы получить в нем преимущество.</p>
             `,
+            'changes': [
+                {
+                    'key': 'flags.midi-qol.optional.inspirationGM.label',
+                    'mode': 5,
+                    'value': 'GM Inspiration',
+                    'priority': 20
+                },
+                {
+                    'key': 'flags.midi-qol.optional.inspirationGM.check.all',
+                    'mode': 5,
+                    'value': "reroll",
+                    'priority': 20
+                },
+                {
+                    'key': 'flags.midi-qol.optional.inspirationGM.skill.all',
+                    'mode': 5,
+                    'value': "reroll",
+                    'priority': 20
+                },
+                {
+                    'key': 'flags.midi-qol.optional.inspirationGM.save.all',
+                    'mode': 5,
+                    'value': "reroll",
+                    'priority': 20
+                },
+                {
+                    'key': 'flags.midi-qol.optional.inspirationGM.attack.all',
+                    'mode': 5,
+                    'value': "reroll",
+                    'priority': 20
+                },
+                {
+                    'key': 'flags.midi-qol.optional.inspirationGM.count',
+                    'mode': 5,
+                    'value': 1,
+                    'priority': 20
+                },
+            ],
             'flags': {
                 'dae': {
                     'showIcon': true
@@ -131,13 +171,16 @@ export async function gameMasterHelper() {
                 .fadeOut(1000)
                 .zIndex(1)
 
-                .thenDo(function () {
-                    mba.createEffect(target.actor, effectData);
+                .thenDo(async () => {
+                    await mba.createEffect(target.actor, effectData);
                 })
 
                 .play()
         }
 
+    }
+    else if (helperType === "seanse") {
+        await seanse();
     }
     else if (helperType === "showhide") {
         let type = await mba.dialog("GM Helper: Hide/Show", [["Show Tokens", "show"], ["Hide Tokens", "hide"]], "<b>Choose one:</b>");

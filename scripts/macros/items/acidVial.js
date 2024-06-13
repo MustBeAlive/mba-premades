@@ -10,10 +10,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let choices = [
         ["Splash acid on somebody (5 ft.)", "splash"],
         ["Throw vial at someone (20 ft.)", "shatter"],
-        ["Cancel", "cancel"]
+        ["Cancel", false]
     ];
     let selection = await mba.dialog("Acid Vial", choices, `<b>What would you like to do?</b>`);
-    if (!selection || selection === "cancel") return;
+    if (!selection) return;
     let featureData;
     if (selection === "splash") {
         featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Acid Vial: Splash Acid', false);
@@ -36,7 +36,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow) return;
 
-    let vialItem = mba.getItem(workflow.actor, workflow.item.name);
+    let vialItem = await mba.getItem(workflow.actor, workflow.item.name);
     if (vialItem.system.quantity > 1) {
         await vialItem.update({ "system.quantity": vialItem.system.quantity - 1 });
     } else {
@@ -44,7 +44,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     }
     
     if (selection === "splash") {
-        let emptyVialItem = mba.getItem(workflow.actor, "Empty Vial");
+        let emptyVialItem = await mba.getItem(workflow.actor, "Empty Vial");
         if (!emptyVialItem) {
             const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Vial', false);
             if (!itemData) {
@@ -97,8 +97,8 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
         .attachTo(target)
         .scale(1.4)
 
-        .thenDo(function () {
-            mba.applyDamage(target, damageRoll.total, 'acid')
+        .thenDo(async () => {
+            await mba.applyDamage(target, damageRoll.total, 'acid')
         })
 
         .effect()

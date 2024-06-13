@@ -1,7 +1,7 @@
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Sunbeam: Create Beam', false);
+    let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Sunbeam: Create Beam', false);
     if (!featureData) return;
-    featureData.system.save.dc = chrisPremades.helpers.getSpellDC(workflow.item);
+    featureData.system.save.dc = mbaPremades.helpers.getSpellDC(workflow.item);
     async function effectMacroDel() {
         await warpgate.revert(token.document, 'Sunbeam: Create Beam');
     }
@@ -29,7 +29,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mbaPremades.helpers.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -79,7 +79,7 @@ async function check({ speaker, actor, token, character, item, args, scope, work
             'dae': {
                 'specialDuration': ['isSave']
             },
-            'chris-premades': {
+            'mba-premades': {
                 'effect': {
                     'noAnimation': true
                 }
@@ -89,9 +89,9 @@ async function check({ speaker, actor, token, character, item, args, scope, work
     let targets = Array.from(workflow.targets);
     for (let i = 0; i < targets.length; i++) {
         let target = fromUuidSync(targets[i].document.uuid).object;
-        let type = chrisPremades.helpers.raceOrType(target.actor);
+        let type = mbaPremades.helpers.raceOrType(target.actor);
         if (type === 'undead' || type === 'ooze') {
-            await chrisPremades.helpers.createEffect(target.actor, effectData);
+            await mbaPremades.helpers.createEffect(target.actor, effectData);
         }
     }
 }

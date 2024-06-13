@@ -87,7 +87,7 @@ export async function arcaneRecovery({ speaker, actor, token, character, item, a
     new Sequence()
 
         .effect()
-        .file("jb2a.particle_burst.01.circle.bluepurple")
+        .file("jb2a.particle_burst.01.rune.bluepurple")
         .attachTo(workflow.token)
         .scaleToObject(2 * workflow.token.document.texture.scaleX)
         .fadeIn(1000)

@@ -62,7 +62,7 @@ export async function greaterRestoration({ speaker, actor, token, character, ite
                 ui.notifications.warn(`Unable to find effect: ${effects[0].name}`);
                 return;
             }
-            let eventId = effect.flags['mba-bestiary']?.eventId;
+            let eventId = effect.flags['mba-premades']?.eventId;
             if (eventId) game.Gametime.doIn({ second: 1 }, async () => { game.Gametime.clearTimeout(eventId) });
             await mba.removeEffect(effect);
         } else {
@@ -152,7 +152,7 @@ export async function greaterRestoration({ speaker, actor, token, character, ite
                 ui.notifications.warn("Something went wrong, unable to find the effect!");
                 return;
             }
-            let eventId = removeEffect.flags['mba-bestiary']?.eventId;
+            let eventId = removeEffect.flags['mba-premades']?.eventId;
             if (eventId) game.Gametime.doIn({ second: 1 }, async () => { game.Gametime.clearTimeout(eventId) });
             await mba.removeEffect(removeEffect);
         }
@@ -169,7 +169,7 @@ export async function greaterRestoration({ speaker, actor, token, character, ite
                 ui.notifications.warn(`Unable to find effect: ${effects[0].name}`);
                 return;
             }
-            let eventId = effect.flags['mba-bestiary']?.eventId;
+            let eventId = effect.flags['mba-premades']?.eventId;
             if (eventId) game.Gametime.doIn({ second: 1 }, async () => { game.Gametime.clearTimeout(eventId) });
             await mba.removeEffect(effect);
         } else {
@@ -259,7 +259,7 @@ export async function greaterRestoration({ speaker, actor, token, character, ite
                 ui.notifications.warn("Something went wrong, unable to find the effect!");
                 return;
             }
-            let eventId = removeEffect.flags['mba-bestiary']?.eventId;
+            let eventId = removeEffect.flags['mba-premades']?.eventId;
             if (eventId) game.Gametime.doIn({ second: 1 }, async () => { game.Gametime.clearTimeout(eventId) });
             await mba.removeEffect(removeEffect);
         }

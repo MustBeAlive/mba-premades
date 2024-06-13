@@ -75,6 +75,9 @@ export async function divineSense({ speaker, actor, token, character, item, args
         );
         const gridDistance = distance / canvas.grid.size
         let [canSee] = await MidiQOL.findNearby(null, target, 60, { includeIncapacitated: false, canSee: true }).filter(i => i.name === workflow.token.document.name);
+        let type = await mba.raceOrType(target.actor);
+        let nystul = await mba.findEffect(target.actor, "Nystul's Magic Aura");
+        if (nystul) type = nystul.flags['mba-premades']?.spell?.nystulMagicAura?.type;
         new Sequence()
 
             .effect()
@@ -109,7 +112,7 @@ export async function divineSense({ speaker, actor, token, character, item, args
             .playIf(() => {
                 if (mba.findEffect(target.actor, "Nondetection")) return false;
                 if (!canSee) return false;
-                return mba.raceOrType(target.actor) === "celestial";
+                return type === "celestial";
             })
 
             .effect()
@@ -129,7 +132,7 @@ export async function divineSense({ speaker, actor, token, character, item, args
             .playIf(() => {
                 if (mba.findEffect(target.actor, "Nondetection")) return false;
                 if (!canSee) return false;
-                return mba.raceOrType(target.actor) === "celestial";
+                return type === "celestial";
             })
 
             //Fiend Effect
@@ -151,7 +154,7 @@ export async function divineSense({ speaker, actor, token, character, item, args
             .playIf(() => {
                 if (mba.findEffect(target.actor, "Nondetection")) return false;
                 if (!canSee) return false;
-                return mba.raceOrType(target.actor) === "fiend";
+                return type === "fiend";
             })
 
             .effect()
@@ -171,7 +174,7 @@ export async function divineSense({ speaker, actor, token, character, item, args
             .playIf(() => {
                 if (mba.findEffect(target.actor, "Nondetection")) return false;
                 if (!canSee) return false;
-                return mba.raceOrType(target.actor) === "fiend";
+                return type === "fiend";
             })
 
             //Undead Effect
@@ -193,7 +196,7 @@ export async function divineSense({ speaker, actor, token, character, item, args
             .playIf(() => {
                 if (mba.findEffect(target.actor, "Nondetection")) return false;
                 if (!canSee) return false;
-                return mba.raceOrType(target.actor) === "undead";
+                return type === "undead";
             })
 
             .effect()
@@ -213,7 +216,7 @@ export async function divineSense({ speaker, actor, token, character, item, args
             .playIf(() => {
                 if (mba.findEffect(target.actor, "Nondetection")) return false;
                 if (!canSee) return false;
-                return mba.raceOrType(target.actor) === "undead";
+                return type === "undead";
             })
 
             .play()

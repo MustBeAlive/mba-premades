@@ -38,17 +38,17 @@ export async function mistyStep({ speaker, actor, token, character, item, args, 
 
         .animation()
         .delay(800)
-        .on(token)
+        .on(workflow.token)
         .fadeOut(200)
 
         .effect()
         .file(animation1)
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(2)
         .waitUntilFinished(-2000)
 
         .animation()
-        .on(token)
+        .on(workflow.token)
         .teleportTo(position)
         .snapToGrid()
         .offset({ x: -1, y: -1 })
@@ -56,12 +56,12 @@ export async function mistyStep({ speaker, actor, token, character, item, args, 
 
         .effect()
         .file(animation2)
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(2)
 
         .animation()
         .delay(1400)
-        .on(token)
+        .on(workflow.token)
         .fadeIn(200)
 
         .play();

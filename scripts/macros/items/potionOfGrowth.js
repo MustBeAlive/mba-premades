@@ -1,4 +1,4 @@
-import { mba } from "../../helperFunctions.js";
+import {mba} from "../../helperFunctions.js";
 
 export async function potionOfGrowth({ speaker, character, item, args, scope, workflow }) {
     let durationRoll = await new Roll("1d4").roll({ 'async': true });
@@ -280,7 +280,7 @@ export async function potionOfGrowth({ speaker, character, item, args, scope, wo
         .opacity(1)
 
         .thenDo(async () => {
-            let vialItem = mba.getItem(workflow.actor, workflow.item.name);
+            let vialItem = await mba.getItem(workflow.actor, workflow.item.name);
             if (vialItem.system.quantity > 1) {
                 await vialItem.update({ "system.quantity": vialItem.system.quantity - 1 });
             } else {

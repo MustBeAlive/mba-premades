@@ -143,8 +143,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .attachTo(token)
             .stretchTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
 
-            .thenDo(function () {
-                mba.removeEffect(effect);
+            .thenDo(async () => {
+                await mba.removeEffect(effect);
             })
 
             .play()
@@ -159,8 +159,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .attachTo(token)
         .stretchTo(target)
 
-        .thenDo(function () {
-            mba.removeEffect(effect);
+        .thenDo(async () => {
+            await mba.removeEffect(effect);
         })
 
         .play()

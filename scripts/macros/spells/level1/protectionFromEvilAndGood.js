@@ -1,5 +1,5 @@
-import { mba } from "../../../helperFunctions.js";
-import { queue } from "../../mechanics/queue.js";
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
@@ -68,8 +68,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .persist()
         .name(`${target.document.name} Protection from Evil and Good`)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData)
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData)
         })
 
         .play()

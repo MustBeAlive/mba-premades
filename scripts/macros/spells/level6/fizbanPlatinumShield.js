@@ -1,5 +1,5 @@
 async function cast({speaker, actor, token, character, item, args, scope, workflow}) {
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Fizban\'s Platinum Shield: Apply Shield', false);
+    let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Fizban\'s Platinum Shield: Apply Shield', false);
     if (!featureData) return;
     async function effectMacroDel() {
         await warpgate.revert(token.document, 'Fizban\'s Platinum Shield: Apply Shield');
@@ -14,7 +14,7 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mbaPremades.helpers.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -45,7 +45,7 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
 }
 
 async function item({speaker, actor, token, character, item, args, scope, workflow}) {
-    let effect = chrisPremades.helpers.findEffect(workflow.actor, "Fizban's Platinum Shield");
+    let effect = mbaPremades.helpers.findEffect(workflow.actor, "Fizban's Platinum Shield");
     let effectData = {
         'name': "Platinum Shield",
         'icon': workflow.item.img,
@@ -117,8 +117,8 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
     let target = workflow.targets.first();
     let oldTargetEffectUuid = effect.flags['mba-premades']?.spell?.fizbanPlatinumShield?.targetEffectUuid;
     if (!oldTargetEffectUuid) {
-        let targetEffect = await chrisPremades.helpers.createEffect(target.actor, effectData);
-        let newEffect = await chrisPremades.helpers.findEffect(target.actor, "Platinum Shield");
+        let targetEffect = await mbaPremades.helpers.createEffect(target.actor, effectData);
+        let newEffect = await mbaPremades.helpers.findEffect(target.actor, "Platinum Shield");
         let concData = workflow.actor.getFlag("midi-qol", "concentration-data.removeUuids");
         concData.push(newEffect.uuid);
         await workflow.actor.setFlag("midi-qol", "concentration-data.removeUuids", concData);
@@ -133,13 +133,13 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                 }
             }
         }
-        await chrisPremades.helpers.updateEffect(effect, updates)
+        await mbaPremades.helpers.updateEffect(effect, updates)
         return;
     }
     let oldTargetEffect = await fromUuid(oldTargetEffectUuid);
-    await chrisPremades.helpers.removeEffect(oldTargetEffect);
-    let targetEffect = await chrisPremades.helpers.createEffect(target.actor, effectData);
-    let newEffect = await chrisPremades.helpers.findEffect(target.actor, "Platinum Shield");
+    await mbaPremades.helpers.removeEffect(oldTargetEffect);
+    let targetEffect = await mbaPremades.helpers.createEffect(target.actor, effectData);
+    let newEffect = await mbaPremades.helpers.findEffect(target.actor, "Platinum Shield");
     let concData = workflow.actor.getFlag("midi-qol", "concentration-data.removeUuids");
     concData.push(newEffect.uuid);
     await workflow.actor.setFlag("midi-qol", "concentration-data.removeUuids", concData);
@@ -154,7 +154,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             }
         }
     }
-    await chrisPremades.helpers.updateEffect(effect, updates)
+    await mbaPremades.helpers.updateEffect(effect, updates)
 }
 
 export let fizbanPlatinumShield = {

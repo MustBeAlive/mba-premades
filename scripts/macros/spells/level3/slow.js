@@ -1,14 +1,14 @@
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = 6;
-    let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Choose which targets to keep (Max: ' + ammount + ')');
+    let selection = await mbaPremades.helpers.selectTarget(workflow.item.name, mbaPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Choose which targets to keep (Max: ' + ammount + ')');
     if (!selection.buttons) return;
     let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
-    chrisPremades.helpers.updateTargets(newTargets);
+    mbaPremades.helpers.updateTargets(newTargets);
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) {
-        await chrisPremades.helpers.removeCondition(workflow.actor, 'Concentrating');
+        await mbaPremades.helpers.removeCondition(workflow.actor, 'Concentrating');
         return;
     }
     let targets = Array.from(workflow.failedSaves);
@@ -69,14 +69,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': 'turn=end, saveAbility=wis, saveDC=' + chrisPremades.helpers.getSpellDC(workflow.item) + ' , saveMagic=true, name=Slow End Turn',
+                'value': 'turn=end, saveAbility=wis, saveDC=' + mbaPremades.helpers.getSpellDC(workflow.item) + ' , saveMagic=true, name=Slow End Turn',
                 'priority': 20
             },
         ],
         'flags': {
             'effectmacro': {
                 'onTurnStart': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroStart)
+                    'script': mbaPremades.helpers.functionToString(effectMacroStart)
                 }
             },
             'midi-qol': {
@@ -88,7 +88,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    for (let target of targets) await chrisPremades.helpers.createEffect(target.actor, effectData);
+    for (let target of targets) await mbaPremades.helpers.createEffect(target.actor, effectData);
 }
 
 async function reaction({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -98,7 +98,7 @@ async function reaction({ speaker, actor, token, character, item, args, scope, w
 }
 
 async function check({ speaker, actor, token, character, item, args, scope, workflow }) {
-    if (chrisPremades.helpers.findEffect(actor, 'Slow: Postponed Spell')) return;
+    if (mbaPremades.helpers.findEffect(actor, 'Slow: Postponed Spell')) return;
     if (workflow.item.type != "spell" && workflow.item.system.activation.type != "action") return;
     let slowRoll = await new Roll('1d20').roll({ 'async': true }); // it would've been much better if it requested the roll from the player (don't want to use Monk's TokenBar)
     await MidiQOL.displayDSNForRoll(slowRoll, 'damageRoll');
@@ -134,7 +134,7 @@ async function check({ speaker, actor, token, character, item, args, scope, work
             }
         },
     };
-    await chrisPremades.helpers.createEffect(actor, effectData);
+    await mbaPremades.helpers.createEffect(actor, effectData);
     return false;
 
 }

@@ -64,7 +64,7 @@ export async function handOfHealing(workflow) {
             if (!free) await kiItem.update({ "system.uses.value": kiPoints -= 1 });
             else await mba.removeEffect(free);
             if (physicianTouch && effectToRemove) await mba.removeEffect(effectToRemove); 
-            await mba.applyWorkflowDamage(workflow.token, healingRoll, "healing", [target], workflow.item.name, workflow.itemCardId);
+            await mba.applyWorkflowDamage(workflow.token, healingRoll, "healing", [target], undefined, workflow.itemCardId);
         })
 
         .play()

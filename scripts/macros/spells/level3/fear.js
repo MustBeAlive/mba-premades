@@ -1,5 +1,8 @@
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
 	let template = canvas.scene.collections.templates.get(workflow.templateId);
+	if (!template) return;
 	let targets = Array.from(workflow.targets);
 
 	await new Sequence()
@@ -70,22 +73,22 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
 		.play();
 
-	targets.forEach(target => {
+	for (let target of targets) {
 		const distance = Math.sqrt(Math.pow(target.x - token.x, 2) + Math.pow(target.y - token.y, 2));
 		const gridDistance = distance / canvas.grid.size;
 
 		new Sequence()
 
 			.effect()
-			.delay(gridDistance * 140)
 			.file("jb2a.toll_the_dead.green.skull_smoke")
 			.atLocation(target)
 			.scaleToObject(2.5, { considerTokenScale: true })
+			.delay(gridDistance * 140)
 			.opacity(0.9)
 			.playbackRate(0.5)
 
 			.play()
-	})
+	}
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -106,14 +109,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 		}).render(true);
 	};
 	async function effectMacroTurnEnd() {
-		let effect = chrisPremades.helpers.findEffect(actor, 'Fear');
+		let effect = mbaPremades.helpers.findEffect(actor, 'Fear');
 		let casterName = effect.flags['mba-premades']?.spell?.fear?.casterName;
 		let [casterCanSee] = await MidiQOL.findNearby(null, token, 200, { includeIncapacitated: false, canSee: true }).filter(i => i.name === casterName);
 		if (casterCanSee) return;
 		let spellDC = effect.flags['mba-premades']?.spell?.fear.saveDC;
-		let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'wis');
+		let saveRoll = await mbaPremades.helpers.rollRequest(token, 'save', 'wis');
 		if (saveRoll.total < spellDC) return;
-		await chrisPremades.helpers.removeEffect(effect);
+		await mbaPremades.helpers.removeEffect(effect);
 	};
 	async function effectMacroDel() {
 		await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Fear`, object: token })
@@ -140,20 +143,20 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 		'flags': {
 			'effectmacro': {
 				'onTurnStart': {
-					'script': chrisPremades.helpers.functionToString(effectMacroTurnStart)
+					'script': mba.functionToString(effectMacroTurnStart)
 				},
 				'onTurnEnd': {
-					'script': chrisPremades.helpers.functionToString(effectMacroTurnEnd)
+					'script': mba.functionToString(effectMacroTurnEnd)
 				},
 				'onDelete': {
-					'script': chrisPremades.helpers.functionToString(effectMacroDel)
+					'script': mba.functionToString(effectMacroDel)
 				}
 			},
 			'mba-premades': {
 				'spell': {
 					'fear': {
 						'casterName': workflow.token.document.name,
-						'saveDC': chrisPremades.helpers.getSpellDC(workflow.item)
+						'saveDC': mba.getSpellDC(workflow.item)
 					}
 				}
 			},
@@ -167,7 +170,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 		}
 	};
 	for (let target of targets) {
-		if (chrisPremades.helpers.checkTrait(target.actor, 'ci', 'frightened')) return;
+		if (mba.checkTrait(target.actor, 'ci', 'frightened')) continue;
 
 		new Sequence()
 
@@ -185,8 +188,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			.persist()
 			.name(`${target.document.name} Fear`)
 
-			.thenDo(function () {
-				chrisPremades.helpers.createEffect(target.actor, effectData);
+			.thenDo(async () => {
+				await mba.createEffect(target.actor, effectData);
 			})
 
 			.play()

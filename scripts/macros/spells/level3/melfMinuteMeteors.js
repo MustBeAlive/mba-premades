@@ -1,12 +1,14 @@
+import {mba} from "../../../helperFunctions.js";
+
 export async function melfMinuteMeteors({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel * 2;
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Melf\'s Minute Meteors: Drop Meteor', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Melf\'s Minute Meteors: Drop Meteor', false);
     if (!featureData) return;
     featureData.system.uses.value = ammount;
     featureData.system.uses.max = ammount;
-    featureData.system.save.dc = chrisPremades.helpers.getSpellDC(workflow.item);
+    featureData.system.save.dc = mba.getSpellDC(workflow.item);
     async function effectMacroDel() {
-        await warpgate.revert(token.document, 'Melf\'s Minute Meteors: Drop Meteor');
+        warpgate.revert(token.document, 'Melf\'s Minute Meteors: Drop Meteor');
     }
     let effectData = {
         'name': workflow.item.name,
@@ -18,7 +20,7 @@ export async function melfMinuteMeteors({ speaker, actor, token, character, item
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {

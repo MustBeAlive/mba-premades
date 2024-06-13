@@ -94,13 +94,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .zIndex(0.3)
         .waitUntilFinished(-500)
 
-        .thenDo(function () {
-            warpgate.mutate(target.document, updates, {}, options);
+        .thenDo(async () => {
+            await warpgate.mutate(target.document, updates, {}, options);
         })
 
         .play();
 
-    let vialItem = mba.getItem(workflow.actor, workflow.item.name);
+    let vialItem = await mba.getItem(workflow.actor, workflow.item.name);
     if (vialItem.system.quantity > 1) {
         await vialItem.update({ "system.quantity": vialItem.system.quantity - 1 });
     } else {

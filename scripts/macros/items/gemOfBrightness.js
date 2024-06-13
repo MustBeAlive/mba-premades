@@ -17,10 +17,10 @@ export async function gemOfBrightness({ speaker, actor, token, character, item, 
         ["Create Light (0 charges)", "light"],
         ["Ray of Blinding Light (1 charge)", "ray"],
         ["Cone of Blinding Light (5 charges)", "cone"],
-        ["Cancel", "cancel"]
+        ["Cancel", false]
     ];
     let selection = await mba.dialog("Gem of Brightness", choices, `<b>Choose one of the effects:</b>`);
-    if (!selection || selection === "cancel") return;
+    if (!selection) return;
     const effectData = {
         'name': "Gem of Brightness: Blindness",
         'icon': workflow.item.img,
@@ -133,8 +133,8 @@ export async function gemOfBrightness({ speaker, actor, token, character, item, 
             .fadeOut(1000)
             .belowTokens()
 
-            .thenDo(function () {
-                mba.createEffect(workflow.actor, effectData)
+            .thenDo(async () => {
+                await mba.createEffect(workflow.actor, effectData)
             })
 
             .play()
@@ -165,8 +165,7 @@ export async function gemOfBrightness({ speaker, actor, token, character, item, 
             .play()
 
         let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
-        usesCurrent -= 1;
-        await gemItem.update({ "system.uses.value": usesCurrent });
+        await gemItem.update({ "system.uses.value": usesCurrent -= 1 });
         if (!featureWorkflow.failedSaves.size) return;
         await mba.createEffect(target.actor, effectData);
     }

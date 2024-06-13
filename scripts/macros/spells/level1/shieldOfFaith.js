@@ -74,8 +74,8 @@ export async function shieldOfFaith({ speaker, actor, token, character, item, ar
         .persist()
         .name(`${target.document.name} Shield of Faith`)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData)
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData)
         })
 
         .play()

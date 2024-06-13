@@ -8,9 +8,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             ui.notifications.warn("You don't have any oil to light up the lantern!");
             return;
         }
-        let choices = [["Yes, light the lantern", "light"], ["No, cancel", "cancel"]];
+        let choices = [["Yes, light the lantern", "light"], ["No, cancel", false]];
         let selection = await mba.dialog("Bullseye Lantern", choices, `Would you like to light the <b>Bullseye Lantern</b>?`);
-        if (!selection || selection === "cancel") return;
+        if (!selection) return;
         await mbaPremades.macros.bullseyeLantern.light({ speaker, actor, token, character, item, args, scope, workflow })
         return;
     }
@@ -128,19 +128,19 @@ async function light({ speaker, actor, token, character, item, args, scope, work
         .persist()
         .name(`${workflow.token.document.name} Bullseye Lantern`)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
         })
 
         .play()
 
-    let oilFlaskItem = mba.getItem(workflow.actor, "Oil Flask");
+    let oilFlaskItem = await mba.getItem(workflow.actor, "Oil Flask");
     if (oilFlaskItem.system.quantity > 1) {
         await oilFlaskItem.update({ "system.quantity": oilFlaskItem.system.quantity - 1 });
     } else {
         await workflow.actor.deleteEmbeddedDocuments("Item", [oilFlaskItem.id]);
     }
-    let emptyFlaskItem = mba.getItem(workflow.actor, "Empty Flask");
+    let emptyFlaskItem = await mba.getItem(workflow.actor, "Empty Flask");
     if (!emptyFlaskItem) {
         const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
         if (!itemData) {

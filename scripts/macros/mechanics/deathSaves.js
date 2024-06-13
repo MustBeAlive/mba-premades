@@ -1,3 +1,5 @@
+import {mba} from "../../helperFunctions.js";
+
 export async function deathSaves(combat, update, options, userId) {
     if (!combat.started) return;
     let currentTokenId = combat.current.tokenId;
@@ -19,7 +21,7 @@ export async function deathSaves(combat, update, options, userId) {
         );
     }
     if (actor.system.attributes.hp.value <= 0 && actor.isOwner && actor.system.attributes.death.failure === 3) {
-        await chrisPremades.helpers.removeCondition(actor, "Unconscious");
-        await chrisPremades.helpers.addCondition(actor, "Dead", true);
+        await mba.removeCondition(actor, "Unconscious");
+        await mba.addCondition(actor, "Dead", true);
     }
 }

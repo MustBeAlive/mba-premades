@@ -8,7 +8,7 @@ export async function prismaticSpray({speaker, actor, token, character, item, ar
         if (saved) damageRoll = await new Roll(`10d6/2[${damageType}]`).roll(); //math.min?
         else damageRoll = await new Roll(`10d6[${damageType}]`).roll();
         ChatMessage.create({ flavor: `Prismatic spray (${rayColor}) damaged ${target.document.name} for ${damageRoll.total} ${damageType} damage.`, speaker: ChatMessage.getSpeaker({ actor: target.actor}) });
-        await chrisPremades.helpers.applyDamage([target], damageRoll.total, damageType);
+        await mbaPremades.helpers.applyDamage([target], damageRoll.total, damageType);
         new Sequence().effect().atLocation(workflow.token).stretchTo(target).file(animation).play();
     }
 
@@ -41,16 +41,16 @@ export async function prismaticSpray({speaker, actor, token, character, item, ar
                 break;
             case 6:
                 if (saved) break;
-                let alreadyRestrained = chrisPremades.helpers.findEffect(target.actor, 'Prismatic Spray: Indigo');
+                let alreadyRestrained = mbaPremades.helpers.findEffect(target.actor, 'Prismatic Spray: Indigo');
                 if (alreadyRestrained) break;
                 rayColor = "Indigo";
                 animation = 'jb2a.scorching_ray.01.pink';
                 async function effectMacro1() {
-                    let effect = chrisPremades.helpers.findEffect(actor, 'Prismatic Spray: Indigo');
+                    let effect = mbaPremades.helpers.findEffect(actor, 'Prismatic Spray: Indigo');
                     let success = effect.flags['mba-premades']?.spell?.prismaticSpray?.success;
                     let fail = effect.flags['mba-premades']?.spell?.prismaticSpray?.fail;
                     let spellDC = effect.flags['mba-premades']?.spell?.prismaticSpray?.dc;
-                    let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'con');
+                    let saveRoll = await mbaPremades.helpers.rollRequest(token, 'save', 'con');
                     if (saveRoll.total < spellDC) {
                         fail += 1;
                         let updates = {
@@ -64,7 +64,7 @@ export async function prismaticSpray({speaker, actor, token, character, item, ar
                                 }
                             }
                         };
-                        await chrisPremades.helpers.updateEffect(effect, updates);
+                        await mbaPremades.helpers.updateEffect(effect, updates);
                     } else {
                         success += 1;
                         let updates = {
@@ -78,14 +78,14 @@ export async function prismaticSpray({speaker, actor, token, character, item, ar
                                 }
                             }
                         };
-                        await chrisPremades.helpers.updateEffect(effect, updates);
+                        await mbaPremades.helpers.updateEffect(effect, updates);
                     }
                     if (effect.flags['mba-premades']?.spell?.prismaticSpray?.success > 2) {
-                        await chrisPremades.helpers.removeEffect(effect);
+                        await mbaPremades.helpers.removeEffect(effect);
                     }
                     if (effect.flags['mba-premades']?.spell?.prismaticSpray?.fail > 2) {
-                        await chrisPremades.helpers.removeEffect(effect);
-                        await chrisPremades.helpers.addCondition(actor, 'Petrified');
+                        await mbaPremades.helpers.removeEffect(effect);
+                        await mbaPremades.helpers.addCondition(actor, 'Petrified');
                     }
                 };
                 let restrainData = {
@@ -108,7 +108,7 @@ export async function prismaticSpray({speaker, actor, token, character, item, ar
                         'mba-premades': {
                             'spell': {
                                 'prismaticSpray': {
-                                    'dc': chrisPremades.helpers.getSpellDC(workflow.item),
+                                    'dc': mbaPremades.helpers.getSpellDC(workflow.item),
                                     'success': 0,
                                     'fail': 0
                                 }
@@ -116,7 +116,7 @@ export async function prismaticSpray({speaker, actor, token, character, item, ar
                         },
                         'effectmacro': {
                             'onTurnEnd': {
-                                'script': chrisPremades.helpers.functionToString(effectMacro1)
+                                'script': mbaPremades.helpers.functionToString(effectMacro1)
                             }
                         },
                         'midi-qol': {
@@ -128,20 +128,20 @@ export async function prismaticSpray({speaker, actor, token, character, item, ar
                         }
                     }
                 };
-                await chrisPremades.helpers.createEffect(target.actor, restrainData);
+                await mbaPremades.helpers.createEffect(target.actor, restrainData);
                 ChatMessage.create({ flavor: `Prismatic spray - ${rayColor} restrained ${target.document.name}`, speaker: ChatMessage.getSpeaker({ actor: target.actor}) });
                 new Sequence().effect().atLocation(workflow.token).stretchTo(target).file(animation).play();
                 break;
             case 7: // Promts at wrong time, find a way to promt on source turn start
                 if (saved) break;
-                let alreadyBlinded = chrisPremades.helpers.findEffect(target.actor, 'Prismatic Spray: Violet');
+                let alreadyBlinded = mbaPremades.helpers.findEffect(target.actor, 'Prismatic Spray: Violet');
                 if (alreadyBlinded) break;
                 rayColor = "Purple";
                 animation = 'jb2a.scorching_ray.01.purple';
                 async function effectMacro2() {
-                    let effect = chrisPremades.helpers.findEffect(actor, 'Prismatic Spray: Violet');
+                    let effect = mbaPremades.helpers.findEffect(actor, 'Prismatic Spray: Violet');
                     let spellDC = effect.flags['mba-premades']?.spell?.prismaticSpray?.dc;
-                    let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'wis');
+                    let saveRoll = await mbaPremades.helpers.rollRequest(token, 'save', 'wis');
                     if (saveRoll.total < spellDC) {
                         new Sequence()
                             .effect()
@@ -168,10 +168,10 @@ export async function prismaticSpray({speaker, actor, token, character, item, ar
                             .play();
                         await warpgate.wait(3500);
                         await token.document.update({ hidden: true });
-                        await chrisPremades.helpers.removeEffect(effect); 
+                        await mbaPremades.helpers.removeEffect(effect); 
                         ChatMessage.create({ content: token.document.name + " was banished!" });
                     } else {
-                        await chrisPremades.helpers.removeEffect(effect);
+                        await mbaPremades.helpers.removeEffect(effect);
                         return;
                     }
                 };
@@ -195,13 +195,13 @@ export async function prismaticSpray({speaker, actor, token, character, item, ar
                         'mba-premades': {
                             'spell': {
                                 'prismaticSpray': {
-                                    'dc': chrisPremades.helpers.getSpellDC(workflow.item),
+                                    'dc': mbaPremades.helpers.getSpellDC(workflow.item),
                                 }
                             }
                         },
                         'effectmacro': {
                             'onTurnStart': {
-                                'script': chrisPremades.helpers.functionToString(effectMacro2)
+                                'script': mbaPremades.helpers.functionToString(effectMacro2)
                             }
                         },
                         'midi-qol': {
@@ -213,7 +213,7 @@ export async function prismaticSpray({speaker, actor, token, character, item, ar
                         }
                     }
                 };
-                await chrisPremades.helpers.createEffect(target.actor, blindData);
+                await mbaPremades.helpers.createEffect(target.actor, blindData);
                 ChatMessage.create({ flavor: `Prismatic spray (${rayColor}) blinded ${target.document.name}`, speaker: ChatMessage.getSpeaker({ actor: target.actor}) });
                 new Sequence().effect().atLocation(workflow.token).stretchTo(target).file(animation).play();
                 break;

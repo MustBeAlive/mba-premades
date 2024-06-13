@@ -21,24 +21,24 @@ export async function confusion({ speaker, actor, token, character, item, args, 
         },
         'angle': 0
     };
-    let template = await chrisPremades.helpers.placeTemplate(templateData);
+    let template = await mbaPremades.helpers.placeTemplate(templateData);
     if (!template) return;
     let targetUuids = [];
     for (let i of game.user.targets) targetUuids.push(i.document.uuid);
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Confusion: Delusions', false);
+    let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Confusion: Delusions', false);
     if (!featureData) return;
-    featureData.system.save.dc = chrisPremades.helpers.getSpellDC(workflow.item);
+    featureData.system.save.dc = mbaPremades.helpers.getSpellDC(workflow.item);
     delete featureData._id;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions(targetUuids);
+    let [config, options] = mbaPremades.constants.syntheticItemWorkflowOptions(targetUuids);
     await game.messages.get(workflow.itemCardId).delete();
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow.failedSaves.size) {
-        await chrisPremades.helpers.removeCondition(workflow.actor, "Concentrating");
+        await mbaPremades.helpers.removeCondition(workflow.actor, "Concentrating");
         return;
     }
     async function effectMacroConfusion() {
-        await chrisPremades.helpers.addCondition(actor, "Reaction");
+        await mbaPremades.helpers.addCondition(actor, "Reaction");
         let confusionRoll = await new Roll("1d10").roll({ 'async': true });
         await MidiQOL.displayDSNForRoll(confusionRoll, 'damageRoll');
         if (confusionRoll.total === 1) {
@@ -201,9 +201,9 @@ export async function confusion({ speaker, actor, token, character, item, args, 
         }
     }
     async function effectMacroConfusionDel() {
-        let effect = await chrisPremades.helpers.findEffect(actor, "Reaction");
+        let effect = await mbaPremades.helpers.findEffect(actor, "Reaction");
         if (!effect) return;
-        await chrisPremades.helpers.removeEffect(effect);
+        await mbaPremades.helpers.removeEffect(effect);
     }
     let effectData = {
         'name': workflow.item.name,
@@ -223,17 +223,17 @@ export async function confusion({ speaker, actor, token, character, item, args, 
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': 'turn=end, saveAbility=wis, saveDC=' + chrisPremades.helpers.getSpellDC(workflow.item) + ', saveMagic=true, name=Confusion: Turn End',
+                'value': 'turn=end, saveAbility=wis, saveDC=' + mbaPremades.helpers.getSpellDC(workflow.item) + ', saveMagic=true, name=Confusion: Turn End',
                 'priority': 20
             }
         ],
         'flags': {
             'effectmacro': {
                 'onTurnStart': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroConfusion)
+                    'script': mbaPremades.helpers.functionToString(effectMacroConfusion)
                 },
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroConfusionDel)
+                    'script': mbaPremades.helpers.functionToString(effectMacroConfusionDel)
                 }
             },
             'midi-qol': {
@@ -246,8 +246,8 @@ export async function confusion({ speaker, actor, token, character, item, args, 
         }
     };
     for (let i of featureWorkflow.failedSaves) {
-        await chrisPremades.helpers.createEffect(i.actor, effectData);
-        let newEffect = await chrisPremades.helpers.findEffect(i.actor, "Confusion");
+        await mbaPremades.helpers.createEffect(i.actor, effectData);
+        let newEffect = await mbaPremades.helpers.findEffect(i.actor, "Confusion");
         let concData = workflow.actor.getFlag("midi-qol", "concentration-data.removeUuids");
         concData.push(newEffect.uuid);
         await workflow.actor.setFlag("midi-qol", "concentration-data.removeUuids", concData);

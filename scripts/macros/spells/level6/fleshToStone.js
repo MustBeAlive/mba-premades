@@ -1,16 +1,16 @@
 export async function fleshToStone({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     let choices = [['Yes', 'yes'], ['No', 'no']];
-    let selection = await chrisPremades.helpers.dialog('Is target made of flesh? (Ask your GM)', choices);
+    let selection = await mbaPremades.helpers.dialog('Is target made of flesh? (Ask your GM)', choices);
     if (selection === 'no') return;
     let target = workflow.targets.first();
     async function effectMacroEnd() {
-        let effect = await chrisPremades.helpers.findEffect(actor, "Flesh to Stone: Restrained");
+        let effect = await mbaPremades.helpers.findEffect(actor, "Flesh to Stone: Restrained");
         if (!effect) return;
         let success = effect.flags['mba-premades']?.spell?.fleshToStone?.success;
         let fail = effect.flags['mba-premades']?.spell?.fleshToStone?.fail;
         let saveDC = effect.flags['mba-premades']?.spell?.fleshToStone?.saveDC;
-        let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'con');
+        let saveRoll = await mbaPremades.helpers.rollRequest(token, 'save', 'con');
         if (saveRoll.total < saveDC) fail += 1;
         else success += 1;
         let updates = {
@@ -25,7 +25,7 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
                 }
             }
         };
-        await chrisPremades.helpers.updateEffect(effect, updates);
+        await mbaPremades.helpers.updateEffect(effect, updates);
         await new Dialog({
             title: "Flesh to Stone progress:",
             content: `<p><b>Success:</b> ${success}</p><p><b>Fails:</b> ${fail}</p>`,
@@ -35,10 +35,10 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
                 }
             }
         }).render(true);
-        if (effect.flags['mba-premades']?.spell?.fleshToStone?.success > 2) await chrisPremades.helpers.removeEffect(effect);
+        if (effect.flags['mba-premades']?.spell?.fleshToStone?.success > 2) await mbaPremades.helpers.removeEffect(effect);
         if (effect.flags['mba-premades']?.spell?.fleshToStone?.fail > 2) {
             async function effectMacroPermanent() {
-                let effect = await chrisPremades.helpers.findEffect(actor, "Flesh to Stone: Petrification");
+                let effect = await mbaPremades.helpers.findEffect(actor, "Flesh to Stone: Petrification");
                 let duration = effect.duration.remaining;
                 if (duration > 6) return;
                 async function effectMacro() {
@@ -62,13 +62,13 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
                         },
                         'effectmacro': {
                             'onDelete': {
-                                'script': chrisPremades.helpers.functionToString(effectMacro)
+                                'script': mbaPremades.helpers.functionToString(effectMacro)
                             }
                         }
                     }
                 };
-                await chrisPremades.helpers.removeEffect(effect);
-                await chrisPremades.helpers.createEffect(actor, effectData);
+                await mbaPremades.helpers.removeEffect(effect);
+                await mbaPremades.helpers.createEffect(actor, effectData);
 
                 new Sequence()
 
@@ -126,10 +126,10 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
                     },
                     'effectmacro': {
                         'onTurnStart': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroPermanent)
+                            'script': mbaPremades.helpers.functionToString(effectMacroPermanent)
                         },
                         'onDelete': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                            'script': mbaPremades.helpers.functionToString(effectMacroDel)
                         }
                     },
                     'mba-premades': {
@@ -141,8 +141,8 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
                     }
                 }
             };
-            await chrisPremades.helpers.createEffect(actor, effectData);
-            await chrisPremades.helpers.removeEffect(effect);
+            await mbaPremades.helpers.createEffect(actor, effectData);
+            await mbaPremades.helpers.removeEffect(effect);
 
             new Sequence()
 
@@ -198,13 +198,13 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
             },
             'effectmacro': {
                 'onTurnEnd': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroEnd)
+                    'script': mbaPremades.helpers.functionToString(effectMacroEnd)
                 }
             },
             'mba-premades': {
                 'spell': {
                     'fleshToStone': {
-                        'saveDC': chrisPremades.helpers.getSpellDC(workflow.item),
+                        'saveDC': mbaPremades.helpers.getSpellDC(workflow.item),
                         'success': 0,
                         'fail': 0,
                         'icon': workflow.item.img
@@ -220,5 +220,5 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
             }
         }
     };
-    await chrisPremades.helpers.createEffect(target.actor, effectData)
+    await mbaPremades.helpers.createEffect(target.actor, effectData)
 }

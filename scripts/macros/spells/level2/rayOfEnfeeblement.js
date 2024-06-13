@@ -84,8 +84,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             return workflow.hitTargets.size
         })
 
-        .thenDo(function () {
-            if (workflow.hitTargets.size) mba.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            if (workflow.hitTargets.size) await mba.createEffect(target.actor, effectData);
         })
 
         .play()

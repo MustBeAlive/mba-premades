@@ -102,8 +102,8 @@ export async function skillEmpowerment({ speaker, actor, token, character, item,
         .zIndex(2)
         .waitUntilFinished(-1000)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
         })
 
         .effect()

@@ -62,8 +62,8 @@ export async function rayOfSickness({ speaker, actor, token, character, item, ar
             return workflow.failedSaves.size
         })
 
-        .thenDo(function () {
-            if (workflow.failedSaves.size) mba.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            if (workflow.failedSaves.size) await mba.createEffect(target.actor, effectData);
         })
 
         .play()

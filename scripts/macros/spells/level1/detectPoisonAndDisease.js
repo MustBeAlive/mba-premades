@@ -1,4 +1,4 @@
-import {mba} from "../../../helperFunctions.js";
+import { mba } from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Detect Poison and Disease: Target Creature', false);
@@ -81,19 +81,20 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .play()
 
-    targets.forEach(target => {
+    for (let target of targets) {
         const distance = Math.sqrt(
             Math.pow(target.x - token.x, 2) + Math.pow(target.y - token.y, 2)
         );
-        const gridDistance = distance / canvas.grid.size
+        const gridDistance = distance / canvas.grid.size;
+        let effects = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true || e.name.includes("Poison") && e.name != "Poisoned" && e.name != "Detect Poison and Disease");
 
         new Sequence()
 
             .effect()
-            .delay(gridDistance * 125)
             .file("jb2a.markers.circle_of_stars.green")
             .atLocation(target)
             .scaleToObject(2.5)
+            .delay(gridDistance * 130)
             .duration(5000)
             .fadeIn(1000)
             .fadeOut(1000)
@@ -102,46 +103,44 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             .wait(500)
 
             .effect()
-            .delay(gridDistance * 125)
             .from(target)
-            .belowTokens()
             .attachTo(target, { locale: true })
             .scaleToObject(1, { considerTokenScale: true })
-            .spriteRotation(target.rotation * -1)
-            .filter("Glow", { color: 0x00bd16, distance: 15 })
+            .delay(gridDistance * 130)
             .duration(17500)
             .fadeIn(1000, { delay: 1000 })
             .fadeOut(3500, { ease: "easeInSine" })
+            .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+            .spriteRotation(target.rotation * -1)
+            .belowTokens()
             .opacity(0.75)
             .zIndex(0.1)
-            .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+            .filter("Glow", { color: 0x00bd16, distance: 15 })
             .playIf(() => {
                 if (mba.findEffect(target.actor, "Nondetection")) return false;
-                let effects = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true || e.name.includes("Poison") && e.name != "Poisoned" && e.name != "Detect Poison and Disease");
                 return (effects.length)
             })
 
             .effect()
-            .delay(gridDistance * 125)
             .file("jb2a.extras.tmfx.outflow.circle.01")
             .attachTo(target, { locale: true })
             .scaleToObject(1.5, { considerTokenScale: false })
-            .randomRotation()
+            .delay(gridDistance * 130)
             .duration(17500)
             .fadeIn(4000, { delay: 0 })
             .fadeOut(3500, { ease: "easeInSine" })
             .scaleIn(0, 3500, { ease: "easeInOutCubic" })
-            .tint(0x00bd16)
-            .opacity(0.75)
+            .randomRotation()
             .belowTokens()
+            .opacity(0.75)
+            .tint(0x00bd16)
             .playIf(() => {
                 if (mba.findEffect(target.actor, "Nondetection")) return false;
-                let effects = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true || e.name.includes("Poison") && e.name != "Poisoned" && e.name != "Detect Poison and Disease");
                 return (effects.length)
             })
 
             .play();
-    })
+    }
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -179,30 +178,30 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .from(target)
-        .belowTokens()
         .attachTo(target, { locale: true })
         .scaleToObject(1, { considerTokenScale: true })
-        .spriteRotation(target.rotation * -1)
-        .filter("Glow", { color: 0x00bd16, distance: 15 })
         .duration(17500)
         .fadeIn(1000, { delay: 1000 })
         .fadeOut(3500, { ease: "easeInSine" })
+        .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+        .spriteRotation(target.rotation * -1)
+        .belowTokens()
         .opacity(0.75)
         .zIndex(0.1)
-        .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+        .filter("Glow", { color: 0x00bd16, distance: 15 })
 
         .effect()
         .file("jb2a.extras.tmfx.outflow.circle.01")
         .attachTo(target, { locale: true })
         .scaleToObject(1.5, { considerTokenScale: false })
-        .randomRotation()
         .duration(17500)
         .fadeIn(4000, { delay: 0 })
         .fadeOut(3500, { ease: "easeInSine" })
         .scaleIn(0, 3500, { ease: "easeInOutCubic" })
-        .tint(0x00bd16)
-        .opacity(0.75)
+        .randomRotation()
         .belowTokens()
+        .opacity(0.75)
+        .tint(0x00bd16)
 
         .play()
 
@@ -218,54 +217,50 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     function generateEnergyBox(type) {
         return `
         <label class="radio-label">
-        <input type="radio" name="type" value="${selection[type]}" />
-        <img src="${selection[type].slice(2)}" style="border: 0px; width: 50px; height: 50px"/>
-        ${selection[type].slice(0, -2)}
+            <input type="radio" name="type" value="${selection[type]}" />
+            <img src="${selection[type].slice(2)}" style="border: 0px; width: 50px; height: 50px"/>${selection[type].slice(0, -2)}
         </label>
     `;
     }
     const effectSelection = Object.keys(selection).map((type) => generateEnergyBox(type)).join("\n");
     const content = `
-    <style>
-        .detectPoison 
-            .form-group {
+        <style>
+            .detectPoison .form-group {
                 display: flex;
                 flex-wrap: wrap;
                 width: 100%;
                 align-items: flex-start;
             }
-        .detectPoison 
-            .radio-label {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            justify-items: center;
-            flex: 1 0 20%;
-            line-height: normal;
+            .detectPoison .radio-label {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                justify-items: center;
+                flex: 1 0 20%;
+                line-height: normal;
             }
-        .detectPoison 
-            .radio-label input {
-            display: none;
-        }
-        .detectPoison img {
-            border: 0px;
-            width: 50px;
-            height: 50px;
-            flex: 0 0 50px;
-            cursor: pointer;
-        }
-        /* CHECKED STYLES */
-        .detectPoison [type="radio"]:checked + img {
-            outline: 2px solid #005c8a;
-        }
-    </style>
-    <form class="detectPoison">
-        <div class="form-group" id="types">
-            ${effectSelection}
-        </div>
-    </form>
-`;
+            .detectPoison .radio-label input {
+                display: none;
+            }
+            .detectPoison img {
+                border: 0px;
+                width: 50px;
+                height: 50px;
+                flex: 0 0 50px;
+                cursor: pointer;
+            }
+            /* CHECKED STYLES */
+            .detectPoison [type="radio"]:checked + img {
+                outline: 2px solid #005c8a;
+            }
+        </style>
+        <form class="detectPoison">
+            <div class="form-group" id="types">
+                ${effectSelection}
+            </div>
+        </form>
+    `;
     let stopper = 0;
     while (stopper < 1) {
         const poisonDiseaseEffect = await new Promise((resolve) => {

@@ -14,7 +14,9 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p></p>
+            <p>A protective magical force surrounds you, manifesting as a spectral frost that covers you and your gear.</p>
+            <p>You gain ${workflow.castData.castLevel * 5} temporary hit points for the duration.</p>
+            <p>If a creature hits you with a melee attack while you have these hit points, the creature takes ${workflow.castData.castLevel * 5} cold damage.</p>
         `,
         'duration': {
             'seconds': 3600
@@ -50,13 +52,16 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
 async function onHit(workflow, targetToken) {
     if (workflow.hitTargets.size != 1) return;
-    if (!constants.meleeAttacks.includes(workflow.item?.system?.actionType)) return;
+    let tempHP = targetToken.actor.system.attributes.hp.temp;
     let effect = mba.findEffect(targetToken.actor, 'Armor of Agathys');
     if (!effect) return;
+    if (!constants.meleeAttacks.includes(workflow.item?.system?.actionType)) {
+        if (tempHP === 0) await mba.removeEffect(effect);
+        return;
+    }
     let damage = effect.flags['midi-qol'].castData.castLevel * 5;
     let queueSetup = await queue.setup(workflow.uuid, 'armorOfAgathys', 50);
     if (!queueSetup) return;
-    let tempHP = targetToken.actor.system.attributes.hp.temp;
     if (tempHP === 0) await mba.removeEffect(effect);
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Armor of Agathys: Damage Reflect');
     if (!featureData) {
@@ -83,8 +88,8 @@ async function onHit(workflow, targetToken) {
         .spriteOffset({ 'x': -0.15 }, { 'gridUnits': true })
 
         .effect()
-        .atLocation(targetToken)
         .file('jb2a.side_impact.part.fast.ice_shard.blue')
+        .atLocation(targetToken)
         .rotateTowards(workflow.token)
         .scaleToObject(2)
         .randomizeMirrorY()
@@ -93,11 +98,11 @@ async function onHit(workflow, targetToken) {
         .effect()
         .from(workflow.token)
         .atLocation(workflow.token)
+        .scaleToObject(workflow.token.document.texture.scaleX)
+        .duration(500)
         .fadeIn(100)
         .fadeOut(100)
         .loopProperty('sprite', 'position.x', { 'from': -0.05, 'to': 0.05, 'duration': 175, 'pingPong': true, 'gridUnits': true })
-        .scaleToObject(workflow.token.document.texture.scaleX)
-        .duration(500)
         .opacity(0.15)
 
         .play()
@@ -110,9 +115,9 @@ async function start(token) {
         .file('jb2a.ward.rune.dark_purple.01')
         .atLocation(token)
         .scaleToObject(1.85)
-        .belowTokens()
         .fadeOut(3000)
         .scaleIn(0, 500, { 'ease': 'easeOutCubic' })
+        .belowTokens()
         .filter('ColorMatrix', { 'brightness': 2, 'saturate': -0.75, 'hue': -75 })
 
         .effect()
@@ -136,12 +141,12 @@ async function start(token) {
         .file('jb2a.extras.tmfx.inflow.circle.01')
         .attachTo(token)
         .scaleToObject(1 * token.document.texture.scaleX)
-        .randomRotation()
         .fadeIn(1500)
         .fadeOut(500)
+        .extraEndDuration(1500)
+        .randomRotation()
         .opacity(0.9)
         .zIndex(2)
-        .extraEndDuration(1500)
         .persist()
         .name(`${token.document.name} Armor of Agathys`)
 
@@ -149,13 +154,13 @@ async function start(token) {
         .file('jb2a.extras.tmfx.outflow.circle.01')
         .attachTo(token)
         .scaleToObject(1.35 * token.document.texture.scaleX)
-        .randomRotation()
         .fadeIn(1500)
         .fadeOut(500)
+        .extraEndDuration(1500)
         .scaleIn(0, 1500, { 'ease': 'easeOutCubic' })
+        .randomRotation()
         .belowTokens()
         .opacity(0.9)
-        .extraEndDuration(1500)
         .zIndex(1)
         .persist()
         .name(`${token.document.name} Armor of Agathys`)
@@ -164,13 +169,13 @@ async function start(token) {
         .file('jb2a.template_circle.symbol.normal.snowflake.blue')
         .attachTo(token)
         .scaleToObject(1.35 * token.document.texture.scaleX)
-        .randomRotation()
         .fadeIn(1500)
         .fadeOut(500)
+        .extraEndDuration(1500)
         .scaleIn(0, 1500, { 'ease': 'easeOutCubic' })
+        .randomRotation()
         .belowTokens()
         .opacity(0.75)
-        .extraEndDuration(1500)
         .zIndex(2)
         .persist()
         .name(`${token.document.name} Armor of Agathys`)
@@ -179,9 +184,9 @@ async function start(token) {
         .file('jb2a.shield.01.loop.blue')
         .attachTo(token)
         .scaleToObject(1.5 * token.document.texture.scaleX)
-        .opacity(0.75)
         .fadeIn(1500)
         .fadeOut(500)
+        .opacity(0.75)
         .zIndex(1)
         .persist()
         .name(`${token.document.name} Armor of Agathys`)
@@ -204,6 +209,7 @@ async function end(token) {
         .zIndex(1)
 
         .play()
+        
     if (token.actor.system.attributes.hp.temp > 0) await token.actor.update({ "system.attributes.hp.temp": 0 });
 }
 

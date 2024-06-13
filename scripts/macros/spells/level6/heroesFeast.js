@@ -52,7 +52,7 @@ export async function heroesFeast({speaker, actor, token, character, item, args,
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mbaPremades.helpers.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -66,7 +66,7 @@ export async function heroesFeast({speaker, actor, token, character, item, args,
     };
     for (let i = 0; i < targets.length; i++) {
         let target = fromUuidSync(targets[i].document.uuid).object;
-        await chrisPremades.helpers.createEffect(target.actor, effectData);
-        await chrisPremades.helpers.applyDamage([target], hpRoll.total, 'healing');
+        await mbaPremades.helpers.createEffect(target.actor, effectData);
+        await mbaPremades.helpers.applyDamage([target], hpRoll.total, 'healing');
     }
 }

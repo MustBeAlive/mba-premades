@@ -191,9 +191,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .zIndex(0)
         .waitUntilFinished(-500)
 
-        .thenDo(function () {
-            if (selection === "natural") warpgate.mutate(workflow.token.document, updates, {}, options);
-            else if (selection === "aquatic" || selection === "change") mba.createEffect(workflow.actor, effectData);
+        .thenDo(async () => {
+            if (selection === "natural") await warpgate.mutate(workflow.token.document, updates, {}, options);
+            else if (selection === "aquatic" || selection === "change") await mba.createEffect(workflow.actor, effectData);
         })
 
         .effect()

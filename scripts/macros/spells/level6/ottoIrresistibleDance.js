@@ -1,7 +1,7 @@
 // Animation by Sammo#3425 and EskieMoh#2969
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    let hasCharmImmunity = chrisPremades.helpers.checkTrait(target.actor, 'ci', 'charmed');
+    let hasCharmImmunity = mbaPremades.helpers.checkTrait(target.actor, 'ci', 'charmed');
     if (!hasCharmImmunity) return;
     let immuneData = {
         'name': 'Save Immunity',
@@ -24,14 +24,14 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                     'isSave'
                 ]
             },
-            'chris-premades': {
+            'mba-premades': {
                 'effect': {
                     'noAnimation': true
                 }
             }
         }
     };
-    await chrisPremades.helpers.createEffect(target.actor, immuneData);
+    await mbaPremades.helpers.createEffect(target.actor, immuneData);
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -83,14 +83,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': 'actionSave=true, saveAbility=wis, saveDC=' + chrisPremades.helpers.getSpellDC(workflow.item) + ' , saveMagic=true, name=Irresistable Dance',
+                'value': 'actionSave=true, saveAbility=wis, saveDC=' + mbaPremades.helpers.getSpellDC(workflow.item) + ' , saveMagic=true, name=Irresistable Dance',
                 'priority': 20
             },
         ],
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mbaPremades.helpers.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -197,7 +197,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .play();
 
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
+    await mbaPremades.helpers.createEffect(target.actor, effectData);
     new Sequence()
 
         .effect()

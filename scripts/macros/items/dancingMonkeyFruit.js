@@ -1,7 +1,8 @@
+import {mba} from "../../helperFunctions.js";
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.token;
-    let poisonImmune = await chrisPremades.helpers.checkTrait(target.actor, 'ci', 'poisoned');
-    if (poisonImmune) {
+    if (mba.checkTrait(target.actor, 'ci', 'poisoned')) {
         ChatMessage.create({
             whisper: ChatMessage.getWhisperRecipients("GM"),
             content: "<b>" + target.document.name + "</b> is immune to Dancing Monkey Fruit effects! (has immunity to poisoned condtion)",
@@ -9,21 +10,11 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         });
         return;
     }
-    let saveRoll = await chrisPremades.helpers.rollRequest(target, 'save', 'con');
+    let saveRoll = await mba.rollRequest(target, 'save', 'con');
     if (!saveRoll) return;
     if (saveRoll.total >= 14) return;
     async function effectMacroStart() {
-        await new Dialog({
-            title: "Dancing Monkey Fruit",
-            content: `
-                <p>You must use all of your movement to dance without leaving your space.</p>
-            `,
-            buttons: {
-                ok: {
-                    label: "Ok!",
-                }
-            }
-        }).render(true);
+        await mbaPremades.helpers.dialog("Dancing Monkey Fruit", [["Ok!", "ok"]], `<p>You must use all of your movement to dance without leaving your space.</p>`);
     }
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Dancing Monkey Fruit` })
@@ -56,7 +47,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 }
             }
         }
-        await chrisPremades.helpers.createEffect(actor, effectData);
+        await mba.createEffect(actor, effectData);
     }
     let effectData = {
         'name': "Dancing Monkey Fruit",
@@ -100,10 +91,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'effectmacro': {
                 'onTurnStart': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroStart)
+                    'script': mba.functionToString(effectMacroStart)
                 },
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             }
         }
@@ -200,8 +191,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .zIndex(0)
         .belowTokens()
 
-        .thenDo(function () {
-            chrisPremades.helpers.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
         })
 
         .play();
@@ -257,11 +248,11 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 }
 
 async function damaged({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let effect = await chrisPremades.helpers.findEffect(actor, "Dancing Monkey Fruit");
+    let effect = await mba.findEffect(actor, "Dancing Monkey Fruit");
     if (!effect) return;
-    let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'con');
+    let saveRoll = await mba.rollRequest(token, 'save', 'con');
     if (saveRoll.total < 14) return;
-    await chrisPremades.helpers.removeEffect(effect);
+    await mba.removeEffect(effect);
 }
 
 export let dancingMonkeyFruit = {

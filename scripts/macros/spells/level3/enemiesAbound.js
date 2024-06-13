@@ -1,13 +1,13 @@
 async function item({speaker, actor, token, character, item, args, scope, workflow}) {
     let target = workflow.targets.first();
-    let hasFearImmunity = chrisPremades.helpers.checkTrait(target.actor, 'ci', 'frightened');
+    let hasFearImmunity = mbaPremades.helpers.checkTrait(target.actor, 'ci', 'frightened');
     if (!workflow.failedSaves.size) {
-        await chrisPremades.helpers.removeCondition(workflow.actor, 'Concentrating');
+        await mbaPremades.helpers.removeCondition(workflow.actor, 'Concentrating');
         return;
     }
     if (hasFearImmunity) {
         ui.notifications.warn("Target is immune to Condition: Feared and is unaffected by Enemies Abound!")
-        await chrisPremades.helpers.removeCondition(workflow.actor, 'Concentrating');
+        await mbaPremades.helpers.removeCondition(workflow.actor, 'Concentrating');
         return;
     }
     let effectData = {
@@ -36,7 +36,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             'mba-premades': {
                 'spell': {
                     'enemiesAbound': {
-                        'dc': chrisPremades.helpers.getSpellDC(workflow.item)
+                        'dc': mbaPremades.helpers.getSpellDC(workflow.item)
                     }
                 }
             },
@@ -49,12 +49,12 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
             }
         }
     };
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
+    await mbaPremades.helpers.createEffect(target.actor, effectData);
 }
 //IS BORKED, REWORK
 async function isDamaged({speaker, actor, token, character, item, args, scope, workflow}) {
     const originItem = await fromUuid(actor.effects.find((eff) => eff.name === 'Enemies Abound').origin);
-    let effect = chrisPremades.helpers.findEffect(actor, 'Enemies Abound');
+    let effect = mbaPremades.helpers.findEffect(actor, 'Enemies Abound');
     if (!effect) return;
     let spellDC = effect.flags['mba-premades']?.spell?.enemiesAbound?.dc;
     const itemData = originItem.clone({
@@ -82,7 +82,7 @@ async function isDamaged({speaker, actor, token, character, item, args, scope, w
 	const options = { showFullCard: false, createWorkflow: true, versatile: false, configureDialog: false };
 	const saveResult = await MidiQOL.completeItemUse(itemUpdate, {}, options);
     if (saveResult.failedSaves.size === 0) {
-        await chrisPremades.helpers.removeEffect(effect);
+        await mbaPremades.helpers.removeEffect(effect);
 	}
 }
 
@@ -123,7 +123,7 @@ async function targetCheck({speaker, actor, token, character, item, args, scope,
         .play();
 
     await warpgate.wait(500);
-    await chrisPremades.helpers.updateTargets(newTargets);
+    await mbaPremades.helpers.updateTargets(newTargets);
 
     function mutableSample (arr, n) { //gets n values from array without shuffling (modifies the array)
         const output = [];

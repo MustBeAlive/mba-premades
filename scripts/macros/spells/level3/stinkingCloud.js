@@ -55,7 +55,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 'template': {
                     'name': 'stinkingCloud',
                     'castLevel': workflow.castData.castLevel,
-                    'saveDC': chrisPremades.helpers.getSpellDC(workflow.item),
+                    'saveDC': mbaPremades.helpers.getSpellDC(workflow.item),
                     'macroName': 'stinkingCloud',
                     'templateUuid': template.uuid,
                     'turn': 'end',
@@ -67,10 +67,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 }
 
 async function trigger(token, trigger) {
-    if (chrisPremades.helpers.checkTrait(token.actor, 'ci', 'poisoned')) return;
+    if (mbaPremades.helpers.checkTrait(token.actor, 'ci', 'poisoned')) return;
     let template = await fromUuid(trigger.templateUuid);
     if (!template) return;
-    if (chrisPremades.helpers.inCombat()) {
+    if (mbaPremades.helpers.inCombat()) {
         let turn = game.combat.round + '-' + game.combat.turn;
         let lastTurn = template.flags['mba-premades']?.spell?.stinkingCloud?.[token.id]?.turn;
         if (turn === lastTurn) return;
@@ -80,12 +80,12 @@ async function trigger(token, trigger) {
     if (!originUuid) return;
     let originItem = await fromUuid(originUuid);
     if (!originItem) return;
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Stinking Cloud: Nauseating Gas', false);
+    let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Stinking Cloud: Nauseating Gas', false);
     if (!featureData) return;
     featureData.system.save.dc = trigger.saveDC;
     delete featureData._id;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': originItem.actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([token.uuid]);
+    let [config, options] = mbaPremades.constants.syntheticItemWorkflowOptions([token.uuid]);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow.failedSaves.size) return;
     async function effectMacroStart() {
@@ -106,7 +106,7 @@ async function trigger(token, trigger) {
         'flags': {
             'effectmacro': {
                 'onCreate': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroStart)
+                    'script': mbaPremades.helpers.functionToString(effectMacroStart)
                 }
             },
             'dae': {
@@ -115,7 +115,7 @@ async function trigger(token, trigger) {
             }
         }
     };
-    await chrisPremades.helpers.createEffect(token.actor, effectData)
+    await mbaPremades.helpers.createEffect(token.actor, effectData)
 }
 
 async function enter(template, token) {

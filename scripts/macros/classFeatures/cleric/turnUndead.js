@@ -18,8 +18,8 @@ export async function turnUndead({ speaker, actor, token, character, item, args,
     for (let i of Array.from(workflow.targets)) {
         if (mba.raceOrType(i.actor) != 'undead') continue;
         if (i.actor.system.attributes.hp.value === 0) continue;
-        if (i.actor.flags['mba-bestiary']?.feature?.turnResistance) await mba.createEffect(i.actor, constants.advantageEffectData);
-        if (i.actor.flags['mba-bestiary']?.feature?.turnImmunity) await mba.createEffect(i.actor, constants.immunityEffectData);
+        if (i.actor.flags['mba-premades']?.feature?.turnResistance) await mba.createEffect(i.actor, constants.advantageEffectData);
+        if (i.actor.flags['mba-premades']?.feature?.turnImmunity) await mba.createEffect(i.actor, constants.immunityEffectData);
         validTargets.push(i.document.uuid);
     }
     mba.updateTargets(validTargets);
@@ -269,9 +269,9 @@ export async function turnUndead({ speaker, actor, token, character, item, args,
                 .persist()
                 .name(`${target.document.name} Turn Undead`)
 
-                .thenDo(function () {
-                    mba.createEffect(target.actor, effectData);
-                    if (!mba.findEffect(target.actor, "Reaction")) mba.addCondition(target.actor, "Reaction");
+                .thenDo(async () => {
+                    await mba.createEffect(target.actor, effectData);
+                    if (!mba.findEffect(target.actor, "Reaction")) await mba.addCondition(target.actor, "Reaction");
                 })
 
                 .play()

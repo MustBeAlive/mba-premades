@@ -43,10 +43,11 @@ export async function mindSliver({ speaker, actor, token, character, item, args,
     new Sequence()
 
         .effect()
-        .file("jb2a.ranged.03.projectile.01.pinkpurple")
+        .file("animated-spell-effects-cartoon.magic.mind sliver")
         .attachTo(token)
         .stretchTo(target)
-        .waitUntilFinished(-1200)
+        .filter("ColorMatrix", { hue: 80 })
+        .waitUntilFinished(-1300)
 
         .effect()
         .file("jb2a.melee_generic.slashing.two_handed")
@@ -80,8 +81,8 @@ export async function mindSliver({ speaker, actor, token, character, item, args,
             return workflow.failedSaves.size
         })
 
-        .thenDo(function () {
-            if (workflow.failedSaves.size) mba.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            if (workflow.failedSaves.size) await mba.createEffect(target.actor, effectData);
         })
 
         .play()

@@ -43,7 +43,7 @@ export async function quickenedHealing({ speaker, actor, token, character, item,
 
         .thenDo(async () => {
             await kiItem.update({ "system.uses.value": kiPoints -= 2 });
-            await mba.applyWorkflowDamage(workflow.token, healingRoll, "healing", [workflow.token], workflow.item.name, workflow.itemCardId);
+            await mba.applyWorkflowDamage(workflow.token, healingRoll, "healing", [workflow.token], undefined, workflow.itemCardId);
         })
 
         .play()

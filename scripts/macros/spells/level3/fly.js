@@ -1,10 +1,10 @@
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel - 2;
     if (workflow.targets.size <= ammount) return;
-    let selection = await chrisPremades.helpers.selectTarget(workflow.item.name, chrisPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+    let selection = await mbaPremades.helpers.selectTarget(workflow.item.name, mbaPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
     if (!selection.buttons) return;
     let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
-    chrisPremades.helpers.updateTargets(newTargets);
+    mbaPremades.helpers.updateTargets(newTargets);
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -39,7 +39,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacroDel)
+                    'script': mbaPremades.helpers.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -119,7 +119,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
             .play();
 
-        await chrisPremades.helpers.createEffect(target.actor, effectData)
+        await mbaPremades.helpers.createEffect(target.actor, effectData)
     }
 }
 

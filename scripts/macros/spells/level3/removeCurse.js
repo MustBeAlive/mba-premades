@@ -6,12 +6,12 @@ export async function removeCurse({ speaker, actor, token, character, item, args
         return;
     }
     if (effects.length < 2) {
-        let curse = await chrisPremades.helpers.findEffect(target.actor, effects[0].name);
+        let curse = await mbaPremades.helpers.findEffect(target.actor, effects[0].name);
         if (!curse) {
             ui.notifications.warn(`Unable to find Curse: ${effects[0].name}`);
             return;
         }
-        await chrisPremades.helpers.removeEffect(curse);
+        await mbaPremades.helpers.removeEffect(curse);
     } else {
         let selection = [];
         for (let i = 0; i < effects.length; i++) {
@@ -93,12 +93,12 @@ export async function removeCurse({ speaker, actor, token, character, item, args
             }).render(true);
         });
         let effectToRemoveName = effectToRemove.split(",")[0];
-        let removeEffect = await chrisPremades.helpers.findEffect(target.actor, effectToRemoveName);
+        let removeEffect = await mbaPremades.helpers.findEffect(target.actor, effectToRemoveName);
         if (!removeEffect) {
             ui.notifications.warn("Something went wrong, unable to find the effect!");
             return;
         }
-        await chrisPremades.helpers.removeEffect(removeEffect);
+        await mbaPremades.helpers.removeEffect(removeEffect);
     }
 
     new Sequence()

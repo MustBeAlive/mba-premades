@@ -58,8 +58,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .persist()
         .name(`${token.document.name} Hail of Thorns`)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData)
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData)
         })
 
         .play()
@@ -103,9 +103,13 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .size(4, { gridUnits: true })
         .delay(200)
 
-        .play()
+        .wait(200)
 
-    await mba.removeCondition(workflow.actor, 'Concentrating');
+        .thenDo(async () => {
+            await mba.removeCondition(workflow.actor, 'Concentrating');
+        })
+
+        .play()
 }
 
 export let hailOfThorns = {

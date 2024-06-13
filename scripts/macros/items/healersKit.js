@@ -18,19 +18,6 @@ export async function healersKit({ speaker, actor, token, character, item, args,
         ui.notifications.warn("Healer's Kit has no effect!");
         return;
     }
-    let potioncolor = "green";
-    let defaults = {
-        "green": {
-            "color": "green",
-            "particles": "greenyellow",
-            "tintColor": "0xbbf000",
-            "hue1": -105,
-            "hue2": 35,
-            "hue3": 0,
-            "saturate": 1
-        }
-    };
-    let config = defaults[potioncolor];
     const effectData = {
         'name': "Healer's Kit: Stabilized",
         'icon': workflow.item.img,
@@ -54,27 +41,25 @@ export async function healersKit({ speaker, actor, token, character, item, args,
 
     await new Sequence()
 
-        .wait(500)
-
         .effect()
         .file("animated-spell-effects-cartoon.water.05")
         .atLocation(target, { offset: { x: 0.2, y: -0.5 }, gridUnits: true })
         .scaleToObject(1.4)
         .opacity(0.9)
         .rotate(90)
-        .filter("ColorMatrix", { saturate: config.saturate, hue: config.hue1 })
+        .filter("ColorMatrix", { saturate: 1, hue: -105 })
         .zIndex(1)
 
         .wait(200)
 
         .effect()
-        .file(`jb2a.sacred_flame.source.${config.color}`)
+        .file(`jb2a.sacred_flame.source.green`)
         .attachTo(target, { offset: { y: 0.15 }, gridUnits: true, followRotation: false })
         .startTime(3400)
         .scaleToObject(2.2)
         .fadeOut(500)
         .animateProperty("sprite", "position.y", { from: 0, to: -0.4, duration: 1000, gridUnits: true })
-        .filter("ColorMatrix", { hue: config.hue3 })
+        .filter("ColorMatrix", { hue: 0 })
         .zIndex(1)
 
         .effect()
@@ -84,11 +69,11 @@ export async function healersKit({ speaker, actor, token, character, item, args,
         .duration(1250)
         .fadeIn(100)
         .fadeOut(600)
-        .filter("Glow", { color: config.tintColor })
-        .tint(config.tintColor)
+        .filter("Glow", { color: "0xbbf000" })
+        .tint("0xbbf000")
 
         .effect()
-        .file(`jb2a.particles.outward.${config.particles}.01.03`)
+        .file(`jb2a.particles.outward.greenyellow.01.03`)
         .attachTo(target, { offset: { y: 0.1 }, gridUnits: true, followRotation: false })
         .scale(0.6)
         .duration(1000)
@@ -100,8 +85,8 @@ export async function healersKit({ speaker, actor, token, character, item, args,
         .zIndex(0.3)
         .waitUntilFinished(-500)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
         })
 
         .play();

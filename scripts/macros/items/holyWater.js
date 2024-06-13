@@ -10,10 +10,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let choices = [
         ["Splash Holy Water on somebody (5 ft.)", "splash"],
         ["Throw flask of Holy Water at someone (20 ft.)", "shatter"],
-        ["Cancel", "cancel"]
+        ["Cancel", false]
     ];
     let selection = await mba.dialog("Holy Water", choices, `<b>What would you like to do?</b>`);
-    if (!selection || selection === "cancel") return;
+    if (!selection) return;
     let featureData;
     if (selection === "splash") {
         featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Holy Water: Splash Water', false);
@@ -35,14 +35,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     await game.messages.get(workflow.itemCardId).delete();
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow) return;
-    let flaskItem = mba.getItem(workflow.actor, workflow.item.name);
+    let flaskItem = await mba.getItem(workflow.actor, workflow.item.name);
     if (flaskItem.system.quantity > 1) {
         await flaskItem.update({ "system.quantity": flaskItem.system.quantity - 1 });
     } else {
         await workflow.actor.deleteEmbeddedDocuments("Item", [flaskItem.id]);
     }
     if (selection === "splash") {
-        let emptyFlaskItem = mba.getItem(workflow.actor, "Empty Flask");
+        let emptyFlaskItem = await mba.getItem(workflow.actor, "Empty Flask");
         if (!emptyFlaskItem) {
             const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
             if (!itemData) {
@@ -84,11 +84,6 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     let type = await mba.raceOrType(target.actor).toLowerCase();
     if (type === "undead" || type === 'fiend') {
         let damageRoll = await new Roll('2d6[radiant]').roll({ 'async': true });
-        await damageRoll.toMessage({
-            rollMode: 'roll',
-            speaker: { 'alias': name },
-            flavor: 'Holy Water'
-        });
         new Sequence()
 
             .effect()
@@ -113,8 +108,8 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
             .zIndex(2)
             .startTime(400)
 
-            .thenDo(function () {
-                mba.applyDamage(target, damageRoll.total, 'radiant')
+            .thenDo(async () => {
+                await mba.applyWorkflowDamage(workflow.token, damageRoll, "radiant", [target], undefined, workflow.itemCardId);
             })
 
             .play()

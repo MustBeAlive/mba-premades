@@ -93,8 +93,8 @@ export async function bless({ speaker, actor, token, character, item, args, scop
     
             .wait(delay3)
     
-            .thenDo(function () {
-                mba.createEffect(target.actor, effectData)
+            .thenDo(async () => {
+                await mba.createEffect(target.actor, effectData)
             })
     
             .play()

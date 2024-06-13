@@ -147,8 +147,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             .belowTokens()
             .waitUntilFinished(-1600)
 
-            .thenDo(function () {
-                mba.createEffect(target.actor, effectData);
+            .thenDo(async () => {
+                await mba.createEffect(target.actor, effectData);
             })
 
             .effect()

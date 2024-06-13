@@ -161,8 +161,8 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
 
 			.wait(1500)
 
-			.thenDo(function () {
-				mba.createEffect(target.actor, effectData);
+            .thenDo(async () => {
+				await mba.createEffect(target.actor, effectData);
 			})
 
 			.play()
@@ -236,8 +236,8 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
 
 			.wait(1500)
 
-			.thenDo(function () {
-				mba.createEffect(target.actor, effectData);
+            .thenDo(async () => {
+				await mba.createEffect(target.actor, effectData);
 			})
 
 			.play()
@@ -291,8 +291,8 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
 
 			.wait(1500)
 
-			.thenDo(function () {
-				mba.createEffect(target.actor, effectData);
+            .thenDo(async () => {
+				await mba.createEffect(target.actor, effectData);
 			})
 
 			.play()
@@ -445,9 +445,9 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
 
 			.wait(1500)
 
-			.thenDo(function () {
-				mba.createEffect(t1.actor, effectData1);
-				mba.createEffect(t2.actor, effectData2);
+            .thenDo(async () => {
+				await mba.createEffect(t1.actor, effectData1);
+				await mba.createEffect(t2.actor, effectData2);
 			})
 
 			.play()

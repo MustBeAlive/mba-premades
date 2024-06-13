@@ -1,7 +1,7 @@
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let targetIds = [];
     for (let i of workflow.targets) {
-        let type = chrisPremades.helpers.raceOrType(i.actor);
+        let type = mbaPremades.helpers.raceOrType(i.actor);
         if (type === 'undead' || type === 'construct') {
             ChatMessage.create({ flavor: 'Mass Healing Word fails on ' + i.name + '!', speaker: ChatMessage.getSpeaker({ actor: workflow.actor }) });
             continue;

@@ -63,8 +63,8 @@ export async function falseLife({ speaker, actor, token, character, item, args, 
         .filter("ColorMatrix", { hue: 200 })
         .playbackRate(0.85)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
         })
 
         .play()

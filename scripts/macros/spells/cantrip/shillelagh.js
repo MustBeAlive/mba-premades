@@ -121,8 +121,8 @@ export async function shillelagh({ speaker, actor, token, character, item, args,
 
         .wait(300)
 
-        .thenDo(function () {
-            warpgate.mutate(workflow.token.document, updates, {}, options);
+        .thenDo(async () => {
+            await warpgate.mutate(workflow.token.document, updates, {}, options);
         })
 
         .play()

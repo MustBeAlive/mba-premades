@@ -26,8 +26,8 @@ export async function corpseHide(combat, update, options, userId) {
             .aboveInterface()
             .waitUntilFinished(-1600)
 
-            .thenDo(function () {
-                warpgate.mutate(tokenDoc, updates, {}, options1);
+            .thenDo(async () => {
+                await warpgate.mutate(tokenDoc, updates, {}, options1);
             })
 
             .play()

@@ -8,7 +8,7 @@ async function setupFolder() {
         folder = await Folder.create({
             'name': 'MBA Summons',
             'type': 'Actor',
-            'color': '#005c8a'
+            'color': '#9580FF'
         });
     }
     let summonsCompendium = game.packs.get('mba-premades.MBA Summons');

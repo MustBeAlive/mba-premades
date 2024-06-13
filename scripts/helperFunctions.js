@@ -1,5 +1,5 @@
-import { socket } from "./module.js";
-import { summonEffects } from "./macros/animations/summonEffects.js";
+import {socket} from "./module.js";
+import {summonEffects} from "./macros/animations/summonEffects.js";
 
 export let mba = {
     'addCondition': async function _addCondition(actor, name, overlay, origin) {
@@ -216,12 +216,26 @@ export let mba = {
             return await fromUuid(await socket.executeAsGM('createEffect', actor.uuid, effectData));
         }
     },
+    'createScene': async function _createScene(sceneData) {
+        if (game.user.isGM) {
+            await Scene.create(sceneData);
+        } else {
+            await socket.executeAsGM('createScene', sceneData);
+        }
+    },
     'createTemplate': async function _createTemplate(templateData, returnTokens) {
         let [template] = await canvas.scene.createEmbeddedDocuments('MeasuredTemplate', [templateData]);
         if (!returnTokens) return template;
         await warpgate.wait(200);
         let tokens = await game.modules.get('templatemacro').api.findContained(template).map(t => template.parent.tokens.get(t));
         return { 'template': template, 'tokens': tokens };
+    },
+    'createTile': async function _createTile(tileData) {
+        if (game.user.isGM) {
+            await canvas.scene.createEmbeddedDocuments("Tile", tileData);
+        } else {
+            await socket.executeAsGM('createTile', tileData);
+        }
     },
     'damageRoll': async function _damageRoll(workflow, damageFormula, options = {}, ignoreCrit = false) {
         if (workflow.isCritical && !ignoreCrit) damageFormula = mba.getCriticalFormula(damageFormula);
@@ -234,6 +248,20 @@ export let mba = {
         if (!decimal) return 0;
         if (Number(decimal) >= 1) return Number(decimal);
         return '1/' + 1 / Number(decimal);
+    },
+    'deleteScene': async function _deleteScene(sceneIds) {
+        if (game.user.isGM) {
+            await Scene.deleteDocuments(sceneIds);
+        } else {
+            await socket.executeAsGM('deleteScene', sceneIds);
+        }
+    },
+    'deleteTile': async function _deleteTile(tileDoc) {
+        if (game.user.isGM) {
+            await tileDoc.delete();
+        } else {
+            await socket.executeAsGM('deleteTile', tileDoc.uuid);
+        }
     },
     'dialog': async function _dialog(title, options, content) {
         if (content) content = '<center>' + content + '</center>';
@@ -1187,6 +1215,13 @@ export let mba = {
             }
         }
         return await warpgate.spawn(tokenDocument, updates, callbacks, options);
+    },
+    'stopFollowing': async function _stopFollowing(followerToken, scene) {
+        if (!game.modules.get("Rideable")?.active) {
+            ui.notifications.warn(`Activate module "Rideable"!`);
+            return;
+        }
+        await game.Rideable.StopFollowbyID(followerToken.id, scene.id);
     },
     'templateTokens': function _templateTokens(template) {
         return game.modules.get('templatemacro').api.findContained(template);

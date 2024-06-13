@@ -1,3 +1,4 @@
+import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -136,7 +137,7 @@ async function trigger(token, trigger) {
     featureData.system.damage.parts[0][0] = trigger.dice + "d8[fire]";
     delete featureData._id;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': originItem.actor });
-    let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([token.uuid]);
+    let [config, options] = constants.syntheticItemWorkflowOptions([token.uuid]);
     await MidiQOL.completeItemUse(feature, config, options);
 }
 

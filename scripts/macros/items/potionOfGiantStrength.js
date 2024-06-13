@@ -168,17 +168,17 @@ export async function potionOfGiantStrength({ speaker, actor, token, character, 
         .zIndex(0.3)
         .waitUntilFinished(-500)
 
-        .thenDo(function () {
+        .thenDo(async () => {
             if (target.actor.system.abilities.str.value >= str) {
                 ui.notifications.info("Potion has no effect");
             } else {
-                mba.createEffect(target.actor, effectData);
+                await mba.createEffect(target.actor, effectData);
             }
         })
 
         .play();
 
-    let vialItem = mba.getItem(workflow.actor, workflow.item.name);
+    let vialItem = await mba.getItem(workflow.actor, workflow.item.name);
     if (vialItem.system.quantity > 1) {
         await vialItem.update({ "system.quantity": vialItem.system.quantity - 1 });
     } else {

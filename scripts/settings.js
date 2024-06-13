@@ -1,8 +1,12 @@
-import {addMenuSetting, mbaSettingsAnimations, mbaSettingsClassFeats, mbaSettingsFeats, mbaSettingsHomewbrew, mbaSettingsGeneral, mbaSettingsInterface, mbaSettingsMechanics, mbaSettingsRaceFeats, mbaSettingsSpells, mbaSettingsSummons} from './settingsMenu.js';
+import {addMenuSetting, mbaSettingsAnimations, mbaSettingsClassFeats, mbaSettingsFeats, mbaSettingsHomewbrew, mbaSettingsGeneral, mbaSettingsInterface, mbaSettingsMechanics, mbaSettingsMonsterFeats, mbaSettingsRaceFeats, mbaSettingsSpells, mbaSettingsSummons} from './settingsMenu.js';
+import {automatedAnimations} from './integrations/automatedAnimations.js';
+import {buildABonus} from './integrations/buildABonus.js';
 import {cast} from './macros/animations/cast.js';
+import {colorizeDAETitleBarButton} from './integrations/dae.js';
 import {corpseHide} from './macros/mechanics/corpseHide.js';
 import {critFumble} from './macros/animations/critFumble.js';
 import {deathSaves} from './macros/mechanics/deathSaves.js';
+import {diceSoNice} from './integrations/diceSoNice.js';
 import {effectAuraHooks} from './macros/mechanics/effectAuras.js';
 import {itemDC, noEffectAnimationCreate, noEffectAnimationDelete} from './macros/mechanics/activeEffect.js';
 import {macros, onHitMacro} from './macros.js';
@@ -10,6 +14,7 @@ import {patchSaves, patchSkills} from './patching.js';
 import {removeV10EffectsBlind} from './macros/mechanics/blindness.js';
 import {removeV10EffectsInvisible} from './macros/mechanics/invisibility.js';
 import {tashaSummon} from './macros/generic/tashaSummon.js';
+import {templateMacroTitleBarButton} from './integrations/templateMacro.js';
 import {tokenMoved, combatUpdate, tokenMovedEarly} from './macros/mechanics/movement.js';
 
 let moduleName = 'mba-premades';
@@ -34,7 +39,7 @@ export function registerSettings() {
 
     game.settings.register(moduleName, 'Active Effect Additions', {
         'name': 'Дополнения к Активным Эффектам',
-        'hint': 'Эта настройка добавляет возможность использовать дополнительные "опции" для активных эффектов.',
+        'hint': 'Эта настройка добавляет возможность макросам использовать дополнительные "опции" для активных эффектов.',
         'scope': 'world',
         'config': false,
         'type': Boolean,
@@ -99,6 +104,42 @@ export function registerSettings() {
         }
     });
     addMenuSetting('Combat Listener', 'General');
+
+    game.settings.register(moduleName, 'Build A Bonus Overlapping Effects', {
+        'name': 'Совместимость для Build A Bonus',
+        'hint': 'Позволяет эффектам от модуля Build a Bonus учитывать "overlap".',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('babonus.filterBonuses', buildABonus.overlappingEffects);
+            } else {
+                Hooks.off('babonus.filterBonuses', buildABonus.overlappingEffects);
+            }
+        }
+    });
+    addMenuSetting('Build A Bonus Overlapping Effects', 'General');
+
+    game.settings.register(moduleName, 'Dice So Nice', {
+        'name': 'Совместимость для Dice So Nice',
+        'hint': 'Обновляет значения на 3d кубах в соответствии с работой макросов изменяющих результаты бросков.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preItemRoll', diceSoNice.early);
+                Hooks.on('midi-qol.DamageRollComplete', diceSoNice.late);
+            } else {
+                Hooks.off('midi-qol.preItemRoll', diceSoNice.early);
+                Hooks.off('midi-qol.DamageRollComplete', diceSoNice.late);
+            }
+        }
+    });
+    addMenuSetting('Dice So Nice', 'General');
 
     game.settings.register(moduleName, 'Effect Auras', {
         'name': 'Автоматизация Аур',
@@ -543,6 +584,74 @@ export function registerSettings() {
     });
     addMenuSetting('Corpse Hider', 'Mechanics');
 
+    game.settings.register(moduleName, 'Kuo-toa', {
+        'name': 'Kuo-toa Sticky Shield',
+        'hint': 'Включает автоматизацию способности Kuo-toa Sticky Shield.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.AttackRollComplete', macros.monsters.kuotoa.stickyShield);
+            } else {
+                Hooks.off('midi-qol.AttackRollComplete', macros.monsters.kuotoa.stickyShield);
+            }
+        }
+    });
+    addMenuSetting('Kuo-toa', 'Monster Features');
+
+    game.settings.register(moduleName, 'Nine Lives', {
+        'name': "Chwinga's Magical Secret: Nine Lives",
+        'hint': 'Включает автоматизацию Charm of Nine Lives.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preTargetDamageApplication', macros.monsters.chwinga.nineLives);
+            } else {
+                Hooks.off('midi-qol.preTargetDamageApplication', macros.monsters.chwinga.nineLives);
+            }
+        }
+    });
+    addMenuSetting('Nine Lives', 'Monster Features');
+
+    game.settings.register(moduleName, 'Relentless', {
+        'name': 'Relentless',
+        'hint': 'Включает автоматизацию способности Relentless у монстров Boar, Giant Boar.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preTargetDamageApplication', macros.monsters.relentless);
+            } else {
+                Hooks.off('midi-qol.preTargetDamageApplication', macros.monsters.relentless);
+            }
+        }
+    });
+    addMenuSetting('Relentless', 'Monster Features');
+
+    game.settings.register(moduleName, 'Undead Fortitude', {
+        'name': 'Undead Fortitude',
+        'hint': 'Включает автоматизацию способности Undead Fortitude у нежити.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preTargetDamageApplication', macros.monsters.zombie.undeadFortitude);
+            } else {
+                Hooks.off('midi-qol.preTargetDamageApplication', macros.monsters.zombie.undeadFortitude);
+            }
+        }
+    });
+    addMenuSetting('Undead Fortitude', 'Monster Features');
+
     game.settings.register(moduleName, 'Relentless Endurance', {
         'name': 'Orc: Relentless Endurance',
         'hint': 'Включает автоматизацию спобности Relentless Endurance через Midi-QoL hooks.',
@@ -808,19 +917,8 @@ export function registerSettings() {
     });
     addMenuSetting('Companions Initiative', 'Summons');
 
-    game.settings.register(moduleName, 'Dark Theme', {
-        'name': 'Dark Theme',
-        'hint': "Включает альтернативную версию UI.",
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false,
-        'onChange': () => debouncedReload()
-    });
-    addMenuSetting("Dark Theme", "User Interface")
-
     game.settings.register(moduleName, 'Font Change', {
-        'name': 'Font Change',
+        'name': 'Замена Шрифтов',
         'hint': "Включает альтернативный стиль шрифтов (Geologica). Поддерживает Кириллицу.",
         'scope': 'world',
         'config': false,
@@ -830,8 +928,81 @@ export function registerSettings() {
     });
     addMenuSetting("Font Change", "User Interface")
 
+    game.settings.register(moduleName, 'Colorize Automated Animations', {
+        'name': 'Колоризация иконки модуля Automated Animations',
+        'hint': 'Включает перекрашивание иконки модуля Automated Animations в зависимости от настроек.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                automatedAnimations.sortAutoRec();
+                Hooks.on('renderItemSheet', automatedAnimations.titleBarButton);
+            } else {
+                Hooks.off('renderItemSheet', automatedAnimations.titleBarButton);
+            }
+        }
+    });
+    addMenuSetting('Colorize Automated Animations', 'User Interface');
+
+    game.settings.register(moduleName, 'Colorize Build A Bonus', {
+        'name': 'Колоризация иконки модуля Build A Bonus',
+        'hint': 'Включает перекрашивание иконки модуля Build A Bonus в зависимости от настроек.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('renderItemSheet', buildABonus.titleBarButton);
+                Hooks.on('renderDAEActiveEffectConfig', buildABonus.daeTitleBarButton);
+                Hooks.on('renderActorSheet5e', buildABonus.actorTitleBarButtons);
+            } else {
+                Hooks.off('renderItemSheet', buildABonus.titleBarButton);
+                Hooks.off('renderDAEActiveEffectConfig', buildABonus.daeTitleBarButton);
+                Hooks.off('renderActorSheet5e', buildABonus.actorTitleBarButtons);
+            }
+        }
+    });
+    addMenuSetting('Colorize Build A Bonus', 'User Interface');
+
+    game.settings.register(moduleName, 'Colorize Dynamic Active Effects', {
+        'name': 'Колоризация иконки модуля Dynamic Active Effects',
+        'hint': 'Включает перекрашивание иконки модуля Dynamic Active Effects в зависимости от настроек.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('renderItemSheet', colorizeDAETitleBarButton);
+            } else {
+                Hooks.off('renderItemSheet', colorizeDAETitleBarButton);
+            }
+        }
+    });
+    addMenuSetting('Colorize Dynamic Active Effects', 'User Interface');
+
+    game.settings.register(moduleName, 'Colorize Template Macro', {
+        'name': 'Колоризация иконки модуля Template Macro',
+        'hint': 'Включает перекрашивание иконки модуля Template Macro в зависимости от настроек.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('renderItemSheet', templateMacroTitleBarButton);
+            } else {
+                Hooks.off('renderItemSheet', templateMacroTitleBarButton);
+            }
+        }
+    });
+    addMenuSetting('Colorize Template Macro', 'User Interface');
+
     game.settings.register(moduleName, 'Rollmode Buttons', {
-        'name': 'Rollmode Buttons',
+        'name': 'Селектор режимов броска',
         'hint': "Включает альтернативный селектор режимов броска (кнопки вместо выпадающего списка).",
         'scope': 'world',
         'config': false,
@@ -840,6 +1011,17 @@ export function registerSettings() {
         'onChange': () => debouncedReload()
     });
     addMenuSetting("Rollmode Buttons", "User Interface")
+
+    game.settings.register(moduleName, 'Dark Theme', {
+        'name': 'Темная Тема',
+        'hint': "Включает альтернативную версию UI.",
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': () => debouncedReload()
+    });
+    addMenuSetting("Dark Theme", "User Interface")
 
     game.settings.registerMenu(moduleName, 'General', {
         'name': 'General',
@@ -876,8 +1058,7 @@ export function registerSettings() {
     game.settings.registerMenu(moduleName, 'Homebrew', {
         'name': 'Homebrew',
         'label': 'Homebrew',
-        //'hint': 'Optional settings for homebrew features.',
-        'hint': 'Настройки опциональных ХБ способностей.',
+        'hint': 'Настройки опциональных ХБ способностей/фич.',
         'icon': 'fas fa-cauldron',
         'type': mbaSettingsHomewbrew,
         'restricted': true
@@ -888,6 +1069,14 @@ export function registerSettings() {
         'hint': 'Настройки автоматизации механик и QoL штук.',
         'icon': 'fas fa-dice',
         'type': mbaSettingsMechanics,
+        'restricted': true
+    });
+    game.settings.registerMenu(moduleName, 'Monster Features', {
+        'name': 'Monster Features',
+        'label': 'Monster Features',
+        'hint': 'Настройки автоматизации механик и способностей монстров.',
+        'icon': 'fas fa-dragon',
+        'type': mbaSettingsMonsterFeats,
         'restricted': true
     });
     game.settings.registerMenu(moduleName, 'Race Features', {

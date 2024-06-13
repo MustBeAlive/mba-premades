@@ -46,8 +46,9 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background: -webkit-gradient(linear, left bottom, left top, from(var(--color-dracula-accent-tertiary)), to(var(--color-dracula-accent-secondary)));
-    background: linear-gradient(0deg, var(--color-dracula-accent-tertiary) 0%, var(--color-dracula-accent-secondary) 100%);
+    /*background: -webkit-gradient(linear, left bottom, left top, from(var(--color-dracula-accent-tertiary)), to(var(--color-dracula-accent-secondary)));
+    background: linear-gradient(0deg, var(--color-dracula-accent-tertiary) 0%, var(--color-dracula-accent-secondary) 100%);*/
+    background: var(--color-dracula-accent);
     border-radius: 0;
     outline: none
 }
@@ -1378,8 +1379,8 @@ nav.list-filters a.filter:hover {
 
 .dnd5e input[type=text]:hover, .dnd5e input[type=number]:hover {
     border: 1px solid var(--color-dracula-border-secondary);
-    -webkit-box-shadow: 0 0 8px var(--color-dracula-accent-tertiary);
-    box-shadow: 0 0 8px var(--color-dracula-accent-tertiary)
+    -webkit-box-shadow: 0 0 8px var(--color-dracula-accent);
+    box-shadow: 0 0 8px var(--color-dracula-accent);
 }
 
 .dnd5e input[type=text]:focus, .dnd5e input[type=number]:focus {
@@ -1462,7 +1463,7 @@ nav.list-filters a.filter:hover {
 }
 
 .dnd5e.chat-card .card-content>* {
-    color: var(--color-dracula-text-tertiary)
+    color: var(--color-dracula-text-secondary)
 }
 
 .dnd5e.chat-card .card-header {
@@ -3173,13 +3174,7 @@ aside .read-aloud-text p * {
     padding: 0
 }
 
-/*
-.midi-qol-box {
-    border: 1px solid;
-    border-image-slice: 1;
-    border-image-source: linear-gradient(135deg, var(--color-dracula-accent) 0%, var(--color-dracula-accent-highlight) 100%)
-}
-*/
+
 
 .midi-qol-faint {
     color: var(--color-dracula-text-secondary)
@@ -3981,7 +3976,7 @@ footer.svelte-auto-1g5ic18.svelte-auto-1g5ic18:hover {
 
 /* DFreds Effect Panel */
 .effect-panel .effect-item .effect-info a.content-link {
-    color: var(--color-dracula-accent-tertiary);
+    color: var(--color-dracula-accent);
 }
 
 
@@ -4304,6 +4299,12 @@ footer.svelte-auto-1g5ic18.svelte-auto-1g5ic18:hover {
 .journal-entry.journal-sheet .directory .directory-list {
     background: var(--color-dracula-content);
 }
+body[inline-roll-styling="true"] a.entity-link, body[inline-roll-styling="true"] a.content-link, body[inline-roll-styling="true"] a.inline-roll, body[inline-roll-styling="true"] a.picture-link, body[inline-roll-styling="true"] a.sound-link, body[inline-roll-styling="true"] a.inline-request-roll, body[inline-roll-styling="true"] a.tile-trigger-link {
+    color: var(--color-dracula-accent);
+}
+body[inline-roll-styling="true"] a.entity-link i, body[inline-roll-styling="true"] a.content-link i, body[inline-roll-styling="true"] a.inline-roll, body[inline-roll-styling="true"] a.picture-link i, body[inline-roll-styling="true"] a.sound-link i, body[inline-roll-styling="true"] a.inline-request-roll i, body[inline-roll-styling="true"] a.tile-trigger-link i {
+    color: var(--color-dracula-accent);
+}
 
 
 /* Monk's Tokenbar */
@@ -4530,6 +4531,13 @@ select.ve-foundry-button {
 .veapp-task-runner__disp-progress-number {
     background: var(--color-dracula-accent) !important;
 }
+.rd__b-inset {
+    box-shadow: unset;
+    border: 1px solid var(--color-dracula-accent);
+    border-top: 2px solid var(--color-dracula-accent);
+    border-bottom: 2px solid var(--color-dracula-accent);
+    background-color: var(--color-dracula-content);
+}
 
 
 /* Rollmode Buttons */
@@ -4731,6 +4739,11 @@ form .form-group.spell-lvl-btn .form-fields .spell-lvl-btn__label .spell-lvl-btn
     border: 1px groove var(--color-dracula-accent);
 }
 
+/* Template Macro */
+.templatemacro nav.sheet-tabs.tabs .active {
+    text-shadow: 0 0 10px var(--color-dracula-accent);
+}
+
 
 /* Tidy-5e sheet */
 .tidy5e-sheet:where(.actor) [contenteditable], .tidy5e-sheet:where(.actor) input[type=text], .tidy5e-sheet:where(.actor) input[type=number], .tidy5e-sheet:where(.actor) textarea {
@@ -4762,6 +4775,75 @@ form .form-group.spell-lvl-btn .form-fields .spell-lvl-btn__label .spell-lvl-btn
 }
 .tidy5e-sheet.sheet form .icon-button:hover, .tidy5e-sheet.sheet form .icon-button:focus-visible, .tidy5e-sheet.application-shell .icon-button:hover, .tidy5e-sheet.application-shell .icon-button:focus-visible {
     background: transparent !important;
+}
+.tidy5e-sheet:where(.actor) .rollable:hover {
+    color: var(--color-dracula-accent);
+}
+.tidy5e-sheet .button-menu-wrapper .button-menu-opener:hover.primary {
+    color: var(--color-dracula-accent);
+    background: unset !important;
+}
+.tidy5e-sheet.sheet form .inline-icon-button:hover, .tidy5e-sheet.sheet form .inline-icon-button:focus-visible, .tidy5e-sheet.application-shell .inline-icon-button:hover, .tidy5e-sheet.application-shell .inline-icon-button:focus-visible {
+    color: var(--color-dracula-accent) !important;
+    background: unset !important;
+}
+.tidy5e-sheet:where(.actor) [contenteditable=true]:hover, .tidy5e-sheet:where(.actor) [contenteditable=true]:focus, .tidy5e-sheet:where(.actor) input[type=text]:hover, .tidy5e-sheet:where(.actor) input[type=text]:focus, .tidy5e-sheet:where(.actor) input[type=number]:hover, .tidy5e-sheet:where(.actor) input[type=number]:focus, .tidy5e-sheet:where(.actor) textarea {
+    box-shadow: 0 0 0 0.0625rem var(--color-dracula-accent) inset;
+}
+.tidy5e-sheet.sheet form .icon-button:hover, .tidy5e-sheet.sheet form .icon-button:focus-visible, .tidy5e-sheet.application-shell .icon-button:hover, .tidy5e-sheet.application-shell .icon-button:focus-visible {
+    color: var(--color-dracula-accent);
+}
+.tidy-tabs.svelte-18up2de .tab-option.svelte-18up2de:hover {
+    color: var(--color-dracula-accent);
+}
+.tidy5e-sheet .highlight-on-hover:is(:hover,:focus-visible) {
+    color: var(--color-dracula-accent);
+    background: unset !important;
+}
+.tidy5e-sheet.sheet form .inline-transparent-button:hover, .tidy5e-sheet.application-shell .inline-transparent-button:hover {
+    background: transparent !important;
+    color: var(--color-dracula-accent);
+}
+.tidy5e-sheet.item .tidy-sheet-body .editor-container [contenteditable=true]:hover, .tidy5e-sheet.item .tidy-sheet-body .editor-container [contenteditable=true]:focus {
+    box-shadow: 0 0 0 0.0625rem var(--color-dracula-accent) inset;
+}
+.tidy5e-sheet.item .tidy-tab .form-group input[type=text]:hover, .tidy5e-sheet.item .tidy-tab .form-group input[type=number]:hover, .tidy5e-sheet.item .tidy-tab .form-group select:hover, .tidy5e-sheet.item .tidy-tab .form-group select:focus, .tidy5e-sheet.item .tidy-tab .form-group textarea, .tidy5e-sheet.item .tidy-tab>.tab .form-group input[type=text]:hover, .tidy5e-sheet.item .tidy-tab>.tab .form-group input[type=number]:hover, .tidy5e-sheet.item .tidy-tab>.tab .form-group select:hover, .tidy5e-sheet.item .tidy-tab>.tab .form-group select:focus, .tidy5e-sheet.item .tidy-tab>.tab .form-group textarea {
+    box-shadow: 0 0 0 0.0625rem var(--color-dracula-accent) inset;
+}
+.tidy5e-sheet.item :is(input[type=text],input[type=number],textarea):hover, .tidy5e-sheet.item :is(input[type=text],input[type=number],textarea):focus {
+    box-shadow: 0 0 0 0.0625rem var(--color-dracula-accent) inset;
+}
+.tidy5e-sheet.sheet form .transparent-button:hover, .tidy5e-sheet.application-shell .transparent-button:hover {
+    color: var(--color-dracula-accent);
+}
+.tidy5e-sheet a.entity-link:hover, .tidy5e-sheet a.content-link:hover, .tidy5e-sheet a.inline-roll:hover, .tidy5e-sheet a.roll-link:hover {
+    color: var(--color-dracula-shadow);
+    background: var(--color-dracula-accent);
+}
+.tidy5e-sheet a.entity-link:hover i, .tidy5e-sheet a.content-link:hover i, .tidy5e-sheet a.inline-roll:hover i, .tidy5e-sheet a.roll-link:hover i {
+    color: var(--color-dracula-shadow);
+}
+.wrapper.svelte-t23tby .config-button.svelte-t23tby.svelte-t23tby:hover {
+    color: var(--color-dracula-accent);
+}
+.health.svelte-1y0ovmw .roll-hp-formula.svelte-1y0ovmw:hover {
+    color: var(--color-dracula-accent);
+    background: unset !important;
+}
+.skills-list.svelte-tmgyvr .skill .configure-proficiency.svelte-tmgyvr:hover {
+    color: var(--color-dracula-accent);
+    background: unset !important;
+}
+.skills-list.svelte-tmgyvr .skill .skill-proficiency-toggle.svelte-tmgyvr:hover {
+    color: var(--color-dracula-accent);
+    background: unset !important;
+}
+.portrait-menu.svelte-ocpxj1 .portrait-menu-item.svelte-ocpxj1:hover {
+    border: 1px solid var(--color-dracula-accent);
+    color: var(--color-dracula-shadow);
+}
+.resource.svelte-1bmdrvx .resource-header.active .resource-options.svelte-1bmdrvx.svelte-1bmdrvx {
+    color: var(--color-dracula-accent);
 }
 
 
@@ -4826,4 +4908,60 @@ form .form-group.spell-lvl-btn .form-fields .spell-lvl-btn__label .spell-lvl-btn
     text-shadow: unset;
     border-radius: unset;
     font-weight: 400;
+}
+
+/* Tokenizer */
+#tokenizer div.view-layer-control {
+    background-color: var(--color-dracula-content);
+    border-bottom: 1px solid var(--color-dracula-accent);
+}
+#tokenizer div.view-layer-control canvas {
+    background-color: var(--color-dracula-content);
+    border-bottom: 1px solid var(--color-dracula-accent);
+    border-top: 1px solid var(--color-dracula-accent);
+}
+#tokenizer div.menu {
+    background-color: var(--color-dracula-content);
+}
+#tokenizer div.section {
+    background-color: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
+}
+#tokenizer button.invisible-button {
+    background-color: var(--color-dracula-content);
+    width: 23px;
+}
+#tokenizer div.view-layer-control .section, #tokenizer .section {
+    border: thin solid var(--color-dracula-accent);
+    background-color: var(--color-dracula-content);
+}
+#tokenizer div.view-layer-control button.active {
+    background: var(--color-dracula-accent);
+}
+.tokenizer .title .box-button {
+    background: var(--color-dracula-accent);
+    box-shadow: unset;
+    border-radius: unset;
+    color: var(--color-dracula-shadow);
+}
+.tokenizer .box-button.deselected {
+    background: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+    color: var(--color-dracula-text-primary);
+}
+#tokenizer .popup {
+    background-color: var(--color-dracula-content);
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+}
+.tokenizer button.popup-button {
+    background: var(--color-dracula-content);
+}
+#tokenizer div.view-layer-control button, #tokenizer button.menu-button {
+    border: 1px solid var(--color-dracula-accent);
+    border-radius: unset;
+}
+.tokenizer .popup-input {
+    background: var(--color-dracula-content);
 }

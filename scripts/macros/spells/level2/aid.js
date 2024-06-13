@@ -57,8 +57,8 @@ export async function aid({ speaker, actor, token, character, item, args, scope,
             .filter("ColorMatrix", { hue: 140 })
             .waitUntilFinished(-800)
 
-            .thenDo(function () {
-                mba.createEffect(target.actor, effectData);
+            .thenDo(async () => {
+                await mba.createEffect(target.actor, effectData);
             })
 
             .effect()
@@ -80,8 +80,10 @@ export async function aid({ speaker, actor, token, character, item, args, scope,
             .playbackRate(0.8)
             .repeats(3, 1200)
 
-            .thenDo(function () {
-                mba.applyDamage([target], healAmmount, 'healing');
+            .wait(200)
+
+            .thenDo(async () => {
+                await mba.applyDamage([target], healAmmount, 'healing');
             })
 
             .play()

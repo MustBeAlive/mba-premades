@@ -10,13 +10,11 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'mba-premades': {
                 'template': {
-                    'name': 'dustDevil',
                     'castLevel': workflow.castData.castLevel,
-                    'saveDC': mba.getSpellDC(workflow.item),
-                    'macroName': 'dustDevil',
-                    'templateUuid': template.uuid,
                     'icon': workflow.item.img,
-                    'itemUuid': workflow.item.uuid
+                    'itemUuid': workflow.item.uuid,
+                    'saveDC': mba.getSpellDC(workflow.item),
+                    'templateUuid': template.uuid,
                 }
             }
         }
@@ -85,8 +83,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .persist()
         .name(`Dust Devil`)
 
-        .thenDo(function () {
-            warpgate.mutate(workflow.token.document, updates, {}, options);
+        .thenDo(async () => {
+            await warpgate.mutate(workflow.token.document, updates, {}, options);
         })
 
         .play()

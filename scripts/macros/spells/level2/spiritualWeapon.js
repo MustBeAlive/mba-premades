@@ -754,7 +754,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
         case "spear": attackAnimation = "jb2a.spear.melee.01.white"; break;
         case "trident": attackAnimation = "jb2a.spear.melee.01.white"; break;
         case "warhammer": attackAnimation = "jb2a.warhammer.melee.01.white"; break;
-        case "wrench": attackAnimation = "jb2a.wrench.melee.01.white";
+        case "wrench": attackAnimation = "jb2a.wrench.melee.01.white"; break;
     }
 
     new Sequence()

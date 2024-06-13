@@ -43,10 +43,10 @@ switch (selection) {
                         return;
                     }
                     let effect = effects[0];
-                    let isIncapacitated = await chrisPremades.helpers.findEffect(actor, "Incapacitated");
+                    let isIncapacitated = await Premades.helpers.findEffect(actor, "Incapacitated");
                     if (isIncapacitated) return;
                     let saveDC = effect.flags['mba-premades']?.saveDC;
-                    let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'con');
+                    let saveRoll = await Premades.helpers.rollRequest(token, 'save', 'con');
                     if (saveRoll.total >= saveDC) return;
                     let cackleFeverDamageRoll = await new Roll("1d10[psychic]").roll({ 'async': true });
                     await MidiQOL.displayDSNForRoll(cackleFeverDamageRoll, 'damageRoll');
@@ -55,7 +55,7 @@ switch (selection) {
                         speaker: { 'alias': name },
                         flavor: `<b>Cackle Fever</b>`
                     });
-                    await chrisPremades.helpers.applyDamage(token, cackleFeverDamageRoll.total, 'psychic');
+                    await Premades.helpers.applyDamage(token, cackleFeverDamageRoll.total, 'psychic');
                     let effectData = {
                         'name': "Uncontrollable Cackling",
                         'icon': "modules/mba-premades/icons/spells/level1/tasha_hideous_laughter.webp",
@@ -79,7 +79,7 @@ switch (selection) {
                         ],
 
                     };
-                    await chrisPremades.helpers.createEffect(actor, effectData);
+                    await Premades.helpers.createEffect(actor, effectData);
                 }
                 async function effectMacroCackleFeverFrightened() {
                     let effects = token.actor.effects.filter(e => e.flags['mba-premades']?.name === "Cackle Fever");
@@ -88,12 +88,12 @@ switch (selection) {
                         return;
                     }
                     let effect = effects[0];
-                    let isFrightened = await chrisPremades.helpers.findEffect(actor, "Frightened");
+                    let isFrightened = await Premades.helpers.findEffect(actor, "Frightened");
                     if (!isFrightened) return;
-                    let isIncapacitated = await chrisPremades.helpers.findEffect(actor, "Incapacitated");
+                    let isIncapacitated = await Premades.helpers.findEffect(actor, "Incapacitated");
                     if (isIncapacitated) return;
                     let saveDC = effect.flags['mba-premades']?.saveDC;
-                    let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'con');
+                    let saveRoll = await Premades.helpers.rollRequest(token, 'save', 'con');
                     if (saveRoll.total >= saveDC) return;
                     let cackleFeverDamageRoll = await new Roll("1d10[psychic]").roll({ 'async': true });
                     await MidiQOL.displayDSNForRoll(cackleFeverDamageRoll, 'damageRoll');
@@ -102,7 +102,7 @@ switch (selection) {
                         speaker: { 'alias': name },
                         flavor: `<b>Cackle Fever</b>`
                     });
-                    await chrisPremades.helpers.applyDamage(token, cackleFeverDamageRoll.total, 'psychic');
+                    await Premades.helpers.applyDamage(token, cackleFeverDamageRoll.total, 'psychic');
                     let effectData = {
                         'name': "Uncontrollable Cackling",
                         'icon': "modules/mba-premades/icons/spells/level1/tasha_hideous_laughter.webp",
@@ -126,7 +126,7 @@ switch (selection) {
                         ],
 
                     };
-                    await chrisPremades.helpers.createEffect(actor, effectData);
+                    await Premades.helpers.createEffect(actor, effectData);
                 }
                 async function effectMacroCackleFeverRest() {
                     let effects = token.actor.effects.filter(e => e.flags['mba-premades']?.name === "Cackle Fever");
@@ -138,7 +138,7 @@ switch (selection) {
                     let saveDC = effect.flags['mba-premades']?.saveDC;
                     let fails = effect.flags['mba-premades']?.fails;
                     let newSaveDC;
-                    let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'con');
+                    let saveRoll = await Premades.helpers.rollRequest(token, 'save', 'con');
                     if (saveRoll.total >= saveDC) {
                         let cackleFeverRoll = await new Roll("1d6").roll({ 'async': true });
                         await MidiQOL.displayDSNForRoll(cackleFeverRoll, 'damageRoll');
@@ -178,14 +178,14 @@ switch (selection) {
                             }
                         }
                     };
-                    await chrisPremades.helpers.updateEffect(effect, updates);
+                    await Premades.helpers.updateEffect(effect, updates);
                     if (effect.flags['mba-premades']?.fails > 2) {
                         ChatMessage.create({
                             whisper: ChatMessage.getWhisperRecipients("GM"),
                             content: "<b>" + targets[0].document.name + "</b> failed the save against Cackle Fever 3 times and gains a randomly determined form of <b>Indefinite Madness!</b>",
                             speaker: { actor: null, alias: "Disease Announcer" }
                         });
-                        await chrisPremades.helpers.removeEffect(effect);
+                        await Premades.helpers.removeEffect(effect);
                     }
                     if (effect.flags['mba-premades']?.saveDC < 1) {
                         ChatMessage.create({
@@ -193,18 +193,18 @@ switch (selection) {
                             content: "<b>" + token.document.name + "</b> is cured from Cackle Fever! (Save DC dropped to 0)",
                             speaker: { actor: null, alias: "Disease Announcer" }
                         });
-                        await chrisPremades.helpers.removeEffect(effect);
+                        await Premades.helpers.removeEffect(effect);
                     }
                 }
                 async function effectMacroCackleFeverDel() {
                     let exhaustion = token.actor.effects.filter(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
                     let level = +exhaustion[0].name.slice(-1);
                     if (level === 1) {
-                        await chrisPremades.helpers.removeCondition(actor, "Exhaustion 1");
+                        await Premades.helpers.removeCondition(actor, "Exhaustion 1");
                         return;
                     }
                     level -= 1;
-                    await chrisPremades.helpers.addCondition(actor, "Exhaustion " + level);
+                    await Premades.helpers.addCondition(actor, "Exhaustion " + level);
                 }
                 effectData = {
                     'name': "Unknown Disease 5",
@@ -222,16 +222,16 @@ switch (selection) {
                         },
                         'effectmacro': {
                             'dnd5e.longRest': {
-                                'script': chrisPremades.helpers.functionToString(effectMacroCackleFeverRest)
+                                'script': Premades.helpers.functionToString(effectMacroCackleFeverRest)
                             },
                             'onCombatStart': {
-                                'script': chrisPremades.helpers.functionToString(effectMacroCackleFeverCombatStart)
+                                'script': Premades.helpers.functionToString(effectMacroCackleFeverCombatStart)
                             },
                             'onTurnStart': {
-                                'script': chrisPremades.helpers.functionToString(effectMacroCackleFeverFrightened)
+                                'script': Premades.helpers.functionToString(effectMacroCackleFeverFrightened)
                             },
                             'onDelete': {
-                                'script': chrisPremades.helpers.functionToString(effectMacroCackleFeverDel)
+                                'script': Premades.helpers.functionToString(effectMacroCackleFeverDel)
                             }
                         },
                         'mba-premades': {
@@ -247,17 +247,17 @@ switch (selection) {
                 };
                 let exhaustion = token.actor.effects.filter(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
                 if (!exhaustion.length) {
-                    await chrisPremades.helpers.addCondition(actor, "Exhaustion 1");
-                    await chrisPremades.helpers.createEffect(actor, effectData);
-                    await chrisPremades.helpers.removeEffect(effect);
+                    await Premades.helpers.addCondition(actor, "Exhaustion 1");
+                    await Premades.helpers.createEffect(actor, effectData);
+                    await Premades.helpers.removeEffect(effect);
                     return;
                 }
                 let level = +exhaustion[0].name.slice(-1);
                 level += 1;
                 if (level > 6) level = 6;
-                await chrisPremades.helpers.addCondition(actor, "Exhaustion " + level);
-                await chrisPremades.helpers.createEffect(actor, effectData);
-                await chrisPremades.helpers.removeEffect(effect);
+                await Premades.helpers.addCondition(actor, "Exhaustion " + level);
+                await Premades.helpers.createEffect(actor, effectData);
+                await Premades.helpers.removeEffect(effect);
             });
         }
         effectData = {
@@ -268,7 +268,7 @@ switch (selection) {
                 },
                 'effectmacro': {
                     'onCreate': {
-                        'script': chrisPremades.helpers.functionToString(effectMacroCackleFeverManifest)
+                        'script': Premades.helpers.functionToString(effectMacroCackleFeverManifest)
                     }
                 },
                 'mba-premades': {
@@ -295,7 +295,7 @@ switch (selection) {
             <p>The creature has disadvantage on Intelligence checks and Intelligence saving throws, and the creature behaves as if under the effects of the confusion spell during combat.</p>
         `]);
         async function effectMacroMindfire() {
-            await chrisPremades.helpers.addCondition(actor, "Reaction");
+            await Premades.helpers.addCondition(actor, "Reaction");
             let mindfireRoll = await new Roll("1d10").roll({ 'async': true });
             await MidiQOL.displayDSNForRoll(mindfireRoll, 'damageRoll');
             if (mindfireRoll.total === 1) {
@@ -479,7 +479,7 @@ switch (selection) {
                 },
                 'effectmacro': {
                     'onTurnStart': {
-                        'script': chrisPremades.helpers.functionToString(effectMacroMindfire)
+                        'script': Premades.helpers.functionToString(effectMacroMindfire)
                     }
                 },
                 'mba-premades': {
@@ -539,12 +539,12 @@ switch (selection) {
                     let effect = effects[0];
                     let currentExhaustion = effect.flags['mba-premades']?.currentExhaustion;
                     let saveDC = 11;
-                    let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'con');
+                    let saveRoll = await Premades.helpers.rollRequest(token, 'save', 'con');
                     if (saveRoll.total < saveDC) {
-                        await chrisPremades.helpers.removeCondition(token.actor, "Exhaustion " + currentExhaustion);
+                        await Premades.helpers.removeCondition(token.actor, "Exhaustion " + currentExhaustion);
                         currentExhaustion += 1;
                         if (currentExhaustion > 6) currentExhaustion = 6; // temp workaround
-                        await chrisPremades.helpers.addCondition(token.actor, "Exhaustion " + currentExhaustion);
+                        await Premades.helpers.addCondition(token.actor, "Exhaustion " + currentExhaustion);
                         let updates = {
                             'flags': {
                                 'mba-premades': {
@@ -552,13 +552,13 @@ switch (selection) {
                                 }
                             }
                         };
-                        await chrisPremades.helpers.updateEffect(effect, updates);
+                        await Premades.helpers.updateEffect(effect, updates);
                         return;
                     }
                     if (saveRoll.total >= saveDC && currentExhaustion > 1) {
-                        await chrisPremades.helpers.removeCondition(token.actor, "Exhaustion " + currentExhaustion);
+                        await Premades.helpers.removeCondition(token.actor, "Exhaustion " + currentExhaustion);
                         currentExhaustion -= 1;
-                        await chrisPremades.helpers.addCondition(token.actor, "Exhaustion " + currentExhaustion);
+                        await Premades.helpers.addCondition(token.actor, "Exhaustion " + currentExhaustion);
                         let updates = {
                             'flags': {
                                 'mba-premades': {
@@ -566,15 +566,15 @@ switch (selection) {
                                 }
                             }
                         };
-                        await chrisPremades.helpers.updateEffect(effect, updates);
+                        await Premades.helpers.updateEffect(effect, updates);
                         return;
                     }
-                    if (saveRoll.total >= saveDC && currentExhaustion === 1) await chrisPremades.helpers.removeEffect(effect);
+                    if (saveRoll.total >= saveDC && currentExhaustion === 1) await Premades.helpers.removeEffect(effect);
                 }
                 async function effectMacroSewerPlagueDel() {
                     let exhaustion = token.actor.effects.filter(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
                     if (!exhaustion.length) return
-                    await chrisPremades.helpers.removeEffect(exhaustion[0]);
+                    await Premades.helpers.removeEffect(exhaustion[0]);
                 }
                 let effectData = {
                     'name': "Unknown Disease 10",
@@ -584,10 +584,10 @@ switch (selection) {
                         },
                         'effectmacro': {
                             'dnd5e.longRest': {
-                                'script': chrisPremades.helpers.functionToString(effectMacroSewerPlague)
+                                'script': Premades.helpers.functionToString(effectMacroSewerPlague)
                             },
                             'onDelete': {
-                                'script': chrisPremades.helpers.functionToString(effectMacroSewerPlagueDel)
+                                'script': Premades.helpers.functionToString(effectMacroSewerPlagueDel)
                             }
                         },
                         'mba-premades': {
@@ -600,9 +600,9 @@ switch (selection) {
                         }
                     }
                 };
-                await chrisPremades.helpers.addCondition(token.actor, "Exhaustion 1");
-                await chrisPremades.helpers.createEffect(token.actor, effectData);
-                await chrisPremades.helpers.removeEffect(effect);
+                await Premades.helpers.addCondition(token.actor, "Exhaustion 1");
+                await Premades.helpers.createEffect(token.actor, effectData);
+                await Premades.helpers.removeEffect(effect);
             });
         }
         effectData = {
@@ -613,7 +613,7 @@ switch (selection) {
                 },
                 'effectmacro': {
                     'onCreate': {
-                        'script': chrisPremades.helpers.functionToString(effectMacroSewerPlagueManifest)
+                        'script': Premades.helpers.functionToString(effectMacroSewerPlagueManifest)
                     }
                 },
                 'mba-premades': {
@@ -671,9 +671,9 @@ switch (selection) {
                         return;
                     }
                     let effect = effects[0];
-                    let saveRoll = await chrisPremades.helpers.rollRequest(token, 'save', 'con');
+                    let saveRoll = await Premades.helpers.rollRequest(token, 'save', 'con');
                     if (saveRoll.total < 11) return;
-                    await chrisPremades.helpers.removeEffect(effect);
+                    await Premades.helpers.removeEffect(effect);
                 }
                 let effectData = {
                     'name': "Unknown Disease 11",
@@ -697,7 +697,7 @@ switch (selection) {
                         },
                         'effectmacro': {
                             'dnd5e.longRest': {
-                                'script': chrisPremades.helpers.functionToString(effectMacroShiveringSickness)
+                                'script': Premades.helpers.functionToString(effectMacroShiveringSickness)
                             }
                         },
                         'mba-premades': {
@@ -709,8 +709,8 @@ switch (selection) {
                         }
                     }
                 };
-                await chrisPremades.helpers.createEffect(actor, effectData);
-                await chrisPremades.helpers.removeEffect(effect);
+                await Premades.helpers.createEffect(actor, effectData);
+                await Premades.helpers.removeEffect(effect);
             });
         }
         effectData = {
@@ -721,7 +721,7 @@ switch (selection) {
                 },
                 'effectmacro': {
                     'onCreate': {
-                        'script': chrisPremades.helpers.functionToString(effectMacroShiveringSicknessManifest)
+                        'script': Premades.helpers.functionToString(effectMacroShiveringSicknessManifest)
                     }
                 },
                 'mba-premades': {

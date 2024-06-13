@@ -1,5 +1,5 @@
-import {mba} from "../../../helperFunctions.js";
 import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let nearbyAllies = Array.from(mba.findNearby(workflow.token.document, 100, 'ally', false, true));
@@ -7,6 +7,10 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     if (!selection.buttons) return;
     let ignoreUuids = selection.inputs.filter(i => i).slice(0);
     let template = canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) {
+        ui.notifications.warn("Unable to find template!");
+        return;
+    }
     new Sequence()
 
         .wait(500)
@@ -32,18 +36,19 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'mba-premades': {
                 'template': {
-                    'name': 'alarm',
-                    'castLevel': workflow.castData.castLevel,
-                    'macroName': 'alarm',
-                    'templateUuid': template.uuid,
                     'ignoreUuids': ignoreUuids,
                     'sourceUuid': workflow.token.document.uuid,
-                    'turn': 'end',
-                    'ignoreMove': true
+                    'templateUuid': template.uuid,
                 }
             }
         }
     });
+}
+
+async function enter(template, token) {
+    let trigger = template.flags['mba-premades']?.template;
+    if (!trigger) return;
+    await alarm.trigger(token.document, trigger);
 }
 
 async function trigger(token, trigger) {
@@ -53,14 +58,7 @@ async function trigger(token, trigger) {
     let ally = ignoreUuids.filter(i => i === token.uuid);
     if (ally.length) return;
     let sourceToken = await fromUuid(template.flags['mba-premades']?.template?.sourceUuid);
-    let options = [["Ok!", "ok"]];
-    await mba.remoteDialog("Alarm!", options, mba.firstOwner(sourceToken).id, 'Someone entered the Alarm zone!');
-}
-
-async function enter(template, token) {
-    let trigger = template.flags['mba-premades']?.template;
-    if (!trigger) return;
-    await alarm.trigger(token.document, trigger);
+    await mba.remoteDialog("Alarm!", [["Ok!", "ok"]], mba.firstOwner(sourceToken).id, '<b>Someone entered the Alarm zone!</b>');
 }
 
 export let alarm = {

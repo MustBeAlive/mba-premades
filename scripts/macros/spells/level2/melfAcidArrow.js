@@ -61,9 +61,9 @@ export async function melfAcidArrow({ speaker, actor, token, character, item, ar
         .stretchTo(target)
         .waitUntilFinished(-1400)
 
-        .thenDo(function () {
-            MidiQOL.completeItemUse(feature, config, options);
-            if (workflow.hitTargets.size) mba.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            await MidiQOL.completeItemUse(feature, config, options);
+            if (workflow.hitTargets.size) await mba.createEffect(target.actor, effectData);
         })
 
         .effect()

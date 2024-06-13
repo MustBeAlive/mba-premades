@@ -1,11 +1,11 @@
-import {mba} from "../../../helperFunctions.js";
+import { mba } from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Detect Evil and Good: Ping', false);
     if (!featureData) return;
     delete featureData._id;
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Detect Evil and Good` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Detect Evil and Good` })
         await warpgate.revert(token.document, 'Detect Evil and Good: Ping');
     }
     let effectData = {
@@ -79,24 +79,27 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .belowTokens()
 
         .effect()
-        .delay(1500)
         .file("jb2a.token_border.circle.spinning.blue.001")
         .attachTo(token)
-        .scaleIn(0, 4000, { ease: "easeOutCubic" })
         .scaleToObject(2)
-        .filter("ColorMatrix", { saturate: -1, brightness: 1 })
+        .delay(1500)
         .fadeOut(1000)
+        .scaleIn(0, 4000, { ease: "easeOutCubic" })
+        .filter("ColorMatrix", { saturate: -1, brightness: 1 })
         .persist()
         .name(`${token.document.name} Detect Evil and Good`)
 
         .play()
 
-    targets.forEach(target => {
+    for (let target of targets) {
         if (target.name !== token.name) {
             const distance = Math.sqrt(
                 Math.pow(target.x - token.x, 2) + Math.pow(target.y - token.y, 2)
             );
             const gridDistance = distance / canvas.grid.size
+            let type = await mba.raceOrType(target.actor);
+            let nystul = await mba.findEffect(target.actor, "Nystul's Magic Aura");
+            if (nystul) type = nystul.flags['mba-premades']?.spell?.nystulMagicAura?.type;
 
             new Sequence()
 
@@ -104,7 +107,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                 .file("jb2a.markers.circle_of_stars.green")
                 .atLocation(target)
                 .scaleToObject(2.5)
-                .delay(gridDistance * 125)
+                .delay(gridDistance * 130)
                 .duration(5000)
                 .fadeIn(1000)
                 .fadeOut(1000)
@@ -115,235 +118,235 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
                 //Aberration Effect
                 .effect()
-                .delay(gridDistance * 125)
                 .from(target)
-                .belowTokens()
                 .attachTo(target, { locale: true })
                 .scaleToObject(1, { considerTokenScale: true })
-                .spriteRotation(target.rotation * -1)
-                .filter("Glow", { color: 0xab00ad, distance: 20 })
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(1000, { delay: 1000 })
                 .fadeOut(3500, { ease: "easeInSine" })
+                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .spriteRotation(target.rotation * -1)
+                .belowTokens()
                 .opacity(0.75)
                 .zIndex(0.1)
-                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .filter("Glow", { color: 0xab00ad, distance: 20 })
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "aberration";
+                    return type === "aberration";
                 })
 
                 .effect()
-                .delay(gridDistance * 125)
                 .file("jb2a.extras.tmfx.outflow.circle.01")
                 .attachTo(target, { locale: true })
                 .scaleToObject(1.5, { considerTokenScale: false })
-                .randomRotation()
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(4000, { delay: 0 })
                 .fadeOut(3500, { ease: "easeInSine" })
                 .scaleIn(0, 3500, { ease: "easeInOutCubic" })
-                .tint(0xab00ad)
-                .opacity(0.75)
+                .randomRotation()
                 .belowTokens()
+                .opacity(0.75)
+                .tint(0xab00ad)
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "aberration";
+                    return type === "aberration";
                 })
 
                 //Celestial Effect
                 .effect()
-                .delay(gridDistance * 125)
                 .from(target)
-                .belowTokens()
                 .attachTo(target, { locale: true })
                 .scaleToObject(1, { considerTokenScale: true })
-                .spriteRotation(target.rotation * -1)
-                .filter("Glow", { color: 0xffd000, distance: 20 })
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(1000, { delay: 1000 })
                 .fadeOut(3500, { ease: "easeInSine" })
+                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .spriteRotation(target.rotation * -1)
+                .belowTokens()
                 .opacity(0.75)
                 .zIndex(0.1)
-                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .filter("Glow", { color: 0xffd000, distance: 20 })
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "celestial";
+                    return type === "celestial";
                 })
 
                 .effect()
-                .delay(gridDistance * 125)
                 .file("jb2a.extras.tmfx.outflow.circle.01")
                 .attachTo(target, { locale: true })
                 .scaleToObject(1.5, { considerTokenScale: false })
-                .randomRotation()
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(4000, { delay: 0 })
                 .fadeOut(3500, { ease: "easeInSine" })
                 .scaleIn(0, 3500, { ease: "easeInOutCubic" })
-                .tint(0xf3d877)
-                .opacity(0.75)
+                .randomRotation()
                 .belowTokens()
+                .opacity(0.75)
+                .tint(0xf3d877)
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "celestial";
+                    return type === "celestial";
                 })
 
                 //Elemental Effect
                 .effect()
-                .delay(gridDistance * 125)
                 .from(target)
-                .belowTokens()
                 .attachTo(target, { locale: true })
                 .scaleToObject(1, { considerTokenScale: true })
-                .spriteRotation(target.rotation * -1)
-                .filter("Glow", { color: 0x008ae0, distance: 20 })
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(1000, { delay: 1000 })
                 .fadeOut(3500, { ease: "easeInSine" })
+                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .spriteRotation(target.rotation * -1)
+                .belowTokens()
                 .opacity(0.75)
                 .zIndex(0.1)
-                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .filter("Glow", { color: 0x008ae0, distance: 20 })
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "elemental";
+                    return type === "elemental";
                 })
 
                 .effect()
-                .delay(gridDistance * 125)
                 .file("jb2a.extras.tmfx.outflow.circle.01")
                 .attachTo(target, { locale: true })
                 .scaleToObject(1.5, { considerTokenScale: false })
-                .randomRotation()
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(4000, { delay: 0 })
                 .fadeOut(3500, { ease: "easeInSine" })
                 .scaleIn(0, 3500, { ease: "easeInOutCubic" })
-                .tint(0x008ae0)
-                .opacity(0.75)
+                .randomRotation()
                 .belowTokens()
+                .opacity(0.75)
+                .tint(0x008ae0)
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "elemental";
+                    return type === "elemental";
                 })
 
                 //Fey Effect
                 .effect()
-                .delay(gridDistance * 125)
                 .from(target)
-                .belowTokens()
                 .attachTo(target, { locale: true })
                 .scaleToObject(1, { considerTokenScale: true })
-                .spriteRotation(target.rotation * -1)
-                .filter("Glow", { color: 0x00bd16, distance: 20 })
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(1000, { delay: 1000 })
                 .fadeOut(3500, { ease: "easeInSine" })
+                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .spriteRotation(target.rotation * -1)
+                .belowTokens()
                 .opacity(0.75)
                 .zIndex(0.1)
-                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .filter("Glow", { color: 0x00bd16, distance: 20 })
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "fey";
+                    return type === "fey";
                 })
 
                 .effect()
-                .delay(gridDistance * 125)
                 .file("jb2a.extras.tmfx.outflow.circle.01")
                 .attachTo(target, { locale: true })
                 .scaleToObject(1.5, { considerTokenScale: false })
-                .randomRotation()
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(4000, { delay: 0 })
                 .fadeOut(3500, { ease: "easeInSine" })
                 .scaleIn(0, 3500, { ease: "easeInOutCubic" })
-                .tint(0x00bd16)
-                .opacity(0.75)
+                .randomRotation()
                 .belowTokens()
+                .opacity(0.75)
+                .tint(0x00bd16)
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "fey";
+                    return type === "fey";
                 })
 
                 //Fiend Effect
                 .effect()
-                .delay(gridDistance * 125)
                 .from(target)
-                .belowTokens()
                 .attachTo(target, { locale: true })
                 .scaleToObject(1, { considerTokenScale: true })
-                .spriteRotation(target.rotation * -1)
-                .filter("Glow", { color: 0x911a1a, distance: 20 })
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(1000, { delay: 1000 })
                 .fadeOut(3500, { ease: "easeInSine" })
+                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .spriteRotation(target.rotation * -1)
+                .belowTokens()
                 .opacity(0.75)
                 .zIndex(0.1)
-                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .filter("Glow", { color: 0x911a1a, distance: 20 })
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "fiend";
+                    return type === "fiend";
                 })
 
                 .effect()
-                .delay(gridDistance * 125)
                 .file("jb2a.extras.tmfx.outflow.circle.01")
                 .attachTo(target, { locale: true })
                 .scaleToObject(1.5, { considerTokenScale: false })
-                .randomRotation()
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(4000, { delay: 0 })
                 .fadeOut(3500, { ease: "easeInSine" })
                 .scaleIn(0, 3500, { ease: "easeInOutCubic" })
-                .tint(0x870101)
-                .opacity(0.75)
+                .randomRotation()
                 .belowTokens()
+                .opacity(0.75)
+                .tint(0x870101)
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "fiend";
+                    return type === "fiend";
                 })
 
                 //Undead Effect
                 .effect()
-                .delay(gridDistance * 125)
                 .from(target)
-                .belowTokens()
                 .attachTo(target, { locale: true })
                 .scaleToObject(1, { considerTokenScale: true })
-                .spriteRotation(target.rotation * -1)
-                .filter("Glow", { color: 0x111111, distance: 20 })
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(1000, { delay: 1000 })
                 .fadeOut(3500, { ease: "easeInSine" })
+                .loopProperty("alphaFilter", "alpha", { values: [0.9, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .spriteRotation(target.rotation * -1)
+                .belowTokens()
                 .opacity(0.9)
                 .zIndex(0.1)
-                .loopProperty("alphaFilter", "alpha", { values: [0.9, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .filter("Glow", { color: 0x111111, distance: 20 })
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "undead";
+                    return type === "undead";
                 })
 
                 .effect()
-                .delay(gridDistance * 125)
                 .file("jb2a.extras.tmfx.outflow.circle.01")
                 .attachTo(target, { locale: true })
                 .scaleToObject(1.5, { considerTokenScale: false })
-                .randomRotation()
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(4000, { delay: 0 })
                 .fadeOut(3500, { ease: "easeInSine" })
                 .scaleIn(0, 3500, { ease: "easeInOutCubic" })
-                .tint(0x121212)
-                .opacity(0.75)
+                .randomRotation()
                 .belowTokens()
+                .opacity(0.75)
+                .tint(0x121212)
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "undead";
+                    return type === "undead";
                 })
 
                 .play()
         }
-    })
+    }
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -369,12 +372,15 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .play()
 
-    targets.forEach(target => {
+    for (let target of targets) {
         if (target.name !== token.name) {
             const distance = Math.sqrt(
                 Math.pow(target.x - token.x, 2) + Math.pow(target.y - token.y, 2)
             );
-            const gridDistance = distance / canvas.grid.size
+            const gridDistance = distance / canvas.grid.size;
+            let type = await mba.raceOrType(target.actor);
+            let nystul = await mba.findEffect(target.actor, "Nystul's Magic Aura");
+            if (nystul) type = nystul.flags['mba-premades']?.spell?.nystulMagicAura?.type;
 
             new Sequence()
 
@@ -382,7 +388,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 .file("jb2a.markers.circle_of_stars.green")
                 .atLocation(target)
                 .scaleToObject(2.5)
-                .delay(gridDistance * 125)
+                .delay(gridDistance * 130)
                 .duration(5000)
                 .fadeIn(1000)
                 .fadeOut(1000)
@@ -393,235 +399,235 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
                 //Aberration Effect
                 .effect()
-                .delay(gridDistance * 125)
                 .from(target)
-                .belowTokens()
                 .attachTo(target, { locale: true })
                 .scaleToObject(1, { considerTokenScale: true })
-                .spriteRotation(target.rotation * -1)
-                .filter("Glow", { color: 0xab00ad, distance: 20 })
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(1000, { delay: 1000 })
                 .fadeOut(3500, { ease: "easeInSine" })
+                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .spriteRotation(target.rotation * -1)
+                .belowTokens()
                 .opacity(0.75)
                 .zIndex(0.1)
-                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .filter("Glow", { color: 0xab00ad, distance: 20 })
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "aberration";
+                    return type === "aberration";
                 })
 
                 .effect()
-                .delay(gridDistance * 125)
                 .file("jb2a.extras.tmfx.outflow.circle.01")
                 .attachTo(target, { locale: true })
                 .scaleToObject(1.5, { considerTokenScale: false })
-                .randomRotation()
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(4000, { delay: 0 })
                 .fadeOut(3500, { ease: "easeInSine" })
                 .scaleIn(0, 3500, { ease: "easeInOutCubic" })
-                .tint(0xab00ad)
-                .opacity(0.75)
+                .randomRotation()
                 .belowTokens()
+                .opacity(0.75)
+                .tint(0xab00ad)
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "aberration";
+                    return type === "aberration";
                 })
 
                 //Celestial Effect
                 .effect()
-                .delay(gridDistance * 125)
                 .from(target)
-                .belowTokens()
                 .attachTo(target, { locale: true })
                 .scaleToObject(1, { considerTokenScale: true })
-                .spriteRotation(target.rotation * -1)
-                .filter("Glow", { color: 0xffd000, distance: 20 })
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(1000, { delay: 1000 })
                 .fadeOut(3500, { ease: "easeInSine" })
+                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .spriteRotation(target.rotation * -1)
+                .belowTokens()
                 .opacity(0.75)
                 .zIndex(0.1)
-                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .filter("Glow", { color: 0xffd000, distance: 20 })
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "celestial";
+                    return type === "celestial";
                 })
 
                 .effect()
-                .delay(gridDistance * 125)
                 .file("jb2a.extras.tmfx.outflow.circle.01")
                 .attachTo(target, { locale: true })
                 .scaleToObject(1.5, { considerTokenScale: false })
-                .randomRotation()
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(4000, { delay: 0 })
                 .fadeOut(3500, { ease: "easeInSine" })
                 .scaleIn(0, 3500, { ease: "easeInOutCubic" })
-                .tint(0xf3d877)
-                .opacity(0.75)
+                .randomRotation()
                 .belowTokens()
+                .opacity(0.75)
+                .tint(0xf3d877)
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "celestial";
+                    return type === "celestial";
                 })
 
                 //Elemental Effect
                 .effect()
-                .delay(gridDistance * 125)
                 .from(target)
-                .belowTokens()
                 .attachTo(target, { locale: true })
                 .scaleToObject(1, { considerTokenScale: true })
-                .spriteRotation(target.rotation * -1)
-                .filter("Glow", { color: 0x008ae0, distance: 20 })
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(1000, { delay: 1000 })
                 .fadeOut(3500, { ease: "easeInSine" })
+                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .spriteRotation(target.rotation * -1)
+                .belowTokens()
                 .opacity(0.75)
                 .zIndex(0.1)
-                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .filter("Glow", { color: 0x008ae0, distance: 20 })
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "elemental";
+                    return type === "elemental";
                 })
 
                 .effect()
-                .delay(gridDistance * 125)
                 .file("jb2a.extras.tmfx.outflow.circle.01")
                 .attachTo(target, { locale: true })
                 .scaleToObject(1.5, { considerTokenScale: false })
-                .randomRotation()
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(4000, { delay: 0 })
                 .fadeOut(3500, { ease: "easeInSine" })
                 .scaleIn(0, 3500, { ease: "easeInOutCubic" })
-                .tint(0x008ae0)
-                .opacity(0.75)
+                .randomRotation()
                 .belowTokens()
+                .opacity(0.75)
+                .tint(0x008ae0)
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "elemental";
+                    return type === "elemental";
                 })
 
                 //Fey Effect
                 .effect()
-                .delay(gridDistance * 125)
                 .from(target)
-                .belowTokens()
                 .attachTo(target, { locale: true })
                 .scaleToObject(1, { considerTokenScale: true })
-                .spriteRotation(target.rotation * -1)
-                .filter("Glow", { color: 0x00bd16, distance: 20 })
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(1000, { delay: 1000 })
                 .fadeOut(3500, { ease: "easeInSine" })
+                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .spriteRotation(target.rotation * -1)
+                .belowTokens()
                 .opacity(0.75)
                 .zIndex(0.1)
-                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .filter("Glow", { color: 0x00bd16, distance: 20 })
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "fey";
+                    return type === "fey";
                 })
 
                 .effect()
-                .delay(gridDistance * 125)
                 .file("jb2a.extras.tmfx.outflow.circle.01")
                 .attachTo(target, { locale: true })
                 .scaleToObject(1.5, { considerTokenScale: false })
-                .randomRotation()
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(4000, { delay: 0 })
                 .fadeOut(3500, { ease: "easeInSine" })
                 .scaleIn(0, 3500, { ease: "easeInOutCubic" })
-                .tint(0x00bd16)
-                .opacity(0.75)
+                .randomRotation()
                 .belowTokens()
+                .opacity(0.75)
+                .tint(0x00bd16)
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "fey";
+                    return type === "fey";
                 })
 
                 //Fiend Effect
                 .effect()
-                .delay(gridDistance * 125)
                 .from(target)
-                .belowTokens()
                 .attachTo(target, { locale: true })
                 .scaleToObject(1, { considerTokenScale: true })
-                .spriteRotation(target.rotation * -1)
-                .filter("Glow", { color: 0x911a1a, distance: 20 })
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(1000, { delay: 1000 })
                 .fadeOut(3500, { ease: "easeInSine" })
+                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .spriteRotation(target.rotation * -1)
+                .belowTokens()
                 .opacity(0.75)
                 .zIndex(0.1)
-                .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .filter("Glow", { color: 0x911a1a, distance: 20 })
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "fiend";
+                    return type === "fiend";
                 })
 
                 .effect()
-                .delay(gridDistance * 125)
                 .file("jb2a.extras.tmfx.outflow.circle.01")
                 .attachTo(target, { locale: true })
                 .scaleToObject(1.5, { considerTokenScale: false })
-                .randomRotation()
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(4000, { delay: 0 })
                 .fadeOut(3500, { ease: "easeInSine" })
                 .scaleIn(0, 3500, { ease: "easeInOutCubic" })
-                .tint(0x870101)
-                .opacity(0.75)
+                .randomRotation()
                 .belowTokens()
+                .opacity(0.75)
+                .tint(0x870101)
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "fiend";
+                    return type === "fiend";
                 })
 
                 //Undead Effect
                 .effect()
-                .delay(gridDistance * 125)
                 .from(target)
-                .belowTokens()
                 .attachTo(target, { locale: true })
                 .scaleToObject(1, { considerTokenScale: true })
-                .spriteRotation(target.rotation * -1)
-                .filter("Glow", { color: 0x111111, distance: 20 })
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(1000, { delay: 1000 })
                 .fadeOut(3500, { ease: "easeInSine" })
+                .loopProperty("alphaFilter", "alpha", { values: [0.9, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .spriteRotation(target.rotation * -1)
+                .belowTokens()
                 .opacity(0.9)
                 .zIndex(0.1)
-                .loopProperty("alphaFilter", "alpha", { values: [0.9, 0.1], duration: 1500, pingPong: true, delay: 500 })
+                .filter("Glow", { color: 0x111111, distance: 20 })
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "undead";
+                    return type === "undead";
                 })
 
                 .effect()
-                .delay(gridDistance * 125)
                 .file("jb2a.extras.tmfx.outflow.circle.01")
                 .attachTo(target, { locale: true })
                 .scaleToObject(1.5, { considerTokenScale: false })
-                .randomRotation()
+                .delay(gridDistance * 130)
                 .duration(17500)
                 .fadeIn(4000, { delay: 0 })
                 .fadeOut(3500, { ease: "easeInSine" })
                 .scaleIn(0, 3500, { ease: "easeInOutCubic" })
-                .tint(0x121212)
-                .opacity(0.75)
+                .randomRotation()
                 .belowTokens()
+                .opacity(0.75)
+                .tint(0x121212)
                 .playIf(() => {
                     if (mba.findEffect(target.actor, "Nondetection")) return false;
-                    return target.actor.system.details.type.value == "undead";
+                    return type === "undead";
                 })
 
                 .play()
         }
-    })
+    }
 }
 
 export let detectEvilAndGood = {

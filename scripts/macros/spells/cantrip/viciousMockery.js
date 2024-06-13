@@ -213,8 +213,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .wait(2500)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
         })
 
         .play()

@@ -17,8 +17,8 @@ export async function telekinetic({ speaker, actor, token, character, item, args
         .playbackRate(0.8)
         .waitUntilFinished(-1300)
 
-        .thenDo(function () {
-            if (workflow.failedSaves.size) mba.pushToken(workflow.token, target, distance)
+        .thenDo(async () => {
+            if (workflow.failedSaves.size) await mba.pushToken(workflow.token, target, distance)
         })
 
         .play()

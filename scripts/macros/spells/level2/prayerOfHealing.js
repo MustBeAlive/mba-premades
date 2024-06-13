@@ -56,5 +56,5 @@ export async function prayerOfHealing({ speaker, actor, token, character, item, 
 
             .play();
     }
-    await mba.applyWorkflowDamage(workflow.token, damageRoll, 'healing', selectedTokens, workflow.item.name, workflow.itemCardId);
+    await mba.applyWorkflowDamage(workflow.token, damageRoll, 'healing', selectedTokens, undefined, workflow.itemCardId);
 }

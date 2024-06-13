@@ -149,19 +149,19 @@ export async function potionOfResistance({ speaker, actor, token, character, ite
         .zIndex(0.3)
         .waitUntilFinished(-500)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
         })
 
         .play();
 
-    let vialItem = mba.getItem(workflow.actor, workflow.item.name);
+    let vialItem = await mba.getItem(workflow.actor, workflow.item.name);
     if (vialItem.system.quantity > 1) {
         await vialItem.update({ "system.quantity": vialItem.system.quantity - 1 });
     } else {
         await workflow.actor.deleteEmbeddedDocuments("Item", [vialItem.id]);
     }
-    let emptyVialItem = mba.getItem(workflow.actor, "Empty Vial");
+    let emptyVialItem = await mba.getItem(workflow.actor, "Empty Vial");
     if (!emptyVialItem) {
         const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Vial', false);
         if (!itemData) {

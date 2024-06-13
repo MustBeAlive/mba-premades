@@ -9,10 +9,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'mba-premades': {
                 'template': {
-                    'name': 'gustOfWind',
                     'castLevel': workflow.castData.castLevel,
+                    'itemUuid': workflow.item.uuid,
                     'saveDC': mba.getSpellDC(workflow.item),
-                    'macroName': 'gustOfWind',
                     'templateUuid': template.uuid,
                 }
             }
@@ -78,8 +77,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .persist()
         .name(`Gust of Wind`)
 
-        .thenDo(function () {
-            warpgate.mutate(workflow.token.document, updates, {}, options);
+        .thenDo(async () => {
+            await warpgate.mutate(workflow.token.document, updates, {}, options);
         })
 
         .play()
@@ -92,7 +91,8 @@ async function enter(template, token) {
 }
 
 async function trigger(token, trigger) {
-
+    let template = await fromUuid(trigger.templateUuid);
+    if (!template) return;
 }
 
 async function move({ speaker, actor, token, character, item, args, scope, workflow }) {

@@ -172,9 +172,9 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .persist()
         .name(`${target.document.name} Hideous Laughter`)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData);
-            mba.addCondition(target.actor, 'Prone');
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
+            await mba.addCondition(target.actor, 'Prone');
         })
 
         .animation()

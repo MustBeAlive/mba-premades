@@ -1,7 +1,7 @@
 async function cast({speaker, actor, token, character, item, args, scope, workflow}) {
-    let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Eyebite: Action', false);
+    let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Eyebite: Action', false);
     if (!featureData) return;
-    featureData.system.save.dc = chrisPremades.helpers.getSpellDC(workflow.item);
+    featureData.system.save.dc = mbaPremades.helpers.getSpellDC(workflow.item);
     async function effectMacro() {
         await warpgate.revert(token.document, 'Eyebite: Action');
     }
@@ -15,13 +15,13 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': chrisPremades.helpers.functionToString(effectMacro)
+                    'script': mbaPremades.helpers.functionToString(effectMacro)
                 }
             },
             'mba-premades': {
                 'spell': {
                     'eyebite': {
-                        'dc': chrisPremades.helpers.getSpellDC(workflow.item),
+                        'dc': mbaPremades.helpers.getSpellDC(workflow.item),
                         'name': workflow.token.document.name,
                     }
                 }
@@ -55,7 +55,7 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
 
 async function save({speaker, actor, token, character, item, args, scope, workflow}) {
     let target = workflow.targets.first();
-    let effect = chrisPremades.helpers.findEffect(target.actor, "Eyebite: Immunity");
+    let effect = mbaPremades.helpers.findEffect(target.actor, "Eyebite: Immunity");
     if (!effect) return;
     let immuneData = {  
         'name': 'Save Immunity',
@@ -78,14 +78,14 @@ async function save({speaker, actor, token, character, item, args, scope, workfl
                     'isSave'
                 ]
             },
-            'chris-premades': {
+            'mba-premades': {
                 'effect': {
                     'noAnimation': true
                 }
             }
         }
     };
-    await chrisPremades.helpers.createEffect(target.actor, immuneData);
+    await mbaPremades.helpers.createEffect(target.actor, immuneData);
 }
 
 async function item({speaker, actor, token, character, item, args, scope, workflow}) {
@@ -104,12 +104,12 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                 }
             }
         }
-        await chrisPremades.helpers.createEffect(target.actor, effectData);
+        await mbaPremades.helpers.createEffect(target.actor, effectData);
         return;
     }
-    const effect = chrisPremades.helpers.findEffect(workflow.actor, 'Eyebite');
+    const effect = mbaPremades.helpers.findEffect(workflow.actor, 'Eyebite');
     let choices = [['Asleep', 'sleep'], ['Panicked', 'panic'],['Sickened', 'sick']];
-    let selection = await chrisPremades.helpers.dialog('Choose Eyebite effect:', choices);
+    let selection = await mbaPremades.helpers.dialog('Choose Eyebite effect:', choices);
     if (!selection) return;
     async function effectMacroImm() {
         let effectData = {
@@ -125,7 +125,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                 }
             }
         }
-        await chrisPremades.helpers.createEffect(actor, effectData);
+        await mbaPremades.helpers.createEffect(actor, effectData);
     }
     switch (selection) {
         case 'sleep': {
@@ -151,12 +151,12 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                     },
                     'effectmacro': {
                         'onDelete': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroImm)
+                            'script': mbaPremades.helpers.functionToString(effectMacroImm)
                         }
                     }
                 }
             };
-            let newEffect = await chrisPremades.helpers.createEffect(target.actor, effectData);
+            let newEffect = await mbaPremades.helpers.createEffect(target.actor, effectData);
             let concData = workflow.actor.getFlag("midi-qol", "concentration-data.removeUuids");
             concData.push(newEffect.uuid);
             await workflow.actor.setFlag("midi-qol", "concentration-data.removeUuids", concData);
@@ -179,12 +179,12 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                 }).render(true);
             };
             async function effectMacroEnd() {
-                let effect = chrisPremades.helpers.findEffect(actor, 'Eyebite: Panicked');
+                let effect = mbaPremades.helpers.findEffect(actor, 'Eyebite: Panicked');
                 let casterName = effect.flags['mba-premades']?.spell?.eyebite?.name;
                 let casterNearby = await MidiQOL.findNearby(null, token, 60, { includeIncapacitated: false }).filter(i => i.name === casterName);
                 let casterCanSee = await MidiQOL.findNearby(null, token, 200, { includeIncapacitated: false, canSee: true }).filter(i => i.name === casterName);
                 if (casterNearby.length === 1 || casterCanSee.length === 1) return;
-                await chrisPremades.helpers.removeEffect(effect);
+                await mbaPremades.helpers.removeEffect(effect);
             };
             let effectData = {
                 'name': "Eyebite: Panicked",
@@ -207,13 +207,13 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                     },
                     'effectmacro': {
                         'onTurnStart': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroStart)
+                            'script': mbaPremades.helpers.functionToString(effectMacroStart)
                         },
                         'onTurnEnd': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroEnd)
+                            'script': mbaPremades.helpers.functionToString(effectMacroEnd)
                         },
                         'onDelete': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroImm)
+                            'script': mbaPremades.helpers.functionToString(effectMacroImm)
                         }
                     },
                     'mba-premades': {
@@ -225,8 +225,8 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                     }
                 }
             };
-            await chrisPremades.helpers.createEffect(target.actor, effectData);
-            let newEffect = await chrisPremades.helpers.findEffect(target.actor, "Eyebite: Panicked");
+            await mbaPremades.helpers.createEffect(target.actor, effectData);
+            let newEffect = await mbaPremades.helpers.findEffect(target.actor, "Eyebite: Panicked");
             let concData = workflow.actor.getFlag("midi-qol", "concentration-data.removeUuids");
             concData.push(newEffect.uuid);
             await workflow.actor.setFlag("midi-qol", "concentration-data.removeUuids", concData);
@@ -266,13 +266,13 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                     },
                     'effectmacro': {
                         'onDelete': {
-                            'script': chrisPremades.helpers.functionToString(effectMacroImm)
+                            'script': mbaPremades.helpers.functionToString(effectMacroImm)
                         }
                     }
                 }
             };
-            await chrisPremades.helpers.createEffect(target.actor, effectData);
-            let newEffect = await chrisPremades.helpers.findEffect(target.actor, "Eyebite: Sickened");
+            await mbaPremades.helpers.createEffect(target.actor, effectData);
+            let newEffect = await mbaPremades.helpers.findEffect(target.actor, "Eyebite: Sickened");
             let concData = workflow.actor.getFlag("midi-qol", "concentration-data.removeUuids");
             concData.push(newEffect.uuid);
             await workflow.actor.setFlag("midi-qol", "concentration-data.removeUuids", concData);

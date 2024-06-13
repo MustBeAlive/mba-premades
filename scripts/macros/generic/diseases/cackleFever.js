@@ -283,9 +283,9 @@ export async function cackleFeverTrigger(actor, token) {
         .persist()
         .name(`${token.document.name} Cackle Fever`)
 
-        .thenDo(function () {
-            mba.createEffect(token.actor, effectData);
-            if (!mba.findEffect(token.actor, "Prone")) mba.addCondition(token.actor, 'Prone');
+        .thenDo(async () => {
+            await mba.createEffect(token.actor, effectData);
+            if (!mba.findEffect(token.actor, "Prone")) await mba.addCondition(token.actor, 'Prone');
         })
 
         .animation()
@@ -400,9 +400,9 @@ export async function cackleFeverDamaged({ speaker, actor, token, character, ite
         .persist()
         .name(`${infected.document.name} Cackle Fever`)
 
-        .thenDo(function () {
-            mba.createEffect(infected.actor, effectData);
-            if (!mba.findEffect(infected.actor, "Prone")) mba.addCondition(infected.actor, 'Prone');
+        .thenDo(async () => {
+            await mba.createEffect(infected.actor, effectData);
+            if (!mba.findEffect(infected.actor, "Prone")) await mba.addCondition(infected.actor, 'Prone');
         })
 
         .animation()

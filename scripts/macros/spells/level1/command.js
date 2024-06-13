@@ -139,9 +139,9 @@ export async function command({ speaker, actor, token, character, item, args, sc
         .filter("ColorMatrix", { brightness: 1.5 })
         .tint(0xab01b7)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData);
-            if (selection === "Grovel") mba.addCondition(target.actor, "Prone");
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
+            if (selection === "Grovel") await mba.addCondition(target.actor, "Prone");
         })
 
         .play()

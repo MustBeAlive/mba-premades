@@ -80,8 +80,8 @@ export async function barkskin({ speaker, actor, token, character, item, args, s
 
         .wait(300)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
         })
 
         .play()

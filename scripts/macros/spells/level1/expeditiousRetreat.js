@@ -26,14 +26,11 @@ export async function expeditiousRetreat({ speaker, actor, token, character, ite
         ui.notifications.warn(`Unable to find item in compendium! (Dash)`);
         return;
     }
-    let action = new CONFIG.Item.documentClass(actionData, { parent: token.actor });
-    let targetUuids;
-    if (!game.user.targets.size) targetUuids = [token.document.uuid];
-    else targetUuids = [game.user.targets.first().document.uuid];
+    let action = new CONFIG.Item.documentClass(actionData, { parent: workflow.actor });
     let options = {
         'showFullCard': false,
         'createWorkflow': true,
-        'targetUuids': targetUuids,
+        'targetUuids': [workflow.token.document.uuid],
         'configureDialog': false,
         'versatile': false,
         'consumeResource': false,
@@ -47,22 +44,22 @@ export async function expeditiousRetreat({ speaker, actor, token, character, ite
 
         .effect()
         .file("jb2a.particles.inward.greenyellow.02.05")
-        .attachTo(token)
-        .scaleToObject(2 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(2 * workflow.token.document.texture.scaleX)
         .fadeIn(500)
         .fadeOut(1000)
 
         .effect()
         .file("jb2a.particle_burst.01.rune.yellow")
-        .attachTo(token)
-        .scaleToObject(1.8 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(1.8 * workflow.token.document.texture.scaleX)
         .delay(1000)
 
         .wait(2800)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData);
-            MidiQOL.completeItemUse(action, {}, options);
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
+            await MidiQOL.completeItemUse(action, {}, options);
         })
 
         .play()

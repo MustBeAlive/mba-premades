@@ -156,8 +156,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .persist()
         .name(`${target.document.name} Continual Flame`)
 
-        .thenDo(function () {
-            warpgate.mutate(target.document, updates, {}, options);
+        .thenDo(async () => {
+            await warpgate.mutate(target.document, updates, {}, options);
         })
 
         .play()
@@ -201,9 +201,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     if (state === "exposed") choices.push([`Hide "Torch"`, "hide"]);
     else if (state === "hidden") choices.push([`Show "Torch"`, "show"]);
     if (!choices.length) return;
-    choices.push(["Cancel", "cancel"]);
+    choices.push(["Cancel", false]);
     let selection = await mba.dialog("Continual Flame", choices, "What would you like to do?");
-    if (!selection || selection === "cancel") return;
+    if (!selection) return;
     let updates;
     if (selection === "hide") {
         updates = {
@@ -279,8 +279,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .persist()
             .name(`${token.document.name} Continual Flame`)
 
-            .thenDo(function () {
-                mba.updateEffect(effect, updates);
+            .thenDo(async () => {
+                await mba.updateEffect(effect, updates);
             })
 
             .play()

@@ -4,6 +4,7 @@ export async function potionOfHealing({ speaker, actor, token, character, item, 
     let target = workflow.targets.first()
     let potionType = workflow.item.name.substring(workflow.item.name.indexOf(" ") + 1).split(" ")[1].toLowerCase();
     let healingFormula;
+    let healingRoll;
     let exhaustion;
     switch (potionType) {
         case "normal":
@@ -43,10 +44,9 @@ export async function potionOfHealing({ speaker, actor, token, character, item, 
         else if (level > exhaustion ) await mba.addCondition(target.actor, `Exhaustion ${level - exhaustion}`);
     }
     else if (typeSelection === "heal") {
-        let choices = [["Action (max healing)", "action"], ["Bonus (roll healing)", "bonus"], ["Cancel", "cancel"]];
+        let choices = [["Action (max healing)", "action"], ["Bonus (roll healing)", "bonus"], ["Cancel", false]];
         let selection = await mba.dialog("Potion of Healing", choices, `<b>Choose action type:</b>`);
-        if (!selection || selection === "cancel") return;
-        let healAmmount;
+        if (!selection) return;
         if (selection === "action") {
             let parts = healingFormula.split('+');
             let dicePart = parts[0];
@@ -56,22 +56,10 @@ export async function potionOfHealing({ speaker, actor, token, character, item, 
             let diceType = parseInt(diceMax[2]);
             let maxDiceRoll = numDice * diceType;
             let maxFormula = maxDiceRoll + modifier + "[healing]";
-            let healingRoll = await new Roll(maxFormula).roll({ 'async': true });
-            await healingRoll.toMessage({
-                rollMode: 'roll',
-                speaker: { actor: target.actor },
-                flavor: 'Potion of Healing'
-            });
-            healAmmount = healingRoll.total;
-        } else {
-            let healingRoll = await new Roll(healingFormula).roll({ 'async': true });
-            await healingRoll.toMessage({
-                rollMode: 'roll',
-                speaker: { actor: target.actor },
-                flavor: 'Potion of Healing'
-            });
-            healAmmount = healingRoll.total;
-        }
+            healingRoll = await new Roll(maxFormula).roll({ 'async': true });
+        } 
+        else healingRoll = await new Roll(healingFormula).roll({ 'async': true });
+        
 
         await new Sequence()
 
@@ -119,20 +107,20 @@ export async function potionOfHealing({ speaker, actor, token, character, item, 
             .zIndex(0.3)
             .waitUntilFinished(-500)
 
-            .thenDo(function () {
-                if (typeSelection === "heal") mba.applyDamage(target, healAmmount, 'healing')
+            .thenDo(async () => {
+                if (typeSelection === "heal") await mba.applyWorkflowDamage(workflow.token, healingRoll, "healing", [target], undefined, workflow.itemCardId);
             })
 
             .play();
     }
 
-    let vialItem = mba.getItem(workflow.actor, workflow.item.name);
+    let vialItem = await mba.getItem(workflow.actor, workflow.item.name);
     if (vialItem.system.quantity > 1) {
         await vialItem.update({ "system.quantity": vialItem.system.quantity - 1 });
     } else {
         await workflow.actor.deleteEmbeddedDocuments("Item", [vialItem.id]);
     }
-    let emptyVialItem = mba.getItem(workflow.actor, "Empty Vial");
+    let emptyVialItem = await mba.getItem(workflow.actor, "Empty Vial");
     if (!emptyVialItem) {
         const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Vial', false);
         if (!itemData) {

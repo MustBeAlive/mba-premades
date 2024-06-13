@@ -118,9 +118,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 	if (state === 0) choices.push([`See through Beast (${targetDoc.name})`, "see"]);
 	else if (state === 1) choices.push(["Return to Self", "return"]);
 	if (!choices.length) return;
-	choices.push(["Cancel", "cancel"]);
+	choices.push(["Cancel", false]);
 	let selection = await mba.dialog("Beast Sense", choices, "<b>What would you like to do?</b>");
-	if (!selection || selection === "cancel") return;
+	if (!selection) return;
 	if (selection === "see") {
 		let ownership = target.actor.ownership;
 		ownership[`${game.user.id}`] = 2;

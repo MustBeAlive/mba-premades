@@ -187,8 +187,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .persist()
         .name(`Healing Spirit 2`)
 
-        .thenDo(function () {
-            warpgate.mutate(workflow.token.document, updates, {}, options);
+        .thenDo(async () => {
+            await warpgate.mutate(workflow.token.document, updates, {}, options);
         })
 
         .play()
@@ -343,8 +343,8 @@ async function move({ speaker, actor, token, character, item, args, scope, workf
         .startTime(1500)
         .filter("ColorMatrix", { hue: 15 })
 
-        .thenDo(function () {
-            template.update(updates);
+        .thenDo(async () => {
+            await template.update(updates);
         })
 
         .effect()

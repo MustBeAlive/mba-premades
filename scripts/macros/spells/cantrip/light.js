@@ -121,8 +121,8 @@ export async function light({ speaker, actor, token, character, item, args, scop
         .fadeOut(1000)
         .belowTokens()
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData)
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData)
         })
 
         .play()

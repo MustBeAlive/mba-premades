@@ -134,8 +134,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .persist()
         .name(`${token.document.name} Shadow Blade`)
 
-        .thenDo(function () {
-            warpgate.mutate(workflow.token.document, updates, {}, options);
+        .thenDo(async () => {
+            await warpgate.mutate(workflow.token.document, updates, {}, options);
         })
 
         .play()
@@ -219,8 +219,8 @@ async function evoke({ speaker, actor, token, character, item, args, scope, work
             .persist()
             .name(`${token.document.name} Shadow Blade`)
 
-            .thenDo(function () {
-                mba.updateEffect(effect, updates)
+            .thenDo(async () => {
+                await mba.updateEffect(effect, updates)
             })
 
             .play()

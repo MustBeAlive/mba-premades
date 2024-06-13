@@ -41,9 +41,11 @@ export async function potionOfSpeed({ speaker, actor, token, character, item, ar
             .persist()
             .name(`${token.document.name} Lethargic`)
 
-            .play()
+            .thenDo(async () => {
+                await mbaPremades.helpers.createEffect(actor, effectData);
+            })
 
-        await mbaPremades.helpers.createEffect(actor, effectData);
+            .play()
     }
     const effectData = {
         'name': workflow.item.name,
@@ -223,13 +225,13 @@ export async function potionOfSpeed({ speaker, actor, token, character, item, ar
     await warpgate.wait(1400);
     await mba.createEffect(target.actor, effectData);
 
-    let vialItem = mba.getItem(workflow.actor, workflow.item.name);
+    let vialItem = await mba.getItem(workflow.actor, workflow.item.name);
     if (vialItem.system.quantity > 1) {
         await vialItem.update({ "system.quantity": vialItem.system.quantity - 1 });
     } else {
         await workflow.actor.deleteEmbeddedDocuments("Item", [vialItem.id]);
     }
-    let emptyVialItem = mba.getItem(workflow.actor, "Empty Vial");
+    let emptyVialItem = await mba.getItem(workflow.actor, "Empty Vial");
     if (!emptyVialItem) {
         const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Vial', false);
         if (!itemData) {

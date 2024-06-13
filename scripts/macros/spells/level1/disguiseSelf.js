@@ -2463,8 +2463,8 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
         .duration(1000)
         .fadeOut(1000)
 
-        .thenDo(function () {
-            warpgate.mutate(workflow.token.document, updates, {}, options);
+        .thenDo(async () => {
+            await warpgate.mutate(workflow.token.document, updates, {}, options);
         })
 
         .effect()

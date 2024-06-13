@@ -5,11 +5,11 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     let maxHP = target.actor.system.attributes?.hp?.max;
     if (!maxHP) return;
     if (ditem.appliedDamage > (maxHP + ditem.oldHP)) return;
-    let queueSetup = await chrisPremades.queue.setup(workflow.uuid, 'harm', 389);
+    let queueSetup = await mbaPremades.queue.setup(workflow.uuid, 'harm', 389);
     if (!queueSetup) return;
     ditem.newHP = 1;
     ditem.hpDamage = Math.abs(ditem.newHP - ditem.oldHP);
-    chrisPremades.queue.remove(workflow.uuid);
+    mbaPremades.queue.remove(workflow.uuid);
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -46,7 +46,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    await chrisPremades.helpers.createEffect(target.actor, effectData);
+    await mbaPremades.helpers.createEffect(target.actor, effectData);
 }
 
 export let harm = {

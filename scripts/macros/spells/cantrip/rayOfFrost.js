@@ -77,8 +77,8 @@ export async function rayOfFrost({ speaker, actor, token, character, item, args,
             return workflow.hitTargets.size
         })
 
-        .thenDo(function () {
-            if (workflow.hitTargets.size) mba.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            if (workflow.hitTargets.size) await mba.createEffect(target.actor, effectData);
         })
 
         .play()

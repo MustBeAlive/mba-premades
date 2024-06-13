@@ -15,7 +15,7 @@ export async function fadeAway({ speaker, actor, token, character, item, args, s
 
             .wait(500)
 
-            .thenDo(function () {
+            .thenDo(async () => {
                 Sequencer.EffectManager.endEffects({ name: `${token.document.name} Fade Away`, object: token })
             })
 
@@ -62,8 +62,8 @@ export async function fadeAway({ speaker, actor, token, character, item, args, s
 
         .wait(500)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
         })
 
         .play()

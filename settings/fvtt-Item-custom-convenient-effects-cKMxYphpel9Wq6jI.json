@@ -107,7 +107,7 @@
           "priority": 20
         }
       ],
-      "description": "<p>Flanking grants +2 bonus on melee attack rolls</p><p></p><p>Фланкирование предоставляет +2 бонус на все атаки в ближнем бою.</p>",
+      "description": "<p>Flanking grants +2 bonus on melee attack rolls.</p><p></p><p>Фланкирование предоставляет +2 бонус на все атаки в ближнем бою.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -203,7 +203,7 @@
           "priority": 20
         }
       ],
-      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p><p></p><p>Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</p>",
+      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves).</p><p></p><p>Каждый уровень усталости дает -1 штраф на все броски (атаки, проверки характеристик, спасброски).</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -296,7 +296,7 @@
           "priority": 20
         }
       ],
-      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p><p></p><p>Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</p>",
+      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves).</p><p></p><p>Каждый уровень усталости дает -1 штраф на все броски (атаки, проверки характеристик, спасброски).</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -389,7 +389,7 @@
           "priority": 20
         }
       ],
-      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p><p></p><p>Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</p>",
+      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves).</p><p></p><p>Каждый уровень усталости дает -1 штраф на все броски (атаки, проверки характеристик, спасброски).</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -482,7 +482,7 @@
           "priority": 20
         }
       ],
-      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p><p></p><p>Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</p>",
+      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves).</p><p></p><p>Каждый уровень усталости дает -1 штраф на все броски (атаки, проверки характеристик, спасброски).</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -575,7 +575,7 @@
           "priority": 20
         }
       ],
-      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p><p></p><p>Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</p>",
+      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves).</p><p></p><p>Каждый уровень усталости дает -1 штраф на все броски (атаки, проверки характеристик, спасброски).</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -668,7 +668,7 @@
           "priority": 20
         }
       ],
-      "description": "<p>A restrained creature's speed becomes 0, and it can't benefit from any bonus to its speed.</p><p>Attack rolls against the creature have advantage, and the creature's attack rolls have disadvantage.</p><p>The creature has disadvantage on Dexterity saving throws.</p><p>Restrained creature cannot use somatic spell components.</p><p></p><p>Скорость опутанного существа равна 0, и оно не получает выгоды ни от каких бонусов к скорости.</p><p>Броски атаки по такому существу совершаются с преимуществом, а его броски атаки — с помехой.</p><p>Существо совершает с помехой спасброски Ловкости.</p><p>Опутанное существо не может использовать заклинания, имеющие Соматический (S) компонент.</p>",
+      "description": "<p>A restrained creature's speed becomes 0, and it can't benefit from any bonus to its speed.</p><p>Attack rolls against the creature have advantage, and the creature's attack rolls have disadvantage.</p><p>The creature has disadvantage on Dexterity saving throws.</p><p>Restrained creature cannot use somatic spell components (HB).</p><p></p><p>Скорость опутанного существа равна 0, и оно не получает выгоды ни от каких бонусов к скорости.</p><p>Броски атаки по такому существу совершаются с преимуществом, а его броски атаки — с помехой.</p><p>Существо совершает с помехой спасброски Ловкости.</p><p>Опутанное существо не может использовать заклинания, имеющие Соматический (S) компонент (ХБ).</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -745,7 +745,7 @@
           "priority": 0
         }
       ],
-      "description": "<p>A blinded creature can't see and automatically fails any ability check that requires sight.</p><p>Attack rolls against the creature have advantage, and the creature's attack rolls have disadvantage.<br /></p><p>Ослеплённое существо ничего не видит и автоматически проваливает все проверки характеристик, связанные со зрением.</p><p>Броски атаки по такому существу совершаются с преимуществом, а его броски атаки совершаются с помехой.</p>",
+      "description": "<p>A blinded creature can't see and automatically fails any ability check that requires sight.</p><p>Attack rolls against the creature have advantage, and the creature's attack rolls have disadvantage.</p><p></p><p>Ослеплённое существо ничего не видит и автоматически проваливает все проверки характеристик, связанные со зрением.</p><p>Броски атаки по такому существу совершаются с преимуществом, а его броски атаки совершаются с помехой.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -1111,7 +1111,7 @@
           "priority": 20
         }
       ],
-      "description": "<p>A stunned creature is incapacitated (see the condition), can't move, and can speak only falteringly.</p><p>The creature automatically fails Strength and Dexterity saving throws.</p><p>Attack rolls against the creature have advantage.</p><p></p><p>Ошеломлённое существо недееспособно, не способно перемещаться и говорит, запинаясь.</p><p>Существо автоматически проваливает спасброски Силы и Ловкости.</p><p>Броски атаки по существу совершаются с преимуществом.</p>",
+      "description": "<p>A stunned creature is @UUID[Compendium.mba-premades.MBA SRD.Item.LCcuJNMKrGouZbFJ]{Incapacitated}, can't move, and can speak only falteringly.</p><p>The creature automatically fails Strength and Dexterity saving throws.</p><p>Attack rolls against the creature have advantage.</p><p></p><p>Ошеломлённое существо недееспособно, не способно перемещаться и говорит, запинаясь.</p><p>Существо автоматически проваливает спасброски Силы и Ловкости.</p><p>Броски атаки по существу совершаются с преимуществом.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -1388,7 +1388,7 @@
           "priority": 20
         }
       ],
-      "description": "<p>An unconscious creature is incapacitated (See the condition) can't move or speak, and is unaware of its surroundings.</p><p>The creature drops whatever its holding and falls prone (See the condition).</p><p>The creature automatically fails Strength and Dexterity saving throws.</p><p>Attack rolls against the creature have advantage.</p><p>Any attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.</p><p></p><p>Находящееся без сознания существо недееспособно, не способно перемещаться и говорить, а также не осознаёт своё окружение.</p><p>Существо роняет всё, что держит, и падает ничком.</p><p>Существо автоматически проваливает спасброски Силы и Ловкости. Броски атаки по существу совершаются с преимуществом.</p><p>Любая атака, попавшая по такому существу, считается критическим попаданием, если нападающий находится в пределах 5 футов от него.</p>",
+      "description": "<p>An unconscious creature is @UUID[Compendium.mba-premades.MBA SRD.Item.LCcuJNMKrGouZbFJ]{Incapacitated},can't move or speak, and is unaware of its surroundings.</p><p>The creature drops whatever its holding and falls @UUID[Compendium.mba-premades.MBA SRD.Item.LbGCc4TiQnxaUoGn]{Prone}.</p><p>The creature automatically fails Strength and Dexterity saving throws.</p><p>Attack rolls against the creature have advantage.</p><p>Any attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.</p><p></p><p>Находящееся без сознания существо недееспособно, не способно перемещаться и говорить, а также не осознаёт своё окружение.</p><p>Существо роняет всё, что держит, и падает ничком.</p><p>Существо автоматически проваливает спасброски Силы и Ловкости. Броски атаки по существу совершаются с преимуществом.</p><p>Любая атака, попавшая по такому существу, считается критическим попаданием, если нападающий находится в пределах 5 футов от него.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -1452,7 +1452,7 @@
     },
     {
       "changes": [],
-      "description": "<p>An incapacitated creature can't take actions or reactions</p><p>An incapacitated creature fails all checks against being grappled or shoved</p><p>An incapacitated creature automatically loses concentration</p><p></p><p>Недееспособное существо не может совершать действия и реакции.</p><p>Недееспособные существа автоматически проваливают проверки для сопротивления захвату или толчку.</p><p>Существо теряет концентрацию на заклинании, если становится недееспособным.</p>",
+      "description": "<p>An incapacitated creature can't take actions or reactions.</p><p>An incapacitated creature fails all checks against being grappled or shoved.</p><p>An incapacitated creature automatically loses Concentration.</p><p></p><p>Недееспособное существо не может совершать действия и реакции.</p><p>Недееспособные существа автоматически проваливают проверки для сопротивления захвату или толчку.</p><p>Существо теряет концентрацию на заклинании, если становится недееспособным.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -1551,7 +1551,7 @@
           "priority": 20
         }
       ],
-      "description": "<p>A paralyzed creature is incapacitated (see the condition) and can't move or speak.</p><p>The creature automatically fails Strength and Dexterity saving throws.</p><p>Attack rolls against the creature have advantage.</p><p>Any attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.</p><p></p><p>Парализованное существо недееспособно (incapacitated) и не способно перемещаться и говорить.</p><p>Существо автоматически проваливает спасброски Силы и Ловкости.</p><p>Броски атаки по парализованному существу совершаются с преимуществом.</p><p>Любая атака, попавшая по такому существу, считается критическим попаданием, если нападающий находится в пределах 5 футов от существа.</p>",
+      "description": "<p>A paralyzed creature is @UUID[Compendium.mba-premades.MBA SRD.Item.LCcuJNMKrGouZbFJ]{Incapacitated} and can't move or speak.</p><p>The creature automatically fails Strength and Dexterity saving throws.</p><p>Attack rolls against the creature have advantage.</p><p>Any attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.</p><p></p><p>Парализованное существо недееспособно и не способно перемещаться и говорить.</p><p>Существо автоматически проваливает спасброски Силы и Ловкости.</p><p>Броски атаки по парализованному существу совершаются с преимуществом.</p><p>Любая атака, попавшая по такому существу, считается критическим попаданием, если нападающий находится в пределах 5 футов от существа.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -1663,7 +1663,7 @@
           "priority": 20
         }
       ],
-      "description": "<p>A petrified creature is transformed, along with any nonmagical object it is wearing or carrying, into a solid inanimate substance (usually stone). Its weight increases by a factor of ten, and it ceases aging.</p><p>The creature is incapacitated (see the condition), can't move or speak, and is unaware of its surroundings.</p><p>Attack rolls against the creature have advantage.</p><p>The creature automatically fails Strength and Dexterity saving throws.</p><p>The creature has resistance to all damage.</p><p>The creature is immune to poison and disease, although a poison or disease already in its system is suspended, not neutralized. Remove all movement, grant advantage to all who attack, and add damage resistance to all magical and physical attacks</p><p></p><p>Окаменевшее существо, а также все немагические предметы, которые оно несёт или носит, трансформируется в твёрдое инертное вещество (как правило, в камень). Его вес увеличивается в 10 раз, и оно перестаёт стареть.</p><p>Существо недееспособно (incapacitated), не способно двигаться и говорить, а также не осознаёт своё окружение.</p><p>Броски атаки по существу совершаются с преимуществом.</p><p>Существо автоматически проваливает спасброски Силы и Ловкости.</p><p>Существо получает сопротивление ко всем видам урона.</p><p>Существо получает иммунитет к ядам и болезням. Если яд или болезнь уже действовали на существо, их действие приостанавливается, но не исчезает.</p>",
+      "description": "<p>A petrified creature is transformed, along with any nonmagical object it is wearing or carrying, into a solid inanimate substance (usually stone). Its weight increases by a factor of ten, and it ceases aging.</p><p>The creature is @UUID[Compendium.mba-premades.MBA SRD.Item.LCcuJNMKrGouZbFJ]{Incapacitated}, can't move or speak, and is unaware of its surroundings.</p><p>Attack rolls against the creature have advantage.</p><p>The creature automatically fails Strength and Dexterity saving throws.</p><p>The creature has resistance to all damage.</p><p>The creature is immune to poison and disease, although a poison or disease already in its system is suspended, not neutralized. Remove all movement, grant advantage to all who attack, and add damage resistance to all magical and physical attacks</p><p></p><p>Окаменевшее существо, а также все немагические предметы, которые оно несёт или носит, трансформируется в твёрдое инертное вещество (как правило, в камень). Его вес увеличивается в 10 раз, и оно перестаёт стареть.</p><p>Существо недееспособно, не способно двигаться и говорить, а также не осознаёт своё окружение.</p><p>Броски атаки по существу совершаются с преимуществом.</p><p>Существо автоматически проваливает спасброски Силы и Ловкости.</p><p>Существо получает сопротивление ко всем видам урона.</p><p>Существо получает иммунитет к ядам и болезням. Если яд или болезнь уже действовали на существо, их действие приостанавливается, но не исчезает.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -2079,7 +2079,7 @@
     },
     {
       "changes": [],
-      "description": "<p>If you're surprised, you can't move or take an action on your first turn of the combat, and you can't take a reaction until that turn ends. A member of a group can be surprised even if the other members aren't.<br /><br />Тот, кто оказывается захвачен врасплох, не может перемещаться и совершать действия в первом ходу сражения, и, пока это состояние не окончится, не можете совершать реакции.</p>",
+      "description": "<p>If you're surprised, you can't move or take an action on your first turn of the combat, and you can't take a reaction until that turn ends. A member of a group can be surprised even if the other members aren't.<br /><br />Существо, оказавшееся захваченным врасплох, не может перемещаться и совершать действия в первом ходу сражения, и, пока это состояние не окончится, не можете совершать реакции.</p>",
       "disabled": false,
       "duration": {
         "rounds": 1,
@@ -2174,7 +2174,7 @@
           "priority": 20
         }
       ],
-      "description": "",
+      "description": "<p>When making a melee weapon attack, a creature that doesn't have a swimming speed (either natural or granted by magic) has disadvantage on the attack roll unless the weapon is a dagger, javelin, shortsword, spear, or trident.</p><p>A ranged weapon attack automatically misses a target beyond the weapon's normal range. Even against a target within normal range, the attack roll has disadvantage unless the weapon is a crossbow, a net, or a weapon that is thrown like a javelin (including a spear, trident, or dart).</p><p>Creatures and objects that are fully immersed in water have resistance to fire damage.</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -2267,7 +2267,7 @@
           "priority": 20
         }
       ],
-      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves)</p><p></p><p>Каждый уровень усталости дает статический -1 на все броски (атака, проверка характеристик, спасбросок)</p>",
+      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves).</p><p></p><p>Каждый уровень усталости дает -1 штраф на все броски (атаки, проверки характеристик, спасброски).</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -2329,7 +2329,7 @@
     },
     {
       "changes": [],
-      "description": "<p>The end.</p>",
+      "description": "<p>The end?</p><p></p><p>Конец?</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -2399,7 +2399,7 @@
           "priority": 25
         }
       ],
-      "description": "<p>A grappled creature's speed becomes 0, and it can't benefit from any bonus to its speed.</p><p>The condition ends if the grappler is incapacitated.</p><p>The condition also ends if an effect removes the grappled creature from the reach of the grappler or grappling effect.</p><p></p><p>Скорость схваченного существа равна 0, и оно не получает выгоды ни от каких бонусов к скорости.</p><p>Состояние оканчивается, если схвативший становится недееспособным.</p><p>Это состояние также оканчивается, если какой-либо эффект выводит схваченное существо из зоны досягаемости того, кто его удерживает, или из зоны удерживающего эффекта. Например, когда существо отбрасывается заклинанием Волна Грома (Thunderwave).</p>",
+      "description": "<p>A grappled creature's speed becomes 0, and it can't benefit from any bonus to its speed.</p><p>The condition ends if the grappler is @UUID[Compendium.mba-premades.MBA SRD.Item.LCcuJNMKrGouZbFJ]{Incapacitated}.</p><p>The condition also ends if an effect removes the grappled creature from the reach of the grappler or grappling effect.</p><p></p><p>Скорость схваченного существа равна 0, и оно не получает выгоды ни от каких бонусов к скорости.</p><p>Состояние оканчивается, если схвативший становится недееспособным.</p><p>Это состояние также оканчивается, если какой-либо эффект выводит схваченное существо из зоны досягаемости того, кто его удерживает, или из зоны удерживающего эффекта. Например, когда существо отбрасывается заклинанием Волна Грома (@UUID[Compendium.mba-premades.MBA Spells.Item.iSlvXdqXcGgDbK0Y]{Thunderwave}).</p>",
       "disabled": false,
       "duration": {
         "rounds": null,
@@ -2475,7 +2475,7 @@
     "systemVersion": "2.4.1",
     "coreVersion": "11.315",
     "createdTime": 1698551381684,
-    "modifiedTime": 1715642066135,
+    "modifiedTime": 1717827737799,
     "lastModifiedBy": "AaGlXPdfBCo8JJO1"
   }
 }

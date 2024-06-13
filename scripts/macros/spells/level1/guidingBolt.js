@@ -125,8 +125,8 @@ export async function guidingBolt({ speaker, actor, token, character, item, args
         .persist()
         .name(`${target.document.name} Guiding Bolt`)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
         })
 
         .effect()

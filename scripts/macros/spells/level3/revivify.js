@@ -1,12 +1,12 @@
 // Animation by EskieMoh#2969
 export async function revivify({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    let isDead = await chrisPremades.helpers.findEffect(target.actor, 'Dead');
+    let isDead = await mbaPremades.helpers.findEffect(target.actor, 'Dead');
     if (!isDead) {
         ui.notifications.warn("Target is not dead!");
         return;
     }
-    let gentleRepose = await chrisPremades.helpers.findEffect(target.actor, "Gentle Repose");
+    let gentleRepose = await mbaPremades.helpers.findEffect(target.actor, "Gentle Repose");
     let timeLimit = 60;
     if (gentleRepose) timeLimit = 864060;
     let timeDiff = game.time.worldTime - isDead.duration.startTime;
@@ -108,7 +108,7 @@ export async function revivify({ speaker, actor, token, character, item, args, s
             'description': "Revivify"
         };
         await warpgate.wait(1500);
-        if (gentleRepose) await chrisPremades.helpers.removeEffect(gentleRepose);
+        if (gentleRepose) await mbaPremades.helpers.removeEffect(gentleRepose);
         await warpgate.mutate(target.document, updates, options);
         return
     }
@@ -133,7 +133,7 @@ export async function revivify({ speaker, actor, token, character, item, args, s
         'description': "Revivify"
     };
     await warpgate.wait(1500);
-    if (gentleRepose) await chrisPremades.helpers.removeEffect(gentleRepose);
-    await chrisPremades.helpers.removeCondition(target.actor, 'Dead');
+    if (gentleRepose) await mbaPremades.helpers.removeEffect(gentleRepose);
+    await mbaPremades.helpers.removeCondition(target.actor, 'Dead');
     await warpgate.mutate(target.document, updates, options);
 }

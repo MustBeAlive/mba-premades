@@ -15,20 +15,18 @@ export async function grapple({ speaker, actor, token, character, item, args, sc
             [`Athletics (${target.actor.system.skills.ath.total})`, 'ath'],
             ['Uncontested', false]
         ];
-        let selection = await mba.remoteDialog(workflow.item.name, options, mba.firstOwner(target).id, 'How would you like to contest the grapple?');
+        let selection = await mba.remoteDialog(workflow.item.name, options, mba.firstOwner(target).id, `<b>How would you like to contest the Grapple?</b>`);
         if (selection) {
             let sourceRoll = await workflow.actor.rollSkill('ath');
             let targetRoll = await mba.rollRequest(target, 'skill', selection);
             if (targetRoll.total >= sourceRoll.total) return;
         }
     }
-    //if (game.modules.get('Rideable')?.active) game.Rideable.Mount([target.document], workflow.token.document, { 'Grappled': true, 'MountingEffectsOverride': ['Grappled'] });
-    
     await new Sequence()
     
         .effect()
         .file("jb2a.unarmed_strike.no_hit.01.yellow")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .stretchTo(target)
         .playbackRate(0.9)
         .filter("ColorMatrix", { saturate: -1, brightness: 1 })
@@ -36,16 +34,12 @@ export async function grapple({ speaker, actor, token, character, item, args, sc
         .effect()
         .file("jb2a.unarmed_strike.no_hit.01.yellow")
         .mirrorY()
-        .atLocation(token)
+        .atLocation(workflow.token)
         .stretchTo(target)
         .playbackRate(0.9)
         .filter("ColorMatrix", { saturate: -1, brightness: 1 })
     
         .wait(150)
-    
-        .thenDo(async () => {
-            await mba.addCondition(target.actor, 'Grappled', false, workflow.item.uuid);
-        })
     
         .effect()
         .file("jb2a.markers.chain.standard.complete.02.grey")
@@ -54,6 +48,10 @@ export async function grapple({ speaker, actor, token, character, item, args, sc
         .fadeIn(500)
         .fadeOut(1000)
         .opacity(0.8)
+
+        .thenDo(async () => {
+            await mba.addCondition(target.actor, 'Grappled', false, workflow.item.uuid);
+        })
     
         .play()
 }

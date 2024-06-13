@@ -1,6 +1,6 @@
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
 	if (workflow.failedSaves.size != 1) return;
-	let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'bestowCurse', 50);
+	let queueSetup = await mbaPremades.queue.setup(workflow.item.uuid, 'bestowCurse', 50);
 	if (!queueSetup) return;
 	let choices = [
 		['Disadvantage on Ability Score', 'Ability'],
@@ -9,17 +9,17 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 		['Extra Damage', 'Damage'],
 		['Other', 'Other']
 	];
-	let selection = await chrisPremades.helpers.dialog('What curse do you wish to bestow?', choices);
+	let selection = await mbaPremades.helpers.dialog('What curse do you wish to bestow?', choices);
 	if (!selection) {
-		chrisPremades.queue.remove(workflow.item.uuid);
+		mbaPremades.queue.remove(workflow.item.uuid);
 		return;
 	}
 	let castLevel = workflow.castData.castLevel;
 	let duration = 60;
 	let concentration = true;
-	let featureData = await chrisPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Bestow Curse: ' + selection, false);
+	let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Bestow Curse: ' + selection, false);
 	if (!featureData) {
-		chrisPremades.queue.remove(workflow.item.uuid);
+		mbaPremades.queue.remove(workflow.item.uuid);
 		return;
 	}
 	let effectData;
@@ -69,9 +69,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 				['Wisdom', 'wis'],
 				['Charisma', 'cha']
 			];
-			let ability = await chrisPremades.helpers.dialog('What ability?', abilityChoices);
+			let ability = await mbaPremades.helpers.dialog('What ability?', abilityChoices);
 			if (!ability) {
-				chrisPremades.queue.remove(workflow.item.uuid);
+				mbaPremades.queue.remove(workflow.item.uuid);
 				return;
 			}
 			featureData.effects[0].changes[0].key += ability;
@@ -116,25 +116,25 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 				}
 			};
 			if (!isNaN(duration)) effectData.duration.seconds = duration;
-			await chrisPremades.helpers.createEffect(workflow.actor, effectData);
+			await mbaPremades.helpers.createEffect(workflow.actor, effectData);
 			break;
 		case 'Attack':
 			featureData.effects[0].changes[0].value = workflow.token.actor.uuid;
 			break;
 		case 'Turn':
-			let saveDC = chrisPremades.helpers.getSpellDC(workflow.item);
+			let saveDC = mbaPremades.helpers.getSpellDC(workflow.item);
 			featureData.effects[0].changes[0].value = 'turn=start, saveAbility=wis, saveMagic=true, saveRemove=false, saveDC=' + saveDC + ', name="Bestow Curse: Turn Start", killAnim= true'
 			break;
 	}
 	let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
-	let [config, options] = chrisPremades.constants.syntheticItemWorkflowOptions([workflow.targets.first().document.uuid]);
+	let [config, options] = mbaPremades.constants.syntheticItemWorkflowOptions([workflow.targets.first().document.uuid]);
 	await MidiQOL.completeItemUse(feature, config, options);
-	let targetEffect = chrisPremades.helpers.findEffect(workflow.targets.first().actor, 'Bestow Curse: ' + selection);
+	let targetEffect = mbaPremades.helpers.findEffect(workflow.targets.first().actor, 'Bestow Curse: ' + selection);
 	if (!targetEffect) {
-		chrisPremades.queue.remove(workflow.item.uuid);
+		mbaPremades.queue.remove(workflow.item.uuid);
 		return;
 	}
-	await chrisPremades.helpers.updateEffect(targetEffect,
+	await mbaPremades.helpers.updateEffect(targetEffect,
 		{
 			'origin': workflow.item.uuid,
 			'flags': {
@@ -152,16 +152,16 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 		}
 	);
 	if (concentration) {
-		let concentrationEffect = chrisPremades.helpers.findEffect(workflow.actor, 'Concentrating');
+		let concentrationEffect = mbaPremades.helpers.findEffect(workflow.actor, 'Concentrating');
 		if (!concentrationEffect) {
-			chrisPremades.queue.remove(workflow.item.uuid);
+			mbaPremades.queue.remove(workflow.item.uuid);
 			return;
 		}
-		await chrisPremades.helpers.updateEffect(concentrationEffect, { 'origin': workflow.item.uuid, 'flags.midi-qol.isConcentration': workflow.item.uuid });
+		await mbaPremades.helpers.updateEffect(concentrationEffect, { 'origin': workflow.item.uuid, 'flags.midi-qol.isConcentration': workflow.item.uuid });
 		await workflow.actor.setFlag('midi-qol', 'concentration-data.uuid', workflow.item.uuid);
 
 	}
-	chrisPremades.queue.remove(workflow.item.uuid);
+	mbaPremades.queue.remove(workflow.item.uuid);
 
 	let target = workflow.targets.first();
 
@@ -210,16 +210,16 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
 	if (workflow.hitTargets.size != 1) return;
 	if (workflow.actor.flags['mba-premades']?.spell?.bestowCurse?.damage?.target != workflow.hitTargets.first().id) return;
-	let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'bestowCurse', 250);
+	let queueSetup = await mbaPremades.queue.setup(workflow.item.uuid, 'bestowCurse', 250);
 	if (!queueSetup) return;
 	let oldFormula = workflow.damageRoll._formula;
 	let bonusDamageFormula = '1d8[necrotic]';
-	//await chrisPremades.helpers.addToDamageRoll(workflow, bonusDamageFormula);
-	if (workflow.isCritical) bonusDamageFormula = chrisPremades.helpers.getCriticalFormula(bonusDamageFormula);
+	//await mbaPremades.helpers.addToDamageRoll(workflow, bonusDamageFormula);
+	if (workflow.isCritical) bonusDamageFormula = mbaPremades.helpers.getCriticalFormula(bonusDamageFormula);
 	let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
 	let damageRoll = await new Roll(damageFormula).roll({ async: true });
 	await workflow.setDamageRoll(damageRoll);
-	chrisPremades.queue.remove(workflow.item.uuid);
+	mbaPremades.queue.remove(workflow.item.uuid);
 
 	let target = workflow.targets.first();
 	new Sequence()
@@ -257,13 +257,13 @@ async function damageApplication({ speaker, actor, token, character, item, args,
 	if (workflow.hitTargets.size < 2) return;
 	let targetId = workflow.actor.flags['mba-premades']?.spell?.bestowCurse?.damage.target;
 	if (!targetId) return;
-	let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'bestowCurse', 250);
+	let queueSetup = await mbaPremades.queue.setup(workflow.item.uuid, 'bestowCurse', 250);
 	if (!queueSetup) return;
 	let targetDamage = workflow.damageList.find(i => i.tokenId === targetId);
 	if (!targetDamage) return;
 	let targetActor = canvas.scene.tokens.get(targetDamage.tokenId).actor;
 	if (!targetActor) {
-		chrisPremades.queue.remove(workflow.item.uuid);
+		mbaPremades.queue.remove(workflow.item.uuid);
 		return;
 	}
 	let damageRoll = await new Roll('1d8[necrotic]').roll({ 'async': true });
@@ -272,13 +272,13 @@ async function damageApplication({ speaker, actor, token, character, item, args,
 		speaker: { 'alias': name },
 		flavor: 'Bestow Curse Damage'
 	});
-	let hasDI = chrisPremades.helpers.checkTrait(targetActor, 'di', 'necrotic');
+	let hasDI = mbaPremades.helpers.checkTrait(targetActor, 'di', 'necrotic');
 	if (hasDI) {
-		chrisPremades.queue.remove(workflow.item.uuid);
+		mbaPremades.queue.remove(workflow.item.uuid);
 		return;
 	}
 	let damageTotal = damageRoll.total;
-	let hasDR = chrisPremades.helpers.checkTrait(targetActor, 'dr', 'necrotic');
+	let hasDR = mbaPremades.helpers.checkTrait(targetActor, 'dr', 'necrotic');
 	if (hasDR) damageTotal = Math.floor(damageTotal / 2);
 	targetDamage.damageDetail[0].push(
 		{
@@ -300,7 +300,7 @@ async function damageApplication({ speaker, actor, token, character, item, args,
 	} else {
 		targetDamage.newHP -= damageTotal;
 	}
-	chrisPremades.queue.remove(workflow.item.uuid);
+	mbaPremades.queue.remove(workflow.item.uuid);
 
 }
 
@@ -309,11 +309,11 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
 	let targetUuid = workflow.actor.flags['mba-premades']?.spell?.bestowCurse?.attack.target;
 	if (!targetUuid) return;
 	if (targetUuid != workflow.targets.first().actor.uuid) return;
-	let queueSetup = await chrisPremades.queue.setup(workflow.item.uuid, 'bestowCurse', 50);
+	let queueSetup = await mbaPremades.queue.setup(workflow.item.uuid, 'bestowCurse', 50);
 	if (!queueSetup) return;
 	workflow.disadvantage = true;
 	workflow.attackAdvAttribution.add('DIS: Bestow Curse');
-	chrisPremades.queue.remove(workflow.item.uuid);
+	mbaPremades.queue.remove(workflow.item.uuid);
 
 	let target = workflow.targets.first();
 	new Sequence()
@@ -353,11 +353,11 @@ async function remove(effect, origin, token) {
 	await warpgate.wait(200);
 	if (curseFlags.type === 'Damage') {
 		let damageEffect = origin.actor.effects.find(eff => eff.name === 'Bestow Curse: Damage' && eff.changes?.[2]?.value === token.id);
-		if (damageEffect) await chrisPremades.helpers.removeEffect(damageEffect);
+		if (damageEffect) await mbaPremades.helpers.removeEffect(damageEffect);
 	}
 	if (curseFlags.level < 5) {
-		let effect2 = chrisPremades.helpers.findEffect(origin.actor, 'Concentrating');
-		if (effect2) await chrisPremades.helpers.removeEffect(effect2);
+		let effect2 = mbaPremades.helpers.findEffect(origin.actor, 'Concentrating');
+		if (effect2) await mbaPremades.helpers.removeEffect(effect2);
 	}
 }
 

@@ -167,8 +167,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			.zIndex(0)
 			.waitUntilFinished(-500)
 
-			.thenDo(function () {
-				mba.createEffect(target.actor, effectData);
+            .thenDo(async () => {
+				await mba.createEffect(target.actor, effectData);
 			})
 
 			.effect()

@@ -5,14 +5,14 @@ export async function divineIntervention({ speaker, actor, token, character, ite
     let subClassIdentifier = workflow.actor.classes.cleric?.subclass?.identifier;
     if (workflow.damageTotal > clericLevels && clericLevels != 20) {
         ChatMessage.create({
-            content: `Your call on your deity to intervene on your behalf was unsuccessful.`,
+            content: `Your call on your deity to intervene on your behalf was <b>unsuccessful</b>.`,
             speaker: { actor: workflow.actor }
         });
         return;
     }
     else if (workflow.damageTotal <= clericLevels || clericLevels === 20) {
-        let animationLight;
-        let animationParticles;
+        let animationLight = "jb2a.markers.light.loop.yellow02";
+        let animationParticles = "jb2a.particles.outward.orange.01.03";
         switch (subClassIdentifier) {
             case 'death-domain':
                 animationLight = "jb2a.markers.light.loop.green";
@@ -48,7 +48,7 @@ export async function divineIntervention({ speaker, actor, token, character, ite
                 break;
         }
         ChatMessage.create({
-            content: `Your call on your deity to intervene on your behalf was successful!`,
+            content: `Your call on your deity to intervene on your behalf <b>was successful</b>!`,
             speaker: { actor: workflow.actor }
         });
         new Sequence()

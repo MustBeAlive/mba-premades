@@ -84,7 +84,7 @@ export async function absorbElements({ speaker, actor, token, character, item, a
             .zIndex(3)
             .waitUntilFinished(-500)
 
-            .thenDo(function () {
+            .thenDo(async () => {
                 Sequencer.EffectManager.endEffects({ name: `${token.document.name} AE Resistance`, object: token })
             })
 
@@ -206,9 +206,9 @@ export async function absorbElements({ speaker, actor, token, character, item, a
         .persist()
         .name(`${token.document.name} AE Resistance`)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectDataResist);
-            mba.createEffect(workflow.actor, effectDataBonus);
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectDataResist);
+            await mba.createEffect(workflow.actor, effectDataBonus);
         })
 
         .play()

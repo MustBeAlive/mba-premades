@@ -1,4 +1,4 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Flame Blade: Scimitar', false);
@@ -164,8 +164,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .persist()
         .name(`${token.document.name} Flame Blade`)
 
-        .thenDo(function () {
-            warpgate.mutate(workflow.token.document, updates, {}, options);
+        .thenDo(async () => {
+            await warpgate.mutate(workflow.token.document, updates, {}, options);
         })
 
         .play()
@@ -288,8 +288,8 @@ async function evoke({ speaker, actor, token, character, item, args, scope, work
             .persist()
             .name(`${token.document.name} Flame Blade`)
 
-            .thenDo(function () {
-                mba.updateEffect(effect, updates)
+            .thenDo(async () => {
+                await mba.updateEffect(effect, updates)
             })
 
             .play()

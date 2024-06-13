@@ -97,8 +97,8 @@ export async function comprehendLanguages({ speaker, actor, token, character, it
         .zIndex(2)
         .waitUntilFinished(-1000)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
         })
 
         .effect()

@@ -63,9 +63,9 @@ export async function resistance({ speaker, actor, token, character, item, args,
         .persist()
         .name(`${target.document.name} Resistance`)
 
-        .thenDo(function () {
-            if (effect) mba.removeEffect(effect); //HB, target cannot benefit from more than 1 instance of "Resistance"
-            mba.createEffect(target.actor, effectData)
+        .thenDo(async () => {
+            if (effect) await mba.removeEffect(effect); //HB, target cannot benefit from more than 1 instance of "Resistance"
+            await mba.createEffect(target.actor, effectData)
         })
 
         .play()

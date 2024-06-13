@@ -15,10 +15,9 @@ export async function witchBolt({ speaker, actor, token, character, item, args, 
             return;
         }
         if (game.combat.current.tokenId != token.document.id) return;
-        let choices = [['Yes!', 'yes'], ['No, stop concentrating!', 'no']];
+        let choices = [['Yes!', 'yes'], ['No, stop concentrating!', false]];
         let selection = await mba.dialog("Witch Bolt", choices, `<b>Do you want to spend your Action to sustain Witch Bolt?</b>`);
-        if (!selection) return;
-        if (selection === "no") {
+        if (!selection) {
             await mba.removeCondition(actor, 'Concentrating');
             return;
         }
@@ -171,8 +170,8 @@ export async function witchBolt({ speaker, actor, token, character, item, args, 
         .persist()
         .name(`${token.document.name} Witch Bolt`)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
         })
 
         .play()

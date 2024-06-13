@@ -67,8 +67,8 @@ export async function protectionFromPoison({ speaker, actor, token, character, i
         .playbackRate(0.9)
         .name(`${target.document.name} Protection from Poison`)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
         })
 
         .play()

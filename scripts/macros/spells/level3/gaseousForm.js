@@ -176,8 +176,8 @@ export async function gaseousForm({ speaker, actor, token, character, item, args
         .persist()
         .name(`${target.document.name} Gaseous Form`)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
         })
 
         .play()

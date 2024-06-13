@@ -119,6 +119,12 @@ export class mbaSettingsMechanics extends mbaSettingsBase {
         this.category = 'Mechanics';
     }
 }
+export class mbaSettingsMonsterFeats extends mbaSettingsBase {
+    constructor() {
+        super();
+        this.category = 'Monster Features';
+    }
+}
 export class mbaSettingsRaceFeats extends mbaSettingsBase {
     constructor() {
         super();

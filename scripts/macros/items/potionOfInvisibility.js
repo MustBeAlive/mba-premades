@@ -1,4 +1,4 @@
-import { mba } from "../../helperFunctions.js";
+import {mba} from "../../helperFunctions.js";
 
 export async function potionOfInvisibility({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
@@ -73,13 +73,13 @@ export async function potionOfInvisibility({ speaker, actor, token, character, i
         .zIndex(0.3)
         .waitUntilFinished(-500)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
         })
 
         .play();
 
-    let vialItem = mba.getItem(workflow.actor, workflow.item.name);
+    let vialItem = await mba.getItem(workflow.actor, workflow.item.name);
     if (vialItem.system.quantity > 1) {
         await vialItem.update({ "system.quantity": vialItem.system.quantity - 1 });
     } else {

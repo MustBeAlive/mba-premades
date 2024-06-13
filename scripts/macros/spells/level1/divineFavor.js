@@ -87,8 +87,8 @@ export async function divineFavor({ speaker, actor, token, character, item, args
         .persist()
         .name(`${token.document.name} Divine Favor`)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
         })
 
         .play()

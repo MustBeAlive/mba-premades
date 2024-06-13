@@ -17,6 +17,24 @@ async function createFolder(folderData) {
     return await Folder.create(folderData);
 }
 
+async function createScene(sceneData) {
+    return await Scene.create(sceneData);
+}
+
+async function createTile(tileData) {
+    return canvas.scene.createEmbeddedDocuments("Tile", tileData);
+}
+
+async function deleteScene(sceneIds) {
+    return await Scene.deleteDocuments(sceneIds);
+}
+
+async function deleteTile(tileUuid) {
+    let tile = await fromUuid(tileUuid);
+    if (!tile) return;
+    await tile.delete();
+}
+
 async function removeEffect(effectUuid) {
     let effect = await fromUuid(effectUuid);
     if (!effect) return;
@@ -27,6 +45,12 @@ async function updateCombatant(uuid, updates) {
     let combatant = await fromUuid(uuid);
     if (!combatant) return;
     await combatant.update(updates);
+}
+
+async function updateDoc(docUuid, updates) {
+    let doc = await fromUuid(docUuid);
+    if (!doc) return;
+    await doc.update(updates);
 }
 
 async function updateEffect(effectUuid, updates) {
@@ -41,16 +65,14 @@ function updateInitiative(combatantUuid, initiative) {
     combatant.update({ 'initiative': initiative });
 }
 
-async function updateDoc(docUuid, updates) {
-    let doc = await fromUuid(docUuid);
-    if (!doc) return;
-    await doc.update(updates);
-}
-
 export let runAsGM = {
     'createActor': createActor,
     'createEffect': createEffect,
     'createFolder': createFolder,
+    'createScene': createScene,
+    'createTile': createTile,
+    'deleteScene': deleteScene,
+    'deleteTile': deleteTile,
     'removeEffect': removeEffect,
     'updateCombatant': updateCombatant,
     'updateEffect': updateEffect,

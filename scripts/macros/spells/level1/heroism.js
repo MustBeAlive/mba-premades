@@ -1,5 +1,5 @@
-import { constants } from "../../generic/constants.js";
-import { mba } from "../../../helperFunctions.js";
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
 
 export async function heroism({ speaker, actor, token, character, item, args, scope, workflow }) {
     let castLevel = workflow.castData.castLevel;
@@ -86,8 +86,8 @@ export async function heroism({ speaker, actor, token, character, item, args, sc
             .persist()
             .name(`${target.document.name} Heroism`)
 
-            .thenDo(function () {
-                mba.createEffect(target.actor, effectData);
+            .thenDo(async () => {
+                await mba.createEffect(target.actor, effectData);
             })
 
             .play()

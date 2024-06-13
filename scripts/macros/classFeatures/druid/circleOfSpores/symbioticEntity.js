@@ -180,9 +180,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .wait(200)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData);
-            mba.applyDamage([workflow.token], (druidLevel * 4), "temphp");
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
+            await mba.applyDamage([workflow.token], (druidLevel * 4), "temphp");
         })
 
         .play()

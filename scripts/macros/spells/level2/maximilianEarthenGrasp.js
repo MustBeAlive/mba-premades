@@ -111,10 +111,10 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
         .attachTo(target)
         .scaleToObject(1.7 * target.document.texture.scaleX)
 
-        .thenDo(function () {
+        .thenDo(async () => {
             if (workflow.failedSaves.size) {
-                mba.createEffect(target.actor, effectDataTarget);
-                mba.createEffect(workflow.actor, effectDataSource);
+                await mba.createEffect(target.actor, effectDataTarget);
+                await mba.createEffect(workflow.actor, effectDataSource);
             }
         })
 

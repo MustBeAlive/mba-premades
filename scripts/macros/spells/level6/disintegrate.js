@@ -144,8 +144,8 @@ export async function disintegrate({ speaker, actor, token, character, item, arg
         .name(`3`)
         .waitUntilFinished()
 
-        .thenDo(function () {
-            warpgate.mutate(target.document, updates, {}, options);
+        .thenDo(async () => {
+            await warpgate.mutate(target.document, updates, {}, options);
         })
 
         .wait(500)

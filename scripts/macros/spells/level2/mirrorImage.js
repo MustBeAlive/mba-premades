@@ -142,8 +142,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .wait(200)
 
-        .thenDo(function () {
-            mba.createEffect(workflow.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
         })
 
         .effect()

@@ -1,4 +1,4 @@
-import { mba } from "../../helperFunctions.js";
+import {mba} from "../../helperFunctions.js";
 
 async function dagger({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();

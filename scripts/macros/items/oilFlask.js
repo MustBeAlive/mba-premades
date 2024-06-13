@@ -7,10 +7,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Splash oil on somebody (5 ft.)", "splash"],
         ["Throw flask at someone (20 ft.)", "shatter"],
         ["Pour oil on the ground (5 ft. square)", "pour"],
-        ["Cancel", "cancel"]
+        ["Cancel", false]
     ];
     let selection = await mba.dialog("Oil Flask", choices, `<b>What would you like to do?</b>`);
-    if (!selection || selection === "cancel") return;
+    if (!selection) return;
     if (selection === "splash") {
         let target = workflow.targets.first();
         if (!target) {
@@ -146,7 +146,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         await workflow.actor.deleteEmbeddedDocuments("Item", [flaskItem.id]);
     }
     if (selection === "splash" || selecion === "pour") {
-        let emptyFlaskItem = mba.getItem(workflow.actor, "Empty Flask");
+        let emptyFlaskItem = await mba.getItem(workflow.actor, "Empty Flask");
         if (!emptyFlaskItem) {
             const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
             if (!itemData) {
@@ -227,8 +227,8 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
         .attachTo(target)
         .scale(1.4)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
         })
 
         .effect()
@@ -334,8 +334,8 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .mask()
         .playbackRate(0.9)
 
-        .thenDo(function () {
-            mba.removeEffect(effect);
+        .thenDo(async () => {
+            await mba.removeEffect(effect);
         })
 
         .play()

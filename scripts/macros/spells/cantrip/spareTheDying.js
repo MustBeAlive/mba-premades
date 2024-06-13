@@ -95,8 +95,8 @@ export async function spareTheDying({ speaker, actor, token, character, item, ar
 
         .wait(800)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
         })
 
         .play()

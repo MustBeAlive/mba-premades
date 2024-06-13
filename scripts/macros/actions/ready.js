@@ -65,13 +65,9 @@ export async function ready({ speaker, actor, token, character, item, args, scop
     let isConcentrating = await mba.findEffect(workflow.actor, "Concentrating");
     if (isConcentrating) {
         let oldConc = await fromUuid(isConcentrating.flags['midi-qol']?.isConcentration);
-        let concChoices = [
-            [`Stop concentrating on <b>${oldConc.name}</b>`, "yes"],
-            ["Cancel readying action", "no"]
-        ];
+        let concChoices = [[`Stop concentrating on <b>${oldConc.name}</b>`, "yes"],["Cancel readying action", false]];
         let concSelection = await mba.dialog("Ready Action", concChoices, `<b>You are already concentrating. What would you like to do?</b>`);
         if (!concSelection) return;
-        if (concSelection === "no") return;
         await mba.removeCondition(workflow.actor, "Concentrating");
         await warpgate.wait(100);
     }
@@ -79,7 +75,9 @@ export async function ready({ speaker, actor, token, character, item, args, scop
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
-        'description': "You are readying an action until the start of your next turn, or until the designated trigger occurs.",
+        'description': `
+            <p>You are readying an action until the start of your next turn, or until the designated trigger occurs.</p>
+        `,
         'changes': [
             {
                 'key': "macro.CE",
@@ -107,14 +105,14 @@ export async function ready({ speaker, actor, token, character, item, args, scop
     
         .effect()
         .from(token)
-        .belowTokens()
         .attachTo(token, { locale: true })
         .scaleToObject(1, { considerTokenScale: true })
+        .belowTokens()
         .spriteRotation(token.rotation * -1)
+        .loopProperty("alphaFilter", "alpha", { values: [0.05, 0.75], duration: 5000, pingPong: true })
         .filter("Glow", { color: 0xff0000, distance: 20 })
         .opacity(0.8)
         .zIndex(0.1)
-        .loopProperty("alphaFilter", "alpha", { values: [0.05, 0.75], duration: 5000, pingPong: true })
         .persist()
         .name(`${token.document.name} Ready 1`)
     
@@ -124,8 +122,8 @@ export async function ready({ speaker, actor, token, character, item, args, scop
         .scaleToObject(1.2 * token.document.texture.scaleX)
         .tint("#FF0000")
         .belowTokens()
-        .persist()
         .playbackRate(0.66)
+        .persist()
         .name(`${token.document.name} Ready 2`)
     
         .play()

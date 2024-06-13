@@ -15,9 +15,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .scaleToObject(1.7 * token.document.texture.scaleX)
             .waitUntilFinished(-500)
 
-            .thenDo(function () {
+            .thenDo(async () => {
                 Sequencer.EffectManager.endEffects({ name: `${token.document.name} Shell Defense`, object: token })
-                warpgate.revert(token.document, "Shell Defense");
+                await warpgate.revert(token.document, "Shell Defense");
             })
 
             .play()
@@ -94,6 +94,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'name': 'Shell Defense',
         'description': 'Shell Defense'
     };
+
     new Sequence()
 
         .effect()
@@ -114,8 +115,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .persist()
         .name(`${token.document.name} Shell Defense`)
 
-        .thenDo(function () {
-            warpgate.mutate(workflow.token.document, updates, {}, options);
+        .thenDo(async () => {
+            await warpgate.mutate(workflow.token.document, updates, {}, options);
         })
 
         .play()
@@ -127,9 +128,9 @@ async function emerge({ speaker, actor, token, character, item, args, scope, wor
         ui.notifications.warn("You are not hiding in the shell!");
         return;
     };
-    let choices = [["Yes, emerge", "yes"], ["No, stay in the shell", "no"]];
+    let choices = [["Yes, emerge", "yes"], ["No, stay in the shell", false]];
     let selection = await mba.dialog("Shell Defense", choices, `<b>Do you want to emerge from the shell?</b>`);
-    if (!selection || selection === "no") return;
+    if (!selection) return;
     await mba.removeEffect(effect);
 }
 

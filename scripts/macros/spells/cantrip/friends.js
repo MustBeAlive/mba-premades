@@ -64,9 +64,9 @@ export async function friends({ speaker, actor, token, character, item, args, sc
         .persist()
         .name(`${target.document.name} Friends`)
 
-        .thenDo(function () {
-            mba.createEffect(target.actor, effectDataTarget);
-            mba.createEffect(workflow.actor, effectDataSource);
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectDataTarget);
+            await mba.createEffect(workflow.actor, effectDataSource);
         })
 
         .play()

@@ -1,6 +1,6 @@
-import { mba } from '../../helperFunctions.js';
-import { constants } from '../generic/constants.js';
-import { queue } from '../mechanics/queue.js';
+import {mba} from '../../helperFunctions.js';
+import {constants} from '../generic/constants.js';
+import {queue} from '../mechanics/queue.js';
 
 async function reroll({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.hitTargets.size === 0 || !workflow.damageRoll || !['mwak', 'rwak', 'msak', 'rsak'].includes(workflow.item.system.actionType)) return;

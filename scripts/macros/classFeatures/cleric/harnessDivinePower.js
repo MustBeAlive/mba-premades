@@ -7,7 +7,7 @@ export async function harnessDivinePower({speaker, actor, token, character, item
         let harness = await mba.getItem(workflow.actor, "CD: Harness Divine Power");
         if (harness) {
             let harnessUses = harness.system.uses.value;
-            await harness.update({"system.uses.value": harnessUses += 1});
+            if (harnessUses < harness.system.uses.max) await harness.update({"system.uses.value": harnessUses += 1});
         }
         return;
     }
@@ -17,7 +17,7 @@ export async function harnessDivinePower({speaker, actor, token, character, item
         let harness = await mba.getItem(workflow.actor, "CD: Harness Divine Power");
         if (harness) {
             let harnessUses = harness.system.uses.value;
-            await harness.update({"system.uses.value": harnessUses += 1});
+            if (harnessUses < harness.system.uses.max) await harness.update({"system.uses.value": harnessUses += 1});
         }
         return;
     }
@@ -35,7 +35,7 @@ export async function harnessDivinePower({speaker, actor, token, character, item
         let harness = await mba.getItem(workflow.actor, "CD: Harness Divine Power");
         if (harness) {
             let harnessUses = harness.system.uses.value;
-            await harness.update({"system.uses.value": harnessUses += 1});
+            if (harnessUses < harness.system.uses.max) await harness.update({"system.uses.value": harnessUses += 1});
         }
         return;
     }
@@ -46,12 +46,20 @@ export async function harnessDivinePower({speaker, actor, token, character, item
         let harness = await mba.getItem(workflow.actor, "CD: Harness Divine Power");
         if (harness) {
             let harnessUses = harness.system.uses.value;
-            await harness.update({"system.uses.value": harnessUses += 1});
+            if (harnessUses < harness.system.uses.max) await harness.update({"system.uses.value": harnessUses += 1});
         }
         return;
     }
     let value = getProperty(workflow.actor, selection);
-    if (isNaN(value)) return;
+    if (isNaN(value)) {
+        let harness = await mba.getItem(workflow.actor, "CD: Harness Divine Power");
+        if (harness) {
+            let harnessUses = harness.system.uses.value;
+            if (harnessUses < harness.system.uses.max) await harness.update({"system.uses.value": harnessUses += 1});
+        }
+        return;
+    }
+    
     new Sequence()
 
         .effect()
