@@ -40,14 +40,6 @@
 				}
 			},
 			{
-				"id": "ActiveAuras",
-				"type": "module",
-				"manifest": "https://github.com/kandashi/Active-Auras",
-				"compatibility": {
-					"verified": "0.9.8"
-				}
-			},
-			{
 				"id": "ATL",
 				"type": "module",
 				"manifest": "https://github.com/kandashi/Active-Token-Lighting",
@@ -88,19 +80,19 @@
 				}
 			},
 			{
-				"id": "chris-premades",
-				"type": "module",
-				"manifest": "https://github.com/chrisk123999/chris-premades/",
-				"compatibility": {
-					"verified": "0.9.64"
-				}
-			},
-			{
 				"id": "dfreds-convenient-effects",
 				"type": "module",
 				"manifest": "https://github.com/DFreds/dfreds-convenient-effects",
 				"compatibility": {
 					"verified": "6.0.3"
+				}
+			},
+			{
+				"id": "dfreds-effects-panel",
+				"type": "module",
+				"manifest": "https://github.com/DFreds/dfreds-effects-panel",
+				"compatibility": {
+					"verified": "3.1.2"
 				}
 			},
 			{
@@ -136,6 +128,14 @@
 				}
 			},
 			{
+				"id": "drag-ruler",
+				"type": "module",
+				"manifest": "https://github.com/manuelVo/foundryvtt-drag-ruler",
+				"compatibility": {
+					"verified": "1.13.8"
+				}
+			},
+			{
 				"id": "jaamod",
 				"type": "module",
 				"manifest": "https://raw.githubusercontent.com/jinkergm/JAA/master/module.json",
@@ -148,7 +148,7 @@
 				"type": "module",
 				"manifest": "https://www.patreon.com/JB2A",
 				"compatibility": {
-					"verified": "0.6.7"
+					"verified": "0.6.8"
 				}
 			},
 			{
@@ -157,6 +157,22 @@
 				"manifest": "https://gitlab.com/tposney/midi-qol",
 				"compatibility": {
 					"verified": "11.3.24"
+				}
+			},
+			{
+				"id": "Rideable",
+				"type": "module",
+				"manifest": "https://github.com/Saibot393/Rideable",
+				"compatibility": {
+					"verified": "2.21.6"
+				}
+			},
+			{
+				"id": "routinglib",
+				"type": "module",
+				"manifest": "https://github.com/manuelVo/foundryvtt-routinglib",
+				"compatibility": {
+					"verified": "1.1.0"
 				}
 			},
 			{
@@ -181,6 +197,14 @@
 				"manifest": "https://github.com/krbz999/templatemacro",
 				"compatibility": {
 					"verified": "11.0.1"
+				}
+			},
+			{
+				"id": "token-attacher",
+				"type": "module",
+				"manifest": "https://github.com/KayelGee/token-attacher",
+				"compatibility": {
+					"verified": "v4.5.15"
 				}
 			},
 			{
@@ -259,6 +283,20 @@
 			"system": "dnd5e"
 		},
 		{
+			"name": "MBA Monster Features",
+			"label": "MBA Monster Features",
+			"path": "packs/mba-monster-features",
+			"type": "Item",
+			"system": "dnd5e"
+		},
+		{
+			"name": "MBA Monster Summons",
+			"label": "MBA Monster Summons",
+			"path": "packs/mba-monster-summons",
+			"type": "Actor",
+			"system": "dnd5e"
+		},
+		{
 			"name": "MBA Race Features",
 			"label": "MBA Race Features",
 			"path": "packs/mba-race-features",
@@ -283,6 +321,13 @@
 			"name": "MBA Spells",
 			"label": "MBA Spells",
 			"path": "packs/mba-spells",
+			"type": "Item",
+			"system": "dnd5e"
+		},
+		{
+			"name": "MBA SRD",
+			"label": "MBA SRD",
+			"path": "packs/mba-srd",
 			"type": "Item",
 			"system": "dnd5e"
 		},
@@ -314,11 +359,14 @@
 				"MBA Items",
 				"MBA Item Features",
 				"MBA Macro",
+				"MBA Monster Features",
+				"MBA Monster Summons",
 				"MBA Music",
 				"MBA Race Features",
 				"MBA Race Feature Items",
 				"MBA Spells",
 				"MBA Spell Features",
+				"MBA SRD",
 				"MBA Summons",
 				"MBA Summon Features"
 			]
