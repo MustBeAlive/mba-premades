@@ -5,10 +5,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     if (workflow.targets.size != 1) return;
     let target = workflow.targets.first();
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', "Hunter's Mark: Move", false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Hunter's Mark: Move)");
-        return;
-    }
+    if (!featureData) return;
     delete featureData._id;
     let seconds;
     switch (workflow.castData.castLevel) {
@@ -27,13 +24,16 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             seconds = 3600;
     }
     let targetEffectData = {
-        'name': 'Marked',
+        'name': "Hunter's Mark: Target",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'duration': {
             'seconds': seconds
         },
         'flags': {
+            'dae': {
+                'specialDuration': ["zeroHP"]
+            },
             'midi-qol': {
                 'castData': {
                     baseLevel: 1,
@@ -51,23 +51,20 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .file(`jb2a.particles.outward.greenyellow.01.03`)
         .attachTo(target)
         .scale(0.15)
-        .playbackRate(1)
-        .duration(1000)
+        .duration(5500)
         .fadeOut(500)
         .scaleIn(0, 1000, { ease: "easeOutCubic" })
-        .filter("ColorMatrix", { hue: 0 })
-        .animateProperty("sprite", "width", { from: 0, to: 0.5, duration: 500, gridUnits: true, ease: "easeOutBack" })
-        .animateProperty("sprite", "height", { from: 0, to: 1.5, duration: 1000, gridUnits: true, ease: "easeOutBack" })
-        .animateProperty("sprite", "position.y", { from: 0, to: -1, duration: 1000, gridUnits: true })
         .zIndex(0.2)
+        .filter("ColorMatrix", { hue: 0 })
 
         .effect()
         .file("jb2a.hunters_mark.loop.01.green")
         .attachTo(target)
         .scaleToObject(1)
+        .duration(5500)
+        .fadeOut(1000)
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .zIndex(0.1)
-        .fadeOut(500)
 
         .effect()
         .file("animated-spell-effects-cartoon.simple.27")
@@ -81,22 +78,23 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .file("jb2a.ward.rune.dark_purple.01")
         .attachTo(target)
         .scaleToObject(1.85)
-        .fadeOut(3000)
-        .duration(3500)
+        .duration(5500)
+        .fadeOut(3500)
+        .scaleIn(0, 250, { ease: "easeOutCubic" })
         .opacity(1)
         .belowTokens()
         .filter("ColorMatrix", { hue: 182 })
-        .scaleIn(0, 250, { ease: "easeOutCubic" })
 
         .effect()
         .file("jb2a.extras.tmfx.outflow.circle.04")
         .attachTo(target)
+        .scaleToObject(1.35)
+        .duration(5500)
+        .fadeOut(500)
+        .scaleIn(0, 500, { ease: "easeOutCubic" })
         .belowTokens()
         .tint("#098a00")
         .opacity(2)
-        .scaleToObject(1.35)
-        .scaleIn(0, 500, { ease: "easeOutCubic" })
-        .fadeOut(500)
 
         .play()
 
@@ -106,7 +104,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         let targetToken = canvas.scene.tokens.get(targetTokenId);
         if (!targetToken) return;
         let targetActor = targetToken.actor;
-        let targetEffect = mbaPremades.helpers.findEffect(targetActor, 'Marked');
+        let targetEffect = mbaPremades.helpers.findEffect(targetActor, "Hunter's Mark: Target");
         if (targetEffect) await mbaPremades.helpers.removeEffect(targetEffect);
     }
     let sourceEffectData = {
@@ -202,9 +200,6 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
         .fadeOut(500)
         .scaleIn(0, 1000, { ease: "easeOutCubic" })
         .filter("ColorMatrix", { hue: 0 })
-        .animateProperty("sprite", "width", { from: 0, to: 0.5, duration: 500, gridUnits: true, ease: "easeOutBack" })
-        .animateProperty("sprite", "height", { from: 0, to: 1.5, duration: 1000, gridUnits: true, ease: "easeOutBack" })
-        .animateProperty("sprite", "position.y", { from: 0, to: -1, duration: 1000, gridUnits: true })
         .zIndex(0.2)
 
         .effect()
@@ -246,17 +241,17 @@ async function move({ speaker, actor, token, character, item, args, scope, workf
     let oldTargetOrigin;
     if (oldTargetToken) {
         let oldTargetActor = oldTargetToken.actor;
-        let oldTargetEffect = mba.findEffect(oldTargetActor, 'Marked');
+        let oldTargetEffect = mba.findEffect(oldTargetActor, "Hunter's Mark: Target");
         if (oldTargetEffect) {
             await mba.removeEffect(oldTargetEffect);
             oldTargetOrigin = oldTargetEffect.origin;
         }
     }
-    let effect = mba.findEffect(workflow.actor, 'Hunter\'s Mark');
+    let effect = mba.findEffect(workflow.actor, "Hunter's Mark");
     let duration = 3600;
     if (effect) duration = effect.duration.remaining;
     let effectData = {
-        'name': 'Marked',
+        'name': "Hunter's Mark: Target",
         'icon': workflow.item.img,
         'origin': oldTargetOrigin,
         'duration': {
@@ -285,9 +280,6 @@ async function move({ speaker, actor, token, character, item, args, scope, workf
         .fadeOut(500)
         .scaleIn(0, 1000, { ease: "easeOutCubic" })
         .filter("ColorMatrix", { hue: 0 })
-        .animateProperty("sprite", "width", { from: 0, to: 0.5, duration: 500, gridUnits: true, ease: "easeOutBack" })
-        .animateProperty("sprite", "height", { from: 0, to: 1.5, duration: 1000, gridUnits: true, ease: "easeOutBack" })
-        .animateProperty("sprite", "position.y", { from: 0, to: -1, duration: 1000, gridUnits: true })
         .zIndex(0.2)
 
         .effect()

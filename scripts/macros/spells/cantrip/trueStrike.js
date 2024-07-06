@@ -1,11 +1,11 @@
+import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 import {queue} from "../../mechanics/queue.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    console.log(game.combat.round);
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} True Strike`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} TruStr` })
     };
     const effectData = {
         'name': workflow.item.name,
@@ -90,7 +90,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .fadeOut(1000)
         .opacity(0.66)
         .persist()
-        .name(`${target.document.name} True Strike`)
+        .name(`${target.document.name} TruStr`)
 
         .effect()
         .file("jb2a.token_border.circle.spinning.purple.006")
@@ -102,7 +102,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .opacity(0.9)
         .belowTokens()
         .persist()
-        .name(`${target.document.name} True Strike`)
+        .name(`${target.document.name} TruStr`)
 
         .wait(2500)
 
@@ -115,7 +115,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
 async function hook(workflow) {
     if (!workflow.item) return;
-    if (!(workflow.item.system.actionType === 'mwak' || workflow.item.system.actionType === 'msak' || workflow.item.system.actionType === 'rwak' || workflow.item.system.actionType === 'rsak')) return;
+    if (!constants.attacks.includes(workflow.item.system.actionType)) return;
     let target = workflow.targets.first();
     let effect = await mba.findEffect(target.actor, "True Strike");
     if (!effect) return;

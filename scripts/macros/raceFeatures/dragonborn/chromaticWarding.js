@@ -20,7 +20,7 @@ export async function chromaticWarding({speaker, actor, token, character, item, 
         case "poison": hue = 70; break; 
     }
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Chromatic Warding` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} ChromWa` })
     };
     let effectData = {
         'name': workflow.item.name,
@@ -67,7 +67,7 @@ export async function chromaticWarding({speaker, actor, token, character, item, 
         .belowTokens()
         .filter("ColorMatrix", {hue: hue })
         .persist()
-        .name(`${workflow.token.document.name} Chromatic Warding`)
+        .name(`${workflow.token.document.name} ChromWa`)
 
         .thenDo(async () => {
             await mba.createEffect(workflow.actor, effectData);

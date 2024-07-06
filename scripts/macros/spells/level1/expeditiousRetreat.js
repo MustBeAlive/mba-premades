@@ -21,11 +21,8 @@ export async function expeditiousRetreat({ speaker, actor, token, character, ite
             }
         }
     };
-    let actionData = await mba.getItemFromCompendium('mba-premades.MBA Actions', "Dash", false);
-    if (!actionData) {
-        ui.notifications.warn(`Unable to find item in compendium! (Dash)`);
-        return;
-    }
+    let actionData = await mba.getItemFromCompendium("mba-premades.MBA Actions", "Dash", false);
+    if (!actionData) return;
     let action = new CONFIG.Item.documentClass(actionData, { parent: workflow.actor });
     let options = {
         'showFullCard': false,

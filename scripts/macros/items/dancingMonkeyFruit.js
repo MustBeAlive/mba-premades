@@ -5,7 +5,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     if (mba.checkTrait(target.actor, 'ci', 'poisoned')) {
         ChatMessage.create({
             whisper: ChatMessage.getWhisperRecipients("GM"),
-            content: "<b>" + target.document.name + "</b> is immune to Dancing Monkey Fruit effects! (has immunity to poisoned condtion)",
+            content: `<u>${target.document.name}</u> is unaffected by Dancing Monkey Fruit!`,
             speaker: { actor: null, alias: "GM Helper" }
         });
         return;
@@ -14,10 +14,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     if (!saveRoll) return;
     if (saveRoll.total >= 14) return;
     async function effectMacroStart() {
-        await mbaPremades.helpers.dialog("Dancing Monkey Fruit", [["Ok!", "ok"]], `<p>You must use all of your movement to dance without leaving your space.</p>`);
+        await mbaPremades.helpers.dialog("Dancing Monkey Fruit", [["Ok!", "ok"]], `<b>You must use all of your movement to dance without leaving your space.</b><p></p>`);
     }
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Dancing Monkey Fruit` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} DaMoFr` })
         await new Sequence()
 
             .animation()
@@ -27,9 +27,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .play();
 
         let effectData = {
-            'name': "Dancing Monkey Fruit: Poisoning",
+            'name': "Dancing Monkey Fruit: Poison",
             'icon': "icons/consumables/fruit/guanabana-soursop-cut-orange.webp",
-            'description': `You suffered effects of Dancing Monkey Fruit and are poisoned for the next hour.`,
+            'description': `You suffered effects of Dancing Monkey Fruit and are @UUID[Compendium.mba-premades.MBA SRD.Item.pAjPUbk2oPUTfva2]{Poisoned} for the next hour.`,
             'duration': {
                 'seconds': 3600
             },
@@ -57,7 +57,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             <p>You are affected by Dancing Monkey's Fruit and begin a comic dance, that lasts for 1 minute.</p>
             <p>On your turn, you must use all of your movement to dance without leaving your space.</p>
             <p>You have disadvantage on attack rolls and dexterity saving throws, and other creatures have advantage on attack rolls against you.</p>
-            <p>Each time you take damage, you can repeat the saving throw, ending the effect on a success. When the dancing effect ends, you suffer from poisoned condition for the next hour.</p>
+            <p>Each time you take damage, you can repeat the saving throw, ending the effect on a success. When the dancing effect ends, you suffer from @UUID[Compendium.mba-premades.MBA SRD.Item.pAjPUbk2oPUTfva2]{Poisoned} condition for the next hour.</p>
         `,
         'duration': {
             'seconds': 60
@@ -102,7 +102,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     await new Sequence()
 
         .effect()
-        .atLocation(token)
+        .atLocation(target)
         .file(`jb2a.magic_signs.circle.02.enchantment.loop.yellow`)
         .scaleToObject(1.25)
         .rotateIn(30, 300, { ease: "easeOutCubic" })
@@ -113,7 +113,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .zIndex(0)
 
         .effect()
-        .atLocation(token)
+        .atLocation(target)
         .file(`jb2a.magic_signs.circle.02.enchantment.loop.yellow`)
         .scaleToObject(1.25)
         .rotateIn(180, 600, { ease: "easeOutCubic" })
@@ -131,7 +131,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .file("jb2a.music_notations.{{music}}.orange")
         .scaleIn(0, 500, { ease: "easeOutQuint" })
         .delay(500)
-        .atLocation(token, { offset: { y: -0.2 }, gridUnits: true, randomOffset: 1.5 })
+        .atLocation(target, { offset: { y: -0.2 }, gridUnits: true, randomOffset: 1.5 })
         .scaleToObject(0.5)
         .zIndex(1)
         .playbackRate(1.5)
@@ -147,7 +147,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("animated-spell-effects-cartoon.level 01.bless.blue")
-        .atLocation(token, { randomOffset: 1.2, gridUnits: true })
+        .atLocation(target, { randomOffset: 1.2, gridUnits: true })
         .scaleToObject(0.5)
         .repeats(8, 100, 100)
         .filter("ColorMatrix", { saturate: 1, hue: -170 })
@@ -155,7 +155,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("animated-spell-effects-cartoon.cantrips.mending.yellow")
-        .atLocation(token)
+        .atLocation(target)
         .scaleToObject(3)
         .opacity(0.75)
         .filter("ColorMatrix", { saturate: 1, brightness: 1.3, hue: -5 })
@@ -165,7 +165,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .delay(300)
         .file("jb2a.impact.002.orange")
-        .atLocation(token)
+        .atLocation(target)
         .scaleToObject(2)
         .opacity(1)
         .filter("ColorMatrix", { hue: 6 })
@@ -176,7 +176,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .scaleIn(0, 500, { ease: "easeOutQuint" })
         .delay(300)
         .fadeOut(1000)
-        .atLocation(token)
+        .atLocation(target)
         .duration(1000)
         .size(1.75, { gridUnits: true })
         .animateProperty("spriteContainer", "position.y", { from: 0, to: -0.5, gridUnits: true, duration: 1000 })
@@ -184,7 +184,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("animated-spell-effects-cartoon.magic.impact.01")
-        .atLocation(token)
+        .atLocation(target)
         .scaleToObject(2)
         .opacity(1)
         .filter("ColorMatrix", { saturate: 1, brightness: 1.3, hue: -210 })
@@ -201,48 +201,48 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.butterflies.few.yellow")
-        .attachTo(token, { local: true, bindAlpha: false })
+        .attachTo(target, { local: true, bindAlpha: false })
         .scaleToObject(2)
         .opacity(1)
         .persist()
         .zIndex(0)
-        .name(`${token.document.name} Dancing Monkey Fruit`)
+        .name(`${target.document.name} DaMoFr`)
 
         .animation()
-        .on(token)
+        .on(target)
         .opacity(0)
 
         .effect()
-        .file("https://i.imgur.com/SQWSf10.png")
-        .attachTo(token, { offset: { x: 0.4 * token.document.width, y: -0.45 * token.document.width }, gridUnits: true, local: true, bindAlpha: false })
+        .file("modules/mba-premades/icons/conditions/overlay/laughter1.webp")
+        .attachTo(target, { offset: { x: 0.4 * target.document.width, y: -0.45 * target.document.width }, gridUnits: true, local: true, bindAlpha: false })
         .loopProperty("sprite", "rotation", { from: 0, to: 5, duration: 250, ease: "easeOutCubic" })
         .loopProperty("sprite", "position.y", { from: 0, to: -0.025, duration: 250, gridUnits: true, pingPong: false })
         .scaleToObject(0.34)
         .private()
         .persist()
-        .name(`${token.document.name} Dancing Monkey Fruit`)
+        .name(`${target.document.name} DaMoFr`)
 
         .effect()
-        .file("https://i.imgur.com/iWuBQ10.png")
-        .attachTo(token, { offset: { x: 0.55 * token.document.width, y: 0 }, gridUnits: true, local: true, bindAlpha: false })
+        .file("modules/mba-premades/icons/conditions/overlay/laughter2.webp")
+        .attachTo(target, { offset: { x: 0.55 * target.document.width, y: 0 }, gridUnits: true, local: true, bindAlpha: false })
         .loopProperty("sprite", "rotation", { from: 0, to: -20, duration: 250, ease: "easeOutCubic" })
         .loopProperty("sprite", "position.y", { from: 0, to: -0.025, duration: 250, gridUnits: true, pingPong: false })
         .scaleToObject(0.34)
         .private()
         .persist()
-        .name(`${token.document.name} Dancing Monkey Fruit`)
+        .name(`${target.document.name} DaMoFr`)
 
         .effect()
-        .from(token)
+        .from(target)
         .scaleToObject(1, { considerTokenScale: true })
-        .attachTo(token, { bindAlpha: false })
+        .attachTo(target, { bindAlpha: false })
         .loopProperty("sprite", "position.y", { from: 0, to: 0.11, duration: 150, gridUnits: true, pingPong: true, ease: "easeOutQuad" })
         .loopProperty("sprite", "rotation", { from: -33, to: 33, duration: 900, ease: "easeOutCubic", pingPong: true })
         .rotate(-15)
         .loopProperty("sprite", "width", { from: 0, to: 0.015, duration: 900, gridUnits: true, pingPong: true, ease: "easeOutQuad" })
         .loopProperty("sprite", "height", { from: 0, to: 0.015, duration: 900, gridUnits: true, pingPong: true, ease: "easeOutQuad" })
         .persist()
-        .name(`${token.document.name} Dancing Monkey Fruit`)
+        .name(`${target.document.name} DaMoFr`)
 
         .play()
 }

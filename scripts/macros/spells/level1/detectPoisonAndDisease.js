@@ -1,11 +1,11 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Detect Poison and Disease: Target Creature', false);
     if (!featureData) return;
     delete featureData._id;
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Detect Poison and Disease` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} DePaD` })
         await warpgate.revert(token.document, 'Detect Poison and Disease: Target Creature');
     }
     let effectData = {
@@ -50,8 +50,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
     const aoeDistance = 30;
     const captureArea = {
-        x: token.x + (canvas.grid.size * token.document.width) / 2,
-        y: token.y + (canvas.grid.size * token.document.width) / 2,
+        x: workflow.token.x + (canvas.grid.size * workflow.token.document.width) / 2,
+        y: workflow.token.y + (canvas.grid.size * workflow.token.document.width) / 2,
         scene: canvas.scene,
         radius: aoeDistance / canvas.scene.grid.distance * canvas.grid.size
     };
@@ -62,7 +62,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.detect_magic.circle.green")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .size(12.5, { gridUnits: true })
         .fadeOut(4000)
         .opacity(0.75)
@@ -70,23 +70,22 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.token_border.circle.spinning.blue.001")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(2)
         .delay(1500)
         .fadeOut(1000)
         .scaleIn(0, 4000, { ease: "easeOutCubic" })
         .filter("ColorMatrix", { hue: 285 })
         .persist()
-        .name(`${token.document.name} Detect Poison and Disease`)
+        .name(`${workflow.token.document.name} DePaD`)
 
         .play()
 
     for (let target of targets) {
-        const distance = Math.sqrt(
-            Math.pow(target.x - token.x, 2) + Math.pow(target.y - token.y, 2)
-        );
+        const distance = Math.sqrt(Math.pow(target.x - token.x, 2) + Math.pow(target.y - token.y, 2));
         const gridDistance = distance / canvas.grid.size;
         let effects = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true || e.name.includes("Poison") && e.name != "Poisoned" && e.name != "Detect Poison and Disease");
+        let nondetection = target.actor.flags['mba-premades']?.spell?.nondetection;
 
         new Sequence()
 
@@ -94,7 +93,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             .file("jb2a.markers.circle_of_stars.green")
             .atLocation(target)
             .scaleToObject(2.5)
-            .delay(gridDistance * 130)
+            .delay(gridDistance * canvas.grid.size)
             .duration(5000)
             .fadeIn(1000)
             .fadeOut(1000)
@@ -106,18 +105,18 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             .from(target)
             .attachTo(target, { locale: true })
             .scaleToObject(1, { considerTokenScale: true })
-            .delay(gridDistance * 130)
+            .delay(gridDistance * canvas.grid.size)
             .duration(17500)
             .fadeIn(1000, { delay: 1000 })
             .fadeOut(3500, { ease: "easeInSine" })
-            .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+            .loopProperty("alphaFilter", "alpha", { values: [0.1, 0.8], duration: 1500, pingPong: true, delay: 500 })
             .spriteRotation(target.rotation * -1)
             .belowTokens()
             .opacity(0.75)
             .zIndex(0.1)
-            .filter("Glow", { color: 0x00bd16, distance: 15 })
+            .filter("Glow", { color: 0x00bd16, distance: 20 })
             .playIf(() => {
-                if (mba.findEffect(target.actor, "Nondetection")) return false;
+                if (nondetection) return false;
                 return (effects.length)
             })
 
@@ -125,7 +124,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             .file("jb2a.extras.tmfx.outflow.circle.01")
             .attachTo(target, { locale: true })
             .scaleToObject(1.5, { considerTokenScale: false })
-            .delay(gridDistance * 130)
+            .delay(gridDistance * canvas.grid.size)
             .duration(17500)
             .fadeIn(4000, { delay: 0 })
             .fadeOut(3500, { ease: "easeInSine" })
@@ -135,7 +134,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             .opacity(0.75)
             .tint(0x00bd16)
             .playIf(() => {
-                if (mba.findEffect(target.actor, "Nondetection")) return false;
+                if (nondetection) return false;
                 return (effects.length)
             })
 
@@ -145,7 +144,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    let effects = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true || e.name.includes("Poison") && e.name != "Poisoned" && e.name != "Detect Poison and Disease");
+    let effects = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true /*|| e.name.includes("Poison") && e.name != "Poisoned" && e.name != "Detect Poison and Disease"*/);
     if (!effects.length) {
         new Sequence()
 
@@ -183,12 +182,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .duration(17500)
         .fadeIn(1000, { delay: 1000 })
         .fadeOut(3500, { ease: "easeInSine" })
-        .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+        .loopProperty("alphaFilter", "alpha", { values: [0.1, 0.8], duration: 1500, pingPong: true, delay: 500 })
         .spriteRotation(target.rotation * -1)
         .belowTokens()
         .opacity(0.75)
         .zIndex(0.1)
-        .filter("Glow", { color: 0x00bd16, distance: 15 })
+        .filter("Glow", { color: 0x00bd16, distance: 20 })
 
         .effect()
         .file("jb2a.extras.tmfx.outflow.circle.01")
@@ -205,99 +204,21 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .play()
 
-    await warpgate.wait(500);
-    let selection = [];
-    for (let i = 0; i < effects.length; i++) {
-        let effect = effects[i];
-        let name = effect.flags['mba-premades']?.name;
-        let description = effect.flags['mba-premades']?.description[0].toString();
-        let icon = "modules/mba-premades/icons/conditions/nauseated.webp";
-        selection.push([name, description, icon]);
+    let stopper = false;
+    let choices = [];
+    for (let effect of effects) choices.push([effect.flags['mba-premades']?.name, effect.flags['mba-premades']?.description[0].toString(), "modules/mba-premades/icons/conditions/nauseated.webp"]);
+    if (!choices.length) {
+        stopper = true;
+        return;
     }
-    function generateEnergyBox(type) {
-        return `
-        <label class="radio-label">
-            <input type="radio" name="type" value="${selection[type]}" />
-            <img src="${selection[type].slice(2)}" style="border: 0px; width: 50px; height: 50px"/>${selection[type].slice(0, -2)}
-        </label>
-    `;
-    }
-    const effectSelection = Object.keys(selection).map((type) => generateEnergyBox(type)).join("\n");
-    const content = `
-        <style>
-            .detectPoison .form-group {
-                display: flex;
-                flex-wrap: wrap;
-                width: 100%;
-                align-items: flex-start;
-            }
-            .detectPoison .radio-label {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                justify-items: center;
-                flex: 1 0 20%;
-                line-height: normal;
-            }
-            .detectPoison .radio-label input {
-                display: none;
-            }
-            .detectPoison img {
-                border: 0px;
-                width: 50px;
-                height: 50px;
-                flex: 0 0 50px;
-                cursor: pointer;
-            }
-            /* CHECKED STYLES */
-            .detectPoison [type="radio"]:checked + img {
-                outline: 2px solid #005c8a;
-            }
-        </style>
-        <form class="detectPoison">
-            <div class="form-group" id="types">
-                ${effectSelection}
-            </div>
-        </form>
-    `;
-    let stopper = 0;
-    while (stopper < 1) {
-        const poisonDiseaseEffect = await new Promise((resolve) => {
-            new Dialog({
-                title: "Choose Poison or Disease to find out about:",
-                content,
-                buttons: {
-                    ok: {
-                        label: "Ok",
-                        callback: async (html) => {
-                            const element = html.find("input[type='radio'][name='type']:checked").val();
-                            resolve(element);
-                        },
-                    },
-                    cancel: {
-                        label: "Stop ",
-                        callback: async (html) => {
-                            stopper += 1
-                            return;
-                        }
-                    }
-                }
-            }).render(true);
-        });
-        let poisonDiseaseEffectName = poisonDiseaseEffect.split(",")[0];
-        let poisonDiseaseEffectDescription = poisonDiseaseEffect.substring(poisonDiseaseEffect.indexOf("<"), poisonDiseaseEffect.lastIndexOf(","));
-        await new Promise((resolve) => {
-            new Dialog({
-                title: poisonDiseaseEffectName,
-                content: poisonDiseaseEffectDescription,
-                buttons: {
-                    ok: {
-                        label: "Ok",
-                    }
-                }
-            }).render(true);
-        });
+    choices.push(["Cancel", false, "modules/mba-premades/icons/conditions/incapacitated.webp"]);
+    while (!stopper) {
+        let selection = await mba.selectImage("Detect Poison & Disease", choices, "Select effect:", "value");
+        if (!selection) {
+            stopper = true;
+            return;
+        }
+        await mba.dialog("Detect Poison & Disease", [["Ok!", false]], selection);
     }
 }
 

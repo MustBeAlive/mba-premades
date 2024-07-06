@@ -9,7 +9,7 @@ async function reckless({ speaker, actor, token, character, item, args, scope, w
             .opacity(1)
 
             .thenDo(async () => {
-                await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Reckless` })
+                Sequencer.EffectManager.endEffects({ name: `${token.document.name} Reckless` })
             })
 
             .play();

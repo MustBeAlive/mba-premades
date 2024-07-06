@@ -2,6 +2,7 @@ import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
 	let template = canvas.scene.collections.templates.get(workflow.templateId);
+	if (!template) return;
 
 	new Sequence()
 
@@ -138,14 +139,18 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
 	if (!workflow.failedSaves.size) return;
+	let saveDC = mba.getSpellDC(workflow.item);
 	async function effectMacroDel() {
-		await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Entangle` })
+		Sequencer.EffectManager.endEffects({ name: `${token.document.name} Entangle` })
 	}
 	let effectData = {
 		'name': "Entangled",
 		'icon': workflow.item.img,
 		'origin': workflow.item.uuid,
-		'description': "You are restrained by a mass of thick, entangling plants. You can use your action to make a Strength check. If you succeed, you are no longer restrained.",
+		'description': `
+			<p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.gfRbTxGiulUylAjE]{Restrained} by a mass of thick, entangling plants.</p>
+			<p>You can use your action to make a Strength check. If you succeed, you are no longer @UUID[Compendium.mba-premades.MBA SRD.Item.gfRbTxGiulUylAjE]{Restrained}.</p>
+		`,
 		'changes': [
 			{
 				'key': 'macro.CE',
@@ -156,14 +161,15 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			{
 				'key': 'flags.midi-qol.OverTime',
 				'mode': 0,
-				'value': 'actionSave=true, rollType=check, saveAbility=str, saveDC=' + mba.getSpellDC(workflow.item) + ', saveMagic=true, name=Entangle: Action Save',
+				'value': `actionSave=true, rollType=check, saveAbility=str, saveDC=${saveDC}, saveMagic=true, name=Entangle: Action Save (DC${saveDC}), killAnim=true`,
 				'priority': 20
 			}
 		],
 		'flags': {
-			'dae': {
-				'showIcon': true
-			},
+            'dae': {
+				'showIcon': true,
+                'specialDuration': ["zeroHP"]
+            },
 			'effectmacro': {
 				'onDelete': {
 					'script': mba.functionToString(effectMacroDel)
@@ -178,22 +184,25 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			}
 		}
 	};
-	for (let i of Array.from(workflow.failedSaves)) {
-		await mba.createEffect(i.actor, effectData);
+	for (let target of Array.from(workflow.failedSaves)) {
 		new Sequence()
 
 			.effect()
 			.file('jb2a.entangle.green')
-			.attachTo(i)
+			.attachTo(target)
 			.size(1.5, { gridUnits: true })
 			.delay(100)
 			.fadeIn(5000)
 			.fadeOut(1000)
 			.scaleIn(0, 5000, { ease: "easeOutCubic" })
 			.zIndex(1)
-			.mask(i)
+			.mask()
 			.persist()
-			.name(`${i.document.name} Entangle`)
+			.name(`${target.document.name} Entangle`)
+
+			.thenDo(async () => {
+				await mba.createEffect(target.actor, effectData);
+			})
 
 			.play()
 	}

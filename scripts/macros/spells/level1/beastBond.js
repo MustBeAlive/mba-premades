@@ -26,7 +26,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         ui.notifications.info('Beast Bond can only affect creatures with Intelligence score of 4 or lower!');
         return;
     }
-    let casterDisposition = token.document.disposition;
+    let casterDisposition = workflow.token.document.disposition;
     let targetDisposition = target.document.disposition;
     let isCharmed = mba.findEffect(target.actor, 'Charmed');
     if (casterDisposition < 0) {
@@ -44,7 +44,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         }
     }
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Beast Bond`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} BeaBon` })
     };
     const effectData = {
         'name': workflow.item.name,
@@ -107,7 +107,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
         .fadeOut(1000)
         .mask()
         .persist()
-        .name(`${target.document.name} Beast Bond`)
+        .name(`${target.document.name} BeaBon`)
 
         .thenDo(async () => {
             await mba.createEffect(target.actor, effectData);
@@ -115,7 +115,6 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
 
         .play()
 }
-
 
 async function bonus({speaker, actor, token, character, item, args, scope, workflow}) {
     let effect = await mba.findEffect(workflow.actor, "Beast Bond");

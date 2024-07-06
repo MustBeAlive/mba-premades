@@ -18,12 +18,11 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
 			return;
 		}
 		let atonementRoll = await mba.rollRequest(workflow.token, 'skill', 'ins');
-
 		new Sequence()
 
 			.effect()
 			.file("jb2a.divine_smite.caster.yellowwhite")
-			.attachTo(token)
+			.attachTo(workflow.token)
 			.scaleToObject(1.85)
 			.belowTokens()
 			.waitUntilFinished(-1100)
@@ -68,7 +67,7 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
 		if (!holyWater) {
 			const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Holy Water', false);
 			if (!itemData) {
-				ui.notifications.warn("Unable to find item in compenidum! (Holy Water)");
+				ui.notifications.warn("Unable to find item in compendium! (Holy Water)");
 				return
 			}
 			await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
@@ -79,15 +78,15 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
 
 			.effect()
 			.file("jb2a.divine_smite.caster.yellowwhite")
-			.attachTo(token)
+			.attachTo(workflow.token)
 			.scaleToObject(1.85)
 			.belowTokens()
 			.waitUntilFinished(-1200)
 
 			.effect()
 			.file("jb2a.cast_generic.water.02.blue.0")
-			.attachTo(token)
-			.scaleToObject(1.9 * token.document.texture.scaleX)
+			.attachTo(workflow.token)
+			.scaleToObject(1.9 * workflow.token.document.texture.scaleX)
 			.fadeIn(500)
 
 			.play()
@@ -148,7 +147,7 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
 
 			.effect()
 			.file("jb2a.divine_smite.caster.yellowwhite")
-			.attachTo(token)
+			.attachTo(workflow.token)
 			.scaleToObject(1.85)
 			.belowTokens()
 			.waitUntilFinished(-1100)
@@ -223,7 +222,7 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
 
 			.effect()
 			.file("jb2a.divine_smite.caster.yellowwhite")
-			.attachTo(token)
+			.attachTo(workflow.token)
 			.scaleToObject(1.85)
 			.belowTokens()
 			.waitUntilFinished(-1100)
@@ -278,7 +277,7 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
 
 			.effect()
 			.file("jb2a.divine_smite.caster.yellowwhite")
-			.attachTo(token)
+			.attachTo(workflow.token)
 			.scaleToObject(1.85)
 			.belowTokens()
 			.waitUntilFinished(-1100)
@@ -426,7 +425,7 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
 
 			.effect()
 			.file("jb2a.divine_smite.caster.yellowwhite")
-			.attachTo(token)
+			.attachTo(workflow.token)
 			.scaleToObject(1.85)
 			.belowTokens()
 			.waitUntilFinished(-1100)

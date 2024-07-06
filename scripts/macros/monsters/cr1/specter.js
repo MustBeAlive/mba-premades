@@ -7,14 +7,15 @@ async function lifeDrain({ speaker, actor, token, character, item, args, scope, 
         .effect()
         .file("jb2a.energy_strands.range.multiple.dark_purple02.01")
         .attachTo(target)
-        .stretchTo(token)
+        .stretchTo(workflow.token)
         .repeats(2, 1500)
 
         .effect()
         .file("jb2a.divine_smite.caster.dark_purple")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .fadeIn(500)
         .scaleToObject(1.5)
+        .belowTokens()
 
         .play()
 
@@ -73,6 +74,7 @@ async function lifeDrain({ speaker, actor, token, character, item, args, scope, 
                 'specialDuration': ['longRest']
             },
             'mba-premades': {
+                'greaterRestoration': true,
                 'healthReduction': true,
                 'originalMax': target.actor.system.attributes.hp.max,
                 'penalty': damageRoll,

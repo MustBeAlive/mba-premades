@@ -3,7 +3,7 @@ import {mba} from "../../../helperFunctions.js";
 export async function tongues({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Tongues Rune` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Tongues Rune` })
     }
     let effectData = {
         'name': workflow.item.name,

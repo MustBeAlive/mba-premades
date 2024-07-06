@@ -1,5 +1,7 @@
-// To do: animations, effect description
-export async function confusion({ speaker, actor, token, character, item, args, scope, workflow }) {
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
+async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let radius = (workflow.castData.castLevel - 2) * 5;
     let templateData = {
         't': 'circle',
@@ -15,198 +17,67 @@ export async function confusion({ speaker, actor, token, character, item, args, 
                 'originUuid': workflow.item.uuid
             },
             'walledtemplates': {
-                'wallRestriction': 'move',
+                'hideBorder': "alwaysHide",
+                'wallRestriction': 'light',
                 'wallsBlock': 'recurse',
             }
         },
         'angle': 0
     };
-    let template = await mbaPremades.helpers.placeTemplate(templateData);
+    let template = await mba.placeTemplate(templateData);
     if (!template) return;
-    let targetUuids = [];
-    for (let i of game.user.targets) targetUuids.push(i.document.uuid);
-    let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Confusion: Delusions', false);
-    if (!featureData) return;
-    featureData.system.save.dc = mbaPremades.helpers.getSpellDC(workflow.item);
+
+    new Sequence()
+
+        .effect()
+        .file("jb2a.magic_signs.circle.02.enchantment.complete.pink")
+        .attachTo(template)
+        .scaleToObject(1)
+        .persist()
+        .name(`${workflow.token.document.name} Confus`)
+
+        .effect()
+        .file("jb2a.sleep.cloud.01.yellow")
+        .attachTo(template)
+        .scaleToObject(2)
+        .delay(2000)
+        .fadeOut(2000)
+        .scaleIn(0, 1500, { ease: "easeOutCubic" })
+        .opacity(0.8)
+        .persist()
+        .name(`${workflow.token.document.name} Confus`)
+
+        .play()
+
+    let targetUuids = Array.from(game.user.targets).map(t => t.document.uuid);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Confusion: Save", false);
+    if (!featureData) {
+        Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} Confus` })
+        await mba.removeCondition(workflow.actor, "Concentrating");
+        return;
+    }
     delete featureData._id;
+    let saveDC = mba.getSpellDC(workflow.item);
+    featureData.system.save.dc = saveDC;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
-    let [config, options] = mbaPremades.constants.syntheticItemWorkflowOptions(targetUuids);
+    let [config, options] = constants.syntheticItemWorkflowOptions(targetUuids);
     await game.messages.get(workflow.itemCardId).delete();
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow.failedSaves.size) {
-        await mbaPremades.helpers.removeCondition(workflow.actor, "Concentrating");
+        Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} Confus` })
+        await mba.removeCondition(workflow.actor, "Concentrating");
         return;
     }
-    async function effectMacroConfusion() {
-        await mbaPremades.helpers.addCondition(actor, "Reaction");
-        let confusionRoll = await new Roll("1d10").roll({ 'async': true });
-        await MidiQOL.displayDSNForRoll(confusionRoll, 'damageRoll');
-        if (confusionRoll.total === 1) {
-            let directionRoll = await new Roll("1d8").roll({ 'async': true });
-            await MidiQOL.displayDSNForRoll(directionRoll, 'damageRoll');
-            const directionResult = directionRoll.total;
-            const directions = ["North", "North-East", "East", "South-East", "South", "South-West", "West", "North-West"];
-            const directionContent = directions[directionResult - 1];
-            ChatMessage.create({
-                content: `<p>Roll result: <b>${confusionRoll.total}</b></p><p>Direction roll: <b>${directionRoll.total}</b></p><p><b>${token.document.name}</b> uses all its movement to move in ${directionContent} direction</p>`,
-                speaker: { actor: token.actor }
-            });
-            /* Auto Token Move Block, uncomment to make it work
-            const walkSpeedFeet = token.actor.system.attributes.movement.walk;
-            const gridDistance = canvas.dimensions.distance; // Feet per grid cell
-            const pixelsPerFoot = canvas.scene.grid.size / gridDistance;
-            const moveDistancePixels = walkSpeedFeet * pixelsPerFoot;
-            const diagonalMultiplier = Math.SQRT2;
-            let moveX = 0;
-            let moveY = 0;
-    
-            switch (directionContent) {
-                case "North":
-                    moveY = -moveDistancePixels;
-                    break;
-                case "South":
-                    moveY = moveDistancePixels;
-                    break;
-                case "East":
-                    moveX = moveDistancePixels;
-                    break;
-                case "West":
-                    moveX = -moveDistancePixels;
-                    break;
-                case "North-West":
-                    moveX = -moveDistancePixels / diagonalMultiplier;
-                    moveY = -moveDistancePixels / diagonalMultiplier;
-                    break;
-                case "North-East":
-                    moveX = moveDistancePixels / diagonalMultiplier;
-                    moveY = -moveDistancePixels / diagonalMultiplier;
-                    break;
-                case "South-West":
-                    moveX = -moveDistancePixels / diagonalMultiplier;
-                    moveY = moveDistancePixels / diagonalMultiplier;
-                    break;
-                case "South-Eeast":
-                    moveX = moveDistancePixels / diagonalMultiplier;
-                    moveY = moveDistancePixels / diagonalMultiplier;
-                    break;
-            }
-            const newX = token.x + moveX;
-            const newY = token.y + moveY;
-            let endPoint = new PIXI.Point(newX, newY);
-            let collisionDetected = CONFIG.Canvas.polygonBackends.move.testCollision(token.center, endPoint, { type: "move", mode: "any" });
-            if (!collisionDetected) {
-                await token.document.update({ x: newX, y: newY });
-                content1 = `The movement roll for ${token.actor.name} is ${directionResult}: ${token.actor.name} moves ${directionContent} using all (${token.actor.system.attributes.movement.walk} feet) of their movement. The creature doesn't take an action this turn.`
-            }
-            else {
-                // Calculate the direction vector based on the intended direction
-                let directionVector = { x: moveX, y: moveY };
-                let magnitude = Math.hypot(directionVector.x, directionVector.y);
-                // Normalize the direction vector
-                directionVector.x /= magnitude;
-                directionVector.y /= magnitude;
-    
-                // Calculate the number of steps based on the total intended movement distance
-                let totalSteps = moveDistancePixels / (canvas.scene.grid.size / 10);
-                let collisionDetected = false;
-                let stepCounter = 0;
-    
-                for (let step = 1; step <= totalSteps; step++) {
-                    // Calculate the next step's potential position
-                    let nextX = token.x + directionVector.x * (canvas.scene.grid.size / 10) * step;
-                    let nextY = token.y + directionVector.y * (canvas.scene.grid.size / 10) * step;
-                    let nextPoint = new PIXI.Point(nextX, nextY);
-    
-                    // Check for collision at this next step
-                    collisionDetected = CONFIG.Canvas.polygonBackends.move.testCollision(token.center, nextPoint, { type: "move", mode: "any" });
-    
-                    if (collisionDetected) {
-                        break; // Stop moving further if a collision is detected
-                    }
-                    stepCounter = step; // Update the step counter to the last successful step without a collision
-                }
-    
-                // Calculate the final position to move the token to, based on the last step without a collision
-                let finalX = token.x + directionVector.x * (canvas.scene.grid.size / 10) * stepCounter;
-                let finalY = token.y + directionVector.y * (canvas.scene.grid.size / 10) * stepCounter;
-    
-                let distanceMovedInFeet = (stepCounter * (canvas.scene.grid.size / 10)) / pixelsPerFoot;
-    
-                if (stepCounter > 0) { // Ensure there was at least one step without collision
-                    await token.document.update({ x: finalX, y: finalY });
-                    content1 = `The movement roll for ${token.actor.name} is ${directionResult}: ${token.actor.name} moves ${directionContent} using ${distanceMovedInFeet} feet of their movement before hitting an obstacle. The creature doesn't take an action this turn.`
-                } else {
-                    content1 = `The movement for ${token.actor.name} does not occur because the way is blocked. The creature doesn't take an action this turn.`
-                }
-            }
-            */
-        }
-        else if (confusionRoll.total < 7) {
-            ChatMessage.create({
-                content: `<p>Roll result: <b>${confusionRoll.total}</b></p><p><b>${token.document.name}</b> doesn't move or take actions this turn.</p>`,
-                speaker: { actor: token.actor }
-            });
-        }
-        else if (confusionRoll.total < 9) {
-            const rangeCheck = MidiQOL.findNearby(null, token, token.actor.system.attributes.movement.walk, { includeToken: false });
-            if (rangeCheck.length > 0) {
-                const randomSelection = rangeCheck[Math.floor(Math.random() * rangeCheck.length)];
-                let target = randomSelection;
-                ChatMessage.create({
-                    content: `<p>Roll result: <b>${confusionRoll.total}</b></p><p><b>${token.document.name}</b> must move to <b>${randomSelection.actor.name}</b> and attack them with a melee attack.</p>`,
-                    speaker: { actor: token.actor }
-                });
-                new Sequence()
-
-                    .effect()
-                    .from(target)
-                    .belowTokens()
-                    .attachTo(target, { locale: true })
-                    .scaleToObject(1, { considerTokenScale: true })
-                    .spriteRotation(target.rotation * -1)
-                    .filter("Glow", { color: 0x911a1a, distance: 20 })
-                    .duration(17500)
-                    .fadeIn(1000, { delay: 1000 })
-                    .fadeOut(3500, { ease: "easeInSine" })
-                    .opacity(0.75)
-                    .zIndex(0.1)
-                    .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.25], duration: 1500, pingPong: true, delay: 500 })
-
-                    .effect()
-                    .file("jb2a.extras.tmfx.outflow.circle.01")
-                    .attachTo(target, { locale: true })
-                    .scaleToObject(1.5, { considerTokenScale: false })
-                    .randomRotation()
-                    .duration(17500)
-                    .fadeIn(4000)
-                    .fadeOut(3500, { ease: "easeInSine" })
-                    .scaleIn(0, 3500, { ease: "easeInOutCubic" })
-                    .tint(0x870101)
-                    .opacity(0.5)
-                    .belowTokens()
-                    .play()
-            }
-            else {
-                ChatMessage.create({
-                    content: `<p>Roll result: <b>${confusionRoll.total}</b></p><p><b>${token.document.name}</b> doesn't move or take actions this turn (no available targets).</p>`,
-                    speaker: { actor: token.actor }
-                });
-            }
-        }
-        else {
-            ChatMessage.create({
-                content: `<p>Roll result: <b>${confusionRoll.total}</b></p><p><b>${token.document.name}</b> can act normally.</p>`,
-                speaker: { actor: token.actor }
-            });
-        }
+    async function effectMacroTurnStart() {
+        await mbaPremades.macros.confusion.item(token);
     }
     async function effectMacroConfusionDel() {
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} ConfTa` })
         let effect = await mbaPremades.helpers.findEffect(actor, "Reaction");
-        if (!effect) return;
-        await mbaPremades.helpers.removeEffect(effect);
+        if (effect) await mbaPremades.helpers.removeEffect(effect);
     }
     let effectData = {
-        'name': workflow.item.name,
+        'name': "Confusion",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
@@ -223,17 +94,17 @@ export async function confusion({ speaker, actor, token, character, item, args, 
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': 'turn=end, saveAbility=wis, saveDC=' + mbaPremades.helpers.getSpellDC(workflow.item) + ', saveMagic=true, name=Confusion: Turn End',
+                'value': `turn=end, saveAbility=wis, saveDC=${saveDC}, saveMagic=true, name=Confusion: Turn End (DC${saveDC}), killAnim=true`,
                 'priority': 20
             }
         ],
         'flags': {
             'effectmacro': {
                 'onTurnStart': {
-                    'script': mbaPremades.helpers.functionToString(effectMacroConfusion)
+                    'script': mba.functionToString(effectMacroTurnStart)
                 },
                 'onDelete': {
-                    'script': mbaPremades.helpers.functionToString(effectMacroConfusionDel)
+                    'script': mba.functionToString(effectMacroConfusionDel)
                 }
             },
             'midi-qol': {
@@ -245,11 +116,244 @@ export async function confusion({ speaker, actor, token, character, item, args, 
             }
         }
     };
-    for (let i of featureWorkflow.failedSaves) {
-        await mbaPremades.helpers.createEffect(i.actor, effectData);
-        let newEffect = await mbaPremades.helpers.findEffect(i.actor, "Confusion");
-        let concData = workflow.actor.getFlag("midi-qol", "concentration-data.removeUuids");
-        concData.push(newEffect.uuid);
-        await workflow.actor.setFlag("midi-qol", "concentration-data.removeUuids", concData);
+    for (let target of featureWorkflow.failedSaves) {
+        new Sequence()
+
+            .thenDo(async () => {
+                let reaction = await mba.findEffect(target.actor, "Reaction");
+                if (!reaction) await mba.addCondition(target.actor, "Reaction");
+                let newEffect = await mba.createEffect(target.actor, effectData);
+                let concData = workflow.actor.getFlag("midi-qol", "concentration-data.removeUuids");
+                concData.push(newEffect.uuid);
+                await workflow.actor.setFlag("midi-qol", "concentration-data.removeUuids", concData);
+            })
+
+            .effect()
+            .file("jaamod.spells_effects.confusion")
+            .attachTo(target)
+            .scaleToObject(1)
+            .fadeIn(1000)
+            .fadeOut(1000)
+            .waitUntilFinished(-500)
+
+            .effect()
+            .file("jb2a.template_circle.symbol.normal.stun.purple")
+            .attachTo(target)
+            .scaleToObject(1.5)
+            .fadeIn(500)
+            .fadeOut(2000)
+            .filter("ColorMatrix", { hue: 140 })
+            .mask()
+            .persist()
+            .name(`${target.document.name} ConfTa`)
+
+            .play()
     }
+    Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} Confus` });
+    await template.delete();
+}
+
+async function item(token) {
+    if (mba.findEffect(token.actor, "Confusion")) {
+        let reaction = await mba.findEffect(token.actor, "Reaction");
+        if (!reaction) await mba.addCondition(token.actor, "Reaction");
+    }
+    let confusionRoll = await new Roll("1d10").roll({ 'async': true });
+    await MidiQOL.displayDSNForRoll(confusionRoll);
+    let result = confusionRoll.total;
+    if (result === 1) {
+        new Sequence()
+
+            .effect()
+            .file("jaamod.spells_effects.confusion")
+            .attachTo(token)
+            .scaleToObject(1)
+            .fadeIn(500)
+            .fadeOut(1000)
+
+            .play()
+
+        let directionRoll = await new Roll("1d8").roll({ 'async': true });
+        await MidiQOL.displayDSNForRoll(directionRoll);
+        const directions = ["", "North", "North-East", "East", "South-East", "South", "South-West", "West", "North-West"];
+        const directionContent = directions[directionRoll.total];
+        const walkSpeedFeet = token.actor.system.attributes.movement.walk;
+        const gridDistance = canvas.dimensions.distance;
+        const pixelsPerFoot = canvas.scene.grid.size / gridDistance;
+        const moveDistancePixels = walkSpeedFeet * pixelsPerFoot;
+        const diagonalMultiplier = Math.SQRT2;
+        let moveX = 0;
+        let moveY = 0;
+        switch (directionContent) {
+            case "North":
+                moveY = -moveDistancePixels;
+                break;
+            case "North-East":
+                moveX = moveDistancePixels / diagonalMultiplier;
+                moveY = -moveDistancePixels / diagonalMultiplier;
+                break;
+            case "East":
+                moveX = moveDistancePixels;
+                break;
+            case "South-East":
+                moveX = moveDistancePixels / diagonalMultiplier;
+                moveY = moveDistancePixels / diagonalMultiplier;
+                break;
+            case "South":
+                moveY = moveDistancePixels;
+                break;
+            case "South-West":
+                moveX = -moveDistancePixels / diagonalMultiplier;
+                moveY = moveDistancePixels / diagonalMultiplier;
+                break;
+            case "West":
+                moveX = -moveDistancePixels;
+                break;
+            case "North-West":
+                moveX = -moveDistancePixels / diagonalMultiplier;
+                moveY = -moveDistancePixels / diagonalMultiplier;
+                break;
+        }
+        const position = {
+            x: token.center.x + moveX,
+            y: token.center.y + moveY
+        }
+        new Sequence()
+
+            .effect()
+            .file("jb2a.zoning.inward.indicator.loop.redyellow.01.02")
+            .atLocation(position)
+            .size(1.5, { gridUnits: true })
+            .duration(7000)
+            .fadeIn(1000)
+            .fadeOut(1000)
+
+            .effect()
+            .file("jb2a.zoning.directional.loop.redyellow.line400.02")
+            .attachTo(token)
+            .stretchTo(position)
+            .duration(7000)
+            .fadeIn(1000)
+            .fadeOut(1000)
+
+            .thenDo(async () => {
+                ChatMessage.create({
+                    content: `
+                            <p>Roll result: <b>${result}</b></p>
+                            <p>Direction roll: <b>${directionRoll.total}</b></p>
+                            <p><b>${token.document.name}</b> uses all its movement to move in <u>${directionContent}</u> direction.</p>
+                        `,
+                    speaker: { actor: token.actor }
+                });
+            })
+
+            .play()
+    }
+    else if (result > 1 && result < 7) {
+        new Sequence()
+
+            .effect()
+            .file("jaamod.spells_effects.confusion")
+            .attachTo(token)
+            .scaleToObject(1)
+            .fadeIn(500)
+            .fadeOut(1000)
+
+            .thenDo(async () => {
+                ChatMessage.create({
+                    content: `
+                        <p>Roll result: <b>${result}</b></p>
+                        <p><b>${token.document.name}</b> doesn't move or take actions this turn.</p>
+                    `,
+                    speaker: { actor: token.actor }
+                });
+            })
+
+            .play()
+    }
+    else if (result > 6 && result < 9) {
+        new Sequence()
+
+            .effect()
+            .file("jaamod.spells_effects.confusion")
+            .attachTo(token)
+            .scaleToObject(1)
+            .fadeIn(500)
+            .fadeOut(1000)
+
+            .play()
+
+        let weapons = token.actor.items.filter(i => i.type === "weapon" && i.system.equipped && i.system.actionType === "mwak");
+        let range = 5;
+        if (weapons.length) {
+            for (let weapon of weapons) {
+                let weaponRange = weapon.system.range.value;
+                if (weaponRange > range) range = weaponRange;
+            }
+        }
+        let nearbyTargets = await mba.findNearby(token, range, "any", false, false, true, true);
+        if (!nearbyTargets.length) {
+            ChatMessage.create({
+                content: `
+                    <p>Roll result: <b>${result}</b></p>
+                    <p><b>${token.document.name}</b> doesn't move or take actions this turn (no available targets).</p>
+                `,
+                speaker: { actor: token.actor }
+            });
+            return;
+        }
+        let target;
+        if (nearbyTargets.length === 1) target = nearbyTargets[0];
+        else {
+            let targetRoll = await new Roll(`1d${nearbyTargets.length}`).roll({ 'async': true });
+            await MidiQOL.displayDSNForRoll(targetRoll);
+            target = nearbyTargets[targetRoll.total - 1];
+        }
+        new Sequence()
+
+            .thenDo(async () => {
+                ChatMessage.create({
+                    content: `
+                        <p>Roll result: <b>${result}</b></p>
+                        <p><b>${token.document.name}</b> must attack <u>${target.document.name}</u> with a melee attack.</p>`,
+                    speaker: { actor: token.actor }
+                });
+            })
+
+            .effect()
+            .file("jb2a.ui.indicator.redyellow.02.01")
+            .attachTo(target)
+            .scaleToObject(1.25)
+            .duration(5000)
+            .fadeOut(500)
+            .scaleIn(0.5, 300, { ease: "easeOutCubic" })
+            .loopProperty("sprite", "position.x", { values: [-50, 50, 0, 0, 0, 0, 0], duration: 1000, ease: "easeInOutCubic" })
+            .loopProperty("sprite", "position.y", { values: [-100, 100, 0, 0, 0, 0, 0], duration: 1000, ease: "easeInOutCubic" })
+            .zIndex(1)
+
+            .effect()
+            .file("jb2a.token_stage.round.red.02.01")
+            .attachTo(target)
+            .scaleToObject(1.25)
+            .delay(2000)
+            .duration(5000)
+            .fadeOut(2000)
+            .opacity(0.75)
+
+            .play()
+    }
+    else if (result > 8) {
+        ChatMessage.create({
+            content: `
+                <p>Roll result: <b>${result}</b></p>
+                <p><b>${token.document.name}</b> can act normally.</p>
+            `,
+            speaker: { actor: token.actor }
+        });
+    }
+}
+
+export let confusion = {
+    'cast': cast,
+    'item': item
 }

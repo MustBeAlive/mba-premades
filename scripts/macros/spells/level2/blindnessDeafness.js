@@ -17,24 +17,20 @@ export async function blindnessDeafness({ speaker, actor, token, character, item
         targets = Array.from(game.user.targets);
     }
     let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Blindness/Deafness: Save", false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in compendium! (Blindness/Deafness: Save)");
-        return
-    }
+    if (!featureData) return;
     delete featureData._id;
-    featureData.system.save.dc = mba.getSpellDC(workflow.item);
+    let saveDC = mba.getSpellDC(workflow.item);
+    featureData.system.save.dc = saveDC;
     setProperty(featureData, 'mba-premades.spell.castData.school', workflow.item.system.school);
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
-    let targetUuids = [];
-    for (let i of targets) targetUuids.push(i.document.uuid);
+    let targetUuids = Array.from(targets).map(t => t.document.uuid);
     let [config, options] = constants.syntheticItemWorkflowOptions(targetUuids);
     await game.messages.get(workflow.itemCardId).delete();
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow.failedSaves.size) return;
-    let failedTargets = Array.from(featureWorkflow.failedSaves);
-    for (let target of failedTargets) {
+    for (let target of Array.from(featureWorkflow.failedSaves)) {
         let choices = [['Blindness', 'blind'], ['Deafness', 'deaf']];
-        let selection = await mba.dialog(`Blindness/Deafness`, choices, `Choose condition for <b>${target.document.name}</b>:`);
+        let selection = await mba.dialog(`Blindness/Deafness`, choices, `Choose condition for <u>${target.document.name}</u>:`);
         if (!selection) return;
         let name;
         let description;
@@ -54,7 +50,7 @@ export async function blindnessDeafness({ speaker, actor, token, character, item
             }
         }
         async function effectMacroDel() {
-            await Sequencer.EffectManager.endEffects({ name: `${token.document.name} BD`, object: token })
+            Sequencer.EffectManager.endEffects({ name: `${token.document.name} BliDea` })
         };
         let effectData = {
             'name': name,
@@ -68,7 +64,7 @@ export async function blindnessDeafness({ speaker, actor, token, character, item
                 {
                     'key': 'flags.midi-qol.OverTime',
                     'mode': 0,
-                    'value': `turn=end, saveAbility=con, saveDC=${mba.getSpellDC(workflow.item)}, saveMagic=true, name=Blindness/Deafness: Turn End, killAnim= true`,
+                    'value': `turn=end, saveAbility=con, saveDC=${saveDC}, saveMagic=true, name=Blindness/Deafness: Turn End(DC${saveDC}), killAnim= true`,
                     'priority': 20
                 },
                 {
@@ -79,6 +75,9 @@ export async function blindnessDeafness({ speaker, actor, token, character, item
                 }
             ],
             'flags': {
+                'dae': {
+                    'specialDuration': ["zeroHP"]
+                },
                 'effectmacro': {
                     'onDelete': {
                         'script': mba.functionToString(effectMacroDel)
@@ -114,7 +113,7 @@ export async function blindnessDeafness({ speaker, actor, token, character, item
             .fadeOut(1000)
             .opacity(0.8)
             .persist()
-            .name(`${target.document.name} BD`)
+            .name(`${target.document.name} BliDea`)
 
             .thenDo(async () => {
                 await mba.createEffect(target.actor, effectData);

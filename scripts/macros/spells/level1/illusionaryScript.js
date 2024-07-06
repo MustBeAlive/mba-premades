@@ -5,8 +5,8 @@ export async function illusionaryScript({ speaker, actor, token, character, item
 
         .effect()
         .file("modules/mba-premades/icons/spells/level1/illusory_script.webp")
-        .attachTo(token)
-        .scaleToObject(1.7 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(1.7 * workflow.token.document.texture.scaleX)
         .duration(8000)
         .fadeIn(1000)
         .fadeOut(1000)

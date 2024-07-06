@@ -5,8 +5,8 @@ export async function moldEarth({ speaker, actor, token, character, item, args, 
 
         .effect()
         .file("jb2a.cast_generic.earth.01.browngreen.1")
-        .attachTo(token)
-        .scaleToObject(2.2 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(2.2 * workflow.token.document.texture.scaleX)
         .endTime(600)
         .fadeOut(200)
         .belowTokens()
@@ -14,7 +14,7 @@ export async function moldEarth({ speaker, actor, token, character, item, args, 
 
         .effect()
         .file("jb2a.burrow.out.01.brown.1")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .size(3, { gridUnits: true })
         .belowTokens()
 

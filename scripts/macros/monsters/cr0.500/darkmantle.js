@@ -56,13 +56,13 @@ async function crushItem({ speaker, actor, token, character, item, args, scope, 
         {
             'key': 'flags.midi-qol.OverTime',
             'mode': 0,
-            'value': `actionSave=true, rollType=check, saveAbility=str, saveDC=13, saveMagic=false, name=Crush: Action Save, killAnim=true`,
+            'value': `actionSave=true, rollType=check, saveAbility=str, saveDC=13, saveMagic=false, name=Crush: Action Save (DC13), killAnim=true`,
             'priority': 20
         }
     ];
     if (workflow.advantage) {
         descriptionTarget = `
-            <p>Darkmantle is attached to your head. While it is attached this way, you are unable to breathe and are blinded.</p>
+            <p>Darkmantle is attached to your head. While it is attached this way, you are unable to breathe and are @UUID[Compendium.mba-premades.MBA SRD.Item.3NxmNhGQQqUDnu73]{Blinded}.</p>
             <p>As an action, you can make a Strength ability check (DC13).</p>
             <p>On a success, the darkmantle is detached.</p>
         `;
@@ -94,7 +94,7 @@ async function crushItem({ speaker, actor, token, character, item, args, scope, 
         'name': "Darkmantle: Attached",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
-        'description': `Attached to: <b>${target.document.name}</b>`,
+        'description': `Attached to: <u>${target.document.name}</u>`,
         'changes': [
             {
                 'key': 'flags.midi-qol.advantage.attack.all',

@@ -6,7 +6,7 @@ export async function kineticJaunt({ speaker, actor, token, character, item, arg
         let check = mbaPremades.helpers.findNearby(token.document, 2, undefined, false, false);
         if (!check.length) return;
         let damageRoll = await new Roll("1d8[force]").roll({ 'async': true });
-        await MidiQOL.displayDSNForRoll(damageRoll, 'damageRoll');
+        await MidiQOL.displayDSNForRoll(damageRoll);
         await mbaPremades.helpers.applyDamage([token], damageRoll.total, "force");
         ChatMessage.create({
             content: `<b>${token.document.name}</b> ends its turn in another creature's space, takes <b>${damageRoll.total}</b> force damage and is also <b>shunted to the last unoccupied space</b>.`,

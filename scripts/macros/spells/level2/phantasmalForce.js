@@ -16,14 +16,11 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         let target = targetDoc.object;
         let choices = [[`Yes, deal damage to <b>${targetDoc.name}</b>`, "damage"], ["Cancel", false]];
         await mbaPremades.helpers.gmDialogMessage();
-        let selection = await mbaPremades.helpers.remoteDialog("Phantasmal Force", choices, game.users.activeGM.id, `Can <b>${token.document.name}</b> deal damage to <b>${targetDoc.name}</b>?`);
+        let selection = await mbaPremades.helpers.remoteDialog("Phantasmal Force", choices, game.users.activeGM.id, `Can <u>${token.document.name}</u> deal damage to <u>${targetDoc.name}</u>?`);
         await mbaPremades.helpers.clearGMDialogMessage();
         if (!selection) return;
-        let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Phantasmal Force: Damage', false);
-        if (!featureData) {
-            ui.notifications.warn("Unable to find item in the compendium! (Phantasmal Force: Damage)");
-            return;
-        }
+        let featureData = await mbaPremades.helpers.getItemFromCompendium("mba-premades.MBA Spell Features", "Phantasmal Force: Damage", false);
+        if (!featureData) return;
         delete featureData._id;
         let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
         let [config, options] = mbaPremades.constants.syntheticItemWorkflowOptions([targetDoc.uuid]);
@@ -41,10 +38,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .play()
     }
     async function effectMacroDelSource() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Phantasmal Force` });
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} PhanFo` });
     }
     async function effectMacroDelTarget() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Phantasmal Force` });
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} PhanFo` });
         let targets = game.canvas.scene.tokens.filter(i => mbaPremades.helpers.findEffect(i.actor, "Phantasmal Force"));
         if (!targets.length) return;
         await mbaPremades.helpers.removeCondition(targets[0].actor, "Concentrating");
@@ -150,13 +147,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .scaleIn(0, 2000, { ease: "easeOutCubic" })
         .belowTokens()
         .persist()
-        .name(`${target.document.name} Phantasmal Force`)
+        .name(`${target.document.name} PhanFo`)
         .playIf(() => {
             return workflow.failedSaves.size
         })
 
         .effect()
-        .file("jb2a.template_square.symbol.normal.stun.purple")
+        .file("jb2a.template_circle.symbol.normal.stun.purple")
         .delay(3500)
         .atLocation(target)
         .fadeIn(1000)
@@ -166,7 +163,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .scaleIn(0, 2000, { ease: "easeOutCubic" })
         .size(4.5, { gridUnits: true })
         .persist()
-        .name(`${workflow.token.document.name} Phantasmal Force`)
+        .name(`${workflow.token.document.name} PhanFo`)
         .playIf(() => {
             return workflow.failedSaves.size
         })

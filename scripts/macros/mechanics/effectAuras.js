@@ -249,6 +249,7 @@ function deleteToken(token, options, id) {
         for (let aura of Object.values(flagAuras)) {
             remove(aura.name, token.uuid, true);
         }
+        refreshEffects(token.uuid, 'all');//
     }
 }
 

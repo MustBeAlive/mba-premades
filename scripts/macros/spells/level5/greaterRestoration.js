@@ -2,44 +2,59 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function greaterRestoration({ speaker, actor, token, character, item, args, scope, workflow }) {
     const target = workflow.targets.first();
-    let effect;
     let choices = [
         ['Charmed', 'charm'],
         ['Petrified', 'petr'],
         ['Cursed', 'curse'],
         ['Ability Score Reduction', 'ability'],
         ['Hit Point Maximum Reduction', 'health'],
-        ['Up to 3 levels of Exhaustion', 'exhaustion']
+        ['Up to 3 levels of Exhaustion', 'exhaustion'] //HB
     ];
     let selection = await mba.dialog('Greater Restoration', choices, "<b>Which condition do you wish to remove?</b>");
     if (!selection) return;
     if (selection === "charm") {
-        effect = await mba.findEffect(target.actor, "Charmed");
-        if (!effect) {
+        let effectToRemove = await mba.findEffect(target.actor, "Charmed");
+        if (!effectToRemove) {
             ui.notifications.warn("Target is not charmed!");
             return;
         }
-        await mba.removeEffect(effect);
+        await mba.removeEffect(effectToRemove);
     }
     else if (selection === "petr") {
-        effect = await mba.findEffect(target.actor, "Petrified");
-        if (!effect) {
+        let effectsFirst = target.actor.effects.filter(i => i.name.includes("Petrif"));
+        if (!effectsFirst.length) {
             ui.notifications.warn("Target is not petrified!");
             return;
         }
-        await mba.removeEffect(effect);
-        let cockatrice = await mba.findEffect(target.actor, "Cockatrice: Petrification");
-        let medusa = await mba.findEffect(target.actor, "Medusa: Petrification")
-        if (medusa && cockatrice) {
-
+        let effectToRemove;
+        if (effectsFirst.length < 2) {
+            effectToRemove = await mba.findEffect(target.actor, effectsFirst[0].name);
+            if (!effectToRemove) {
+                ui.notifications.warn(`Unable to find Poison: ${effectsFirst[0].name}`);
+                return;
+            }
+            await mba.removeEffect(effectToRemove);
         }
-        if (cockatrice) await mba.removeEffect(cockatrice);
-        if (medusa) await mba.removeEffect(medusa);
+        else {
+            let effects = effectsFirst.filter(i => i.name != "Petrified");
+            if (effects.length < 2) {
+                effectToRemove = await mba.findEffect(target.actor, effects[0].name);
+                if (!effectToRemove) {
+                    ui.notifications.warn(`Unable to find Poison: ${effects[0].name}`);
+                    return;
+                }
+                await mba.removeEffect(effectToRemove);
+            } else {
+                effectToRemove = await mba.selectEffect("Greater Restoration: Petrification", effects, "<b>Choose one effect:</b>");
+                if (!effectToRemove) return;
+                await mba.removeEffect(effectToRemove);
+            }
+        }
     }
     else if (selection === "curse") {
-        let curable = target.actor.effects.filter(i => i.flags['mba-premades']?.isCurse === true).filter(i => i.flags['mba-premades']?.greaterRestoration === true);
-        if (!curable.length) {
-            let uncurable = target.actor.effects.filter(i => i.flags['mba-premades']?.isCurse === true).filter(i => !i.flags['mba-premades']?.greaterRestoration === true);
+        let effects = target.actor.effects.filter(e => e.flags['mba-premades']?.isCurse === true && e.flags['mba-premades']?.greaterRestoration === true);
+        if (!effects.length) {
+            let uncurable = target.actor.effects.filter(e => e.flags['mba-premades']?.isCurse === true && !e.flags['mba-premades']?.greaterRestoration === true);
             if (!uncurable.length) {
                 ui.notifications.info('Target is not affected by any curse!');
                 return;
@@ -47,221 +62,73 @@ export async function greaterRestoration({ speaker, actor, token, character, ite
             ui.notifications.info('Targeted creature is affected by a curse which can not be removed with Greater Restoration!');
             return;
         }
-        effect = await mba.findEffect(target.actor, "Hexed");
-        if (effect) await mba.removeEffect(effect);
+        let effectToRemove;
+        if (effects.length < 2) {
+            effectToRemove = await mba.findEffect(target.actor, effects[0].name);
+            if (!effectToRemove) {
+                ui.notifications.warn(`Unable to find effect: ${effects[0].name}`);
+                return;
+            }
+            let eventId = effectToRemove.flags['mba-premades']?.eventId;
+            if (eventId) game.Gametime.doIn({ second: 1 }, async () => { game.Gametime.clearTimeout(eventId) });
+            await mba.removeEffect(effectToRemove);
+        }
+        else {
+            effectToRemove = await mba.selectEffect("Greater Restoration: Curse", effects, "<b>Choose effect to remove:</b>");
+            if (!effectToRemove) return;
+            let eventId = effectToRemove.flags['mba-premades']?.eventId;
+            if (eventId) game.Gametime.doIn({ second: 1 }, async () => { game.Gametime.clearTimeout(eventId) });
+            await mba.removeEffect(effectToRemove);
+        }
     }
     else if (selection === "ability") {
-        let effects = target.actor.effects.filter(i => i.flags['mba-premades']?.abilityReduction === true);
+        let effects = target.actor.effects.filter(e => e.flags['mba-premades']?.abilityReduction === true && e.flags['mba-premades']?.greaterRestoration === true);
         if (!effects.length) {
             ui.notifications.warn("Target is not affected by any ability reduction effects!");
             return;
         }
+        let effectToRemove;
         if (effects.length < 2) {
-            let effect = await mba.findEffect(target.actor, effects[0].name);
-            if (!effect) {
+            effectToRemove = await mba.findEffect(target.actor, effects[0].name);
+            if (!effectToRemove) {
                 ui.notifications.warn(`Unable to find effect: ${effects[0].name}`);
                 return;
             }
-            let eventId = effect.flags['mba-premades']?.eventId;
+            let eventId = effectToRemove.flags['mba-premades']?.eventId;
             if (eventId) game.Gametime.doIn({ second: 1 }, async () => { game.Gametime.clearTimeout(eventId) });
-            await mba.removeEffect(effect);
-        } else {
-            let selection = [];
-            for (let i = 0; i < effects.length; i++) {
-                let effect = effects[i];
-                let name = effect.name;
-                let icon = effect.icon;
-                let penalty = effect.flags['mba-premades']?.penalty;
-                selection.push([name, penalty, icon]);
-            }
-            function generateEnergyBox(type) {
-                return `
-                <label class="radio-label">
-                <input type="radio" name="type" value="${selection[type]}" />
-                <img src="${selection[type].slice(2)}" style="border: 0px; width: 50px; height: 50px"/>
-                ${selection[type].slice(0, -2)}
-                </label>
-            `;
-            }
-            const effectSelection = Object.keys(selection).map((type) => generateEnergyBox(type)).join("\n");
-            const content = `
-            <style>
-                .dispelMagic 
-                    .form-group {
-                        display: flex;
-                        flex-wrap: wrap;
-                        width: 100%;
-                        align-items: flex-start;
-                    }
-                .dispelMagic 
-                    .radio-label {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    text-align: center;
-                    justify-items: center;
-                    flex: 1 0 20%;
-                    line-height: normal;
-                    }
-                .dispelMagic 
-                    .radio-label input {
-                    display: none;
-                }
-                .dispelMagic img {
-                    border: 0px;
-                    width: 50px;
-                    height: 50px;
-                    flex: 0 0 50px;
-                    cursor: pointer;
-                }
-                /* CHECKED STYLES */
-                .dispelMagic [type="radio"]:checked + img {
-                    outline: 2px solid #005c8a;
-                }
-            </style>
-            <form class="dispelMagic">
-                <div class="form-group" id="types">
-                    ${effectSelection}
-                </div>
-            </form>
-        `;
-            const effectToRemove = await new Promise((resolve) => {
-                new Dialog({
-                    title: "Choose effect to remove:",
-                    content,
-                    buttons: {
-                        ok: {
-                            label: "Ok",
-                            callback: async (html) => {
-                                const element = html.find("input[type='radio'][name='type']:checked").val();
-                                resolve(element);
-                            },
-                        },
-                        cancel: {
-                            label: "Cancel",
-                            callback: async (html) => {
-                                return;
-                            }
-                        }
-                    }
-                }).render(true);
-            });
-            let effectToRemoveName = effectToRemove.split(",")[0];
-            let removeEffect = await mba.findEffect(target.actor, effectToRemoveName);
-            if (!removeEffect) {
-                ui.notifications.warn("Something went wrong, unable to find the effect!");
-                return;
-            }
-            let eventId = removeEffect.flags['mba-premades']?.eventId;
+            await mba.removeEffect(effectToRemove);
+        } 
+        else {
+            effectToRemove = await mba.selectEffect("Greater Restoration: Ability Reduction", effects, "<b>Select effect to remove:</b>");
+            if (!effectToRemove) return;
+            let eventId = effectToRemove.flags['mba-premades']?.eventId;
             if (eventId) game.Gametime.doIn({ second: 1 }, async () => { game.Gametime.clearTimeout(eventId) });
-            await mba.removeEffect(removeEffect);
+            await mba.removeEffect(effectToRemove);
         }
     }
     else if (selection === "health") {
-        let effects = target.actor.effects.filter(i => i.flags['mba-premades']?.healthReduction === true);
+        let effects = target.actor.effects.filter(e => e.flags['mba-premades']?.healthReduction === true && e.flags['mba-premades']?.greaterRestoration === true);
         if (!effects.length) {
-            ui.notifications.warn("Target is not affected by any ability reduction effects!");
+            ui.notifications.warn("Target is not affected by any health reduction effects!");
             return;
         }
+        let effectToRemove;
         if (effects.length < 2) {
-            let effect = await mba.findEffect(target.actor, effects[0].name);
-            if (!effect) {
+            effectToRemove = await mba.findEffect(target.actor, effects[0].name);
+            if (!effectToRemove) {
                 ui.notifications.warn(`Unable to find effect: ${effects[0].name}`);
                 return;
             }
-            let eventId = effect.flags['mba-premades']?.eventId;
+            let eventId = effectToRemove.flags['mba-premades']?.eventId;
             if (eventId) game.Gametime.doIn({ second: 1 }, async () => { game.Gametime.clearTimeout(eventId) });
-            await mba.removeEffect(effect);
-        } else {
-            let selection = [];
-            for (let i = 0; i < effects.length; i++) {
-                let effect = effects[i];
-                let name = effect.name;
-                let icon = effect.icon;
-                let penalty = effect.flags['mba-premades']?.penalty;
-                selection.push([name, penalty, icon]);
-            }
-            function generateEnergyBox(type) {
-                return `
-                <label class="radio-label">
-                <input type="radio" name="type" value="${selection[type]}" />
-                <img src="${selection[type].slice(2)}" style="border: 0px; width: 50px; height: 50px"/>
-                ${selection[type].slice(0, -2)}
-                </label>
-            `;
-            }
-            const effectSelection = Object.keys(selection).map((type) => generateEnergyBox(type)).join("\n");
-            const content = `
-            <style>
-                .dispelMagic 
-                    .form-group {
-                        display: flex;
-                        flex-wrap: wrap;
-                        width: 100%;
-                        align-items: flex-start;
-                    }
-                .dispelMagic 
-                    .radio-label {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    text-align: center;
-                    justify-items: center;
-                    flex: 1 0 20%;
-                    line-height: normal;
-                    }
-                .dispelMagic 
-                    .radio-label input {
-                    display: none;
-                }
-                .dispelMagic img {
-                    border: 0px;
-                    width: 50px;
-                    height: 50px;
-                    flex: 0 0 50px;
-                    cursor: pointer;
-                }
-                /* CHECKED STYLES */
-                .dispelMagic [type="radio"]:checked + img {
-                    outline: 2px solid #005c8a;
-                }
-            </style>
-            <form class="dispelMagic">
-                <div class="form-group" id="types">
-                    ${effectSelection}
-                </div>
-            </form>
-        `;
-            const effectToRemove = await new Promise((resolve) => {
-                new Dialog({
-                    title: "Choose effect to remove:",
-                    content,
-                    buttons: {
-                        ok: {
-                            label: "Ok",
-                            callback: async (html) => {
-                                const element = html.find("input[type='radio'][name='type']:checked").val();
-                                resolve(element);
-                            },
-                        },
-                        cancel: {
-                            label: "Cancel",
-                            callback: async (html) => {
-                                return;
-                            }
-                        }
-                    }
-                }).render(true);
-            });
-            let effectToRemoveName = effectToRemove.split(",")[0];
-            let removeEffect = await mba.findEffect(target.actor, effectToRemoveName);
-            if (!removeEffect) {
-                ui.notifications.warn("Something went wrong, unable to find the effect!");
-                return;
-            }
-            let eventId = removeEffect.flags['mba-premades']?.eventId;
+            await mba.removeEffect(effectToRemove);
+        } 
+        else {
+            effectToRemove = await mba.selectEffect("Greater Restoration: Heath Reduction", effects, "<b>Choose effect to remove:</b>");
+            if (!effectToRemove) return;
+            let eventId = effectToRemove.flags['mba-premades']?.eventId;
             if (eventId) game.Gametime.doIn({ second: 1 }, async () => { game.Gametime.clearTimeout(eventId) });
-            await mba.removeEffect(removeEffect);
+            await mba.removeEffect(effectToRemove);
         }
     }
     else if (selection === "exhaustion") {
@@ -277,7 +144,8 @@ export async function greaterRestoration({ speaker, actor, token, character, ite
             let effect = await mba.findEffect(target.actor, exhaustName);
             if (!effect) return;
             await mba.removeEffect(effect);
-        } else {
+        }
+        else {
             level -= 3;
             exhaustName = `Exhaustion ${level}`;
             await mba.addCondition(target.actor, exhaustName);
@@ -301,58 +169,51 @@ export async function greaterRestoration({ speaker, actor, token, character, ite
 
         .effect()
         .file("jb2a.healing_generic.burst.purplepink")
-        .atLocation(target)
-        .scaleToObject(1.5)
-        .fadeOut(1000, { ease: "easeInExpo" })
-        .belowTokens()
-        .scaleIn(0, 500, { ease: "easeOutCubic" })
-        .duration(1200)
         .attachTo(target, { bindAlpha: false })
+        .scaleToObject(1.5)
+        .duration(1200)
+        .fadeOut(1000, { ease: "easeInExpo" })
+        .scaleIn(0, 500, { ease: "easeOutCubic" })
+        .belowTokens()
 
         .effect()
         .from(target)
-        .atLocation(target)
+        .attachTo(target)
+        .duration(6000)
+        .fadeIn(100)
+        .fadeOut(5000)
+        .opacity(1)
         .filter("ColorMatrix", { saturate: -1, brightness: 10 })
         .filter("Blur", { blurX: 5, blurY: 10 })
-        .fadeIn(100)
-        .opacity(1)
-        .fadeOut(5000)
-        .duration(6000)
-        .attachTo(target)
 
         .effect()
         .file("jb2a.fireflies.few.02.purple")
-        .atLocation(target)
+        .attachTo(target)
         .scaleToObject(2)
         .duration(10000)
         .fadeIn(1000)
         .fadeOut(500)
-        .attachTo(target)
 
         .effect()
         .file("jb2a.extras.tmfx.outflow.circle.02")
-        .atLocation(target)
-        .fadeIn(200)
-        .opacity(0.25)
-        .duration(10000)
-        .scaleToObject(2)
-        .fadeOut(500)
-        .fadeIn(1000)
-        .belowTokens()
         .attachTo(target)
+        .scaleToObject(2)
+        .duration(10000)
+        .fadeIn(1000)
+        .fadeOut(500)
+        .opacity(0.25)
+        .belowTokens()
 
         .effect()
         .file("jb2a.particles.outward.purple.01.03")
-        .atLocation(target)
-        .filter("ColorMatrix", { saturate: -1, brightness: 2 })
-        .fadeIn(200, { ease: "easeInExpo" })
-        .duration(10000)
-        .opacity(0.25)
-        .scaleToObject(2)
-        .fadeOut(500)
-        .fadeIn(1000)
-        .belowTokens()
         .attachTo(target)
+        .scaleToObject(2)
+        .duration(10000)
+        .fadeIn(200, { ease: "easeInExpo" })
+        .fadeOut(500)
+        .opacity(0.25)
+        .belowTokens()
+        .filter("ColorMatrix", { saturate: -1, brightness: 2 })
 
         .play()
 }

@@ -168,7 +168,6 @@ async function post({ speaker, actor, token, character, item, args, scope, workf
         await mba.removeEffect(effect);
         return;
     }
-
     async function effectMacroCreate() {
         await token.document.update({ hidden: true });
     };
@@ -293,23 +292,26 @@ async function post({ speaker, actor, token, character, item, args, scope, workf
         .fadeOut(1500)
         .belowTokens()
 
-        .play()
+        .wait(3500)
 
-    await warpgate.wait(1000);
-    let targetEffect = await mba.createEffect(target.actor, effectData);
-    let updates = {
-        'flags': {
-            'mba-premades': {
-                'spell': {
-                    'banishingSmite': {
-                        'used': true,
-                        'targetEffectUuid': targetEffect.uuid
+        .thenDo(async () => {
+            let targetEffect = await mba.createEffect(target.actor, effectData);
+            let updates = {
+                'flags': {
+                    'mba-premades': {
+                        'spell': {
+                            'banishingSmite': {
+                                'used': true,
+                                'targetEffectUuid': targetEffect.uuid
+                            }
+                        }
                     }
                 }
-            }
-        }
-    };
-    await mba.updateEffect(effect, updates);
+            };
+            await mba.updateEffect(effect, updates);
+        })
+
+        .play()
 }
 
 export let banishingSmite = {

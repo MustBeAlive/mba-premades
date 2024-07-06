@@ -3,7 +3,7 @@ import {mba} from "../../../helperFunctions.js";
 export async function barkskin({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Barkskin` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Barks` })
     };
     const effectData = {
         'name': workflow.item.name,
@@ -76,7 +76,7 @@ export async function barkskin({ speaker, actor, token, character, item, args, s
         .fadeIn(1000)
         .fadeOut(1000)
         .persist()
-        .name(`${target.document.name} Barkskin`)
+        .name(`${target.document.name} Barks`)
 
         .wait(300)
 

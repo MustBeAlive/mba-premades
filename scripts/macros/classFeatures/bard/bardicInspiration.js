@@ -1,6 +1,6 @@
-import {constants} from "../../generic/constants.js";
-import {mba} from "../../../helperFunctions.js";
-import {queue} from "../../mechanics/queue.js";
+import { constants } from "../../generic/constants.js";
+import { mba } from "../../../helperFunctions.js";
+import { queue } from "../../mechanics/queue.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let bardLevel = workflow.actor.classes.bard?.system?.levels;
@@ -178,12 +178,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
             return;
         }
         featureData.system.save.dc = moteOfPotential;
-        featureData.system.damage.parts = [
-            [
-                bardDie + '[thunder]',
-                'thunder'
-            ]
-        ];
+        featureData.system.damage.parts = [[bardDie + '[thunder]', 'thunder']];
         let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
         let newTargets = await mba.findNearby(workflow.targets.first(), 5, 'ally', false, true).map(i => i.document.uuid);
         let [config, options] = constants.syntheticItemWorkflowOptions(newTargets);

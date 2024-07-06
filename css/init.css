@@ -417,6 +417,11 @@ button:hover, form button:hover {
     background: none;
 }
 
+.sheet.journal-entry .journal-entry-page * {
+    background: var(--color-dracula-content);
+    color: var(--color-dracula-text-secondary);
+}
+
 
 #navigation.collapsed #nav-toggle {
     background: var(--color-dracula-content);
@@ -1213,7 +1218,8 @@ nav.list-filters a.filter:hover {
 }
 
 .editor-content {
-    color: var(--color-dracula-text-primary)
+    color: var(--color-dracula-text-primary);
+    background: var(--color-dracula-content);
 }
 
 .editor-edit {
@@ -3567,8 +3573,7 @@ aside .read-aloud-text p * {
 	background: rgb(255 255 255 / 5%);
 	color: white;
 }
-#always-hp #alwayshp-hp,
-.alwayshp-btn {
+#always-hp #alwayshp-hp, .alwayshp-btn {
     flex: 0 0 auto;
     margin: 0 2px;
     box-shadow: none;
@@ -3588,6 +3593,10 @@ aside .read-aloud-text p * {
 }
 #always-hp .death-savingthrow > div:hover {
 	background: rgb(255 255 255 / 20%);
+}
+.death-savingthrow > div.active {
+    border: 1px solid red !important;
+    background-color: red !important;
 }
 #always-hp .death-savingthrow.save > div.active {
     border: 1px solid #158d25; /* green saving thows */
@@ -4168,9 +4177,9 @@ footer.svelte-auto-1g5ic18.svelte-auto-1g5ic18:hover {
     background: var(--color-dracula-content);
 }
 .monks-enhanced-journal .enhanced-journal-header .navigation .nav-button:not(.disabled):hover {
-    box-shadow: 0 0 5px var(--color-dracula-accent);
-    cursor: pointer;
     background: var(--color-dracula-accent);
+    box-shadow: unset;
+    color: var(--color-dracula-shadow);
 }
 .monks-enhanced-journal .enhanced-journal-header .navigation hr.vertical {
     border-right: 2px groove var(--color-dracula-accent);
@@ -4304,6 +4313,12 @@ body[inline-roll-styling="true"] a.entity-link, body[inline-roll-styling="true"]
 }
 body[inline-roll-styling="true"] a.entity-link i, body[inline-roll-styling="true"] a.content-link i, body[inline-roll-styling="true"] a.inline-roll, body[inline-roll-styling="true"] a.picture-link i, body[inline-roll-styling="true"] a.sound-link i, body[inline-roll-styling="true"] a.inline-request-roll i, body[inline-roll-styling="true"] a.tile-trigger-link i {
     color: var(--color-dracula-accent);
+}
+.monks-enhanced-journal .enhanced-journal-footer .nav-button:not(.disabled):hover {
+    background: var(--color-dracula-accent);
+    box-shadow: unset;
+    color: var(--color-dracula-shadow);
+    text-shadow: unset;
 }
 
 
@@ -4630,6 +4645,10 @@ select.ve-foundry-button {
 }
 .second.svelte-ese-o0yoxs.svelte-ese-o0yoxs {
     background: var(--color-dracula-content);
+}
+.hover-highlight.svelte-ese-1fyjvdk:hover>.hover-text.svelte-ese-1fyjvdk {
+    color: var(--color-dracula-text-secondary);
+    text-shadow: 0 0 10px var(--color-dracula-accent);
 }
 
 

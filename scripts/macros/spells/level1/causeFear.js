@@ -2,24 +2,14 @@ import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
-	let targets = Array.from(workflow.targets);
-	for (let target of targets) {
+	for (let target of Array.from(workflow.targets)) {
 		let type = mba.raceOrType(target.actor);
-		if (type === 'undead' || type === 'construct') {
+		if (type === "undead" || type === "construct" || mba.checkTrait(target.actor, 'ci', 'frightened')) {
 			ChatMessage.create({
-				flavor: target.document.name + ' is unaffected by Cause Fear! (Target is undead/construct)',
+				flavor: `<u>${target.document.name}</u> is unaffected by Cause Fear!`,
 				speaker: ChatMessage.getSpeaker({ actor: workflow.actor })
 			});
 			await mba.createEffect(target.actor, constants.immunityEffectData);
-			continue;
-		}
-		if (mba.checkTrait(target.actor, 'ci', 'frightened')) {
-			ChatMessage.create({
-				flavor: target.document.name + ' is unaffected by Cause Fear! (target is immune to condition: Frightened)',
-				speaker: ChatMessage.getSpeaker({ actor: workflow.actor })
-			});
-			await mba.createEffect(target.actor, constants.immunityEffectData);
-			continue;
 		}
 	}
 }
@@ -48,17 +38,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 		await mba.removeCondition(workflow.actor, "Concentrating");
 		return;
 	}
-	let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Cause Fear: Fear', false);
-	if (!featureData) {
-		ui.notifications.warn("Unable to find item in the compenidum! (Cause Fear: Fear)");
-		return
-	}
+	let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Cause Fear: Save", false);
+	if (!featureData) return;
 	delete featureData._id;
-	featureData.system.save.dc = mba.getSpellDC(workflow.item);
+	let saveDC = mba.getSpellDC(workflow.item);
+	featureData.system.save.dc = saveDC;
 	setProperty(featureData, 'mba-premades.spell.castData.school', workflow.item.system.school);
 	let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
-	let targetUuids = [];
-	for (let i of targets) targetUuids.push(i.document.uuid);
+	let targetUuids = Array.from(targets).map(t => t.document.uuid);
 	let [config, options] = constants.syntheticItemWorkflowOptions(targetUuids);
 	await game.messages.get(workflow.itemCardId).delete();
 	let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
@@ -66,16 +53,15 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 		await mba.removeCondition(workflow.actor, "Concentrating");
 		return;
 	}
-	let failedTargets = Array.from(featureWorkflow.failedSaves);
 	async function effectMacroDel() {
-		await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Cause Fear`, object: token })
+		Sequencer.EffectManager.endEffects({ name: `${token.document.name} CauFea`})
 	}
 	let effectData = {
 		'name': workflow.item.name,
 		'icon': workflow.item.img,
 		'origin': workflow.item.uuid,
 		'description': `
-			<p>You feel the sense of mortality and are frightened for the duration.</p>
+			<p>You feel the sense of mortality and are @UUID[Compendium.mba-premades.MBA SRD.Item.oR1wUvem3zVVUv5Q]{Frightened} for the duration.</p>
 			<p>At the end of each of your turns you can repeat the saving throw, ending the effect on a success.</p>
 		`,
 		'duration': {
@@ -83,19 +69,22 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 		},
 		'changes': [
 			{
-				'key': 'flags.midi-qol.OverTime',
-				'mode': 0,
-				'value': 'turn=end, saveAbility=wis, saveDC=' + mba.getSpellDC(workflow.item) + ', saveMagic=true, name=Fear: End Turn',
-				'priority': 20
-			},
-			{
 				'key': 'macro.CE',
 				'mode': 0,
 				'value': 'Frightened',
 				'priority': 20
-			}
+			},
+			{
+				'key': 'flags.midi-qol.OverTime',
+				'mode': 0,
+				'value': `turn=end, saveAbility=wis, saveDC=${saveDC}, saveMagic=true, name=Fear: Turn End (DC${saveDC}), killAnim=true`,
+				'priority': 20
+			},
 		],
 		'flags': {
+			'dae': {
+                'specialDuration': ["zeroHP"]
+            },
 			'effectmacro': {
 				'onDelete': {
 					'script': mba.functionToString(effectMacroDel)
@@ -111,39 +100,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 		}
 	};
 
-	await new Sequence()
-
-		.effect()
-		.file(`jb2a.magic_signs.circle.02.necromancy.loop.green`)
-		.atLocation(token)
-		.scaleToObject(1.5)
-		.rotateIn(180, 600, { ease: "easeOutCubic" })
-		.scaleIn(0, 600, { ease: "easeOutCubic" })
-		.loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-		.belowTokens()
-		.fadeOut(2000)
-		.zIndex(0)
-
-		.effect()
-		.file(`jb2a.magic_signs.circle.02.necromancy.loop.green`)
-		.atLocation(token)
-		.scaleToObject(1.5)
-		.duration(1200)
-		.fadeIn(200, { ease: "easeOutCirc", delay: 500 })
-		.fadeOut(300, { ease: "linear" })
-		.rotateIn(180, 600, { ease: "easeOutCubic" })
-		.scaleIn(0, 600, { ease: "easeOutCubic" })
-		.loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-		.belowTokens(true)
-		.filter("ColorMatrix", { saturate: -1, brightness: 2 })
-		.filter("Blur", { blurX: 5, blurY: 10 })
-		.zIndex(1)
-
-		.wait(1500)
-
-		.play();
-
-	for (let target of failedTargets) {
+	for (let target of Array.from(featureWorkflow.failedSaves)) {
 		let delay = 100 + Math.floor(Math.random() * (Math.floor(1000) - Math.ceil(50)) + Math.ceil(50));
 
 		new Sequence()
@@ -209,7 +166,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			.playbackRate(1)
 			.filter("ColorMatrix", { hue: 130 })
 			.persist()
-			.name(`${target.document.name} Cause Fear`)
+			.name(`${target.document.name} CauFea`)
 
 			.play()
 	};

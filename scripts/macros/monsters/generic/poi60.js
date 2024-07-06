@@ -5,14 +5,17 @@ export async function poi60({ speaker, actor, token, character, item, args, scop
     let target = workflow.targets.first();
     if (target.actor.system.attributes.hp.value > 0) return;
     if (mba.checkTrait(target.actor, "ci", "poisoned")) return;
-    if (mba.findEffect(target.actor, `${workflow.token.document.name}: Poison`)) return;;
+    if (mba.findEffect(target.actor, `${workflow.token.document.name}: Poison`)) return;
+    async function effectMacroDel() {
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Poison` })
+    };
     let effectData = {
         'name': `${workflow.token.document.name}: Poison`,
         'icon': "modules/mba-premades/icons/generic/generic_poison.webp",
         'origin': workflow.item.uuid,
         'description': `
-            <p>You've been poisoned by ${workflow.token.document.name}.</p>
-            <p>You are stable, but poisoned for the duration (even after regaining hit points) and are Paralyzed while poioned in this way.</p>
+            <p>You've been @UUID[Compendium.mba-premades.MBA SRD.Item.pAjPUbk2oPUTfva2]{Poisoned} by ${workflow.token.document.name}.</p>
+            <p>You are stable, but @UUID[Compendium.mba-premades.MBA SRD.Item.pAjPUbk2oPUTfva2]{Poisoned} for the duration (even after regaining hit points) and are @UUID[Compendium.mba-premades.MBA SRD.Item.jooSbuYlWEhaNpIi]{Paralyzed} while @UUID[Compendium.mba-premades.MBA SRD.Item.pAjPUbk2oPUTfva2]{Poisoned} in this way.</p>
         `,
         'duration': {
             'seconds': 3600
@@ -36,7 +39,37 @@ export async function poi60({ speaker, actor, token, character, item, args, scop
                 'value': 3,
                 'priority': 20
             }
-        ]
+        ],
+        'flags': {
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDel)
+                }
+            }
+        }
     };
-    await mba.createEffect(target.actor, effectData);
+    new Sequence()
+
+        .effect()
+        .file("jb2a.smoke.puff.centered.green.2")
+        .attachTo(target)
+        .scaleToObject(2 * target.document.texture.scaleX)
+
+        .effect()
+        .file("jb2a.template_circle.symbol.normal.poison.dark_green")
+        .attachTo(target)
+        .scaleToObject(1 * target.document.texture.scaleX)
+        .delay(500)
+        .fadeIn(500)
+        .fadeOut(500)
+        .randomRotation()
+        .mask(target)
+        .persist()
+        .name(`${target.document.name} Poison`)
+
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData)
+        })
+
+        .play()
 }

@@ -1,22 +1,25 @@
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel - 2;
     if (workflow.targets.size <= ammount) return;
-    let selection = await mbaPremades.helpers.selectTarget(workflow.item.name, mbaPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+    let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
     if (!selection.buttons) return;
     let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
-    mbaPremades.helpers.updateTargets(newTargets);
+    mba.updateTargets(newTargets);
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let targets = Array.from(workflow.targets);
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Fly`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Fly` })
 
         new Sequence()
 
             .animation()
             .on(token)
             .opacity(1)
+            .fadeIn(1000)
 
             .play();
     }
@@ -24,7 +27,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
-        'description': "You have flying speed of 60 feet for the duration. When the spell ends, you instantly fall if you are still aloft, unless you can stop the fall.",
+        'description': `
+            <p>You have flying speed of 60 feet for the duration.</p>
+            <p>When the spell ends, you instantly fall if you are still aloft, unless you can stop the fall.
+        `,
         'duration': {
             'seconds': 600
         },
@@ -39,7 +45,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'effectmacro': {
                 'onDelete': {
-                    'script': mbaPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -51,24 +57,24 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    for (let target of targets) {
+    for (let target of Array.from(workflow.targets)) {
         await new Sequence()
 
             .effect()
             .file("animated-spell-effects-cartoon.energy.pulse.yellow")
             .atLocation(target, { offset: { y: 0.2 }, gridUnits: true })
             .size({ width: target.document.width * 1.5, height: target.document.width * 1.45 }, { gridUnits: true })
+            .zIndex(1)
             .belowTokens()
             .filter("ColorMatrix", { hue: -10 })
-            .zIndex(1)
 
             .effect()
             .file("animated-spell-effects-cartoon.smoke.105")
             .atLocation(target, { offset: { y: 0.05 }, gridUnits: true })
-            .opacity(1)
             .scaleToObject(2)
-            .tint("#FFd129")
+            .opacity(1)
             .belowTokens()
+            .tint("#FFd129")
 
             .animation()
             .on(target)
@@ -78,48 +84,49 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .from(target)
             .attachTo(target, { bindAlpha: false, followRotation: true, locale: false })
             .scaleToObject(1, { considerTokenScale: true })
-            .opacity(1)
             .duration(800)
+            .fadeOut(1000)
             .animateProperty("sprite", "position.y", { from: 50, to: -10, duration: 500, ease: "easeOutBack" })
             .loopProperty("sprite", "position.y", { from: 0, to: -50, duration: 2500, pingPong: true, delay: 1000 })
-            .filter("Glow", { color: 0xFFd129, distance: 10, outerStrength: 4, innerStrength: 0 })
+            .opacity(1)
             .zIndex(2)
-            .fadeOut(500)
+            .filter("Glow", { color: 0xFFd129, distance: 10, outerStrength: 4, innerStrength: 0 })
             .persist()
             .name(`${target.document.name} Fly`)
 
             .effect()
             .file("jb2a.particles.outward.orange.02.04")
-            .scaleToObject(1.35, { considerTokenScale: true })
             .attachTo(target, { bindAlpha: false })
-            .opacity(1)
+            .scaleToObject(1.35, { considerTokenScale: true })
             .duration(800)
+            .fadeIn(1000)
+            .fadeOut(1000)
             .animateProperty("sprite", "position.y", { from: 50, to: -10, duration: 500, ease: "easeOutBack" })
             .loopProperty("sprite", "position.y", { from: 0, to: -50, duration: 2500, pingPong: true, delay: 1000 })
-            .fadeIn(1000)
             .zIndex(2.2)
-            .fadeOut(500)
             .persist()
             .name(`${target.document.name} Fly`)
 
             .effect()
             .from(target)
             .atLocation(target)
+            .attachTo(target, { bindAlpha: false })
             .scaleToObject(0.9)
             .duration(1000)
+            .fadeOut(1000)
             .opacity(0.5)
+            .zIndex(1)
             .belowTokens()
             .filter("ColorMatrix", { brightness: -1 })
             .filter("Blur", { blurX: 5, blurY: 10 })
-            .attachTo(target, { bindAlpha: false })
-            .zIndex(1)
-            .fadeOut(500)
             .persist()
             .name(`${target.document.name} Fly`)
 
-            .play();
+            .thenDo(async () => {
+                await mba.createEffect(target.actor, effectData)
+            })
 
-        await mbaPremades.helpers.createEffect(target.actor, effectData)
+            .play();
     }
 }
 

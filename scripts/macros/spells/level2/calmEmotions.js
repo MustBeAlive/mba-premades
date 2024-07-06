@@ -47,9 +47,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
-    let targets = Array.from(workflow.failedSaves);
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Calm Emotions` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} CalEmo` })
     };
     let effectDataCalm = {
         'name': workflow.item.name,
@@ -86,7 +85,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>Calm Emotions suppresses any effect causing you to be charmed or frightened.</p>
+            <p>Calm Emotions suppresses any effect causing you to be @UUID[Compendium.mba-premades.MBA SRD.Item.SVd8xu3mTZMqz8fL]{Charmed} or @UUID[Compendium.mba-premades.MBA SRD.Item.oR1wUvem3zVVUv5Q]{Frightened}.</p>
             <p>When this spell ends, any suppressed effect resumes, provided that its duration has not expired in the meantime.</p>
         `,
         'duration': {
@@ -121,9 +120,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    for (let target of targets) {
+    for (let target of Array.from(workflow.failedSaves)) {
         let choices = [["Suppress Charmed/Frightened effect", "suppress"], ["Make target indifferent", "calm"]];
-        let selectionType = await mba.dialog("Calm Emotions", choices, `Choose effect type for <b>${target.document.name}</b>:`);
+        let selectionType = await mba.dialog("Calm Emotions", choices, `Choose effect type for <u>${target.document.name}</u>:`);
         if (!selectionType) continue;
         new Sequence()
 
@@ -136,7 +135,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .filter("ColorMatrix", { hue: 40 })
             .playbackRate(0.8)
             .persist()
-            .name(`${target.document.name} Calm Emotions`)
+            .name(`${target.document.name} CalEmo`)
 
             .thenDo(async () => {
                 if (selectionType === "suppress") await mba.createEffect(target.actor, effectDataSuppress);

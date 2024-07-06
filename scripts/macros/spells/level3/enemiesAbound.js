@@ -1,3 +1,6 @@
+
+//To do: whole spell
+
 async function item({speaker, actor, token, character, item, args, scope, workflow}) {
     let target = workflow.targets.first();
     let hasFearImmunity = mbaPremades.helpers.checkTrait(target.actor, 'ci', 'frightened');
@@ -51,6 +54,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
     };
     await mbaPremades.helpers.createEffect(target.actor, effectData);
 }
+
 //IS BORKED, REWORK
 async function isDamaged({speaker, actor, token, character, item, args, scope, workflow}) {
     const originItem = await fromUuid(actor.effects.find((eff) => eff.name === 'Enemies Abound').origin);
@@ -91,7 +95,7 @@ async function targetCheck({speaker, actor, token, character, item, args, scope,
     let range = workflow.item.system.range.value;
     if (!range) {
         let isSelf = workflow.item.system.target.type;
-        if (isSelf = self) return;
+        if (isSelf === "self") return;
         ui.notifications.warn("Item has no range value. Ask GM for target randomisation (if it can be applied to the used item).");
         return;
     }

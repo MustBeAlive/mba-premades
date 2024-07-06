@@ -9,9 +9,9 @@ export async function primalSavagery({ speaker, actor, token, character, item, a
 
         .effect()
         .file("jaamod.sequencer_fx_master.blood_splat.red.2")
-        .delay(100)
         .attachTo(target)
         .scaleToObject(1.7)
+        .delay(100)
         .duration(5000)
         .fadeOut(1000)
         .belowTokens()

@@ -6,6 +6,7 @@ import {help} from "./help.js";
 import {hide} from "./hide.js";
 import {ready} from "./ready.js";
 import {shove} from "./shove.js";
+import {standUp} from "./standUp.js";
 
 export let actions = {
     'dash': dash,
@@ -15,5 +16,6 @@ export let actions = {
     'help': help,
     'hide': hide,
     'ready': ready,
-    'shove': shove
+    'shove': shove,
+    'standUp': standUp
 }

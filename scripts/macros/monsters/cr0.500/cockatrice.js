@@ -4,7 +4,7 @@ async function petrification({ speaker, actor, token, character, item, args, sco
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
     if (mba.checkTrait(target.actor, "ci", "petrified")) return;
-    if (mba.findEffect(target.actor, "Petrified")) return; //just overly cautious
+    if (mba.findEffect(target.actor, "Petrified")) return; //overly cautious
     if (mba.findEffect(target.actor, "Cockatrice: Petrifying Bite")) return;
     if (mba.findEffect(target.actor, "Cockatrice: Petrification")) return;
     async function effectMacroDel() {
@@ -14,7 +14,7 @@ async function petrification({ speaker, actor, token, character, item, args, sco
             return;
         }
         async function effectMacroDel() {
-            Sequencer.EffectManager.endEffects({ name: `${token.document.name} Cockatrice Petrification`, object: token })
+            Sequencer.EffectManager.endEffects({ name: `${token.document.name} CockatP`})
         }
         const effectData = {
             'name': "Cockatrice: Petrification",
@@ -54,10 +54,10 @@ async function petrification({ speaker, actor, token, character, item, args, sco
             .duration(5000)
             .zIndex(1)
             .persist()
-            .name(`${token.document.name} Cockatrice Petrification`)
+            .name(`${token.document.name} CockatP`)
 
             .effect()
-            .file("https://i.imgur.com/4P2tITB.png")
+            .file("modules/mba-premades/icons/conditions/overlay/pertrification.webp")
             .atLocation(token)
             .mask(token)
             .opacity(1)
@@ -68,7 +68,7 @@ async function petrification({ speaker, actor, token, character, item, args, sco
             .duration(5000)
             .attachTo(token)
             .persist()
-            .name(`${token.document.name} Cockatrice Petrification`)
+            .name(`${token.document.name} CockatP`)
 
             .thenDo(async () => {
                 await mbaPremades.helpers.createEffect(actor, effectData);
@@ -80,9 +80,9 @@ async function petrification({ speaker, actor, token, character, item, args, sco
         'name': "Cockatrice: Petrifying Bite",
         'icon': "modules/mba-premades/icons/conditions/muddy.webp",
         'description': `
-            <p>You are restrained as you begin to magically turn into stone.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.gfRbTxGiulUylAjE]{Restrained} as you begin to magically turn into stone.</p>
             <p>At the end of your next turn you must repeat the saving throw.</p>
-            <p>On a success, the effect ends. On a failure, you are petrified.</p>
+            <p>On a success, the effect ends. On a failure, you are @UUID[Compendium.mba-premades.MBA SRD.Item.rrTzCb9szWTmyXwH]{Petrified}.</p>
         `,
         'changes': [
             {

@@ -9,7 +9,7 @@ export async function arcaneLock({ speaker, actor, token, character, item, args,
 
             .effect()
             .file("icons/svg/padlock.svg")
-            .atLocation(token)
+            .atLocation(workflow.token)
             .size(0.5, { gridUnits: true })
             .duration(1700)
             .fadeIn(500)
@@ -21,7 +21,7 @@ export async function arcaneLock({ speaker, actor, token, character, item, args,
 
             .effect()
             .file("jb2a.markers.chain.spectral_standard.complete.02.blue")
-            .atLocation(token)
+            .atLocation(workflow.token)
             .size(0.5 + 0.8, { gridUnits: true })
             .duration(1700)
             .fadeOut(1000)
@@ -37,7 +37,7 @@ export async function arcaneLock({ speaker, actor, token, character, item, args,
 
             .effect()
             .file("jb2a.impact.004.blue")
-            .atLocation(token)
+            .atLocation(workflow.token)
             .size(1.75, { gridUnits: true })
             .fadeOut(1000)
             .aboveLighting()
@@ -47,7 +47,7 @@ export async function arcaneLock({ speaker, actor, token, character, item, args,
 
             .effect()
             .file("animated-spell-effects-cartoon.smoke.57")
-            .atLocation(token, { offset: { x: 0.2, y: -0.2 }, gridUnits: true })
+            .atLocation(workflow.token, { offset: { x: 0.2, y: -0.2 }, gridUnits: true })
             .size(4, { gridUnits: true })
             .fadeOut(1000)
             .belowTokens()
@@ -56,7 +56,7 @@ export async function arcaneLock({ speaker, actor, token, character, item, args,
 
             .effect()
             .file("jb2a.particles.outward.white.01.03")
-            .atLocation(token)
+            .atLocation(workflow.token)
             .size(3, { gridUnits: true })
             .duration(1500)
             .fadeOut(1500)
@@ -161,7 +161,7 @@ export async function arcaneLock({ speaker, actor, token, character, item, args,
             .shake({ duration: 500, strength: 2, rotation: false, fadeOut: 500 })
 
             .thenDo(async () => {
-                mba.updateDoc(door, updates);
+                await mba.updateDoc(door, updates);
             })
 
             .play()

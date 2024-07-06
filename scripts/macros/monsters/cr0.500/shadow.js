@@ -4,7 +4,7 @@ async function strengthDrain({ speaker, actor, token, character, item, args, sco
     if (!workflow.hitTargets.size) return;
     let target = workflow.targets.first();
     let strRoll = await new Roll("1d4").roll({ 'async': true });
-    await MidiQOL.displayDSNForRoll(strRoll, 'damageRoll');
+    await MidiQOL.displayDSNForRoll(strRoll);
     strRoll.toMessage({
         rollMode: 'roll',
         speaker: { 'alias': name },
@@ -26,8 +26,8 @@ async function strengthDrain({ speaker, actor, token, character, item, args, sco
         let newStr = effect.flags['mba-premades']?.penalty + strRoll.total;
         let updates = {
             'description': `
-                <p>Shadow is draining your strength.</p>
-                <p>If your strength score becomes 0, you will die.</p>
+                <p>Shadow is draining your Strength.</p>
+                <p>If your Strength score becomes 0, you will die.</p>
                 <p>Reduction lasts until you finish a short or a long rest.</p>
                 <p>Current Penalty: <b>${newStr}</b></p>
             `,
@@ -59,8 +59,8 @@ async function strengthDrain({ speaker, actor, token, character, item, args, sco
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-                <p>Shadow is draining your strength.</p>
-                <p>If your strength score becomes 0, you will die.</p>
+                <p>Shadow is draining your Strength.</p>
+                <p>If your Strength score becomes 0, you will die.</p>
                 <p>Reduction lasts until you finish a short or a long rest.</p>
                 <p>Current Penalty: <b>${strRoll.total}</b></p>
             `,
@@ -79,12 +79,12 @@ async function strengthDrain({ speaker, actor, token, character, item, args, sco
             },
             'mba-premades': {
                 'abilityReduction': true,
+                'greaterRestoration': true,
                 'penalty': strRoll.total
             }
         }
     };
     await mba.createEffect(target.actor, effectData);
-
 }
 
 export let shadow = {

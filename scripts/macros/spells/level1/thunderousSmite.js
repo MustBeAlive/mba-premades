@@ -4,7 +4,7 @@ import {queue} from "../../mechanics/queue.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Thunderous Smite` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} ThuSmi` })
     }
     let effectData = {
         'name': workflow.item.name,
@@ -43,12 +43,11 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-
     await new Sequence()
 
         .effect()
         .file(`jb2a.particles.outward.blue.02.03`)
-        .attachTo(token, { offset: { y: -0.25 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { y: -0.25 }, gridUnits: true, followRotation: false })
         .scaleToObject(1.2)
         .delay(500)
         .duration(2000)
@@ -62,7 +61,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.divine_smite.caster.reversed.orange")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(2.2)
         .delay(1050)
         .startTime(900)
@@ -71,7 +70,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.divine_smite.caster.orange")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(1.85)
         .filter("ColorMatrix", { hue: 170 })
         .belowTokens()
@@ -79,15 +78,17 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.token_border.circle.static.blue.007")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(2)
         .fadeOut(500)
         .persist()
-        .name(`${token.document.name} Thunderous Smite`)
+        .name(`${workflow.token.document.name} ThuSmi`)
+
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
+        })
 
         .play();
-
-    await mba.createEffect(workflow.actor, effectData);
 }
 
 async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -104,7 +105,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRoll = await new Roll(damageFormula).roll({ async: true });
     await workflow.setDamageRoll(damageRoll);
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Thunderous Smite: Push');
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Thunderous Smite: Save", false);
     if (!featureData) {
         queue.remove(workflow.item.uuid);
         return;
@@ -124,7 +125,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .effect()
         .file("jb2a.impact.ground_crack.01.blue")
         .atLocation(target)
-        .size(2.3 * token.document.width, { gridUnits: true })
+        .size(2.3 * workflow.token.document.width, { gridUnits: true })
         .delay(300)
         .belowTokens()
         .playbackRate(0.85)
@@ -133,10 +134,10 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .effect()
         .file("jb2a.divine_smite.target.orange")
         .atLocation(target)
-        .rotateTowards(token)
+        .rotateTowards(workflow.token)
         .filter("ColorMatrix", { hue: 170 })
         .scaleToObject(3)
-        .spriteOffset({ x: -1.5 * token.document.width, y: -0 * token.document.width }, { gridUnits: true })
+        .spriteOffset({ x: -1.5 * workflow.token.document.width, y: -0 * workflow.token.document.width }, { gridUnits: true })
         .mirrorY()
         .rotate(90)
         .zIndex(2)
@@ -144,7 +145,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .wait(600)
 
         .thenDo(function () {
-            Sequencer.EffectManager.endEffects({ name: `${token.document.name} Thunderous Smite` })
+            Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} ThuSmi` })
         })
 
         .play();

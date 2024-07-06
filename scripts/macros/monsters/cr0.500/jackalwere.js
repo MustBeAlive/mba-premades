@@ -23,14 +23,14 @@ async function sleepGaze({ speaker, actor, token, character, item, args, scope, 
                 'seconds': 86400
             }
         };
-        await mbaPremades.helpers.createEffect(actor, immuneData);
+        await mbaPremades.helpers.createEffect(token.actor, immuneData);
     }
     const effectData = {
         'name': "Jackalwere: Sleep Gaze",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You succumb to a magical slumber, falling unconscious for the duration or until someone uses and action to shake you awake.</p>
+            <p>You succumb to a magical slumber, falling @UUID[Compendium.mba-premades.MBA SRD.Item.kIUR1eRcTTtaMFao]{Unconscious} for the duration or until someone uses and action to shake you awake.</p>
             <p>After the effect ends you are immune to Jackalwere's Sleep Gaze for the next 24 hours.</p>
         `,
         'duration': {

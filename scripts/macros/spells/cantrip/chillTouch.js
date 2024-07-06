@@ -12,7 +12,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
             .effect()
             .file("jb2a.spell_projectile.skull.pinkpurple")
-            .attachTo(token)
+            .attachTo(workflow.token)
             .stretchTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
             .filter("ColorMatrix", { hue: 160 })
 
@@ -21,7 +21,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         return;
     }
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Chill Touch`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} ChiTou` })
     };
     const effectData = {
         'name': workflow.item.name,
@@ -68,7 +68,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.spell_projectile.skull.pinkpurple")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target)
         .filter("ColorMatrix", { hue: 160 })
         .waitUntilFinished(-1600)
@@ -81,7 +81,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .fadeIn(500)
         .fadeOut(1000)
         .persist()
-        .name(`${target.document.name} Chill Touch`)
+        .name(`${target.document.name} ChiTou`)
 
         .thenDo(async () => {
             await mba.createEffect(target.actor, effectData);

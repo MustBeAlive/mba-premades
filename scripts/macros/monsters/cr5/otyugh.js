@@ -110,7 +110,8 @@ async function tentacleSlam({ speaker, actor, token, character, item, args, scop
         ui.notifications.warn("You must select two targets!");
         return;
     }
-    let grappleItem = workflow.actor.items.filter(i => i.name === `Tentacle`)[0];
+    //let grappleItem = workflow.actor.items.filter(i => i.name === `Tentacle`)[0];
+    let grappleItem = mba.getItem(workflow.actor, "Tentacle");
     for (let target of targets) {
         let effect = mba.findEffect(target.actor, "Otyugh: Grapple")
         if (!effect) return;
@@ -122,21 +123,20 @@ async function tentacleSlam({ speaker, actor, token, character, item, args, scop
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Monster Features', 'Otyugh: Tentacle Slam', false);
     if (!featureData) return;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
-    let targetUuids = [];
-    for (let target of targets) targetUuids.push(target.document.uuid);
+    let targetUuids = Array.from(targets).map(t => t.document.uuid);
+    //for (let target of targets) targetUuids.push(target.document.uuid);
     let [config, options] = constants.syntheticItemWorkflowOptions(targetUuids);
     await warpgate.wait(100);
     await game.messages.get(workflow.itemCardId).delete();
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow.failedSaves.size) return;
-    let failedTargets = Array.from(featureWorkflow.failedSaves);
     const effectData = {
         'name': "Otyugh: Tentacle Slam",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
             <p>Otyugh used it's tentacles to slam creatures it was grappling into each other.</p>
-            <p>You are stunned until the end of Otyugh's next turn.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.O1gS8bqw9PJTuCAh]{Stunned} until the end of Otyugh's next turn.</p>
         `,
         'changes': [
             {
@@ -153,7 +153,9 @@ async function tentacleSlam({ speaker, actor, token, character, item, args, scop
             }
         }
     };
-    for (let failedTarget of failedTargets) await mba.createEffect(failedTarget.actor, effectData);
+    for (let failedTarget of Array.from(featureWorkflow.failedSaves)) {
+        if (!mba.checkTrait(failedTarget.actor, "ci", "stunned") && !mba.findEffect(failedTarget.actor, "Otyugh: Tentacle Slam")) await mba.createEffect(failedTarget.actor, effectData);
+    }
 }
 
 export let otyugh = {

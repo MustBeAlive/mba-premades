@@ -3,6 +3,7 @@ import {mba} from "../../../helperFunctions.js";
 export async function sacredFlame({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let animation = "selection"; // "default"; "selection"; "random";
+    if (!workflow.failedSaves.size) animation = "default";
     let animation1 = "jb2a.sacred_flame.source.";
     let animation2 = "jb2a.divine_smite.caster.";
     let animation3 = "jb2a.sacred_flame.target.";
@@ -15,45 +16,42 @@ export async function sacredFlame({ speaker, actor, token, character, item, args
         ["Yellow", "yellow"],
         ["White", "white"]
     ];
-    console.log(choices);
-    if (animation === "random") {
-        let animRoll = await new Roll('1d4').roll({ 'async': true });
-        color = choices[animRoll.total - 1][1];
-    }
-    if (animation === "selection") {
+    if (animation === "default") color = "white";
+    else if (animation === "selection") {
         color = await mba.dialog("Sacred Flame", choices, `<b>Choose color:</b>`);
         if (!color) color = "white";
     }
-    if (animation === "default") color = "white";
-
-
+    else if (animation === "random") {
+        let animRoll = await new Roll('1d4').roll({ 'async': true });
+        color = choices[animRoll.total - 1][1];
+    }
+    if (!color) return;
     if (color === "blue") {
         animation1 += "blue";
         animation2 += "greenyellow";
         hue = 120;
         animation3 += "blue"; 
     }
-    if (color === "green") {
+    else if (color === "green") {
         animation1 += "green";
         animation2 += "greenyellow";
         animation3 += "green";
     }
-    if (color === "purple") {
+    else if (color === "purple") {
         animation1 += "purple";
         animation2 += "purplepink";
         animation3 += "purple";
     }
-    if (color === "yellow") {
+    else if (color === "yellow") {
         animation1 += "yellow";
         animation2 += "blueyellow";
         animation3 += "yellow";
     }
-    if (color === "white") {
+    else if (color === "white") {
         animation1 += "white";
         animation2 += "yellowwhite";
         animation3 += "white";
     }
-
 
     new Sequence()
 

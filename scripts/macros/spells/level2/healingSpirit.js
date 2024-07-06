@@ -41,10 +41,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         }
     });
     let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Healing Spirit: Move", false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find feature in the compendium! (Healing Spirit: Move)");
-        return;
-    }
+    if (!featureData) return;
     delete featureData._id;
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `Healing Spirit` });
@@ -223,10 +220,7 @@ async function trigger(token, trigger) {
     let selection = await mba.remoteDialog("Healing Spirit", [["Yes", "yes"], ["No", "no"]], mba.firstOwner(caster).id, `<b>Would you like to heal ${token.name}?</b>`);
     if (selection === false) return;
     let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Healing Spirit: Heal", false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find feature in the compendium! (Healing Spirit: Heal)");
-        return;
-    }
+    if (!featureData) return;
     delete featureData._id;
     let usesCurrent = trigger.usesCurrent;
     let usesMax = trigger.usesMax;

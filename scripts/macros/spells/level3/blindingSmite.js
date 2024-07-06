@@ -5,7 +5,7 @@ import {queue} from "../../mechanics/queue.js";
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         await (warpgate.wait(200));
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Blinding Smite` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} BliSmi` })
         let targetEffectUuid = effect.flags['mba-premades']?.spell?.blindingSmite?.targetEffectUuid;
         if (!targetEffectUuid) return;
         let targetEffect = await fromUuid(targetEffectUuid);
@@ -13,7 +13,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         let targetUuid = effect.flags['mba-premades']?.spell?.blindingSmite?.targetUuid;
         if (!targetUuid) return;
         let target = await fromUuid(targetUuid);
-        await Sequencer.EffectManager.endEffects({ name: `${target.name} Blinding Smite` })
+        await Sequencer.EffectManager.endEffects({ name: `${target.name} BliSmi` })
         await mbaPremades.helpers.removeEffect(targetEffect);
     }
     let effectData = {
@@ -32,17 +32,17 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         ],
         'flags': {
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDel)
+                }
+            },
             'mba-premades': {
                 'spell': {
                     'blindingSmite': {
                         'saveDC': mba.getSpellDC(workflow.item),
                         'used': false
                     }
-                }
-            },
-            'effectmacro': {
-                'onDelete': {
-                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -60,7 +60,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .delay(500)
         .file(`jb2a.particles.outward.white.02.03`)
-        .attachTo(token, { offset: { y: -0.25 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { y: -0.25 }, gridUnits: true, followRotation: false })
         .scaleToObject(1.2)
         .playbackRate(2)
         .duration(2000)
@@ -74,33 +74,36 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .delay(1050)
         .file("jb2a.divine_smite.caster.reversed.yellowwhite")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(2.2)
         .startTime(900)
         .fadeIn(200)
 
         .effect()
         .file("jb2a.divine_smite.caster.yellowwhite")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(1.85)
         .belowTokens()
         .waitUntilFinished(-1200)
 
         .effect()
         .file("jb2a.token_border.circle.static.blue.007")
-        .atLocation(token)
-        .attachTo(token)
+        .atLocation(workflow.token)
+        .attachTo(workflow.token)
         .scaleToObject(2)
         .filter("ColorMatrix", { saturate: -1, brightness: 0.8 })
         .fadeOut(500)
         .persist()
-        .name(`${token.document.name} Blinding Smite`)
+        .name(`${token.document.name} BliSmi`)
+
+        .thenDo(async () => {
+            let effect = await mba.createEffect(workflow.actor, effectData);
+            await warpgate.wait(50);
+            let updates = { 'flags.mba-premades.spell.blindingSmite.targetEffectUuid': effect.uuid };
+            await mba.updateEffect(effect, updates);
+        })
 
         .play();
-
-    let effect = await mba.createEffect(workflow.actor, effectData);
-    let updates = { 'flags.mba-premades.spell.blindingSmite.targetEffectUuid': effect.uuid };
-    await mba.updateEffect(effect, updates);
 }
 
 async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -112,18 +115,19 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     let queueSetup = await queue.setup(workflow.item.uuid, 'blindingSmite', 250);
     if (!queueSetup) return;
     let oldFormula = workflow.damageRoll._formula;
-    let bonusDamageFormula = '3d8[radiant]';
+    let bonusDamageFormula = "3d8[radiant]";
     if (workflow.isCritical) bonusDamageFormula = mba.getCriticalFormula(bonusDamageFormula);
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRoll = await new Roll(damageFormula).roll({ async: true });
     await workflow.setDamageRoll(damageRoll);
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Blinding Smite: Blind');
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Blinding Smite: Save", false);
     if (!featureData) {
         queue.remove(workflow.item.uuid);
         return;
     }
     delete featureData._id;
-    featureData.system.save.dc = effect.flags['mba-premades'].spell.blindingSmite.saveDC;
+    let saveDC = effect.flags['mba-premades'].spell.blindingSmite.saveDC;
+    featureData.system.save.dc = saveDC;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
     await warpgate.wait(100);
@@ -139,7 +143,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .delay(300)
         .file("jb2a.impact.ground_crack.01.blue")
         .atLocation(target)
-        .size(2.3 * token.document.width, { gridUnits: true })
+        .size(2.3 * target.document.width, { gridUnits: true })
         .filter("ColorMatrix", { saturate: -0.5, hue: -160 })
         .belowTokens()
         .playbackRate(0.85)
@@ -148,9 +152,9 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .effect()
         .file("jb2a.divine_smite.target.yellowwhite")
         .atLocation(target)
-        .rotateTowards(token)
+        .rotateTowards(workflow.token)
         .scaleToObject(3)
-        .spriteOffset({ x: -1.5 * token.document.width, y: -0 * token.document.width }, { gridUnits: true })
+        .spriteOffset({ x: -1.5 * workflow.token.document.width, y: -0 * workflow.token.document.width }, { gridUnits: true })
         .mirrorY()
         .rotate(90)
         .zIndex(2)
@@ -158,7 +162,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .wait(600)
 
         .thenDo(function () {
-            Sequencer.EffectManager.endEffects({ name: `${token.document.name} Blinding Smite` })
+            Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} BliSmi` })
         })
 
         .play();
@@ -175,37 +179,40 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
             .filter("ColorMatrix", { saturate: -1, brightness: 0.8 })
             .fadeOut(500)
             .persist()
-            .name(`${target.document.name} Blinding Smite`)
+            .name(`${target.document.name} BliSmi`)
 
             .play();
 
         async function effectMacroDel() {
             let originEffect = await fromUuid(effect.origin);
             if (!originEffect) return;
-            await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Blinding Smite` });
+            Sequencer.EffectManager.endEffects({ name: `${token.document.name} BliSmi` });
             await mbaPremades.helpers.removeEffect(originEffect);
         }
         let effectData = {
             'name': 'Blinding Smite: Blindness',
-            'description': "You are blinded by Blinding Smite. At the end of each of your turns, you can make a Constitution Saving Throw. On a successful save, the spell ends and you are no longer blinded.",
             'icon': effect.icon,
             'origin': effect.uuid,
+            'description': `
+                <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.3NxmNhGQQqUDnu73]{Blinded} by Blinding Smite. At the end of each of your turns, you can make a Constitution Saving Throw.</p>
+                <p>On a successful save, the spell ends and you are no longer @UUID[Compendium.mba-premades.MBA SRD.Item.3NxmNhGQQqUDnu73]{Blinded}.</p>
+            `,
             'duration': {
                 'seconds': effect.duration.seconds
             },
             'changes': [
                 {
-                    'key': 'flags.midi-qol.OverTime',
-                    'mode': 0,
-                    'value': 'turn=end, saveAbility=con, saveDC=' + effect.flags['mba-premades'].spell.blindingSmite.saveDC + ', saveMagic=true, name=Blinding Smite: End Turn',
-                    'priority': 20
-                },
-                {
                     'key': 'macro.CE',
                     'mode': 0,
                     'value': 'Blinded',
                     'priority': 20
-                }
+                },
+                {
+                    'key': 'flags.midi-qol.OverTime',
+                    'mode': 0,
+                    'value': `turn=end, saveAbility=con, saveDC=${saveDC}, saveMagic=true, name=Blinding Smite: End Turn (DC${saveDC}), killAnim=true`,
+                    'priority': 20
+                },
             ],
             'flags': {
                 'effectmacro': {
@@ -215,7 +222,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
                 },
                 'midi-qol': {
                     'castData': {
-                        baseLevel: 0,
+                        baseLevel: 3,
                         castLevel: effect.flags['midi-qol']?.castData?.castLevel,
                         itemUuid: effect.uuid
                     }

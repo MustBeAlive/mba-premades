@@ -5,13 +5,13 @@ export async function hellishRebuke({ speaker, actor, token, character, item, ar
 
         .effect()
         .file("jb2a.cast_generic.fire.01.orange.0")
-        .attachTo(token)
-        .scaleToObject(2 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(2 * workflow.token.document.texture.scaleX)
 
         .effect()
         .file("animated-spell-effects-cartoon.fire.19")
-        .attachTo(token)
-        .scaleToObject(1.7 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(1.7 * workflow.token.document.texture.scaleX)
         .waitUntilFinished(-900)
 
         .effect()

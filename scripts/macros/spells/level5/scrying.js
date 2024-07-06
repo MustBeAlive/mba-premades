@@ -15,7 +15,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
             ["Firsthand (you have met the target)", "firsthand"],
             ["Familiar (you know the target well)", "familiar"]
         ];
-        let selectionKnowledge = await mba.dialog("How well do you know the target?", choicesKnowledge);
+        let selectionKnowledge = await mba.dialog("Scrying: Creature", choicesKnowledge, "<b>How well do you know the target?</b>");
         if (!selectionKnowledge) {
             if (conc) await mba.removeEffect(conc);
             return;
@@ -28,7 +28,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
             ["Possession or garment", "garment"],
             ["Body part, lock of hair, bit of nail, or the like", "part"]
         ];
-        let selectionConnection = await mba.dialog("Do you possess any physical connection to the target?", choicesConnection);
+        let selectionConnection = await mba.dialog("Scrying: Creature", choicesConnection, "<b>Do you possess any physical connection to the target?</b>");
         if (!selectionConnection) {
             if (conc) await mba.removeEffect(conc);
             return;
@@ -42,7 +42,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
 
         .effect()
         .file("jb2a.markers.light.complete.blue02")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(3)
         .fadeIn(500)
         .duration(16000)
@@ -55,7 +55,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
         .duration(16000)
         .fadeIn(1000)
         .fadeOut(2000)
-        .atLocation(token, { offset: { x: -1, y: 1.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: -1, y: 1.5 }, gridUnits: true })
         .scale(0.2)
         .belowTokens()
         .name('circle1')
@@ -65,7 +65,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
         .duration(16000)
         .fadeIn(1000)
         .fadeOut(2000)
-        .atLocation(token, { offset: { x: -1, y: 1.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: -1, y: 1.5 }, gridUnits: true })
         .scale(0.7)
         .belowTokens()
         .zIndex(1)
@@ -79,8 +79,8 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
         .fadeIn(1000)
         .fadeOut(2000)
         .scaleIn(0, 2000, { ease: "easeOutExpo" })
-        .atLocation(token, { offset: { x: -1, y: 1.5 }, gridUnits: true })
-        .stretchTo(token, { offset: { x: 0, y: -1.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: -1, y: 1.5 }, gridUnits: true })
+        .stretchTo(workflow.token, { offset: { x: 0, y: -1.5 }, gridUnits: true })
         .name("line1")
 
         .effect()
@@ -89,7 +89,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
         .duration(15000)
         .fadeIn(1000)
         .fadeOut(2000)
-        .atLocation(token, { offset: { x: 0, y: -1.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: 0, y: -1.5 }, gridUnits: true })
         .scale(0.2)
         .belowTokens()
         .name('circle2')
@@ -100,7 +100,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
         .duration(15000)
         .fadeIn(1000)
         .fadeOut(2000)
-        .atLocation(token, { offset: { x: 0, y: -1.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: 0, y: -1.5 }, gridUnits: true })
         .scale(0.7)
         .belowTokens()
         .zIndex(1)
@@ -114,8 +114,8 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
         .fadeIn(1000)
         .fadeOut(2000)
         .scaleIn(0, 2000, { ease: "easeOutExpo" })
-        .atLocation(token, { offset: { x: 0, y: -1.5 }, gridUnits: true })
-        .stretchTo(token, { offset: { x: 1, y: 1.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: 0, y: -1.5 }, gridUnits: true })
+        .stretchTo(workflow.token, { offset: { x: 1, y: 1.5 }, gridUnits: true })
         .name("line2")
 
         .effect()
@@ -124,7 +124,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
         .duration(14000)
         .fadeIn(1000)
         .fadeOut(2000)
-        .atLocation(token, { offset: { x: 1, y: 1.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: 1, y: 1.5 }, gridUnits: true })
         .scale(0.2)
         .belowTokens()
         .name('circle3')
@@ -135,7 +135,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
         .duration(14000)
         .fadeIn(1000)
         .fadeOut(2000)
-        .atLocation(token, { offset: { x: 1, y: 1.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: 1, y: 1.5 }, gridUnits: true })
         .scale(0.7)
         .belowTokens()
         .zIndex(1)
@@ -149,8 +149,8 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
         .fadeIn(1000)
         .fadeOut(2000)
         .scaleIn(0, 2000, { ease: "easeOutExpo" })
-        .atLocation(token, { offset: { x: 1, y: 1.5 }, gridUnits: true })
-        .stretchTo(token, { offset: { x: -1.5, y: -0.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: 1, y: 1.5 }, gridUnits: true })
+        .stretchTo(workflow.token, { offset: { x: -1.5, y: -0.5 }, gridUnits: true })
         .name("line3")
 
         .effect()
@@ -159,7 +159,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
         .duration(13000)
         .fadeIn(1000)
         .fadeOut(2000)
-        .atLocation(token, { offset: { x: -1.5, y: -0.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: -1.5, y: -0.5 }, gridUnits: true })
         .scale(0.2)
         .belowTokens()
         .name('circle4')
@@ -170,7 +170,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
         .duration(13000)
         .fadeIn(1000)
         .fadeOut(2000)
-        .atLocation(token, { offset: { x: -1.5, y: -0.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: -1.5, y: -0.5 }, gridUnits: true })
         .scale(0.7)
         .belowTokens()
         .zIndex(1)
@@ -184,8 +184,8 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
         .fadeIn(1000)
         .fadeOut(2000)
         .scaleIn(0, 2000, { ease: "easeOutExpo" })
-        .atLocation(token, { offset: { x: -1.5, y: -0.5 }, gridUnits: true })
-        .stretchTo(token, { offset: { x: 1.5, y: -0.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: -1.5, y: -0.5 }, gridUnits: true })
+        .stretchTo(workflow.token, { offset: { x: 1.5, y: -0.5 }, gridUnits: true })
         .name("line4")
 
         .effect()
@@ -194,7 +194,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
         .duration(12000)
         .fadeIn(1000)
         .fadeOut(2000)
-        .atLocation(token, { offset: { x: 1.5, y: -0.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: 1.5, y: -0.5 }, gridUnits: true })
         .scale(0.2)
         .belowTokens()
         .name('circle5')
@@ -205,7 +205,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
         .duration(12000)
         .fadeIn(1000)
         .fadeOut(2000)
-        .atLocation(token, { offset: { x: 1.5, y: -0.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: 1.5, y: -0.5 }, gridUnits: true })
         .scale(0.7)
         .belowTokens()
         .zIndex(1)
@@ -219,8 +219,8 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
         .fadeIn(1000)
         .fadeOut(2000)
         .scaleIn(0, 2000, { ease: "easeOutExpo" })
-        .atLocation(token, { offset: { x: 1.5, y: -0.5 }, gridUnits: true })
-        .stretchTo(token, { offset: { x: -1, y: 1.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: 1.5, y: -0.5 }, gridUnits: true })
+        .stretchTo(workflow.token, { offset: { x: -1, y: 1.5 }, gridUnits: true })
         .name("line5")
 
         .effect()
@@ -228,7 +228,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
         .delay(6000)
         .fadeIn(1000)
         .fadeOut(2000)
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scale(0.5)
         .filter("ColorMatrix", { hue: 95 })
         .duration(8667)
@@ -236,7 +236,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
 
         .effect()
         .file("jb2a.magic_signs.circle.02.divination.outro.blue")
-        .atLocation(token, { offset: { x: -1, y: 1.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: -1, y: 1.5 }, gridUnits: true })
         .scale(0.2)
         .belowTokens()
         .zIndex(2)
@@ -244,7 +244,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
 
         .effect()
         .file("jb2a.magic_signs.circle.02.divination.outro.blue")
-        .atLocation(token, { offset: { x: 0, y: -1.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: 0, y: -1.5 }, gridUnits: true })
         .scale(0.2)
         .belowTokens()
         .zIndex(2)
@@ -252,7 +252,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
 
         .effect()
         .file("jb2a.magic_signs.circle.02.divination.outro.blue")
-        .atLocation(token, { offset: { x: 1, y: 1.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: 1, y: 1.5 }, gridUnits: true })
         .scale(0.2)
         .belowTokens()
         .zIndex(2)
@@ -260,7 +260,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
 
         .effect()
         .file("jb2a.magic_signs.circle.02.divination.outro.blue")
-        .atLocation(token, { offset: { x: -1.5, y: -0.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: -1.5, y: -0.5 }, gridUnits: true })
         .scale(0.2)
         .belowTokens()
         .zIndex(2)
@@ -268,7 +268,7 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
 
         .effect()
         .file("jb2a.magic_signs.circle.02.divination.outro.blue")
-        .atLocation(token, { offset: { x: 1.5, y: -0.5 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: 1.5, y: -0.5 }, gridUnits: true })
         .scale(0.2)
         .belowTokens()
         .zIndex(2)
@@ -294,7 +294,6 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
             return;
         }
     }
-
     const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
@@ -312,6 +311,5 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
             }
         }
     };
-
     await mba.createEffect(workflow.actor, effectData);
 }

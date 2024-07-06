@@ -3,10 +3,7 @@ import {mba} from "../../../helperFunctions.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
-    if (!template) {
-        ui.notifications.warn("Unable to find template!");
-        return;
-    }
+    if (!template) return;
     await template.update({
         'flags': {
             'mba-premades': {

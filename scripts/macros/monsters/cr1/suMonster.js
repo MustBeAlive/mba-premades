@@ -3,13 +3,14 @@ import {mba} from "../../../helperFunctions.js";
 async function psychicCrush({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
+    if (mba.checkTrait(target.actor, "ci", "stunned")) return;
     let saveDC = workflow.item.system.save.dc;
     const effectData = {
         'name': "Su-monster: Psychic Crush",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are stunned by Su-monster's Psychic Crush.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.O1gS8bqw9PJTuCAh]{Stunned} by Su-monster's Psychic Crush.</p>
             <p>You can repeat the saving throw at the end of each of your turns, ending the effect on a success.</p>
         `,
         'duration': {

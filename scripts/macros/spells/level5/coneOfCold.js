@@ -1,5 +1,6 @@
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) return;
     let targets = Array.from(workflow.targets);
 
     new Sequence()
@@ -68,8 +69,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 }
 
 async function death({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let targets = Array.from(workflow.targets);
-    for (let target of targets) {
+    for (let target of Array.from(workflow.targets)) {
         if (target.actor.system.attributes.hp.value > 0) continue;
         new Sequence()
 

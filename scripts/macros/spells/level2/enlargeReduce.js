@@ -37,14 +37,14 @@ export async function enlargeReduce({ speaker, actor, token, character, item, ar
                 },
                 {
                     'key': 'flags.midi-qol.advantage.ability.check.str',
-                    'mode': 0,
-                    'value': '1',
+                    'mode': 2,
+                    'value': 1,
                     'priority': 20
                 },
                 {
                     'key': 'flags.midi-qol.advantage.ability.save.str',
-                    'mode': 0,
-                    'value': '1',
+                    'mode': 2,
+                    'value': 1,
                     'priority': 20
                 }
             ],

@@ -14,7 +14,7 @@ export async function acidSplash({ speaker, actor, token, character, item, args,
 
             .effect()
             .file("jb2a.ranged.04.projectile.01.green")
-            .atLocation(token)
+            .atLocation(workflow.token)
             .stretchTo(target)
             .waitUntilFinished(-1400)
 

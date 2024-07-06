@@ -1,5 +1,7 @@
 import {mba} from "../../../helperFunctions.js";
 
+// To do: condition immunity check
+
 async function panpipesCast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let targets = Array.from(workflow.targets).filter(i => !mba.checkTrait(i.actor, 'ci', "charmed") && !mba.findEffect(i.actor, "Deafened") && !i.document.name.includes("Satyr") && i.document.uuid != workflow.token.document.uuid && !mba.findEffect(i.actor, "Satyr Panpipes: Immune") && !mba.findEffect(i.actor, "Satyr Panpipes: Charming Melody") && !mba.findEffect(i.actor, "Satyr Panpipes: Frightening Strain") && !mba.findEffect(i.actor, "Satyr Panpipes: Gentle Lullaby"));
     if (!targets.length) {
@@ -18,7 +20,7 @@ async function panpipesCast({ speaker, actor, token, character, item, args, scop
         .scale(1)
 
         .effect()
-        .file("jb2a.template_square.symbol.out_flow.music_note.purple")
+        .file("jb2a.template_circle.symbol.out_flow.music_note.purple")
         .attachTo(workflow.token)
         .size(12, { gridUnits: true })
         .fadeIn(2500)
@@ -65,7 +67,7 @@ async function panpipesItem({ speaker, actor, token, character, item, args, scop
             'icon': workflow.item.img,
             'origin': workflow.item.uuid,
             'description': `
-                <p>You are charmed by magical melody of Satyr Pipes.</p>
+                <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.SVd8xu3mTZMqz8fL]{Charmed} by magical melody of Satyr Pipes.</p>
                 <p>You can repeat the saving throw at the end of each of your turns, ending the effect on a success.</p>
                 <p>The effect ends early if you take damage from Satyr or any of its companions.</p>
                 <p>After the effect ends or you succeed on save, you are immune to any effect of Satyr Panpipes for the next 24 hours.</p>
@@ -102,7 +104,7 @@ async function panpipesItem({ speaker, actor, token, character, item, args, scop
             'icon': workflow.item.img,
             'origin': workflow.item.uuid,
             'description': `
-                <p>You are frigtened by magical melody of Satyr Pipes.</p>
+                <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.oR1wUvem3zVVUv5Q]{Frightened} by magical melody of Satyr Pipes.</p>
                 <p>You can repeat the saving throw at the end of each of your turns, ending the effect on a success.</p>
                 <p>After the effect ends or you succeed on save, you are immune to any effect of Satyr Panpipes for the next 24 hours.</p>
             `,
@@ -138,7 +140,7 @@ async function panpipesItem({ speaker, actor, token, character, item, args, scop
             'icon': workflow.item.img,
             'origin': workflow.item.uuid,
             'description': `
-                <p>You are put to sleep by magical melody of Satyr Pipes.</p>
+                <p>You are put to sleep by magical melody of Satyr Pipes and fall @UUID[Compendium.mba-premades.MBA SRD.Item.kIUR1eRcTTtaMFao]{Unconscious}.</p>
                 <p>You can repeat the saving throw at the end of each of your turns, ending the effect on a success.</p>
                 <p>The effect ends early if you take damage or if someone takes an action to shake you awake.</p>
                 <p>After the effect ends or you succeed on save, you are immune to any effect of Satyr Panpipes for the next 24 hours.</p>

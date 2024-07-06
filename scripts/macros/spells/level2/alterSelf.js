@@ -61,10 +61,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     }
     else if (selection === "natural") {
         let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Alter Self: Unarmed Strike', false);
-        if (!featureData) {
-            ui.notifications.warn('Missing item in the compendium! (Alter Self: Unarmed Strike)');
-            return;
-        }
+        if (!featureData) return;
         delete featureData._id;
         let damageTypes = [['Piercing', 'piercing'], ['Slashing', 'slashing'], ['Bludgeoning', 'bludgeoning']];
         let chooseDamage = await mba.dialog("Alter Self: Damage Type", damageTypes, `<b>Choose damage type:</b>`);
@@ -112,7 +109,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                     [featureData.name]: featureData,
                 },
                 'ActiveEffect': {
-                    [effectData.label]: effectData
+                    [effectData.name]: effectData
                 }
             }
         };
@@ -127,7 +124,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.extras.tmfx.outflow.circle.01")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(1.5)
         .duration(5000)
         .fadeIn(500)
@@ -135,13 +132,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .scaleIn(0, 750, { ease: "easeOutSine" })
         .randomRotation()
         .filter("ColorMatrix", { saturate: -0, brightness: 0 })
-        .animateProperty("sprite", "scale.x", { from: 0, to: 0.25 * token.document.texture.scaleX, duration: 500, gridUnits: true, ease: "easeOutCubic", delay: 2600 })
-        .animateProperty("sprite", "scale.y", { from: 0, to: 0.25 * token.document.texture.scaleX, duration: 500, gridUnits: true, ease: "easeOutCubic", delay: 2600 })
+        .animateProperty("sprite", "scale.x", { from: 0, to: 0.25 * workflow.token.document.texture.scaleX, duration: 500, gridUnits: true, ease: "easeOutCubic", delay: 2600 })
+        .animateProperty("sprite", "scale.y", { from: 0, to: 0.25 * workflow.token.document.texture.scaleX, duration: 500, gridUnits: true, ease: "easeOutCubic", delay: 2600 })
         .belowTokens()
 
         .effect()
         .file("jb2a.template_circle.vortex.loop.green")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(1.55, { considerTokenScale: true })
         .delay(400)
         .duration(4000)
@@ -153,20 +150,20 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .belowTokens()
 
         .effect()
-        .from(token)
-        .attachTo(token)
+        .from(workflow.token)
+        .attachTo(workflow.token)
         .fadeIn(500)
         .fadeOut(500)
-        .scaleToObject(token.document.texture.scaleX)
-        .animateProperty("sprite", "width", { from: (token.document.width * 1) * token.document.texture.scaleX, to: (token.document.width * 1.06) * token.document.texture.scaleX, duration: 500, gridUnits: true, ease: "easeInOutBack" })
-        .animateProperty("sprite", "height", { from: (token.document.width) * token.document.texture.scaleX, to: (token.document.width * 1.06) * token.document.texture.scaleX, duration: 750, gridUnits: true, ease: "easeOutBack" })
+        .scaleToObject(workflow.token.document.texture.scaleX)
+        .animateProperty("sprite", "width", { from: (workflow.token.document.width * 1) * workflow.token.document.texture.scaleX, to: (workflow.token.document.width * 1.06) * workflow.token.document.texture.scaleX, duration: 500, gridUnits: true, ease: "easeInOutBack" })
+        .animateProperty("sprite", "height", { from: (workflow.token.document.width) * workflow.token.document.texture.scaleX, to: (workflow.token.document.width * 1.06) * workflow.token.document.texture.scaleX, duration: 750, gridUnits: true, ease: "easeOutBack" })
         .loopProperty("sprite", "position.x", { from: -0.005, to: 0.005, duration: 100, pingPong: true, gridUnits: true })
         .opacity(0.65)
         .repeats(3, 800, 800)
 
         .effect()
         .file("jb2a.eyes.01.dark_yellow.single.0")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(1.15)
         .delay(3000)
         .duration(1250)
@@ -175,15 +172,15 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .zIndex(1)
 
         .effect()
-        .from(token)
-        .attachTo(token)
-        .scaleToObject(token.document.texture.scaleX)
+        .from(workflow.token)
+        .attachTo(workflow.token)
+        .scaleToObject(workflow.token.document.texture.scaleX)
         .delay(2400)
         .duration(2000)
         .fadeIn(750)
         .fadeOut(500)
-        .animateProperty("sprite", "width", { from: (token.document.width * 1) * token.document.texture.scaleX, to: (token.document.width * 1.06) * token.document.texture.scaleX, duration: 500, gridUnits: true, ease: "easeInOutBack" })
-        .animateProperty("sprite", "height", { from: (token.document.width) * token.document.texture.scaleX, to: (token.document.width * 1.06) * token.document.texture.scaleX, duration: 750, gridUnits: true, ease: "easeOutBack" })
+        .animateProperty("sprite", "width", { from: (workflow.token.document.width * 1) * workflow.token.document.texture.scaleX, to: (workflow.token.document.width * 1.06) * workflow.token.document.texture.scaleX, duration: 500, gridUnits: true, ease: "easeInOutBack" })
+        .animateProperty("sprite", "height", { from: (workflow.token.document.width) * workflow.token.document.texture.scaleX, to: (workflow.token.document.width * 1.06) * workflow.token.document.texture.scaleX, duration: 750, gridUnits: true, ease: "easeOutBack" })
         .loopProperty("sprite", "position.x", { from: -0.005, to: 0.005, duration: 100, pingPong: true, gridUnits: true })
         .opacity(1)
         .filter("ColorMatrix", { brightness: 0 })
@@ -198,7 +195,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.claws.200px.bright_green")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(2.15)
         .fadeOut(500)
         .playbackRate(1.5)
@@ -207,7 +204,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.impact.004.green")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(2.75)
         .belowTokens()
         .fadeOut(500)
@@ -266,7 +263,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
 
             .effect()
             .file("jb2a.unarmed_strike.magical.02.green")
-            .attachTo(token)
+            .attachTo(workflow.token)
             .stretchTo(target)
 
             .effect()

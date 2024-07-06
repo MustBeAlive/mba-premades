@@ -20,7 +20,7 @@ async function blindingBreathItem({ speaker, actor, token, character, item, args
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are blinded by Dust Mephit's Blinding Breath.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.3NxmNhGQQqUDnu73]{Blinded} by Dust Mephit's Blinding Breath.</p>
             <p>You can repeat the saving throw at the end of each of your turns, ending the effect on a success.</p>
         `,
         'duration': {
@@ -36,13 +36,15 @@ async function blindingBreathItem({ speaker, actor, token, character, item, args
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': `turn=end, saveAbility=dex, saveDC=10, saveMagic=false, name=Blinding Breath: Turn End, killAnim=true`,
+                'value': `turn=end, saveAbility=dex, saveDC=10, saveMagic=false, name=Blinding Breath: Turn End (DC10), killAnim=true`,
                 'priority': 20
             }
         ]
     };
     let targets = Array.from(workflow.failedSaves);
-    for (let target of targets) await mba.createEffect(target.actor, effectData)
+    for (let target of targets) {
+        if (!mba.findEffect(target.actor, "Dust Mephit: Blinding Breath") && !mba.checkTrait(target.actor, "ci", "blinded")) await mba.createEffect(target.actor, effectData);
+    }
 }
 
 async function deathBurstCast(token, origin) {
@@ -63,7 +65,6 @@ async function deathBurstCast(token, origin) {
 
 async function deathBurstItem({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
-    let targets = Array.from(workflow.failedSaves);
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: "Dust Mephit Death Burst" })
     }
@@ -72,7 +73,7 @@ async function deathBurstItem({ speaker, actor, token, character, item, args, sc
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are blinded by Dust Mephit's Death Burst.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.3NxmNhGQQqUDnu73]{Blinded} by Dust Mephit's Death Burst.</p>
             <p>You can repeat the saving throw at the end of each of your turns, ending the effect on a success.</p>
         `,
         'duration': {
@@ -88,7 +89,7 @@ async function deathBurstItem({ speaker, actor, token, character, item, args, sc
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': `turn=end, saveAbility=dex, saveDC=10, saveMagic=false, name=Blinding Breath: Turn End, killAnim=true`,
+                'value': `turn=end, saveAbility=dex, saveDC=10, saveMagic=false, name=Blinding Breath: Turn End (DC10), killAnim=true`,
                 'priority': 20
             }
         ],
@@ -100,9 +101,8 @@ async function deathBurstItem({ speaker, actor, token, character, item, args, sc
             }
         }
     };
-    for (let target of targets) {
-        if (mba.checkTrait(target.actor, "ci", "blinded")) continue;
-        await mba.createEffect(target.actor, effectData);
+    for (let target of Array.from(workflow.failedSaves)) {
+        if (!mba.findEffect(target.actor, "Dust Mephit: Death Burst") && !mba.checkTrait(target.actor, "ci", "blinded")) await mba.createEffect(target.actor, effectData);
     }
 }
 

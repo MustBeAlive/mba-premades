@@ -46,7 +46,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file(`jb2a.markers.light.complete.blue`)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(2)
         .duration(5000)
         .scaleIn(0, 600, { ease: "easeOutCubic" })
@@ -168,7 +168,7 @@ async function hook(workflow) {
     if (!targetEffect) return;
     let targetItem = await fromUuid(targetEffect.origin);
     if (!targetItem) return;
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Sanctuary: Save', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Sanctuary: Save", false);
     if (!featureData) return;
     featureData.system.save.dc = mba.getSpellDC(targetItem);
     setProperty(featureData, 'flags.mba-premades.spell.sanctuary.ignore', true);

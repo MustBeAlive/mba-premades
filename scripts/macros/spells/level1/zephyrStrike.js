@@ -18,7 +18,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 }
             ]
         };
-        await mbaPremades.helpers.createEffect(actor, effectData);
+        await mbaPremades.helpers.createEffect(token.actor, effectData);
     };
     const effectData = {
         'name': workflow.item.name,
@@ -66,7 +66,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("animated-spell-effects-cartoon.air.portal")
-        .attachTo(token, { offset: { x: 0, y: -0.0 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { x: 0, y: -0.0 }, gridUnits: true, followRotation: false })
         .scaleToObject(2.5)
         .fadeIn(250)
         .scaleIn(0, 500, { ease: "easeOutCubic" })
@@ -77,7 +77,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("animated-spell-effects-cartoon.air.explosion.gray")
-        .attachTo(token, { offset: { x: 0, y: -0.0 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { x: 0, y: -0.0 }, gridUnits: true, followRotation: false })
         .scaleToObject(1.45)
         .fadeIn(250)
         .scaleIn(0, 500, { ease: "easeOutCubic" })
@@ -86,7 +86,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.wind_stream.200.white")
-        .attachTo(token, { offset: { x: 0, y: 0 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { x: 0, y: 0 }, gridUnits: true, followRotation: false })
         .scaleToObject(2)
         .fadeIn(1000)
         .fadeOut(500)
@@ -95,11 +95,11 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .rotate(90)
         .mask()
         .persist()
-        .name(`${token.document.name} Zephyr Strike`)
+        .name(`${workflow.token.document.name} ZepStr`)
 
         .effect()
         .file("animated-spell-effects-cartoon.smoke.19")
-        .attachTo(token, { offset: { x: 0.2 * token.document.width, y: 0.45 * token.document.width }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { x: 0.2 * token.document.width, y: 0.45 * workflow.token.document.width }, gridUnits: true, followRotation: false })
         .scaleToObject(1.5, { considerTokenScale: true })
         .rotate(-30)
         .filter("ColorMatrix", { saturate: -1, brightness: 0 })
@@ -107,21 +107,21 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .opacity(0.5)
         .fadeOut(500)
         .persist()
-        .name(`${token.document.name} Zephyr Strike`)
+        .name(`${workflow.token.document.name} ZepStr`)
 
         .effect()
         .file("animated-spell-effects-cartoon.smoke.19")
-        .attachTo(token, { offset: { x: 0.2 * token.document.width, y: 0.35 * token.document.width }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { x: 0.2 * workflow.token.document.width, y: 0.35 * workflow.token.document.width }, gridUnits: true, followRotation: false })
         .scaleToObject(1.5, { considerTokenScale: true })
         .rotate(-30)
         .zIndex(0.1)
         .fadeOut(500)
         .persist()
-        .name(`${token.document.name} Zephyr Strike`)
+        .name(`${workflow.token.document.name} ZepStr`)
 
         .effect()
         .file("animated-spell-effects-cartoon.smoke.19")
-        .attachTo(token, { offset: { x: -0.4 * token.document.width, y: -0.25 * token.document.width }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { x: -0.4 * workflow.token.document.width, y: -0.25 * workflow.token.document.width }, gridUnits: true, followRotation: false })
         .scaleToObject(1.2, { considerTokenScale: true })
         .delay(700)
         .belowTokens(false)
@@ -132,11 +132,11 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .opacity(0.5)
         .fadeOut(500)
         .persist()
-        .name(`${token.document.name} Zephyr Strike`)
+        .name(`${workflow.token.document.name} ZepStr`)
 
         .effect()
         .file("animated-spell-effects-cartoon.smoke.19")
-        .attachTo(token, { offset: { x: -0.4 * token.document.width, y: -0.35 * token.document.width }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { x: -0.4 * workflow.token.document.width, y: -0.35 * workflow.token.document.width }, gridUnits: true, followRotation: false })
         .scaleToObject(1.2, { considerTokenScale: true })
         .delay(700)
         .belowTokens(false)
@@ -145,7 +145,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .zIndex(0.1)
         .fadeOut(500)
         .persist()
-        .name(`${token.document.name} Zephyr Strike`)
+        .name(`${workflow.token.document.name} ZepStr`)
 
         .thenDo(async () => {
             await mba.createEffect(workflow.actor, effectData);
@@ -202,7 +202,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     if (!effect) return;
     await mba.removeCondition(workflow.actor, "Concentrating");
     await mba.removeEffect(effect);
-    await Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} Zephyr Strike` })
+    await Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} ZepStr` })
     let target = workflow.targets.first();
     let ranOffset = (Math.random() * (0.4 + 0.4) - 0.4);
     const targetCenter = {
@@ -210,25 +210,26 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         y: target.y + canvas.grid.size * target.document.width / 2,
     };
     const tokenCenter = {
-        x: token.x + canvas.grid.size * token.document.width / 2,
-        y: token.y + canvas.grid.size * token.document.width / 2,
+        x: workflow.token.x + canvas.grid.size * workflow.token.document.width / 2,
+        y: workflow.token.y + canvas.grid.size * workflow.token.document.width / 2,
     };
-    const distance = Math.sqrt(
-        Math.pow(targetCenter.x - tokenCenter.x, 2) + Math.pow(targetCenter.y - tokenCenter.y, 2)
-    );
+    const distance = Math.sqrt(Math.pow(targetCenter.x - tokenCenter.x, 2) + Math.pow(targetCenter.y - tokenCenter.y, 2));
     const gridDistance = (distance / canvas.grid.size) * 5
     let projHeight = [];
     let projX = [];
     if (gridDistance >= 85) {
         projHeight = canvas.grid.size / 200;
         projX = true;
-    } else if (gridDistance >= 55) {
+    }
+    else if (gridDistance >= 55) {
         projHeight = canvas.grid.size / 250;
         projX = true;
-    } else if (gridDistance > 30) {
+    }
+    else if (gridDistance > 30) {
         projHeight = canvas.grid.size / 300;
         projX = true;
-    } else {
+    }
+    else {
         projHeight = 1;
         projX = false;
     }
@@ -237,9 +238,9 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
 
         .effect()
         .file("animated-spell-effects-cartoon.smoke.17")
-        .atLocation(token, { offset: { x: -0, y: -0 }, gridUnits: true, local: false })
+        .atLocation(workflow.token, { offset: { x: -0, y: -0 }, gridUnits: true, local: false })
         .rotateTowards(targetCenter, { local: true })
-        .spriteOffset({ x: -1.0 + ranOffset, y: -1.2 - (token.document.width - 1) / 2 }, { gridUnits: true })
+        .spriteOffset({ x: -1.0 + ranOffset, y: -1.2 - (workflow.token.document.width - 1) / 2 }, { gridUnits: true })
         .scaleToObject(2)
         .rotate(-90)
         .zIndex(1)
@@ -247,7 +248,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .effect()
         .delay(0)
         .file("animated-spell-effects-cartoon.air.bolt.ray")
-        .atLocation(token, { offset: { x: 0.5 * token.document.width, y: ranOffset }, gridUnits: true, local: true })
+        .atLocation(workflow.token, { offset: { x: 0.5 * workflow.token.document.width, y: ranOffset }, gridUnits: true, local: true })
         .stretchTo(target, { onlyX: projX })
         .scale(projHeight)
         .waitUntilFinished(-2000)

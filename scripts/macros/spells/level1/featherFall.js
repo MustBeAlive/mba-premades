@@ -6,7 +6,6 @@ export async function featherFall({ speaker, actor, token, character, item, args
         return;
     }
     await mba.addCondition(workflow.actor, "Reaction");
-    let targets = Array.from(workflow.targets);
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
@@ -28,14 +27,14 @@ export async function featherFall({ speaker, actor, token, character, item, args
             }
         }
     };
-    for (let target of targets) {
+    for (let target of Array.from(workflow.targets)) {
         let delay = 500 + Math.floor(Math.random() * (Math.floor(1500) - Math.ceil(50)) + Math.ceil(50));
 
         new Sequence()
 
             .effect()
             .file("jb2a.energy_strands.range.multiple.orange.01")
-            .atLocation(token)
+            .atLocation(workflow.token)
             .stretchTo(target)
             .delay(delay)
             .waitUntilFinished(-750)

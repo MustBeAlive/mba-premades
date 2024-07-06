@@ -22,7 +22,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                     'ignoreIds': ignoreIds,
                     'saveDC': mba.getSpellDC(workflow.item),
                     'templateUuid': template.uuid,
-                    'turn': 'end',
                 }
             }
         }
@@ -75,7 +74,7 @@ async function trigger(token, trigger) {
     if (!originUuid) return;
     let originItem = await fromUuid(originUuid);
     if (!originItem) return;
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Cordon of Arrows: Arrow Strike', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Cordon of Arrows: Arrow Strike", false);
     if (!featureData) return;
     delete featureData._id;
     featureData.system.save.dc = trigger.saveDC;

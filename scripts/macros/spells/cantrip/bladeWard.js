@@ -1,6 +1,6 @@
 import {mba} from "../../../helperFunctions.js";
 
-async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
+export async function bladeWard({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         new Sequence()
 
@@ -11,7 +11,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             .waitUntilFinished(-500)
 
             .thenDo(async () => {
-                Sequencer.EffectManager.endEffects({ name: `${token.document.name} Blade Ward`, object: token })
+                Sequencer.EffectManager.endEffects({ name: `${token.document.name} Blade Ward` })
             })
 
             .play()
@@ -21,21 +21,20 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>Until the end of your next turn, you have resistance against bludgeoning, piercing, and slashing damage dealt by weapon attacks.</p>
+            <p>Enemies substract 1d4 from all attack rolls made against you.</p>
         `,
+        'duration': {
+            'seconds': 60
+        },
         'changes': [
             {
-                'key': 'flags.midi-qol.onUseMacroName',
-                'mode': 0,
-                'value': 'function.mbaPremades.macros.bladeWard.item,preTargetDamageApplication',
+                'key': 'flags.midi-qol.grants.attack.bonus.all',
+                'mode': 2,
+                'value': "-1d4",
                 'priority': 20
             }
         ],
         'flags': {
-            'dae': {
-                'showIcon': true,
-                'specialDuration': ['turnEndSource']
-            },
             'effectmacro': {
                 'onDelete': {
                     'script': mba.functionToString(effectMacroDel)
@@ -79,19 +78,4 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         })
 
         .play()
-}
-
-async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-    if (workflow.item.type != "weapon") return;
-    if (workflow.item.system.actionType != 'mwak' && workflow.item.system.actionType != 'rwak') return;
-    let type = workflow.item.system.damage.parts[0][1];
-    if (type != "piercing" && type != "slashing" && type != "bludgeoning") return;
-    let damageTotal = Math.floor(workflow.damageItem.totalDamage / 2);
-    workflow.damageItem.appliedDamage = damageTotal;
-    workflow.damageItem.hpDamage = damageTotal;
-}
-
-export let bladeWard = {
-    'cast': cast,
-    'item': item
 }

@@ -4,17 +4,16 @@ export async function command({ speaker, actor, token, character, item, args, sc
     if (!workflow.failedSaves.size) return;
     const target = workflow.targets.first();
     let choices = [
-        ['Approach', 'Appro'],
-        ['Drop', 'Drop'],
-        ['Flee', 'Flee'],
-        ['Grovel', 'Grovel'],
-        ['Halt', 'Halt'],
-        ['Other', 'Other']
+        ["Approach", "Appro", "modules/mba-premades/icons/spells/level1/command_approach.webp"],
+        ["Drop", "Drop", "modules/mba-premades/icons/spells/level1/command_drop.webp"],
+        ["Flee", "Flee", "modules/mba-premades/icons/spells/level1/command_flee.webp"],
+        ["Grovel", "Grovel", "modules/mba-premades/icons/spells/level1/command_grovel.webp"],
+        ["Halt", "Halt", "modules/mba-premades/icons/spells/level1/command_halt.webp"],
+        ["Other", "Other", "modules/mba-premades/icons/spells/level1/command_halt.webp"]
     ];
-    let selection = await mba.dialog("Command", choices, `<b>Choose command word:</b>`);
+    let selection = await mba.selectImage("Command", choices, `<b>Choose command word:</b>`, "both");
     if (!selection) return;
     let name;
-    let icon;
     let description;
     let word = [];
     const style = {
@@ -24,52 +23,46 @@ export async function command({ speaker, actor, token, character, item, args, sc
         "strokeThickness": 0,
         fontWeight: "bold",
     }
-    if (selection === "Appro") {
+    if (selection[0] === "Appro") {
         name = "Command: Approach";
-        icon = "modules/mba-premades/icons/spells/level1/command_approach.webp";
         description = "You willingly move to the caster of Command spell by the shortest and most direct route, ending your if you come within 5 feet of the caster.";
         word.push("Approach!");
     }
-    else if (selection === "Drop") {
+    else if (selection[0] === "Drop") {
         name = "Command: Drop";
-        icon = "modules/mba-premades/icons/spells/level1/command_drop.webp";
         description = "You willingly drop whatever you are holding and then end your turn.";
         word.push("Drop!");
     }
-    else if (selection === "Flee") {
+    else if (selection[0] === "Flee") {
         name = "Command: Flee";
-        icon = "modules/mba-premades/icons/spells/level1/command_flee.webp";
         description = "You spend your turn moving away from caster by the fastest available means.";
         word.push("Flee!");
     }
-    else if (selection === "Grovel") {
+    else if (selection[0] === "Grovel") {
         name = "Command: Grovel";
-        icon = "modules/mba-premades/icons/spells/level1/command_grovel.webp";
         description = "You fall prone and then end your turn.";
         word.push("Grovel!");
     }
-    else if (selection === "Halt") {
+    else if (selection[0] === "Halt") {
         name = "Command: Halt";
-        icon = "modules/mba-premades/icons/spells/level1/command_halt.webp";
         description = "You don't move and take no actions. A flying creature stays aloft, provided that it is able to do so. If it must move to stay aloft, it flies the minimum distance needed to remain in the air.";
         word.push("Halt!");
     }
-    else if (selection === "Other") {
+    else if (selection[0] === "Other") {
         name = "Command";
-        icon = "modules/mba-premades/icons/spells/level1/command_halt.webp";
         description = "You follow the custom Command";
         word.push("&%@#!");
     }
     let effectData = {
         'name': name,
-        'icon': icon,
+        'icon': selection[1],
         'description': description,
         'duration': {
             'rounds': 1
         },
         'flags': {
             'dae': {
-                'specialDuration': ['turnEnd']
+                'specialDuration': ['zeroHP','turnEnd']
             },
             'midi-qol': {
                 'castData': {
@@ -141,7 +134,7 @@ export async function command({ speaker, actor, token, character, item, args, sc
 
         .thenDo(async () => {
             await mba.createEffect(target.actor, effectData);
-            if (selection === "Grovel") await mba.addCondition(target.actor, "Prone");
+            if (selection[0] === "Grovel") await mba.addCondition(target.actor, "Prone");
         })
 
         .play()

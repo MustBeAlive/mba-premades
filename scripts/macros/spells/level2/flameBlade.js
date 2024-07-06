@@ -2,15 +2,9 @@ import {mba} from "../../../helperFunctions.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Flame Blade: Scimitar', false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in compendium! (Flame Blade: Scimitar)");
-        return
-    }
+    if (!featureData) return;
     let featureData2 = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Flame Blade: Evoke', false);
-    if (!featureData2) {
-        ui.notifications.warn("Unable to find item in compendium! (Flame Blade: Evoke)");
-        return
-    }
+    if (!featureData2) return;
     let damageDice = 3;
     switch (workflow.castData.castLevel) {
         case 4:
@@ -28,7 +22,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     }
     featureData.system.damage.parts[0][0] = damageDice + 'd6[fire]';
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Flame Blade`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Flame Blade` })
         await warpgate.revert(token.document, 'Flame Blade');
     };
     const effectData = {
@@ -121,7 +115,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.impact.fire.01.orange")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(2.5)
         .fadeOut(1000, { ease: "easeInExpo" })
 
@@ -129,7 +123,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.ground_cracks.orange.02")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .fadeIn(500, { ease: "easeOutCirc" })
         .fadeOut(1000, { ease: "easeOutQuint" })
         .duration(6000)
@@ -141,7 +135,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.particles.outward.orange.01.03")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(2)
         .duration(6000)
         .fadeIn(250, { ease: "easeOutQuint" })
@@ -153,16 +147,16 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.spiritual_weapon.scimitar.01.spectral.02.orange")
-        .attachTo(token, { followRotation: true, local: true })
+        .attachTo(workflow.token, { followRotation: true, local: true })
         .scaleToObject(1.3, { considerTokenScale: true })
         .fadeIn(500)
         .fadeOut(1000)
         .scaleIn(0, 2000, { ease: "easeOutElastic" })
         .scaleOut(0, 500, { ease: "easeOutCubic" })
-        .spriteOffset({ x: 0.35 * token.document.width, y: -0.1 * token.document.width }, { gridUnits: true })
+        .spriteOffset({ x: 0.35 * workflow.token.document.width, y: -0.1 * workflow.token.document.width }, { gridUnits: true })
         .spriteRotation(-90)
         .persist()
-        .name(`${token.document.name} Flame Blade`)
+        .name(`${workflow.token.document.name} Flame Blade`)
 
         .thenDo(async () => {
             await warpgate.mutate(workflow.token.document, updates, {}, options);

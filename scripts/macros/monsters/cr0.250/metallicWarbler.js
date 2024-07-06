@@ -26,8 +26,8 @@ async function calmingMistItem({ speaker, actor, token, character, item, args, s
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You were charmed by Metallic Warbler's Calming Mist.</p>
-            <p>While charmed in this way, you are incapacitated and has a speed of 0.</p>
+            <p>You were @UUID[Compendium.mba-premades.MBA SRD.Item.SVd8xu3mTZMqz8fL]{Charmed} by Metallic Warbler's Calming Mist.</p>
+            <p>While @UUID[Compendium.mba-premades.MBA SRD.Item.SVd8xu3mTZMqz8fL]{Charmed} in this way, you are @UUID[Compendium.mba-premades.MBA SRD.Item.LCcuJNMKrGouZbFJ]{Incapacitated} and has a speed of 0.</p>
         `,
         'duration': {
             'seconds': 60
@@ -46,10 +46,10 @@ async function calmingMistItem({ speaker, actor, token, character, item, args, s
                 'priority': 20
             },
             {
-                'key': 'system.attributes.movement.all',
-                'mode': 0,
-                'value': '*0',
-                'priority': 20
+                'key': "system.attributes.movement.walk",
+                'mode': 5,
+                'value': 0,
+                'priority': 100
             }
         ]
     };

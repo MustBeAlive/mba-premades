@@ -1,12 +1,13 @@
-// Animation by EskieMoh#2969
+import {mba} from "../../../helperFunctions.js";
+
 export async function revivify({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    let isDead = await mbaPremades.helpers.findEffect(target.actor, 'Dead');
+    let isDead = await mba.findEffect(target.actor, 'Dead');
     if (!isDead) {
         ui.notifications.warn("Target is not dead!");
         return;
     }
-    let gentleRepose = await mbaPremades.helpers.findEffect(target.actor, "Gentle Repose");
+    let gentleRepose = await mba.findEffect(target.actor, "Gentle Repose");
     let timeLimit = 60;
     if (gentleRepose) timeLimit = 864060;
     let timeDiff = game.time.worldTime - isDead.duration.startTime;
@@ -19,12 +20,12 @@ export async function revivify({ speaker, actor, token, character, item, args, s
     
         .effect()
         .file("jb2a.extras.tmfx.inpulse.circle.01.normal")
-        .atLocation(target)
+        .attachTo(target)
         .scaleToObject(1)
     
         .effect()
         .file("jb2a.misty_step.02.yellow")
-        .atLocation(target)
+        .attachTo(target)
         .scaleToObject(1)
         .scaleOut(1, 3500, { ease: "easeOutCubic" })
     
@@ -32,14 +33,13 @@ export async function revivify({ speaker, actor, token, character, item, args, s
     
         .effect()
         .file("jb2a.healing_generic.burst.tealyellow")
-        .atLocation(target)
-        .scaleToObject(1.5)
-        .filter("ColorMatrix", { hue: 225 })
-        .fadeOut(1000, { ease: "easeInExpo" })
-        .belowTokens()
-        .scaleIn(0, 500, { ease: "easeOutCubic" })
-        .duration(1200)
         .attachTo(target, { bindAlpha: false })
+        .scaleToObject(1.5)
+        .duration(1200)
+        .fadeOut(1000, { ease: "easeInExpo" })
+        .scaleIn(0, 500, { ease: "easeOutCubic" })
+        .belowTokens()
+        .filter("ColorMatrix", { hue: 225 })
     
         .effect()
         .from(target)
@@ -50,41 +50,35 @@ export async function revivify({ speaker, actor, token, character, item, args, s
         .opacity(1)
         .fadeOut(5000)
         .duration(6000)
-        .attachTo(target)
     
         .effect()
         .file("jb2a.fireflies.few.02.yellow")
-        .atLocation(target)
-        .scaleToObject(2)
-        .duration(10000)
-        .fadeIn(1000)
-        .fadeOut(500)
         .attachTo(target)
+        .scaleToObject(2)
+        .duration(6000)
+        .fadeIn(200, { ease: "easeInExpo" })
+        .fadeOut(1000)
     
         .effect()
         .file("jb2a.extras.tmfx.outflow.circle.02")
-        .atLocation(target)
-        .fadeIn(200)
-        .opacity(0.25)
-        .duration(10000)
-        .scaleToObject(2)
-        .fadeOut(500)
-        .fadeIn(1000)
-        .belowTokens()
         .attachTo(target)
+        .scaleToObject(2)
+        .duration(6000)
+        .fadeIn(200, { ease: "easeInExpo" })
+        .fadeOut(1000)
+        .opacity(0.25)
+        .belowTokens()
     
         .effect()
         .file("jb2a.particles.outward.blue.01.03")
-        .atLocation(target)
-        .filter("ColorMatrix", { saturate: -1, brightness: 2 })
-        .fadeIn(200, { ease: "easeInExpo" })
-        .duration(10000)
-        .opacity(0.25)
-        .scaleToObject(2)
-        .fadeOut(500)
-        .fadeIn(1000)
-        .belowTokens()
         .attachTo(target)
+        .scaleToObject(2)
+        .duration(6000)
+        .fadeIn(200, { ease: "easeInExpo" })
+        .fadeOut(1000)
+        .opacity(0.25)
+        .belowTokens()
+        .filter("ColorMatrix", { saturate: -1, brightness: 2 })
     
         .play()
     

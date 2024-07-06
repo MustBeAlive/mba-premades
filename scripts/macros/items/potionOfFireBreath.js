@@ -3,10 +3,7 @@ import {mba} from "../../helperFunctions.js";
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Potion of Fire Breath: Fire Breath', false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in compenidum! (Potion of Fire Breath: Fire Breath)");
-        return
-    }
+    if (!featureData) return;
     delete featureData._id;
     featureData.name = "Fire Breath";
     async function effectMacroDel() {
@@ -110,7 +107,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     if (!emptyVialItem) {
         const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Vial', false);
         if (!itemData) {
-            ui.notifications.warn("Unable to find item in compenidum! (Empty Vial)");
+            ui.notifications.warn("Unable to find item in compendium! (Empty Vial)");
             return
         }
         await workflow.actor.createEmbeddedDocuments("Item", [itemData]);

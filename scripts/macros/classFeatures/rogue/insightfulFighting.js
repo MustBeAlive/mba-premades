@@ -12,7 +12,7 @@ export async function insightfulFighting({ speaker, actor, token, character, ite
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>Insight gained on <b>${target.document.name}</b></p>
+            <p>Insight gained on <u>${target.document.name}</u></p>
         `,
         'duration': {
             'seconds': 60

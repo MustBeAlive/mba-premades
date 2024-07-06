@@ -98,6 +98,11 @@ async function bite({ speaker, actor, token, character, item, args, scope, workf
     await mba.createEffect(target.actor, effectData);
 }
 
+function twoHeaded(saveId, options) {
+    return {'label': '<u>Two-Headed:</u><br>Are you saving against being blinded, charmed, deafened, frightened, stunned, or knocked unconscious?<br>(ask GM)', 'type': 'advantage'};  
+}
+
 export let deathDog = {
-    'bite': bite
+    'bite': bite,
+    'twoHeaded': twoHeaded
 }

@@ -187,7 +187,7 @@ export async function flurryOfBlows({ speaker, actor, token, character, item, ar
                         ["Push up to 15 feet (STR Save)", "push", "modules/mba-premades/icons/class/monk/flurry_of_blows_push.webp"],
                         ["Disable reactions", "stagger", "modules/mba-premades/icons/class/monk/flurry_of_blows_stagger.webp"]
                     );                  
-                    let openHand = await mba.selectImage("Open Hand Technique", openHandEffects, `Choose effect to impose on <b>${target.document.name}</b>:`, "value");
+                    let openHand = await mba.selectImage("Open Hand Technique", openHandEffects, `Choose effect to impose on <u>${target.document.name}</u>:`, "value");
                     if (!openHand) continue;
                     let saveDC = 8 + workflow.actor.system.attributes.prof + workflow.actor.system.abilities.wis.mod;
                     if (openHand === "prone") {
@@ -199,7 +199,7 @@ export async function flurryOfBlows({ speaker, actor, token, character, item, ar
                         let saveRoll = await mba.rollRequest(target, 'save', 'str');
                         if (saveRoll.total >= saveDC) continue;
                         let choicesDistance = [["5 feet", 5], ["10 feet", 10], ["15 feet", 15]];
-                        let selectionDistance = await mba.dialog("Open Hand Technique: Push", choicesDistance, `How far would you like to push <b>${target.document.name}</b>?`);
+                        let selectionDistance = await mba.dialog("Open Hand Technique: Push", choicesDistance, `How far would you like to push <u>${target.document.name}</u>?`);
                         if (!selectionDistance) continue;
                         await mba.pushToken(workflow.token, target, selectionDistance);
                     }

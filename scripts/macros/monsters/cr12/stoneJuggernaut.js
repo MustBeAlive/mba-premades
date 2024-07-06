@@ -2,8 +2,7 @@ import {mba} from "../../../helperFunctions.js";
 
 async function slam({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
-    let targets = Array.from(workflow.failedSaves);
-    for (let target of targets) {
+    for (let target of Array.from(workflow.failedSaves)) {
         await new Sequence()
 
             .effect()
@@ -54,6 +53,7 @@ async function slam({ speaker, actor, token, character, item, args, scope, workf
             .delay(850)
 
             .thenDo(async () => {
+                if (mba.checkTrait(target.actor, "ci", "prone")) return;
                 if (mba.findEffect(target.actor, "Prone")) return;
                 if (mba.getSize(target.actor) > 3) return;
                 await mba.addCondition(target.actor, 'Prone', false, null);
@@ -72,7 +72,6 @@ async function devastatingRollCast({ speaker, actor, token, character, item, arg
 }
 
 async function devastatingRollItem({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let targets = Array.from(workflow.targets);
     const effectData = {
         'name': "Devastating Roll",
         'icon': workflow.item.img,
@@ -84,7 +83,7 @@ async function devastatingRollItem({ speaker, actor, token, character, item, arg
             }
         }
     };
-    for (let target of targets) await mba.createEffect(target.actor, effectData);
+    for (let target of Array.from(workflow.targets)) await mba.createEffect(target.actor, effectData);
 }
 
 export let stoneJuggernaut = {

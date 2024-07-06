@@ -1,5 +1,7 @@
 import {mba} from "../../../helperFunctions.js";
 
+// To do: squash animation (bulette jump for inspo)
+
 async function squashCast({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (mba.getSize(workflow.targets.first().actor) > 2) {
         ui.notifications.warn("Target must be medium or smaller!");

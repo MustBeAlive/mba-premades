@@ -10,7 +10,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     ];
     let selection = await mba.dialog(workflow.item.name, choices, `<b>Choose color:</b>`);
     if (!selection) selection = "orange";
-
     let animation1 = "jb2a.impact.005." + selection;
     let animation2 = "jb2a.ground_cracks." + selection + ".02";
     let animation3 = "jb2a.particles.outward." + selection + ".01.03";
@@ -104,41 +103,20 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'mba-premades': {
                 'template': {
-                    'name': 'createBonfire',
                     'castLevel': workflow.castData.castLevel,
+                    'dice': dice,
                     'saveDC': mba.getSpellDC(workflow.item),
-                    'macroName': 'createBonfire',
                     'templateUuid': template.uuid,
-                    'turn': 'end',
-                    'ignoreMove': true,
-                    'dice': dice
                 }
             }
         }
     });
 }
 
-async function trigger(token, trigger) {
-    let template = await fromUuid(trigger.templateUuid);
-    if (!template) return;
-    if (mba.inCombat()) {
-        let turn = game.combat.round + '-' + game.combat.turn;
-        let lastTurn = template.flags['mba-premades']?.spell?.createBonfire?.[token.id]?.turn;
-        if (turn === lastTurn) return;
-        await template.setFlag('mba-premades', 'spell.createBonfire.' + token.id + '.turn', turn);
-    }
-    let originUuid = template.flags.dnd5e?.origin;
-    if (!originUuid) return;
-    let originItem = await fromUuid(originUuid);
-    if (!originItem) return;
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Create Bonfire: Damage', false);
-    if (!featureData) return;
-    featureData.system.save.dc = trigger.saveDC;
-    featureData.system.damage.parts[0][0] = trigger.dice + "d8[fire]";
-    delete featureData._id;
-    let feature = new CONFIG.Item.documentClass(featureData, { 'parent': originItem.actor });
-    let [config, options] = constants.syntheticItemWorkflowOptions([token.uuid]);
-    await MidiQOL.completeItemUse(feature, config, options);
+async function enter(template, token) {
+    let trigger = template.flags['mba-premades']?.template;
+    if (!trigger) return;
+    await createBonfire.trigger(token.document, trigger);
 }
 
 async function end(template, token) {
@@ -155,10 +133,27 @@ async function end(template, token) {
     await createBonfire.trigger(token.document, trigger);
 }
 
-async function enter(template, token) {
-    let trigger = template.flags['mba-premades']?.template;
-    if (!trigger) return;
-    await createBonfire.trigger(token.document, trigger);
+async function trigger(token, trigger) {
+    let template = await fromUuid(trigger.templateUuid);
+    if (!template) return;
+    if (mba.inCombat()) {
+        let turn = game.combat.round + '-' + game.combat.turn;
+        let lastTurn = template.flags['mba-premades']?.spell?.createBonfire?.[token.id]?.turn;
+        if (turn === lastTurn) return;
+        await template.setFlag('mba-premades', 'spell.createBonfire.' + token.id + '.turn', turn);
+    }
+    let originUuid = template.flags.dnd5e?.origin;
+    if (!originUuid) return;
+    let originItem = await fromUuid(originUuid);
+    if (!originItem) return;
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Create Bonfire: Damage", false);
+    if (!featureData) return;
+    featureData.system.save.dc = trigger.saveDC;
+    featureData.system.damage.parts[0][0] = `${trigger.dice}d8[fire]`;
+    delete featureData._id;
+    let feature = new CONFIG.Item.documentClass(featureData, { 'parent': originItem.actor });
+    let [config, options] = constants.syntheticItemWorkflowOptions([token.uuid]);
+    await MidiQOL.completeItemUse(feature, config, options);
 }
 
 async function del() {

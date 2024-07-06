@@ -13,7 +13,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .waitUntilFinished(-500)
 
             .thenDo(function () {
-                Sequencer.EffectManager.endEffects({ name: `${token.document.name} Protection from Evil and Good` })
+                Sequencer.EffectManager.endEffects({ name: `${token.document.name} PrFEAG` })
             })
 
             .play()
@@ -24,8 +24,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'origin': workflow.item.uuid,
         'description': `
             <p>You are protected from aberrations, celestials, elementals, fey, fiends and undead.</p>
-            <p>Creatures of those types have disadvantage on attack rolls against you. You also can't be charmed, frightened, or possessed by them.</p>
-            <p>If you are already charmed, frightened, or possessed by such a creature, you have advantage on any new saving throw against the relevant effect.</p>
+            <p>Creatures of those types have disadvantage on attack rolls against you. You also can't be @UUID[Compendium.mba-premades.MBA SRD.Item.SVd8xu3mTZMqz8fL]{Charmed}, @UUID[Compendium.mba-premades.MBA SRD.Item.oR1wUvem3zVVUv5Q]{Frightened}, or possessed by them.</p>
+            <p>If you are already @UUID[Compendium.mba-premades.MBA SRD.Item.SVd8xu3mTZMqz8fL]{Charmed}, @UUID[Compendium.mba-premades.MBA SRD.Item.oR1wUvem3zVVUv5Q]{Frightened}, or possessed by such a creature, you have advantage on any new saving throw against the relevant effect.</p>
         `,
         'duration': {
             'seconds': 600
@@ -66,7 +66,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .opacity(0.8)
         .playbackRate(0.8)
         .persist()
-        .name(`${target.document.name} Protection from Evil and Good`)
+        .name(`${target.document.name} PrFEAG`)
 
         .thenDo(async () => {
             await mba.createEffect(target.actor, effectData)

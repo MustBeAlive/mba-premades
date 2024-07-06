@@ -2,7 +2,7 @@ import {mba} from "../../helperFunctions.js";
 
 export async function dash({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Dash` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Dash` })
     }
     let effectData = {
         'name': workflow.item.name,

@@ -4,13 +4,14 @@ async function claws({ speaker, actor, token, character, item, args, scope, work
     if (!workflow.hitTargets.size) return;
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
+    if (mba.checkTrait(target.actor, "ci", "paralyzed")) return;
     if (mba.raceOrType(target.actor) === 'undead' || target.actor.system.details.type.subtype === "elf") return;
     const effectData = {
         'name': "Ghoul: Paralyzing Claws",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are paralyzed by Ghoul's Claws.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.jooSbuYlWEhaNpIi]{Paralyzed} by Ghoul's Claws.</p>
             <p>You can repeat the saving throw at the end of each of your turns, ending the effect on a success.</p>
         `,
         'duration': {
@@ -32,7 +33,6 @@ async function claws({ speaker, actor, token, character, item, args, scope, work
         ],
     };
     await mba.createEffect(target.actor, effectData);
-
 }
 
 export let ghoul = {

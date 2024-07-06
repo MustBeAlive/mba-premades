@@ -1,4 +1,4 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
 
 export async function gust({ speaker, actor, token, character, item, args, scope, workflow }) {
     let choices = [
@@ -25,7 +25,7 @@ export async function gust({ speaker, actor, token, character, item, args, scope
 
                 .effect()
                 .file("animated-spell-effects-cartoon.air.bolt.ray")
-                .attachTo(token)
+                .attachTo(workflow.token)
                 .stretchTo(target)
 
                 .play()
@@ -36,7 +36,7 @@ export async function gust({ speaker, actor, token, character, item, args, scope
 
             .effect()
             .file("animated-spell-effects-cartoon.air.bolt.ray")
-            .attachTo(token)
+            .attachTo(workflow.token)
             .stretchTo(target)
 
             .play()
@@ -60,7 +60,7 @@ export async function gust({ speaker, actor, token, character, item, args, scope
                     'originUuid': workflow.item.uuid
                 },
                 'walledtemplates': {
-                    'wallRestriction': 'move',
+                    'wallRestriction': 'light',
                     'wallsBlock': 'recurse',
                 }
             },
@@ -84,7 +84,7 @@ export async function gust({ speaker, actor, token, character, item, args, scope
 
             .effect()
             .file("jb2a.whirlwind.bluegrey")
-            .atLocation(token)
+            .atLocation(workflow.token)
             .scaleToObject(1)
 
             .play()

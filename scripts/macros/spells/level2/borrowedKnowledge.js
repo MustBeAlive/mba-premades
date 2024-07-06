@@ -7,13 +7,15 @@ export async function borrowedKnowledge({ speaker, actor, token, character, item
     let selection = await mba.dialog("Borrowed Knowledge", choices, "Choose one of the skills:");
     if (!selection) return;
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Borrowed Knowledge` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} BorKno` })
     }
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
-        'description': "For the next hour, you are proficient in one skill of your choosing.",
+        'description': `
+            <p>For the next hour, you are proficient in one skill of your choosing.</p>
+        `,
         'duration': {
             'seconds': 3600
         },
@@ -108,7 +110,7 @@ export async function borrowedKnowledge({ speaker, actor, token, character, item
         .randomRotation()
         .mask()
         .persist()
-        .name(`${workflow.token.document.name} Borrowed Knowledge`)
+        .name(`${workflow.token.document.name} BorKno`)
 
         .effect()
         .file("jb2a.extras.tmfx.outflow.circle.01")
@@ -122,7 +124,7 @@ export async function borrowedKnowledge({ speaker, actor, token, character, item
         .loopProperty("alphaFilter", "alpha", { from: 0.75, to: 1, duration: 1500, pingPong: true, ease: "easeOutSine" })
         .tint("#c77400")
         .persist()
-        .name(`${workflow.token.document.name} Borrowed Knowledge`)
+        .name(`${workflow.token.document.name} BorKno`)
 
         .effect()
         .attachTo(workflow.token, { bindAlpha: false })
@@ -135,7 +137,7 @@ export async function borrowedKnowledge({ speaker, actor, token, character, item
         .fadeOut(1000)
         .zIndex(0.1)
         .persist()
-        .name(`${workflow.token.document.name} Borrowed Knowledge`)
+        .name(`${workflow.token.document.name} BorKno`)
 
         .thenDo(async () => {
             await mba.createEffect(workflow.actor, effectData);

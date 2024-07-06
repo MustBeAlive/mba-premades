@@ -18,10 +18,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             return;
         }
         let featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Oil Flask: Splash Oil', false);
-        if (!featureData) {
-            ui.notifications.warn("Can't find item in compenidum! (Oil Flask: Splash Oil)");
-            return
-        }
+        if (!featureData) return;
         delete featureData._id;
         let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
         let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
@@ -36,10 +33,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             return;
         }
         let featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Oil Flask: Throw Flask', false);
-        if (!featureData) {
-            ui.notifications.warn("Can't find item in compenidum! (Oil Flask: Throw Flask)");
-            return
-        }
+        if (!featureData) return;
         delete featureData._id;
         let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
         let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
@@ -62,7 +56,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                     'originUuid': workflow.item.uuid
                 },
                 'walledtemplates': {
-                    'wallRestriction': 'move',
+                    'hideBorder': "alwaysHide",
+                    'wallRestriction': 'light',
                     'wallsBlock': 'recurse',
                 }
             },
@@ -75,18 +70,18 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
             .effect()
             .file("jb2a.throwable.throw.flask.01.black")
-            .attachTo(token)
+            .atLocation(token)
             .stretchTo(template)
             .waitUntilFinished(-250)
 
             .effect()
             .file("jb2a.explosion.top_fracture.flask.01")
-            .attachTo(template)
+            .atLocation(template)
             .scaleToObject(1.4)
 
             .effect()
             .file("jb2a.impact.green.9")
-            .attachTo(template)
+            .atLocation(template)
             .scaleToObject(1.5)
             .filter("ColorMatrix", { saturate: -1, brightness: -0.8 })
 
@@ -150,7 +145,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         if (!emptyFlaskItem) {
             const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
             if (!itemData) {
-                ui.notifications.warn("Unable to find item in compenidum! (Empty Flask)");
+                ui.notifications.warn("Unable to find item in compendium! (Empty Flask)");
                 return
             }
             await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
@@ -171,7 +166,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
 
             .effect()
             .file("jb2a.throwable.throw.flask.01.black")
-            .attachTo(token)
+            .attachTo(workflow.token)
             .stretchTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
             .waitUntilFinished(-250)
 
@@ -218,7 +213,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
 
         .effect()
         .file("jb2a.throwable.throw.flask.01.black")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target)
         .waitUntilFinished(-250)
 

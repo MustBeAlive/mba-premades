@@ -23,7 +23,7 @@ export async function quickenedHealing({ speaker, actor, token, character, item,
     let prof = workflow.actor.system.attributes.prof;
     let formula = `1d${monkDice} + ${prof}`;
     let healingRoll = await new Roll(formula).roll({ 'async': true });
-    await MidiQOL.displayDSNForRoll(healingRoll, 'damageRoll');
+    await MidiQOL.displayDSNForRoll(healingRoll);
 
     new Sequence()
 

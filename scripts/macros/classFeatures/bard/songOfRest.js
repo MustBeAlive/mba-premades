@@ -34,8 +34,8 @@ export async function songOfRest({ speaker, actor, token, character, item, args,
     if (bardLevel >= 9 && bardLevel < 13) ammount = 8;
     else if (bardLevel >= 13 && bardLevel < 17) ammount = 10;
     else if (bardLevel >= 17) ammount = 12;
-    let formula = `1d${ammount}[healing]`;
-    let healingRoll = await new Roll(formula).roll({ 'async': true });
+    let healingRoll = await new Roll(`1d${ammount}[healing]`).roll({ 'async': true });
+    await MidiQOL.displayDSNForRoll(healingRoll);
 
     new Sequence()
 

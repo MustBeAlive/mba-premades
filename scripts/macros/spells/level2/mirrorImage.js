@@ -3,7 +3,7 @@ import {queue} from "../../mechanics/queue.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Mirror Image` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} MirIma` })
     };
     const effectData = {
         'name': workflow.item.name,
@@ -49,25 +49,25 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .opacity(0.5)
         .rotate(-90)
         .scaleToObject(1.25)
-        .atLocation(token)
+        .atLocation(workflow.token)
 
         .animation()
-        .on(token)
+        .on(workflow.token)
         .opacity(0)
 
         .effect()
         .file("jb2a.particles.outward.purple.02.03")
         .scaleToObject(2.5)
-        .atLocation(token)
-        .attachTo(token)
+        .atLocation(workflow.token)
+        .attachTo(workflow.token)
         .fadeIn(1000)
         .duration(4000)
         .fadeOut(2000)
         .randomRotation()
 
         .effect()
-        .from(token)
-        .atLocation(token)
+        .from(workflow.token)
+        .atLocation(workflow.token)
         .belowTokens()
         .animateProperty("sprite", "position.x", { from: -80, to: 80, duration: 1500, pingPong: true })
         .duration(1500)
@@ -76,8 +76,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .loopProperty("alphaFilter", "alpha", { from: 0.75, to: 0.5, duration: 2000, pingPong: true })
 
         .effect()
-        .from(token)
-        .atLocation(token)
+        .from(workflow.token)
+        .atLocation(workflow.token)
         .belowTokens()
         .animateProperty("sprite", "position.x", { from: 80, to: -80, duration: 1500, pingPong: true })
         .duration(1500)
@@ -88,12 +88,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .wait(500)
 
         .effect()
-        .from(token)
-        .atLocation(token)
+        .from(workflow.token)
+        .atLocation(workflow.token)
         .scale(1)
         .anchor({ x: 0.9 + (1 * 0.05) })
         .belowTokens()
-        .attachTo(token, { bindAlpha: false, followRotation: false })
+        .attachTo(workflow.token, { bindAlpha: false, followRotation: false })
         .animateProperty("spriteContainer", "rotation", { from: 180, to: -10, duration: 500 })
         .loopProperty("sprite", "position.x", { from: -5, to: 5, duration: 2500, pingPong: true })
         .zeroSpriteRotation()
@@ -103,14 +103,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .zIndex(4)
         .fadeOut(500)
         .persist()
-        .name(`${token.document.name} Mirror Image 1`)
+        .name(`${workflow.token.document.name} MirIma1`)
 
         .effect()
-        .from(token)
-        .atLocation(token)
+        .from(workflow.token)
+        .atLocation(workflow.token)
         .anchor({ x: 0.9 + (2 * 0.05) })
         .belowTokens()
-        .attachTo(token, { bindAlpha: false, followRotation: false })
+        .attachTo(workflow.token, { bindAlpha: false, followRotation: false })
         .animateProperty("spriteContainer", "rotation", { from: 0, to: 190, duration: 500 })
         .loopProperty("sprite", "position.x", { from: -5, to: 5, duration: 2500, pingPong: true, delay: 250 })
         .zeroSpriteRotation()
@@ -120,14 +120,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .zIndex(4)
         .fadeOut(500)
         .persist()
-        .name(`${token.document.name} Mirror Image 2`)
+        .name(`${workflow.token.document.name} MirIma2`)
 
         .effect()
-        .from(token)
-        .atLocation(token)
+        .from(workflow.token)
+        .atLocation(workflow.token)
         .anchor({ x: 0.9 + (3 * 0.05) })
         .belowTokens()
-        .attachTo(token, { bindAlpha: false, followRotation: false })
+        .attachTo(workflow.token, { bindAlpha: false, followRotation: false })
         .animateProperty("spriteContainer", "rotation", { from: 0, to: 90, duration: 250 })
         .loopProperty("sprite", "position.x", { from: -5, to: 5, duration: 2500, pingPong: true })
         .zeroSpriteRotation()
@@ -138,7 +138,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .zIndex(4)
         .fadeOut(500)
         .persist()
-        .name(`${token.document.name} Mirror Image 3`)
+        .name(`${workflow.token.document.name} MirIma3`)
 
         .wait(200)
 
@@ -151,10 +151,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .opacity(0.5)
         .rotate(90)
         .scaleToObject(1.25)
-        .atLocation(token)
+        .atLocation(workflow.token)
 
         .animation()
-        .on(token)
+        .on(workflow.token)
         .fadeIn(1000)
         .opacity(1)
 
@@ -163,7 +163,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
 async function hook(workflow) {
     if (workflow.targets.size != 1) return;
-    if (workflow.isFumble === true) return;
+    if (!workflow.hitTargets.size || workflow.isFumble === true) return;
     let target = workflow.targets.first();
     let targetEffect = mba.findEffect(target.actor, 'Mirror Image');
     if (!targetEffect) return;
@@ -175,6 +175,7 @@ async function hook(workflow) {
     let queueSetup = await queue.setup(workflow.item.uuid, 'mirrorImage', 49);
     if (!queueSetup) return;
     let roll = await new Roll('1d20').roll({ 'async': true });
+    await MidiQOL.displayDSNForRoll(roll);
     roll.toMessage({
         'rollMode': 'roll',
         'speaker': { 'alias': name },
@@ -207,8 +208,8 @@ async function hook(workflow) {
             'speaker': { 'alias': name },
             'content': `<b>${workflow.token.document.name}'s</b> attack hit a duplicate and destroyed it.`
         });
-        if (duplicates === 3) Sequencer.EffectManager.endEffects({ name: `${target.document.name} Mirror Image 3` })
-        if (duplicates === 2) Sequencer.EffectManager.endEffects({ name: `${target.document.name} Mirror Image 2` })
+        if (duplicates === 3) Sequencer.EffectManager.endEffects({ name: `${target.document.name} MirIma3` })
+        if (duplicates === 2) Sequencer.EffectManager.endEffects({ name: `${target.document.name} MirIma2` })
         if (duplicates === 1) {
             await mba.removeEffect(targetEffect);
             return;

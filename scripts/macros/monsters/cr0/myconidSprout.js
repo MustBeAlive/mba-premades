@@ -1,6 +1,6 @@
 import {mba} from "../../../helperFunctions.js";
 
-export async function rapportSpores({ speaker, actor, token, character, item, args, scope, workflow }) {
+async function rapportSpores({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} Rapport Spores` })
     }
@@ -28,8 +28,7 @@ export async function rapportSpores({ speaker, actor, token, character, item, ar
             }
         }
     };
-    let targets = Array.from(workflow.targets);
-    for (let target of targets) {
+    for (let target of Array.from(workflow.targets)) {
         let type = mba.raceOrType(target.actor);
         if (type === 'constuct' || type === 'elemental' || type === 'undead') {
             ChatMessage.create({

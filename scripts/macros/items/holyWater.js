@@ -17,17 +17,11 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let featureData;
     if (selection === "splash") {
         featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Holy Water: Splash Water', false);
-        if (!featureData) {
-            ui.notifications.warn("Unable to find item in compenidum! (Holy Water: Splash Water)");
-            return
-        }
+        if (!featureData) return;
     }
     else if (selection === "shatter") {
         featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Holy Water: Throw Flask', false);
-        if (!featureData) {
-            ui.notifications.warn("Unable to find item in compenidum! (Holy Water: Throw Flask)");
-            return
-        }
+        if (!featureData) return;
     }
     delete featureData._id;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
@@ -46,7 +40,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         if (!emptyFlaskItem) {
             const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
             if (!itemData) {
-                ui.notifications.warn("Unable to find item in compenidum! (Empty Flask)");
+                ui.notifications.warn("Unable to find item in compendium! (Empty Flask)");
                 return
             }
             await workflow.actor.createEmbeddedDocuments("Item", [itemData]);

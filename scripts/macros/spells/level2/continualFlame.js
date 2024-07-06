@@ -2,11 +2,8 @@ import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Continual Flame: Torch');
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Continual Flame: Torch)");
-        return;
-    }
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Continual Flame: Torch", false);
+    if (!featureData) return;
     delete featureData._id;
     let choicesColor = [
         ["Amber (Orange)", "#9e5c00"],
@@ -55,8 +52,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         }
     };
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Continual Flame`, object: token })
-        await warpgate.revert(token.document, 'Continual Flame');
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} ConFla` })
+        await warpgate.revert(token.document, "Continual Flame");
     };
     let effectData = {
         'name': workflow.item.name,
@@ -132,8 +129,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     };
     let options = {
         'permanent': false,
-        'name': 'Continual Flame',
-        'description': 'Continual Flame'
+        'name': "Continual Flame",
+        'description': "Continual Flame"
     };
 
     new Sequence()
@@ -154,7 +151,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .fadeOut(1000)
         .filter("ColorMatrix", { hue: hue, saturate: saturate })
         .persist()
-        .name(`${target.document.name} Continual Flame`)
+        .name(`${target.document.name} ConFla`)
 
         .thenDo(async () => {
             await warpgate.mutate(target.document, updates, {}, options);
@@ -219,7 +216,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 }
             }
         };
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Continual Flame`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} ConFla` })
         await mba.updateEffect(effect, updates);
         return;
     }
@@ -277,7 +274,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .fadeOut(1000)
             .filter("ColorMatrix", { hue: hue, saturate: saturate })
             .persist()
-            .name(`${token.document.name} Continual Flame`)
+            .name(`${token.document.name} ConFla`)
 
             .thenDo(async () => {
                 await mba.updateEffect(effect, updates);

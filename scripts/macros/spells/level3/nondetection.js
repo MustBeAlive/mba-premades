@@ -15,7 +15,7 @@ export async function nondetection({ speaker, actor, token, character, item, arg
         });
     };
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Nondetection`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Nondetection` })
         await warpgate.revert(token.document, "Nondetection");
     };
     const effectData = {
@@ -25,6 +25,14 @@ export async function nondetection({ speaker, actor, token, character, item, arg
         'description': `
             <p>You are hidden from divination magic and cannot be percieved through magical scrying sensors.</p>
         `,
+        'changes': [
+            {
+                'key': 'flags.mba-premades.spell.nondetection',
+                'mode': 5,
+                'value': true,
+                'priority': 20
+            }
+        ],
         'flags': {
             'dae': {
                 'showIcon': showIcon

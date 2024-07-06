@@ -3,6 +3,7 @@ import {queue} from "../../mechanics/queue.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) return;
 
     new Sequence()
 

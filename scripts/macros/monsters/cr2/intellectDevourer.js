@@ -5,7 +5,7 @@ async function devourIntellect({ speaker, actor, token, character, item, args, s
     let target = workflow.targets.first();
     let targetInt = target.actor.system.abilities.int.value;
     let intRoll = await new Roll("3d6").roll({ 'async': true });
-    await MidiQOL.displayDSNForRoll(intRoll, 'damageRoll');
+    await MidiQOL.displayDSNForRoll(intRoll);
     intRoll.toMessage({
         rollMode: 'roll',
         speaker: { actor: workflow.actor },
@@ -18,7 +18,7 @@ async function devourIntellect({ speaker, actor, token, character, item, args, s
         'origin': workflow.item.uuid,
         'description': `
             <p>Your intelligence score is reduced to 0.</p>
-            <p>You are stunned until you regain at least on point of Intelligence.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.O1gS8bqw9PJTuCAh]{Stunned} until you regain at least on point of Intelligence.</p>
         `,
         'changes': [
             {
@@ -31,12 +31,6 @@ async function devourIntellect({ speaker, actor, token, character, item, args, s
                 'key': 'macro.CE',
                 'mode': 0,
                 'value': 'Stunned',
-                'priority': 20
-            },
-            {
-                'key': 'macro.CE',
-                'mode': 0,
-                'value': 'Incapacitated',
                 'priority': 20
             }
         ],

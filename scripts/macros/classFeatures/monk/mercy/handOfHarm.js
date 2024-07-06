@@ -49,7 +49,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     let physicianTouch = false
     if (monkLevel >= 6) physicianTouch = true;
     if (physicianTouch && !mba.checkTrait(target.actor, "ci", "poisoned")/*&& !mba.findEffect(target.actor, "Hand of Harm: Poison")*/) {
-        let poisonCheck = await mba.dialog("Hand of Harm: Poison", constants.okCancel, `Would you like to poison <b>${target.document.name}</b>?`);
+        let poisonCheck = await mba.dialog("Hand of Harm: Poison", constants.okCancel, `Would you like to poison <u>${target.document.name}</u>?`);
         if (poisonCheck) {
             let effectDataPoison = {
                 'name': "Hand of Harm: Poison",

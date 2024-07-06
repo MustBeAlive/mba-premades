@@ -1,6 +1,8 @@
 import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
+// To do: overlapping issue
+
 async function stench(token) {
     if (!mba.inCombat()) return;
     let tokenId = game.combat.current.tokenId;
@@ -10,14 +12,14 @@ async function stench(token) {
     if (mba.findEffect(target.actor, "Stench Kow: Stench Immune")) return;
     if (mba.findEffect(target.actor, "Stench Kow: Stench")) return;
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Stench Kow Stench` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} SKS` })
     }
     const effectData = {
         'name': "Stench Kow: Stench",
         'icon': "modules/mba-premades/icons/conditions/nauseated.webp",
         'origin': token.uuid,
         'description': `
-            <p>You are affected by Stench Kow's Stench and are poisoned until the start of your next turn.</p>
+            <p>You are affected by Stench Kow's Stench and are @UUID[Compendium.mba-premades.MBA SRD.Item.pAjPUbk2oPUTfva2]{Poisoned} until the start of your next turn.</p>
         `,
         'changes': [
             {
@@ -49,10 +51,7 @@ async function stench(token) {
         }
     };
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Monster Features', 'Stench Kow: Stench', false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compenidum! (Stench Kow: Stench)");
-        return
-    }
+    if (!featureData) return;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': token.actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
@@ -70,15 +69,15 @@ async function stench(token) {
 
         .effect()
         .file("jb2a.template_circle.symbol.normal.poison.dark_green")
-        .delay(500)
         .attachTo(target)
+        .scaleToObject(1.8 * target.document.texture.scaleX)
+        .delay(500)
         .fadeIn(500)
         .fadeOut(500)
-        .scaleToObject(1.8 * target.document.texture.scaleX)
         .randomRotation()
         .mask(target)
         .persist()
-        .name(`${target.document.name} Stench Kow Stench`)
+        .name(`${target.document.name} SKS`)
 
         .thenDo(async () => {
             await mba.createEffect(target.actor, effectData)

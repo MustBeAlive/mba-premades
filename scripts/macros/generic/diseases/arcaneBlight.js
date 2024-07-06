@@ -11,7 +11,7 @@ export async function arcaneBlight() {
     if (arcaneBlightImmune) {
         ChatMessage.create({
             whisper: ChatMessage.getWhisperRecipients("GM"),
-            content: `<b>${target.document.name}</b> is immune to Arcane Blight!`,
+            content: `<u>${target.document.name}</u> is immune to Arcane Blight!`,
             speaker: { actor: null, alias: "Disease Announcer" }
         });
         return;
@@ -36,7 +36,7 @@ export async function arcaneBlight() {
         let saveRoll = await mbaPremades.helpers.rollRequest(token, 'save', 'con');
         if (saveRoll.total >= saveDC) {
             let arcaneBlightRoll = await new Roll("1d6").roll({ 'async': true });
-            await MidiQOL.displayDSNForRoll(arcaneBlightRoll, 'damageRoll');
+            await MidiQOL.displayDSNForRoll(arcaneBlightRoll);
             newSaveDC = saveDC - arcaneBlightRoll.total;
             ChatMessage.create({
                 whisper: ChatMessage.getWhisperRecipients("GM"),
@@ -136,7 +136,7 @@ export async function arcaneBlight() {
     await mba.createEffect(target.actor, effectData);
     ChatMessage.create({
         whisper: ChatMessage.getWhisperRecipients("GM"),
-        content: `<p><b>${target.document.name}</b> is infected with <b>Arcane Blight</b></p>`,
+        content: `<p><u>${target.document.name}</u> is infected with <b>Arcane Blight</b></p>`,
         speaker: { actor: null, alias: "Disease Announcer" }
     });
 }

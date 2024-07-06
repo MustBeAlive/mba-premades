@@ -1,5 +1,5 @@
-import { mba } from "../../../helperFunctions.js";
-import { constants } from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+import {constants} from "../../generic/constants.js";
 
 export async function greenFlameBlade({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.targets.size != 1) return;

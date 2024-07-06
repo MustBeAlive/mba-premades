@@ -1,5 +1,6 @@
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) return;
     await new Sequence()
 
         .effect()
@@ -28,7 +29,6 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     }
 }
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-
     for (let i of workflow.failedSaves) {
 
         new Sequence()

@@ -1,8 +1,8 @@
-import { constants } from "../../generic/constants.js";
-import { mba } from "../../../helperFunctions.js";
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
 
 export async function pyrotechnics({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let choices = [['Smoke Cloud', 'cloud'], ['Explosion of Fireworkds', 'explosion']];
+    let choices = [['Smoke Cloud', 'cloud'], ['Explosion of Fireworks', 'explosion']];
     let selection = await mba.dialog("Pyrotechnics", choices, `<b>Choose one of the effects:</b>`);
     if (!selection) return;
     if (selection === "cloud") {
@@ -16,17 +16,17 @@ export async function pyrotechnics({ speaker, actor, token, character, item, arg
                 'dnd5e': {
                     'origin': workflow.item.uuid
                 },
-                'midi-qol': {
-                    'originUuid': workflow.item.uuid
-                },
                 'mba-premades': {
                     'spell': {
                         'fogCloud': true
                     }
                 },
+                'midi-qol': {
+                    'originUuid': workflow.item.uuid
+                },
                 'walledtemplates': {
                     'hideBorder': "alwaysHide",
-                    'wallRestriction': 'move',
+                    'wallRestriction': 'light',
                     'wallsBlock': 'recurse',
                 }
             },
@@ -80,7 +80,7 @@ export async function pyrotechnics({ speaker, actor, token, character, item, arg
             .play()
 
         async function effectMacroDel() {
-            await Sequencer.EffectManager.endEffects({ name: "Pyrotechnics" })
+            Sequencer.EffectManager.endEffects({ name: "Pyrotechnics" })
         }
         let templateEffectData = {
             'name': workflow.item.name,
@@ -131,7 +131,7 @@ export async function pyrotechnics({ speaker, actor, token, character, item, arg
                 },
                 'walledtemplates': {
                     'hideBorder': "alwaysHide",
-                    'wallRestriction': 'move',
+                    'wallRestriction': 'light',
                     'wallsBlock': 'recurse',
                 }
             },
@@ -226,19 +226,16 @@ export async function pyrotechnics({ speaker, actor, token, character, item, arg
         let targetUuids = [];
         for (let i of game.user.targets) {
             if (mba.checkTrait(i.actor, 'ci', 'blinded')) {
+                await mba.createEffect(i.actor, constants.immunityEffectData);
                 ChatMessage.create({ 
-                    flavor: `<b>${i.name}</b> is unaffected by Pyrotechnics (target is immune to condition: Blinded)`, 
+                    flavor: `<u>${i.name}</u> is unaffected by Pyrotechnics!`, 
                     speaker: ChatMessage.getSpeaker({ actor: workflow.actor }) 
                 });
-                continue;
             }
             targetUuids.push(i.document.uuid);
         }
-        let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Pyrotechnics: Explosion', false);
-        if (!featureData) {
-            ui.notifications.warn("Unable to find item in the compendium! (Pyrotechnics: Explosion)");
-            return;
-        }
+        let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Pyrotechnics: Explosion", false);
+        if (!featureData) return;
         delete featureData._id;
         featureData.system.save.dc = mba.getSpellDC(workflow.item);
         let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
@@ -249,7 +246,9 @@ export async function pyrotechnics({ speaker, actor, token, character, item, arg
             'name': workflow.item.name,
             'icon': workflow.item.img,
             'origin': workflow.item.uuid,
-            'description': "You witnessed a dazzling explosion of colors and are blinded until the end of caster's next turn.",
+            'description': `
+                <p>You witnessed a dazzling explosion of colors and are @UUID[Compendium.mba-premades.MBA SRD.Item.3NxmNhGQQqUDnu73]{Blinded} until the end of caster's next turn.</p>
+            `,
             'changes': [
                 {
                     'key': 'macro.CE',
@@ -272,6 +271,6 @@ export async function pyrotechnics({ speaker, actor, token, character, item, arg
                 }
             }
         };
-        for (let i of featureWorkflow.failedSaves) await mba.createEffect(i.actor, targetEffectData);
+        for (let target of Array.from(featureWorkflow.failedSaves)) await mba.createEffect(target.actor, targetEffectData);
     }
 }

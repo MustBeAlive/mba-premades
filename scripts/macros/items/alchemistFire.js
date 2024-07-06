@@ -45,10 +45,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         return;
     }
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', "Alchemist's Fire: Throw Flask", false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in compendium! (Alchemist's Fire: Throw Flask)");
-        return
-    }
+    if (!featureData) return;
     delete featureData._id;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);

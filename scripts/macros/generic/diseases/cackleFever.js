@@ -23,7 +23,7 @@ export async function cackleFever() {
         return;
     }
     let cackleFeverRoll = await new Roll("1d4").roll({ 'async': true });
-    await MidiQOL.displayDSNForRoll(cackleFeverRoll, 'damageRoll');
+    await MidiQOL.displayDSNForRoll(cackleFeverRoll);
     const description = [`
         <p>This disease targets humanoids, although gnomes are strangely immune. While in the grips of this disease, victims frequently succumb to fits of mad laughter, giving the disease its common name and its morbid nickname: 'the shrieks'</p>
         <p>Any event that causes the infected creature great stress—including entering combat, taking damage, experiencing fear, or having a nightmare — forces the creature to make a DC 13 Constitution saving throw.</p>
@@ -63,7 +63,7 @@ export async function cackleFever() {
                 let saveRoll = await mbaPremades.helpers.rollRequest(token, 'save', 'con');
                 if (saveRoll.total >= saveDC) {
                     let cackleFeverRoll = await new Roll("1d6").roll({ 'async': true });
-                    await MidiQOL.displayDSNForRoll(cackleFeverRoll, 'damageRoll');
+                    await MidiQOL.displayDSNForRoll(cackleFeverRoll);
                     newSaveDC = saveDC - cackleFeverRoll.total;
                     ChatMessage.create({
                         whisper: ChatMessage.getWhisperRecipients("GM"),
@@ -213,7 +213,7 @@ export async function cackleFever() {
     await mba.createEffect(target.actor, effectData);
     ChatMessage.create({
         whisper: ChatMessage.getWhisperRecipients("GM"),
-        content: `<p><b>${target.document.name}</b> is infected with <b>Cackle Fever</b></p><p>Symptoms will manifest in <b>${cackleFeverRoll.total} hours</b></p>`,
+        content: `<p><u>${target.document.name}</u> is infected with <b>Cackle Fever</b></p><p>Symptoms will manifest in <b>${cackleFeverRoll.total} hours</b></p>`,
         speaker: { actor: null, alias: "Disease Announcer" }
     });
 }
@@ -227,10 +227,7 @@ export async function cackleFeverTrigger(actor, token) {
     if (mba.findEffect(actor, "Incapacitated")) return;
     let saveDC = effect.flags['mba-premades']?.saveDC;
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Features', 'Cackle Fever: Mad Laughter', false);
-    if (!featureData) {
-        ui.notifications.warn(`Unable to find item in the compenidum! (Cackle Fever: Mad Laughter)`);
-        return
-    }
+    if (!featureData) return;
     delete featureData._id;
     featureData.system.save.dc = saveDC
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': token.actor });
@@ -293,7 +290,7 @@ export async function cackleFeverTrigger(actor, token) {
         .opacity(0)
 
         .effect()
-        .file("https://i.imgur.com/SQWSf10.png")
+        .file("modules/mba-premades/icons/conditions/overlay/laughter1.webp")
         .attachTo(token, { offset: { x: 0.4 * token.document.width, y: -0.45 * token.document.width }, gridUnits: true, local: true, bindAlpha: false })
         .loopProperty("sprite", "rotation", { from: 0, to: 15, duration: 1200, ease: "easeOutCubic" })
         .loopProperty("sprite", "position.y", { from: 0, to: -0.025, duration: 1200, gridUnits: true, pingPong: false })
@@ -303,7 +300,7 @@ export async function cackleFeverTrigger(actor, token) {
         .name(`${token.document.name} Cackle Fever`)
 
         .effect()
-        .file("https://i.imgur.com/iWuBQ10.png")
+        .file("modules/mba-premades/icons/conditions/overlay/laughter2.webp")
         .attachTo(token, { offset: { x: 0.55 * token.document.width, y: 0 }, gridUnits: true, local: true, bindAlpha: false })
         .loopProperty("sprite", "rotation", { from: 0, to: -20, duration: 1200, ease: "easeOutCubic" })
         .loopProperty("sprite", "position.y", { from: 0, to: -0.025, duration: 1200, gridUnits: true, pingPong: false })
@@ -344,10 +341,7 @@ export async function cackleFeverDamaged({ speaker, actor, token, character, ite
     if (mba.findEffect(infected.actor, "Incapacitated")) return;
     let saveDC = effect.flags['mba-premades']?.saveDC;
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Features', 'Cackle Fever: Mad Laughter', false);
-    if (!featureData) {
-        ui.notifications.warn(`Unable to find item in the compenidum! (Cackle Fever: Mad Laughter)`);
-        return
-    }
+    if (!featureData) return;
     delete featureData._id;
     featureData.system.save.dc = saveDC
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': infected.actor });
@@ -410,7 +404,7 @@ export async function cackleFeverDamaged({ speaker, actor, token, character, ite
         .opacity(0)
 
         .effect()
-        .file("https://i.imgur.com/SQWSf10.png")
+        .file("modules/mba-premades/icons/conditions/overlay/laughter1.webp")
         .attachTo(infected, { offset: { x: 0.4 * infected.document.width, y: -0.45 * infected.document.width }, gridUnits: true, local: true, bindAlpha: false })
         .loopProperty("sprite", "rotation", { from: 0, to: 15, duration: 1200, ease: "easeOutCubic" })
         .loopProperty("sprite", "position.y", { from: 0, to: -0.025, duration: 1200, gridUnits: true, pingPong: false })
@@ -420,7 +414,7 @@ export async function cackleFeverDamaged({ speaker, actor, token, character, ite
         .name(`${infected.document.name} Cackle Fever`)
 
         .effect()
-        .file("https://i.imgur.com/iWuBQ10.png")
+        .file("modules/mba-premades/icons/conditions/overlay/laughter2.webp")
         .attachTo(infected, { offset: { x: 0.55 * infected.document.width, y: 0 }, gridUnits: true, local: true, bindAlpha: false })
         .loopProperty("sprite", "rotation", { from: 0, to: -20, duration: 1200, ease: "easeOutCubic" })
         .loopProperty("sprite", "position.y", { from: 0, to: -0.025, duration: 1200, gridUnits: true, pingPong: false })

@@ -12,14 +12,12 @@ export async function absorbElements({ speaker, actor, token, character, item, a
     let type = await mba.selectImage("Absorb Elements", choices, `<b>Choose damage element (ask GM)</b>`, "both");
     if (!type || type[0] === "none") return;
     let level = workflow.castData.castLevel;
-    let icon;
     let animation1;
     let animation2;
     let animation3;
     let animation4;
     switch (type[0]) {
         case "acid": {
-            icon = type[1];
             animation1 = "jb2a.shield.03.intro.green";
             animation2 = "jb2a.shield.03.loop.green";
             animation3 = "jb2a.shield.03.outro_explode.green";
@@ -27,7 +25,6 @@ export async function absorbElements({ speaker, actor, token, character, item, a
             break;
         }
         case "cold": {
-            icon = "modules/mba-premades/icons/spells/level1/absorb_elements_cold.webp";
             animation1 = "jb2a.shield.03.intro.blue";
             animation2 = "jb2a.shield.03.loop.blue";
             animation3 = "jb2a.shield.03.outro_explode.blue";
@@ -35,7 +32,6 @@ export async function absorbElements({ speaker, actor, token, character, item, a
             break;
         }
         case "fire": {
-            icon = "modules/mba-premades/icons/spells/level1/absorb_elements_fire.webp";
             animation1 = "jb2a.shield.03.intro.red";
             animation2 = "jb2a.shield.03.loop.red";
             animation3 = "jb2a.shield.03.outro_explode.red";
@@ -43,7 +39,6 @@ export async function absorbElements({ speaker, actor, token, character, item, a
             break;
         }
         case "lightning": {
-            icon = "modules/mba-premades/icons/spells/level1/absorb_elements_lightning.webp";
             animation1 = "jb2a.shield.03.intro.blue";
             animation2 = "jb2a.shield.03.loop.blue";
             animation3 = "jb2a.shield.03.outro_explode.blue";
@@ -51,7 +46,6 @@ export async function absorbElements({ speaker, actor, token, character, item, a
             break;
         }
         case "thunder": {
-            icon = "modules/mba-premades/icons/spells/level1/absorb_elements_thunder.webp";
             animation1 = "jb2a.shield.03.intro.purple";
             animation2 = "jb2a.shield.03.loop.purple";
             animation3 = "jb2a.shield.03.outro_explode.purple";
@@ -72,7 +66,7 @@ export async function absorbElements({ speaker, actor, token, character, item, a
             if (type === "thunder") animation = "jb2a.shield.03.outro_explode.purple";
         }
         if (!animation) {
-            Sequencer.EffectManager.endEffects({ name: `${token.document.name} AE Resistance`, object: token })
+            Sequencer.EffectManager.endEffects({ name: `${token.document.name} AERes` })
             return;
         }
         new Sequence()
@@ -85,17 +79,17 @@ export async function absorbElements({ speaker, actor, token, character, item, a
             .waitUntilFinished(-500)
 
             .thenDo(async () => {
-                Sequencer.EffectManager.endEffects({ name: `${token.document.name} AE Resistance`, object: token })
+                Sequencer.EffectManager.endEffects({ name: `${token.document.name} AERes` })
             })
 
             .play()
     };
     async function effectMacroDel2() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} AE Bonus`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} AEBon` })
     };
     const effectDataResist = {
         'name': `Absorb Elements: Damage Resistance`,
-        'icon': icon,
+        'icon': type[1],
         'origin': workflow.item.uuid,
         'description': `
             <p>You have resistance to ${type[0]} damage type until the start of your next turn.</p>
@@ -175,8 +169,8 @@ export async function absorbElements({ speaker, actor, token, character, item, a
 
         .effect()
         .file(animation1)
-        .attachTo(token)
-        .scaleToObject(1.7 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(1.7 * workflow.token.document.texture.scaleX)
         .opacity(0.8)
         .playbackRate(0.8)
         .zIndex(3)
@@ -186,25 +180,25 @@ export async function absorbElements({ speaker, actor, token, character, item, a
         .delay(600)
         .fadeIn(500)
         .fadeOut(500)
-        .attachTo(token)
-        .scaleToObject(1.75 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(1.75 * workflow.token.document.texture.scaleX)
         .opacity(0.8)
         .zIndex(2)
         .mask()
         .persist()
-        .name(`${token.document.name} AE Bonus`)
+        .name(`${workflow.token.document.name} AEBon`)
 
         .effect()
         .file(animation2)
         .delay(600)
         .fadeIn(500)
-        .attachTo(token)
-        .scaleToObject(1.7 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(1.7 * workflow.token.document.texture.scaleX)
         .opacity(0.8)
         .playbackRate(0.8)
         .zIndex(3)
         .persist()
-        .name(`${token.document.name} AE Resistance`)
+        .name(`${workflow.token.document.name} AERes`)
 
         .thenDo(async () => {
             await mba.createEffect(workflow.actor, effectDataResist);

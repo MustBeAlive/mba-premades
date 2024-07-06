@@ -13,7 +13,7 @@ export async function sewerPlague() {
         return;
     }
     let sewerPlagueRoll = await new Roll("1d4").roll({ 'async': true });
-    await MidiQOL.displayDSNForRoll(sewerPlagueRoll, 'damageRoll');
+    await MidiQOL.displayDSNForRoll(sewerPlagueRoll);
     const description = [`
         <p>Sewer plague is a generic term for a broad category of illnesses that incubate in sewers, refuse heaps, and stagnant swamps, and which are sometimes transmitted by creatures that dwell in those areas, such as rats and otyughs.</p>
         <p>When a humanoid creature is bitten by a creature that carries the disease, or when it comes into contact with filth or offal contaminated by the disease, the creature must succeed on a DC 11 Constitution saving throw or become infected.</p>
@@ -143,7 +143,7 @@ export async function sewerPlague() {
     await mba.createEffect(target.actor, effectData);
     ChatMessage.create({
         whisper: ChatMessage.getWhisperRecipients("GM"),
-        content: `<p><b>${target.document.name}</b> is infected with <b>Sewer Plague</b></p><p>Symptoms will manifest in <b>${sewerPlagueRoll.total}</b> days</p>`,
+        content: `<p><u>${target.document.name}</u> is infected with <b>Sewer Plague</b></p><p>Symptoms will manifest in <b>${sewerPlagueRoll.total}</b> days</p>`,
         speaker: { actor: null, alias: "Disease Announcer" }
     });
 }

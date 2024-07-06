@@ -15,27 +15,22 @@ export async function infestation({ speaker, actor, token, character, item, args
         .play()
 
     if (!workflow.failedSaves.size) return;
-
     let movement = Object.values(target.actor.system.attributes.movement);
     if (!movement.find(i => i >= 5)) {
         ui.notifications.info("Target doesn't have enough movement to be forced to move!");
         return;
     }
-
     const directionRoll = await new Roll(`1d4`).roll({ async: true });
-    await MidiQOL.displayDSNForRoll(directionRoll, 'damageRoll')
+    await MidiQOL.displayDSNForRoll(directionRoll)
     const directionResult = directionRoll.total;
     const directions = ["North", "South", "East", "West"];
     const directionContent = directions[directionResult - 1];
-
     const walkSpeedFeet = 5;
     const gridDistance = canvas.dimensions.distance;
     const pixelsPerFoot = canvas.scene.grid.size / gridDistance;
-
     const moveDistancePixels = walkSpeedFeet * pixelsPerFoot;
     let moveX = 0;
     let moveY = 0;
-
     switch (directionContent) {
         case "North":
             moveY = -moveDistancePixels;
@@ -50,10 +45,8 @@ export async function infestation({ speaker, actor, token, character, item, args
             moveX = -moveDistancePixels;
             break;
     }
-
     const newX = target.x + moveX;
     const newY = target.y + moveY;
-
     let targetUpdate = {
         'token': {
             'x': newX,
@@ -66,11 +59,8 @@ export async function infestation({ speaker, actor, token, character, item, args
         'description': workflow.item.name,
         'updateOpts': { 'token': { 'animate': true } }
     };
-
     let endPoint = new PIXI.Point(newX, newY);
     let collisionDetected = CONFIG.Canvas.polygonBackends.move.testCollision(target.center, endPoint, { type: "move", mode: "any" });
-
-
     if (collisionDetected) {
         let directionVector = { x: moveX, y: moveY };
         let magnitude = Math.hypot(directionVector.x, directionVector.y);

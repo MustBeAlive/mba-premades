@@ -2,7 +2,7 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function divineFavor({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroEnd() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Divine Favor` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} DivFav` })
     };
     const effectData = {
         'name': workflow.item.name,
@@ -49,7 +49,7 @@ export async function divineFavor({ speaker, actor, token, character, item, args
         .effect()
         .delay(500)
         .file(`jb2a.particles.outward.white.02.03`)
-        .attachTo(token, { offset: { y: -0.25 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { y: -0.25 }, gridUnits: true, followRotation: false })
         .scaleToObject(1.2)
         .playbackRate(2)
         .duration(2000)
@@ -63,29 +63,29 @@ export async function divineFavor({ speaker, actor, token, character, item, args
         .effect()
         .delay(1050)
         .file("jb2a.divine_smite.caster.reversed.yellowwhite")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(2.2)
         .startTime(900)
         .fadeIn(200)
 
         .effect()
         .file("jb2a.divine_smite.caster.yellowwhite")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(1.85)
         .belowTokens()
         .waitUntilFinished(-1200)
 
         .effect()
         .file("jb2a.token_border.circle.static.orange.002")
-        .atLocation(token)
-        .attachTo(token)
-        .scaleToObject(1.8 * token.document.texture.scaleX)
+        .atLocation(workflow.token)
+        .attachTo(workflow.token)
+        .scaleToObject(1.8 * workflow.token.document.texture.scaleX)
         .fadeOut(1000)
         .filter("ColorMatrix", { hue: 20 })
         .playbackRate(0.85)
         .belowTokens()
         .persist()
-        .name(`${token.document.name} Divine Favor`)
+        .name(`${workflow.token.document.name} DivFav`)
 
         .thenDo(async () => {
             await mba.createEffect(workflow.actor, effectData);

@@ -42,13 +42,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .fadeIn(500)
         .fadeOut(1000)
         .persist()
-        .name(`${target.document.name} Booming Blade`)
+        .name(`${target.document.name} BooBla`)
 
         .play();
 
     if (!attackWorkflow.hitTargets.size) return;
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Booming Blade`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} BooBla` })
     }
     let effectData = {
         'name': workflow.item.name,
@@ -102,12 +102,12 @@ async function moved(token, changes) {
     let effect = mba.getEffects(token.actor).find(i => i.flags['mba-premades']?.spell?.boomingBlade);
     if (!effect) return;
     await token.object?._animation;
-    let selection = await mba.dialog(effect.name, constants.yesNo, `Did <b>${token.actor.name}</b> move willingly?`);
+    let selection = await mba.dialog(effect.name, constants.yesNo, `Did <u>${token.actor.name}</u> move willingly?`);
     if (!selection) return;
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Booming Blade: Movement Damage', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Booming Blade: Movement Damage", false);
     if (!featureData) return;
     delete featureData._id;
-    featureData.system.damage.parts = [[effect.flags['mba-premades'].spell.boomingBlade.diceNumber + 'd8[thunder]','thunder']];
+    featureData.system.damage.parts = [[`${effect.flags['mba-premades'].spell.boomingBlade.diceNumber}d8[thunder]`,'thunder']];
     if (!effect.origin) return;
     let originItem = await fromUuid(effect.origin);
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': originItem.actor });

@@ -6,6 +6,7 @@ export async function nimbleEscape({ speaker, actor, token, character, item, arg
         .effect()
         .file("jb2a.sneak_attack.dark_green")
         .atLocation(workflow.token)
+        .scaleToObject(2.5)
 
         .play()
 

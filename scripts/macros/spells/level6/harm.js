@@ -1,16 +1,7 @@
-async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let ditem = workflow.damageItem;
-    if (ditem.newHP != 0 || ditem.oldHP === 0) return;
-    let target = workflow.targets.first();
-    let maxHP = target.actor.system.attributes?.hp?.max;
-    if (!maxHP) return;
-    if (ditem.appliedDamage > (maxHP + ditem.oldHP)) return;
-    let queueSetup = await mbaPremades.queue.setup(workflow.uuid, 'harm', 389);
-    if (!queueSetup) return;
-    ditem.newHP = 1;
-    ditem.hpDamage = Math.abs(ditem.newHP - ditem.oldHP);
-    mbaPremades.queue.remove(workflow.uuid);
-}
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
+
+//To do: Animations
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
@@ -46,7 +37,21 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    await mbaPremades.helpers.createEffect(target.actor, effectData);
+    await mba.createEffect(target.actor, effectData);
+}
+
+async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
+    let ditem = workflow.damageItem;
+    if (ditem.newHP != 0 || ditem.oldHP === 0) return;
+    let target = workflow.targets.first();
+    let maxHP = target.actor.system.attributes?.hp?.max;
+    if (!maxHP) return;
+    if (ditem.appliedDamage > (maxHP + ditem.oldHP)) return;
+    let queueSetup = await queue.setup(workflow.uuid, 'harm', 389);
+    if (!queueSetup) return;
+    ditem.newHP = 1;
+    ditem.hpDamage = Math.abs(ditem.newHP - ditem.oldHP);
+    queue.remove(workflow.uuid);
 }
 
 export let harm = {

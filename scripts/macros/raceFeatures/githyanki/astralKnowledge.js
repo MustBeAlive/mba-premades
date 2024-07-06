@@ -1,5 +1,7 @@
 import {mba} from "../../../helperFunctions.js";
 
+// To do: the actual ability (look at Chris shadar-kai?)
+
 export async function astralKnowledge({ speaker, actor, token, character, item, args, scope, workflow }) {
     let oldEffect = await mba.findEffect(workflow.actor, "Astral Knowledge");
     if (oldEffect) await mba.removeEffect(oldEffect);

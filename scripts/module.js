@@ -5,6 +5,7 @@ import {automatedAnimations} from './integrations/automatedAnimations.js';
 import {buildABonus} from './integrations/buildABonus.js';
 import {cast} from './macros/animations/cast.js';
 import {changeFont} from './macros/ui/changeFont.js';
+import {chatUnloader} from './macros/ui/chatUnloader.js';
 import {checkUpdate} from './update.js';
 import {constants} from './macros/generic/constants.js';
 import {compendiumRender} from './macros/generic/compendium.js';
@@ -45,6 +46,7 @@ Hooks.once('init', async function() {
     }
     ChatLog._setRollMode = rollModeChange;
     if (game.settings.get('mba-premades', 'Rollmode Buttons')) Hooks.on('renderChatLog', createRollModeButtons);
+    if (game.settings.get('mba-premades', 'Chat Unloader')) libWrapper.register('mba-premades', 'ChatLog.prototype._onScrollLog', chatUnloader, 'MIXED');
 });
 
 Hooks.once('socketlib.ready', async function() {
@@ -108,6 +110,8 @@ Hooks.once('ready', async function() {
         Hooks.on('midi-qol.postPreambleComplete', macros.conditionVulnerabilityEarly);
         Hooks.on('midi-qol.RollComplete', macros.conditionVulnerabilityLate);
     }
+    if (game.settings.get('mba-premades', 'Armor of Hexes')) Hooks.on('midi-qol.AttackRollComplete', macros.armorOfHexes.hook);
+    if (game.settings.get('mba-premades', 'Beacon of Hope')) Hooks.on('midi-qol.preTargetDamageApplication', macros.beaconOfHope.hook);
     if (game.settings.get('mba-premades', 'Blur')) Hooks.on('midi-qol.preAttackRoll', macros.blur.hook);
     if (game.settings.get('mba-premades', 'Booming Blade')) Hooks.on('updateToken', macros.boomingBlade.moved);
     if (game.settings.get('mba-premades', 'Compelled Duel')) Hooks.on('updateToken', macros.compelledDuel.movement);
@@ -131,6 +135,7 @@ Hooks.once('ready', async function() {
         Hooks.on('updateToken', macros.wardingBond.moveTarget);
         Hooks.on('updateToken', macros.wardingBond.moveSource);
     }
+    if (game.settings.get('mba-premades', 'Wildhunt')) Hooks.on('midi-qol.preAttackRoll', macros.shifting.wildhunt);
     if (game.settings.get('mba-premades', 'Active Effect Additions')) {
         Hooks.on('preCreateActiveEffect', itemDC);  
         Hooks.on('preCreateActiveEffect', noEffectAnimationCreate);

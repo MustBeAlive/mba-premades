@@ -10,7 +10,7 @@ export async function ready({ speaker, actor, token, character, item, args, scop
     let selection = await mba.dialog("Ready Action", choices, `Are you readying a <b>spell?</b>`);
     if (!selection) return;
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Ready` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Ready` })
     }
     if (selection === "no") {
         let effectData = {

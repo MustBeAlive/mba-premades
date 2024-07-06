@@ -4,7 +4,7 @@ import {mba} from "../../../helperFunctions.js";
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         await (warpgate.wait(200));
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Hail of Thorns` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} HaOfTh` })
     };
     let effectData = {
         'name': workflow.item.name,
@@ -51,12 +51,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.token_border.circle.static.green.001")
-        .attachTo(token)
-        .scaleToObject(1.8 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(1.8 * workflow.token.document.texture.scaleX)
         .fadeIn(500)
         .fadeOut(1500)
         .persist()
-        .name(`${token.document.name} Hail of Thorns`)
+        .name(`${workflow.token.document.name} HaOfTh`)
 
         .thenDo(async () => {
             await mba.createEffect(workflow.actor, effectData)
@@ -69,20 +69,17 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     if (!workflow.hitTargets.size) return;
     if (workflow.item?.system?.actionType != 'rwak') return;
     let target = workflow.targets.first();
-    let effect = mba.findEffect(workflow.actor, 'Hail of Thorns');
+    let effect = mba.findEffect(workflow.actor, "Hail of Thorns");
     if (!effect) return;
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Hail of Thorns: Burst', false);
-    if (!featureData) {
-        ui.notifications.warn('Unable to find item in compendium (Hail of Thorns: Burst)');
-        return
-    }
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Hail of Thorns: Burst", false);
+    if (!featureData) return;
     delete featureData._id;
-    let damageDice = Math.min(effect.flags['midi-qol'].castData.castLevel, 6);
-    featureData.system.damage.parts = [[damageDice + 'd10[piercing]', 'piercing']];
     let originItem = await fromUuid(effect.origin);
     if (!originItem) return;
-    featureData.system.save.dc = mba.getSpellDC(originItem);
     setProperty(featureData, 'mba-premades.spell.castData.school', originItem.system.school);
+    featureData.system.save.dc = mba.getSpellDC(originItem);
+    let damageDice = Math.min(effect.flags['midi-qol'].castData.castLevel, 6);
+    featureData.system.damage.parts = [[`${damageDice}d10[piercing]`, "piercing"]];
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
     let targetUuids = await mba.findNearby(target, 5).concat(target).map(t => t.document.uuid);
     let [config, options] = constants.syntheticItemWorkflowOptions(targetUuids);

@@ -1,5 +1,7 @@
 async function fireBreathCast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) return;
+    
     new Sequence()
 
         .effect()

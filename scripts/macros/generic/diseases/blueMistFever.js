@@ -13,7 +13,7 @@ export async function blueMistFever() {
         return;
     }
     let blueMistFeverRoll = await new Roll("1d6").roll({ 'async': true });
-    await MidiQOL.displayDSNForRoll(blueMistFeverRoll, 'damageRoll');
+    await MidiQOL.displayDSNForRoll(blueMistFeverRoll);
     const description = [`
         <p>A magical mist creeps through the jungles of Chult. Contact with this thin, blue, odorless mist can infect giants and humanoids with blue mist fever.</p>
         <p>A giant or humanoid that comes into contact with the mist must succeed on a DC 13 Constitution saving throw or become infected with blue mist fever. An infected creature begins seeing vivid hallucinations of blue monkeys 1d6 hours after failing the save, and the hallucinations last until the disease ends on the creature. A creature can repeat the saving throw every 24 hours, ending the effect on itself on a success.</p>
@@ -99,7 +99,7 @@ export async function blueMistFever() {
     await mba.createEffect(target.actor, effectData);
     ChatMessage.create({
         whisper: ChatMessage.getWhisperRecipients("GM"),
-        content: `<p><b>${target.document.name}</b> is infected with <b>Blue Mist Fever</b></p><p>Symptoms will manifest in <b>${blueMistFeverRoll.total} hours</b></p>`,
+        content: `<p><u>${target.document.name}</u> is infected with <b>Blue Mist Fever</b></p><p>Symptoms will manifest in <b>${blueMistFeverRoll.total} hours</b></p>`,
         speaker: { actor: null, alias: "Disease Announcer" }
     });
 }

@@ -1,5 +1,8 @@
 import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
+
+// To do: overlap issue
 
 async function petrifyingGazeTrigger(actor, token) {
     if (!mba.inCombat()) return;
@@ -11,8 +14,8 @@ async function petrifyingGazeTrigger(actor, token) {
     if (mba.findEffect(target.actor, "Petrified")) return; // just overly cautious
     if (mba.findEffect(target.actor, "Medusa: Petrifying Gaze")) return;
     if (mba.findEffect(target.actor, "Medusa: Petrification")) return;
-    let choices = [["<b>Avert Eyes</b> (inability to attack Medusa)", "avert"], ["<b>Embrace Petrifying Gaze</b> (saving throw)", "save"]];
-    let selection = await mba.remoteDialog("Medusa: Petrifying Gaze", choices, mba.firstOwner(target).id, `<p>You are about to be affected by <b>Medusa's Petrifying Gaze</b></p><p>What would you like to do?</p>`);
+    let choices = [["<u>Avert Eyes</u> (inability to attack Medusa)", "avert"], ["<u>Embrace Petrifying Gaze</u> (saving throw)", "save"]];
+    let selection = await mba.remoteDialog("Medusa: Petrifying Gaze", choices, mba.firstOwner(target).id, `<p>You are about to be affected by</p><p><u>Medusa's Petrifying Gaze</u></p><p>What would you like to do?</p>`);
     if (!selection) selection = "save";
     if (selection === "avert") {
         const effectDataAvert = {
@@ -38,14 +41,12 @@ async function petrifyingGazeTrigger(actor, token) {
                 }
             }
         };
-        await mba.createEffect(target.actor, effectDataAvert);
+        if (!mba.findEffect(target.actor, "Medusa: Avert Eyes")) await mba.createEffect(target.actor, effectDataAvert);
         return;
     }
+    if (mba.findEffect(target.actor, "Medusa: Avert Eyes")) return;
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Monster Features', 'Medusa: Petrifying Gaze', false);
-    if (!featureData) {
-        ui.notifications.warn("Can't find item in compenidum! (Medusa: Petrifying Gaze)");
-        return
-    }
+    if (!featureData) return;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': token.actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
 
@@ -182,7 +183,7 @@ async function petrifyingGazeItem({ speaker, actor, token, character, item, args
             .name(`${token.document.name} Medusa Petrification`)
 
             .effect()
-            .file("https://i.imgur.com/4P2tITB.png")
+            .file("modules/mba-premades/icons/conditions/overlay/pertrification.webp")
             .atLocation(token)
             .mask(token)
             .opacity(1)
@@ -242,10 +243,7 @@ async function avertEyes({ speaker, actor, token, character, item, args, scope, 
         let effect = await mba.findEffect(workflow.actor, "Medusa: Avert Eyes");
         if (effect) await mba.removeEffect(effect);
         let featureData = await mba.getItemFromCompendium('mba-premades.MBA Monster Features', 'Medusa: Petrifying Gaze', false);
-        if (!featureData) {
-            ui.notifications.warn("Can't find item in compenidum! (Medusa: Petrifying Gaze)");
-            return
-        }
+        if (!featureData) return;
         let feature = new CONFIG.Item.documentClass(featureData, { 'parent': target.actor });
         let [config, options] = constants.syntheticItemWorkflowOptions([token.document.uuid]);
 

@@ -8,7 +8,7 @@ export async function wholenessOfBody({ speaker, actor, token, character, item, 
     }
     let formula = `3 * ${monkLevel}`;
     let healingRoll = await new Roll(formula).roll({ 'async': true });
-    await MidiQOL.displayDSNForRoll(healingRoll, 'damageRoll');
+    await MidiQOL.displayDSNForRoll(healingRoll);
 
     new Sequence()
 

@@ -25,17 +25,16 @@ async function corruptedCarrierCast( token, origin ) {
 
 async function corruptedCarrierItem({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
-    let targets = Array.from(workflow.failedSaves);
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Orc Nurtured One Poison` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} ONO Poison` })
     }
     const effectData = {
         'name': "Orc Nurtured One: Poison",
         'icon': "modules/mba-premades/icons/generic/generic_poison.webp",
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are poisoned by Orc Nurtured One's Corruption.</p>
-            <p>While poisoned by this effect, a you are unable to regain hit points.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.pAjPUbk2oPUTfva2]{Poisoned} by Orc Nurtured One's Corruption.</p>
+            <p>While @UUID[Compendium.mba-premades.MBA SRD.Item.pAjPUbk2oPUTfva2]{Poisoned} by this effect, a you are unable to regain hit points.</p>
             <p>You can repeat the saving throw at the end of each of your turns, ending the effect on a success.</p>
         `,
         'changes': [
@@ -69,7 +68,7 @@ async function corruptedCarrierItem({ speaker, actor, token, character, item, ar
             }
         }
     };
-    for (let target of targets) {
+    for (let target of Array.from(workflow.failedSaves)) {
         if (mba.checkTrait(target.actor, "ci", "poisoned")) continue;
         if (mba.findEffect(target.actor, "Orc Nurtured One: Poison")) continue;
         new Sequence()
@@ -89,7 +88,7 @@ async function corruptedCarrierItem({ speaker, actor, token, character, item, ar
             .randomRotation()
             .mask()
             .persist()
-            .name(`${target.document.name} Orc Nurtured One Poison`)
+            .name(`${target.document.name} ONO Poison`)
 
             .thenDo(async () => {
                 await mba.createEffect(target.actor, effectData)
@@ -103,9 +102,13 @@ async function corruptedVengeance({ speaker, actor, token, character, item, args
     await mba.applyDamage([workflow.actor], workflow.actor.system.attributes.hp.value, 'none');
 }
 
+function resilience(saveId, options) {
+    return saveId != 'con' ? false : {'label': '<u>Nurtured One of Yurtus:</u><br>Are you saving against being Poisoned or Diseased?<br>(ask GM)', 'type': 'advantage'};  
+}
 
 export let orcNurturedOne = {
     'corruptedCarrierCast': corruptedCarrierCast,
     'corruptedCarrierItem': corruptedCarrierItem,
-    'corruptedVengeance': corruptedVengeance
+    'corruptedVengeance': corruptedVengeance,
+    'resilience': resilience
 }

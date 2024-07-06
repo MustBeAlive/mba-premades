@@ -14,12 +14,9 @@ export async function relentless(token, { item, workflow, ditem }) {
     if (originItem.system.uses.value === 0) return;
     let queueSetup = await queue.setup(workflow.uuid, 'relentless', 389);
     if (!queueSetup) return;
-    await originItem.update({
-        'system.uses.value': originItem.system.uses.value - 1
-    });
+    await originItem.update({ 'system.uses.value': originItem.system.uses.value - 1 });
     ditem.newHP = 1;
     ditem.hpDamage = Math.abs(ditem.newHP - ditem.oldHP);
-    const messageData = { flavor: `<b>${token.document.name}</b> used it's <b>Relentless</b> ability to stay alive.` };
-    ChatMessage.create(messageData);
+    await originItem.displayCard();
     queue.remove(workflow.uuid);
 }

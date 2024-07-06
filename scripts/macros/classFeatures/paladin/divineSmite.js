@@ -1,5 +1,5 @@
-import { mba } from "../../../helperFunctions.js";
-import { queue } from "../../mechanics/queue.js";
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
 
 export async function divineSmite({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.hitTargets.size != 1) return;

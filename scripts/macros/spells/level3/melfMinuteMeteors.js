@@ -1,5 +1,7 @@
 import {mba} from "../../../helperFunctions.js";
 
+//To do: animations, code update
+
 export async function melfMinuteMeteors({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel * 2;
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Melf\'s Minute Meteors: Drop Meteor', false);

@@ -28,12 +28,9 @@ export function colorizeDAETitleBarButton(app, [elem], options) {
     let passiveEffect = !!object.effects.find(i => i.transfer);
     let transferEffect = !!object.effects.find(i => i.transfer === false);
     let color;
-    if (passiveEffect && !transferEffect) {
-        color = 'dodgerblue';
-    } else if (transferEffect && !passiveEffect) {
-        color = 'green';
-    } else if (transferEffect && passiveEffect) {
-        color = 'orchid';
-    } else return;
+    if (passiveEffect && !transferEffect) color = 'dodgerblue';
+    else if (transferEffect && !passiveEffect) color = 'green';
+    else if (transferEffect && passiveEffect) color = 'orchid';
+    else return;
     headerButton.style.color = color;
 }

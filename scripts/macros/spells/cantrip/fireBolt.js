@@ -12,9 +12,9 @@ export async function fireBolt({ speaker, actor, token, character, item, args, s
             .effect()
             .file("jb2a.token_border.circle.static.orange.005")
             .scaleToObject(2)
-            .attachTo(token)
+            .attachTo(workflow.token)
             .belowTokens()
-            .atLocation(token)
+            .atLocation(workflow.token)
             .fadeIn(200)
             .fadeOut(550)
 
@@ -22,14 +22,14 @@ export async function fireBolt({ speaker, actor, token, character, item, args, s
 
             .effect()
             .file("animated-spell-effects-cartoon.fire.25")
-            .atLocation(token, { offset: { x: 0, y: -30 } })
+            .atLocation(workflow.token, { offset: { x: 0, y: -30 } })
             .scaleToObject(2.1)
             .belowTokens()
             .waitUntilFinished(-650)
 
             .effect()
             .file("animated-spell-effects-cartoon.fire.25")
-            .atLocation(token, { offset: { x: 0, y: 30 } })
+            .atLocation(workflow.token, { offset: { x: 0, y: 30 } })
             .mirrorY()
             .scaleToObject(2.1)
             .belowTokens()
@@ -37,7 +37,7 @@ export async function fireBolt({ speaker, actor, token, character, item, args, s
 
             .effect()
             .file("animated-spell-effects-cartoon.fire.19")
-            .atLocation(token)
+            .atLocation(workflow.token)
             .rotate(-110)
             .scaleToObject(2)
             .waitUntilFinished(-850)
@@ -45,7 +45,7 @@ export async function fireBolt({ speaker, actor, token, character, item, args, s
 
             .effect()
             .file("animated-spell-effects-cartoon.fire.32")
-            .atLocation(token)
+            .atLocation(workflow.token)
             .spriteOffset({ x: 30, y: 10 })
             .scaleToObject(2.1)
             .mirrorX()
@@ -54,7 +54,7 @@ export async function fireBolt({ speaker, actor, token, character, item, args, s
 
             .effect()
             .file("animated-spell-effects-cartoon.fire.03")
-            .atLocation(token)
+            .atLocation(workflow.token)
             .scaleToObject(2.1)
             .rotate(90)
             .spriteOffset({ x: 10, y: -15 })
@@ -64,7 +64,7 @@ export async function fireBolt({ speaker, actor, token, character, item, args, s
 
             .effect()
             .file("animated-spell-effects-cartoon.fire.13")
-            .atLocation(token)
+            .atLocation(workflow.token)
             .scaleToObject(0.5)
             .opacity(0.9)
             .spriteOffset({ x: -10, y: -10 })
@@ -72,7 +72,7 @@ export async function fireBolt({ speaker, actor, token, character, item, args, s
 
             .effect()
             .file("animated-spell-effects-cartoon.fire.20")
-            .atLocation(token)
+            .atLocation(workflow.token)
             .stretchTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
             .waitUntilFinished(-1000)
 
@@ -85,9 +85,9 @@ export async function fireBolt({ speaker, actor, token, character, item, args, s
         .effect()
         .file("jb2a.token_border.circle.static.orange.005")
         .scaleToObject(2)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .belowTokens()
-        .atLocation(token)
+        .atLocation(workflow.token)
         .fadeIn(200)
         .fadeOut(550)
 
@@ -95,14 +95,14 @@ export async function fireBolt({ speaker, actor, token, character, item, args, s
 
         .effect()
         .file("animated-spell-effects-cartoon.fire.25")
-        .atLocation(token, { offset: { x: 0, y: -30 } })
+        .atLocation(workflow.token, { offset: { x: 0, y: -30 } })
         .scaleToObject(2.1)
         .belowTokens()
         .waitUntilFinished(-650)
 
         .effect()
         .file("animated-spell-effects-cartoon.fire.25")
-        .atLocation(token, { offset: { x: 0, y: 30 } })
+        .atLocation(workflow.token, { offset: { x: 0, y: 30 } })
         .mirrorY()
         .scaleToObject(2.1)
         .belowTokens()
@@ -110,7 +110,7 @@ export async function fireBolt({ speaker, actor, token, character, item, args, s
 
         .effect()
         .file("animated-spell-effects-cartoon.fire.19")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .rotate(-110)
         .scaleToObject(2)
         .waitUntilFinished(-850)
@@ -118,7 +118,7 @@ export async function fireBolt({ speaker, actor, token, character, item, args, s
 
         .effect()
         .file("animated-spell-effects-cartoon.fire.32")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .spriteOffset({ x: 30, y: 10 })
         .scaleToObject(2.1)
         .mirrorX()
@@ -127,7 +127,7 @@ export async function fireBolt({ speaker, actor, token, character, item, args, s
 
         .effect()
         .file("animated-spell-effects-cartoon.fire.03")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(2.1)
         .rotate(90)
         .spriteOffset({ x: 10, y: -15 })
@@ -137,7 +137,7 @@ export async function fireBolt({ speaker, actor, token, character, item, args, s
 
         .effect()
         .file("animated-spell-effects-cartoon.fire.13")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(0.5)
         .opacity(0.9)
         .spriteOffset({ x: -10, y: -10 })
@@ -145,7 +145,7 @@ export async function fireBolt({ speaker, actor, token, character, item, args, s
 
         .effect()
         .file("animated-spell-effects-cartoon.fire.20")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .stretchTo(target)
         .waitUntilFinished(-1000)
 

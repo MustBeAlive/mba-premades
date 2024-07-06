@@ -1,7 +1,7 @@
 import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
-//for now don't want to implement "enlarging" part of the spell
+//for now don't want (or know how to) implement "enlarging" part of the spell
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
@@ -19,12 +19,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     });
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Dust Devil: Move', false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Dust Devil: Move)")
-    }
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Dust Devil: Move", false);
+    if (!featureData) return;
     async function effectMacroDel() {
-        await warpgate.revert(token.document, 'Dust Devil');
+        await warpgate.revert(token.document, "Dust Devil");
     }
     const effectData = {
         'name': workflow.item.name,
@@ -75,7 +73,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.whirlwind.bluegrey")
-        .attachTo(template/*, { offset: { x: 0.3, y: -0.8}, gridUnits: true }*/)
+        .attachTo(template)
         .scaleToObject(1.3)
         .fadeIn(500)
         .fadeOut(1000)
@@ -110,7 +108,7 @@ async function trigger(token, trigger) {
     }
     let originItem = await fromUuid(trigger.itemUuid);
     if (!originItem) return;
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Dust Devil: Damage', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Dust Devil: Damage", false);
     if (!featureData) return;
     delete featureData._id;
     featureData.system.save.dc = trigger.saveDC;

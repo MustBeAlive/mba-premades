@@ -1,4 +1,98 @@
-export async function disintegrate({ speaker, actor, token, character, item, args, scope, workflow }) {
+import {mba} from "../../../helperFunctions.js";
+
+async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
+    let target = workflow.targets.first();
+    new Sequence()
+
+        .effect()
+        .file("jb2a.extras.tmfx.border.circle.outpulse.01.fast")
+        .atLocation(workflow.token)
+        .scaleToObject(3)
+        .fadeIn(1000)
+        .fadeOut(2000)
+        .opacity(0.75)
+        .zIndex(1)
+        .belowTokens()
+        .filter("ColorMatrix", { saturate: 0, brightness: 0 })
+        .persist()
+        .name(`${workflow.token.document.name} DT1`)
+
+        .effect()
+        .file("jb2a.extras.tmfx.outflow.circle.04")
+        .attachTo(workflow.token)
+        .scaleToObject(3)
+        .fadeIn(1000)
+        .fadeOut(2000)
+        .opacity(1.2)
+        .zIndex(1)
+        .randomRotation()
+        .belowTokens()
+        .filter("ColorMatrix", { saturate: 0, brightness: 0 })
+        .persist()
+        .name(`${workflow.token.document.name} DT1`)
+
+        .effect()
+        .file(canvas.scene.background.src)
+        .atLocation({ x: (canvas.dimensions.width) / 2, y: (canvas.dimensions.height) / 2 })
+        .size({ width: canvas.scene.width / canvas.grid.size, height: canvas.scene.height / canvas.grid.size }, { gridUnits: true })
+        .duration(20000)
+        .fadeIn(1000)
+        .fadeOut(2000)
+        .spriteOffset({ x: -0.5 }, { gridUnits: true })
+        .filter("ColorMatrix", { brightness: 0.3 })
+        .belowTokens()
+        .persist()
+        .name(`${workflow.token.document.name} DT2`)
+
+        .effect()
+        .file("jb2a.impact.010.orange")
+        .atLocation(workflow.token)
+        .rotateTowards(target)
+        .scaleToObject(0.4)
+        .fadeOut(750)
+        .spriteOffset({ x: -0.2 }, { gridUnits: true })
+        .zIndex(1)
+
+        .wait(50)
+
+        .effect()
+        .file("jb2a.twinkling_stars.points04.orange")
+        .atLocation(workflow.token)
+        .rotateTowards(target)
+        .scaleToObject(0.4)
+        .fadeOut(750)
+        .scaleIn(0, 500, { ease: "easeOutCubic" })
+        .animateProperty("sprite", "rotation", { from: 0, to: 360, duration: 1000, ease: "easeOutCubic" })
+        .animateProperty("sprite", "position.x", { from: -0.2, to: 0.25, duration: 1500, gridUnits: true, ease: "easeOutBack", delay: 1500 })
+        .animateProperty("sprite", "rotation", { from: 0, to: 360, duration: 4042, ease: "easeOutSine" })
+        .spriteOffset({ x: -0.2 }, { gridUnits: true })
+        .rotate(0)
+        .zIndex(1)
+        .persist()
+        .name(`${workflow.token.document.name} DT1`)
+
+        .effect()
+        .file("jb2a.extras.tmfx.outpulse.circle.03.normal")
+        .atLocation(workflow.token)
+        .rotateTowards(target)
+        .scaleToObject(0.35)
+        .duration(4042)
+        .fadeOut(750)
+        .scaleIn(0, 500, { ease: "easeOutCubic" })
+        .animateProperty("sprite", "rotation", { from: 0, to: 360, duration: 1000, ease: "easeOutCubic" })
+        .animateProperty("sprite", "position.x", { from: -0.2, to: 0.275, duration: 1500, gridUnits: true, ease: "easeOutBack", delay: 1500 })
+        .spriteOffset({ x: -0.175 }, { gridUnits: true })
+        .rotate(0)
+        .opacity(0.8)
+        .zIndex(0)
+        .tint("#89eb34")
+        .persist()
+        .name(`${workflow.token.document.name} DT1`)
+
+        .play()
+}
+
+async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let offsetX = 0;
     let offsetY = 0;
@@ -8,59 +102,9 @@ export async function disintegrate({ speaker, actor, token, character, item, arg
         offsetY = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
         if (offsetY === 0) offsetY = 1;
     }
-
-    new Sequence()
-
-        .wait(500)
-
-        .effect()
-        .file("jb2a.particles.outward.white.01.02")
-        .scaleIn(0, 1000, { ease: "easeOutQuint" })
-        .delay(500)
-        .fadeOut(1000)
-        .atLocation(token)
-        .duration(1000)
-        .size(1.75, { gridUnits: true })
-        .animateProperty("spriteContainer", "position.y", { from: 0, to: -0.5, gridUnits: true, duration: 1000 })
-        .zIndex(1)
-
-        .effect()
-        .file("jb2a.particles.outward.white.01.02")
-        .scaleIn(0, 1000, { ease: "easeOutQuint" })
-        .delay(500)
-        .fadeOut(1000)
-        .atLocation(token)
-        .duration(1000)
-        .size(1.75, { gridUnits: true })
-        .animateProperty("spriteContainer", "position.y", { from: 0, to: -0.5, gridUnits: true, duration: 1000 })
-        .zIndex(1)
-        .mirrorX()
-
-        .wait(1000)
-
-        .effect()
-        .file("jb2a.extras.tmfx.border.circle.inpulse.01.fast")
-        .atLocation(token)
-        .tint("#d9df53")
-        .scaleToObject(1.5)
-
-        .wait(500)
-
-        .effect()
-        .file("jb2a.disintegrate.green")
-        .atLocation(token)
-        .stretchTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
-        .zIndex(1)
-        .playbackRate(0.9)
-        .repeats(2, 1000)
-
-        .play()
-
-    if (target.actor.system.attributes.hp.value > 0) return;
-
     let centerX = target.x + canvas.grid.size / 2
     let centerY = target.y + canvas.grid.size / 2
-    let updates = {
+    /*let updates = {
         'token': {
             'hidden': true
         }
@@ -69,11 +113,53 @@ export async function disintegrate({ speaker, actor, token, character, item, arg
         'permanent': false,
         'name': 'Disintegration',
         'description': 'Disintegration'
-    };
+    };*/
+
+    await new Sequence()
+
+        .thenDo(async () => {
+            Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} DT1` })
+        })
+
+        .effect()
+        .file("jb2a.particles.outward.white.01.02")
+        .atLocation(workflow.token)
+        .size(1.75, { gridUnits: true })
+        .delay(500)
+        .duration(1000)
+        .fadeOut(1000)
+        .scaleIn(0, 1000, { ease: "easeOutQuint" })
+        .animateProperty("spriteContainer", "position.y", { from: 0, to: -0.5, gridUnits: true, duration: 1000 })
+        .zIndex(1)
+
+        .effect()
+        .file("jb2a.particles.outward.white.01.02")
+        .atLocation(workflow.token)
+        .size(1.75, { gridUnits: true })
+        .delay(500)
+        .duration(1000)
+        .fadeOut(1000)
+        .scaleIn(0, 1000, { ease: "easeOutQuint" })
+        .animateProperty("spriteContainer", "position.y", { from: 0, to: -0.5, gridUnits: true, duration: 1000 })
+        .zIndex(1)
+        .mirrorX()
+
+        .effect()
+        .file("jb2a.disintegrate.green")
+        .atLocation(workflow.token)
+        .stretchTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
+        .zIndex(1)
+        .playbackRate(0.9)
+        .repeats(2, 1000)
+
+        .play()
+
+    Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} DT2` })
+    if (target.actor.system.attributes.hp.value > 0) return;
+    if (mba.findEffect(target.actor, "Unconscious")) await mba.removeCondition(target.actor, 'Unconscious');
+    await mba.addCondition(target.actor, 'Dead', true);
 
     new Sequence()
-
-        .wait(4000)
 
         .animation()
         .on(target)
@@ -144,15 +230,15 @@ export async function disintegrate({ speaker, actor, token, character, item, arg
         .name(`3`)
         .waitUntilFinished()
 
+        /*
         .thenDo(async () => {
             await warpgate.mutate(target.document, updates, {}, options);
-        })
-
-        .wait(500)
-
-        .animation()
-        .on(target)
-        .opacity(1)
+        })*/
 
         .play()
+}
+
+export let disintegrate = {
+    'cast': cast,
+    'item': item
 }

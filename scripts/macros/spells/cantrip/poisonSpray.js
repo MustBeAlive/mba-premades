@@ -5,7 +5,7 @@ export async function poisonSpray({ speaker, actor, token, character, item, args
 
         .effect()
         .file("animated-spell-effects-cartoon.cantrips.poison_spray.green")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target)
 
         .effect()

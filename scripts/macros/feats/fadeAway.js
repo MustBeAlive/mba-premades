@@ -26,7 +26,7 @@ export async function fadeAway({ speaker, actor, token, character, item, args, s
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are invisible until the end of your next turn or until you attack, deal damage or force someon to make a saving throw.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.2dEv6KlLgFA4wOni]{Invisible} until the end of your next turn or until you attack, deal damage or force someone to make a saving throw.</p>
         `,
         'changes': [
             {

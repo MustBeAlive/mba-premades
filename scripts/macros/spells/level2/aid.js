@@ -1,8 +1,7 @@
 import {mba} from "../../../helperFunctions.js";
 
 export async function aid({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let level = workflow.castData.castLevel;
-    let healAmmount = (5 * (level - 1));
+    let healAmmount = (5 * (workflow.castData.castLevel - 1));
     let targets = Array.from(workflow.targets);
     async function effectMacroDel() {
         let maxHP = actor.system.attributes.hp.max;
@@ -51,7 +50,7 @@ export async function aid({ speaker, actor, token, character, item, args, scope,
 
             .effect()
             .file("animated-spell-effects-cartoon.magic.helix")
-            .attachTo(token)
+            .attachTo(workflow.token)
             .stretchTo(target)
             .delay(delay)
             .filter("ColorMatrix", { hue: 140 })

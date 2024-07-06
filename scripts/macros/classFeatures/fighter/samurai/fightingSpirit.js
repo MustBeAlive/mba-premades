@@ -6,9 +6,10 @@ export async function fightingSpirit({ speaker, actor, token, character, item, a
         ui.notifications.warn("Actor has no Fighter levels!");
         return;
     }
-    let value = 5;
-    if (fighterLevel >= 10 && fighterLevel < 15) value = 10;
-    else if (fighterLevel >= 15) value = 15;
+    let value = "5";
+    if (fighterLevel >= 10 && fighterLevel < 15) value = "10";
+    else if (fighterLevel >= 15) value = "15";
+    let healingRoll = await new Roll(value).roll({ 'async': true });
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ 'name': `${token.document.name} Fighting Spirit`, 'object': token });
     };
@@ -49,14 +50,14 @@ export async function fightingSpirit({ speaker, actor, token, character, item, a
 
         .effect()
         .file("jb2a.energy_strands.in.purple.01.0")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(1.5)
         .playbackRate(0.9)
         .waitUntilFinished(-700)
         
         .effect()
         .file("jb2a.extras.tmfx.outflow.circle.01")
-        .attachTo(token, { cacheLocation: true, offset: { y: 0 }, gridUnits: true, bindAlpha: false })
+        .attachTo(workflow.token, { cacheLocation: true, offset: { y: 0 }, gridUnits: true, bindAlpha: false })
         .scaleToObject(1.45, { considerTokenScale: true })
         .scaleIn(0.5, 1000)
         .loopProperty("alphaFilter", "alpha", { from: 0.75, to: 1, duration: 1500, pingPong: true, ease: "easeOutSine" })
@@ -69,7 +70,7 @@ export async function fightingSpirit({ speaker, actor, token, character, item, a
 
         .effect()
         .file("jb2a.energy_wall.01.circle.500x500.01.loop.purple")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(1.25)
         .fadeOut(1000)
         .scaleIn(0.5, 1000)
@@ -82,7 +83,7 @@ export async function fightingSpirit({ speaker, actor, token, character, item, a
 
         .thenDo(async () => {
             await mba.createEffect(workflow.actor, effectData);
-            await mba.applyDamage([workflow.token], value, 'temphp');
+            await mba.applyWorkflowDamage(workflow.token, healingRoll, "temphp", [workflow.token], undefined, workflow.itemCardId);
         })
 
         .play()

@@ -10,14 +10,14 @@ async function stench(token) {
     if (mba.findEffect(target.actor, "Troglodyte: Stench Immune")) return;
     if (mba.findEffect(target.actor, "Troglodyte: Stench")) return;
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Troglodyte Stench` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} TrogS` })
     }
     const effectData = {
         'name': "Troglodyte: Stench",
         'icon': "modules/mba-premades/icons/conditions/nauseated.webp",
         'origin': token.uuid,
         'description': `
-            <p>You are affected by Troglodyte Stench and are poisoned until the start of your next turn.</p>
+            <p>You are affected by Troglodyte Stench and are @UUID[Compendium.mba-premades.MBA SRD.Item.pAjPUbk2oPUTfva2]{Poisoned} until the start of your next turn.</p>
         `,
         'changes': [
             {
@@ -49,10 +49,7 @@ async function stench(token) {
         }
     };
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Monster Features', 'Troglodyte: Stench', false);
-    if (!featureData) {
-        ui.notifications.warn("Can't find item in compenidum! (Troglodyte: Stench)");
-        return
-    }
+    if (!featureData) return;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': token.actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
@@ -78,7 +75,7 @@ async function stench(token) {
         .randomRotation()
         .mask(target)
         .persist()
-        .name(`${target.document.name} Troglodyte Stench`)
+        .name(`${target.document.name} TrogS`)
 
         .thenDo(async () => {
             await mba.createEffect(target.actor, effectData);

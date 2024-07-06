@@ -1,23 +1,21 @@
 export async function thunderClap({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let targets = Array.from(workflow.targets);
     new Sequence()
 
         .effect()
         .file("jb2a.thunderwave.center.blue")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .size(3, { gridUnits: true })
 
         .effect()
         .file("jb2a.soundwave.02.blue")
-        .attachTo(token)
-        .delay(200)
+        .attachTo(workflow.token)
         .size(4.5, { gridUnits: true })
+        .delay(200)
         .playbackRate(2)
 
         .play()
 
-    for (let target of targets) {
-
+    for (let target of Array.from(workflow.targets)) {
         new Sequence()
 
             .effect()

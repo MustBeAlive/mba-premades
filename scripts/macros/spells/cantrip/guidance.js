@@ -56,7 +56,7 @@ export async function guidance({ speaker, actor, token, character, item, args, s
         .effect()
         .file("jb2a.portals.horizontal.ring_masked.blue")
         .attachTo(target)
-        .scaleToObject(1.7 * token.document.texture.scaleX)
+        .scaleToObject(1.7 * target.document.texture.scaleX)
         .fadeIn(1000)
         .fadeOut(1000)
         .mask()

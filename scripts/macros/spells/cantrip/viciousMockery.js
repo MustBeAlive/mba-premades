@@ -14,7 +14,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .effect()
             .file("jb2a.music_notations.{{music}}.purple")
             .scaleIn(0, 500, { ease: "easeOutQuint" })
-            .atLocation(token, { offset: { y: -0.2 }, gridUnits: true, randomOffset: 1 })
+            .atLocation(workflow.token, { offset: { y: -0.2 }, gridUnits: true, randomOffset: 1 })
             .scaleToObject(0.8)
             .zIndex(1)
             .playbackRate(1.5)
@@ -35,7 +35,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     const gmInputText = ["You smell worse than a golbin!", "I've seen more threatening geckos!", "Your momma's so ugly, clerics try to turn her!"];
     let target = workflow.targets.first();
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Vicious Mockery`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} VicMoc` })
     };
     let effectData = {
         'name': workflow.item.name,
@@ -121,7 +121,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.music_notations.{{music}}.purple")
         .scaleIn(0, 500, { ease: "easeOutQuint" })
-        .atLocation(token, { offset: { y: -0.2 }, gridUnits: true, randomOffset: 1 })
+        .atLocation(workflow.token, { offset: { y: -0.2 }, gridUnits: true, randomOffset: 1 })
         .scaleToObject(0.8)
         .zIndex(1)
         .playbackRate(1.5)
@@ -209,7 +209,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .fadeIn(1000)
         .fadeOut(1000)
         .persist()
-        .name(`${target.document.name} Vicious Mockery`)
+        .name(`${target.document.name} VicMoc`)
 
         .wait(2500)
 

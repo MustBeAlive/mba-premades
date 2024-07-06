@@ -24,10 +24,7 @@ export async function tashaMindWhip({ speaker, actor, token, character, item, ar
         return;
     }
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', "Tasha's Mind Whip: Damage", false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Tasha's Mind Whip: Damage)");
-        return
-    }
+    if (!featureData) return;
     delete featureData._id;
     featureData.system.save.dc = mba.getSpellDC(workflow.item);
     setProperty(featureData, 'mba-premades.spell.castData.school', workflow.item.system.school);
@@ -126,7 +123,7 @@ export async function tashaMindWhip({ speaker, actor, token, character, item, ar
             })
 
             .effect()
-            .file("jb2a.template_square.symbol.normal.stun.purple")
+            .file("jb2a.template_circle.symbol.normal.stun.purple")
             .attachTo(target)
             .scaleToObject(1.4)
             .delay(200)

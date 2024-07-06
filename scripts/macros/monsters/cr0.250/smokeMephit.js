@@ -35,37 +35,43 @@ async function cinderBreathItem({ speaker, actor, token, character, item, args, 
             }
         }
     };
-    let targets = Array.from(workflow.failedSaves);
-    for (let target of targets) await mba.createEffect(target.actor, effectData)
+    for (let target of Array.from(workflow.failedSaves)) await mba.createEffect(target.actor, effectData)
 }
 
-async function deathBurstCast(token, origin) {
+async function deathBurstCast({ speaker, actor, token, character, item, args, scope, workflow }) {
+    let template = canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) return;
+    await template.update({
+        'flags': {
+            'mba-premades': {
+                'spell': {
+                    'fogCloud': true
+                }
+            }
+        }
+    });
     new Sequence()
 
         .effect()
         .file("jb2a.explosion.08.1200.orange")
-        .attachTo(token)
+        .attachTo(template)
         .size(4.5, { gridUnits: true })
         .playbackRate(0.9)
         .filter("ColorMatrix", { saturate: -1, brightness: 0.5 })
 
         .effect()
         .file("jb2a.darkness.black")
-        .atLocation(token)
+        .attachTo(template)
+        .size(3.5, { gridUnits: true })
         .fadeIn(1500)
         .fadeOut(1500)
+        .scaleOut(0, 1500, { ease: "linear" })
+        .scaleIn(0, 1000, { ease: "easeOutCubic" })
         .opacity(0.8)
         .zIndex(1)
         .randomRotation()
-        .scaleOut(0, 1500, { ease: "linear" })
-        .scaleIn(0, 1000, { ease: "easeOutCubic" })
-        .size(3.5, { gridUnits: true })
         .persist()
         .name(`Smoke Mephit Death Burst`)
-
-        .thenDo(async () => {
-            await origin.use();
-        })
 
         .play()
 }

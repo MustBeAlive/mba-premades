@@ -1,98 +1,88 @@
 import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
-async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
-    if (!workflow.targets.size) return;
+export async function massCureWounds({ speaker, actor, token, character, item, args, scope, workflow }) {
+    if (!workflow.targets.size) {
+        ui.notifications.warn("No targets found!");
+        return;
+    }
     let validTargets = [];
-    for (let i of workflow.targets) {
-        if (i.actor.system.details.type.value != 'undead' && i.actor.system.details.type.value != 'construct') validTargets.push(i.id);
+    let sourceDisposition = workflow.token.document.disposition;
+    for (let target of workflow.targets) {
+        let type = await mba.raceOrType(target.actor);
+        if (type != "undead" && type != "construct" && target.document.disposition === sourceDisposition) validTargets.push(target);
     }
     if (!validTargets.length) return;
-    mba.updateTargets(validTargets);
-    await warpgate.wait(100);
-    let ammount = 6;
-    let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(game.user.targets), false, 'multiple', undefined, false, 'Choose which targets to keep (Max: ' + ammount + ')');
-    if (!selection.buttons) return;
-    let finalTargets = selection.inputs.filter(i => i).slice(0, ammount);
-    mba.updateTargets(finalTargets);
-}
-
-async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
+    mba.updateTargets(Array.from(validTargets).map(t => t.id));
     let template = canvas.scene.collections.templates.get(workflow.templateId);
-    let targets = Array.from(game.user.targets);
+    if (!template) return;
+    let effect = await mba.findEffect(workflow.actor, "Mass Cure Wounds Template");
 
-    await new Sequence()
+    new Sequence()
 
         .effect()
-        .atLocation(token)
-        .file(`jb2a.magic_signs.circle.02.evocation.loop.red`)
-        .scaleToObject(1.5)
-        .rotateIn(180, 600, { ease: "easeOutCubic" })
-        .scaleIn(0, 600, { ease: "easeOutCubic" })
-        .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
+        .file(`jb2a.magic_signs.circle.02.evocation.complete.red`)
+        .attachTo(template)
+        .scaleToObject(1)
         .belowTokens()
-        .fadeOut(2000)
-        .zIndex(0)
-
-        .effect()
-        .atLocation(token)
-        .file(`jb2a.magic_signs.circle.02.evocation.loop.red`)
-        .scaleToObject(1.5)
-        .rotateIn(180, 600, { ease: "easeOutCubic" })
-        .scaleIn(0, 600, { ease: "easeOutCubic" })
-        .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-        .belowTokens(true)
-        .filter("ColorMatrix", { saturate: -1, brightness: 2 })
-        .filter("Blur", { blurX: 5, blurY: 10 })
-        .zIndex(1)
-        .duration(1200)
-        .fadeIn(200, { ease: "easeOutCirc", delay: 500 })
-        .fadeOut(300, { ease: "linear" })
-
-        .effect()
-        .delay(1000)
-        .atLocation(template)
-        .file("jb2a.healing_generic.burst.bluewhite")
-        .belowTokens()
-        .scaleToObject(1.15)
+        .filter("ColorMatrix", { hue: 130 })
+        .persist()
+        .name(`${workflow.token.document.name} MaCuWo`)
 
         .play()
 
+    let finalTargets = Array.from(validTargets);
+    let ammount = 6;
+    let wait = 2000;
+    if (validTargets.length > 6) {
+        wait = 10;
+        let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, validTargets, false, 'multiple', undefined, false, 'Choose which targets to keep (Max: ' + ammount + ')');
+        if (!selection.buttons) {
+            if (effect) await mba.removeEffect(effect);
+            return;
+        }
+        let targetIds = selection.inputs.filter(i => i).slice(0, ammount);
+        finalTargets = [];
+        for (let id of targetIds) {
+            let targetToken = canvas.scene.tokens.get(id);
+            if (targetToken) finalTargets.push(targetToken);
+        }
+        mba.updateTargets(targetIds);
+        await warpgate.wait(100);
+    }
+    let targets = Array.from(game.user.targets);
+    let formula = `${workflow.castData.castLevel - 2}d8 + ${mba.getSpellMod(workflow.item)}`;
+    let healingRoll = await new Roll(formula).roll({ 'async': true });
+    await warpgate.wait(wait);
+    await MidiQOL.displayDSNForRoll(healingRoll);
     for (let target of targets) {
-
         new Sequence()
 
             .effect()
-            .delay(500)
-            .file("jb2a.healing_generic.200px.blue")
-            .scaleToObject(1.75)
-            .atLocation(target)
-
-            .effect()
-            .file("jb2a.bless.200px.intro.blue")
-            .scaleToObject(1.75)
-            .playbackRate(1.25)
+            .file("jb2a.bless.200px.intro.green")
             .attachTo(target)
+            .scaleToObject(1.75)
+            .playbackRate(1)
             .belowTokens()
 
             .effect()
-            .delay(500)
-            .file(`jb2a.particles.outward.blue.02.03`)
+            .file("jb2a.healing_generic.03.burst.green")
+            .scaleToObject(1.75)
+            .attachTo(target)
+
+            .effect()
+            .file(`jb2a.fireflies.many.01.green`)
             .attachTo(target, { followRotation: false })
-            .scaleToObject(1.1)
-            .duration(1000)
-            .fadeOut(800)
-            .scaleIn(0, 1000, { ease: "easeOutCubic" })
-            .animateProperty("sprite", "width", { from: 0, to: 0.5, duration: 500, gridUnits: true, ease: "easeOutBack" })
-            .animateProperty("sprite", "height", { from: 0, to: 1.5, duration: 1000, gridUnits: true, ease: "easeOutBack" })
-            .animateProperty("sprite", "position.y", { from: 0, to: -0.6, duration: 1000, gridUnits: true })
-            .zIndex(0.2)
+            .scaleToObject(1.5)
+            .delay(1000)
+            .duration(5000)
+            .fadeIn(500)
+            .fadeOut(1000)
 
             .play();
     }
-}
-
-export let massCureWounds = {
-    'cast': cast,
-    'item': item
+    await warpgate.wait(1000);
+    await mba.applyWorkflowDamage(workflow.token, healingRoll, "healing", finalTargets, "Mass Cure Wounds", workflow.itemCardId);
+    await warpgate.wait(2500);
+    if (effect) await mba.removeEffect(effect);
 }

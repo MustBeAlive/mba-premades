@@ -3,13 +3,14 @@ import {mba} from "../../../helperFunctions.js";
 async function constrict({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.hitTargets.size) return;
     let target = workflow.targets.first();
+    if (mba.checkTrait(target.actor, "ci", "grappled")) return;
     if (mba.findEffect(target.actor, "Grappled")) return;
     let saveDC = workflow.item.system.save.dc;
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Constrictor Snake` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} ConS` })
     }
     let effectData = {
-        'name': workflow.item.name,
+        'name': "Constrictor Snake: Constrict",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'changes': [
@@ -28,7 +29,7 @@ async function constrict({ speaker, actor, token, character, item, args, scope, 
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': `actionSave=true, rollType=skill, saveAbility=ath|acr, saveDC=${saveDC}, saveMagic=false, name=Constrict: Action Save, killAnim=true`,
+                'value': `actionSave=true, rollType=skill, saveAbility=ath|acr, saveDC=${saveDC}, saveMagic=false, name=Constrict: Action Save (DC${saveDC}), killAnim=true`,
                 'priority': 20
             }
         ],
@@ -66,7 +67,7 @@ async function constrict({ speaker, actor, token, character, item, args, scope, 
         .fadeOut(1000)
         .opacity(0.6)
         .persist()
-        .name(`${target.document.name} Constrictor Snake`)
+        .name(`${target.document.name} ConS`)
 
         .play()
 }

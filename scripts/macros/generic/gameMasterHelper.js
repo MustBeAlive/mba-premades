@@ -1,8 +1,8 @@
-import {constants} from "./constants.js";
-import {diseases} from "./diseases.js";
-import {jumping} from "./jumping.js";
-import {mba} from "../../helperFunctions.js";
-import {seanse} from "./ouija.js";
+import { constants } from "./constants.js";
+import { diseases } from "./diseases.js";
+import { jumping } from "./jumping.js";
+import { mba } from "../../helperFunctions.js";
+import { seanse } from "./ouija.js";
 
 export async function gameMasterHelper() {
     let choices = [
@@ -12,8 +12,10 @@ export async function gameMasterHelper() {
         ["Jumping Helper", "jump"],
         ["GM Inspiration Distributor", "inspiration"],
         ["Mass Token Show/Hide", "showhide"],
+        ["Money Manager", "money"],
         ["Ouija Board Seanse", "seanse"],
         ["Surprised Condition Distributor", "surprise"],
+        ["Weather Selector", "weather"]
     ];
     let helperType = await mba.dialog("GM Helper: Type", choices, `<b>What would you like to do?</b>`);
     if (!helperType) return;
@@ -59,7 +61,7 @@ export async function gameMasterHelper() {
         if (artSelection === false) return;
         const show = new ImagePopout(artSelection);
         show.render(true);
-        show.shareImage(); 
+        show.shareImage();
     }
     else if (helperType === "disease") {
         await diseases.creator();
@@ -95,6 +97,10 @@ export async function gameMasterHelper() {
     else if (helperType === "inspiration") {
         const playerCharacterIDs = game.users.players.filter(u => u.character).map(u => u.character.id);
         const playerOwnedTokens = canvas.tokens.placeables.filter(t => playerCharacterIDs.includes(t.actor.id));
+        if (!playerOwnedTokens.length) {
+            ui.notifications.info("Current scene does not contain any player owned tokens!");
+            return;
+        }
         let selection = await mba.selectTarget("GM Helper: Inspiration", constants.okCancel, playerOwnedTokens, false, 'multiple', undefined, false, `<b>Choose player to give inspiration to:</b>`);
         if (!selection.buttons) return;
         let newTargets = selection.inputs.filter(i => i).slice(0);
@@ -161,7 +167,7 @@ export async function gameMasterHelper() {
                 .scaleToObject(2)
                 .zIndex(2)
                 .fadeOut(1000)
-                
+
                 .effect()
                 .file("jb2a.markers.music.blueyellow")
                 .attachTo(target)
@@ -178,6 +184,53 @@ export async function gameMasterHelper() {
                 .play()
         }
 
+    }
+    else if (helperType === "money") {
+        let selection = await mba.dialog("GM Helper: Money Manager", [["Single Target Edit", "single"], ["Mass Money Edit", "mass"]], "<b></b>");
+        if (!selection) return;
+        if (selection === "single") {
+            const playerCharacterIDs = game.users.players.filter(u => u.character).map(u => u.character.id);
+            const playerOwnedTokens = canvas.tokens.placeables.filter(t => playerCharacterIDs.includes(t.actor.id));
+            if (!playerOwnedTokens.length) {
+                ui.notifications.info("Current scene does not contain any player owned tokens!");
+                return;
+            }
+            let selection = await mba.selectTarget("GM Helper: Money Manager", constants.okCancel, playerOwnedTokens, false, 'multiple', undefined, false, `<b>Choose character:</b>`);
+            if (!selection.buttons) return;
+            let newTargets = selection.inputs.filter(i => i).slice(0);
+            let target = await canvas.scene.tokens.get(newTargets[0]);
+            let choicesMoney = [
+                [`<b>Copper</b> (Current: ${target.actor.system.currency.cp})`, "cp"],
+                [`<b>Silver</b> (Current: ${target.actor.system.currency.sp})`, "sp"],
+                [`<b>Gold</b> (Current: ${target.actor.system.currency.gp})`, "gp"],
+                [`<b>Platinum</b> (Current: ${target.actor.system.currency.pp})`, "pp"],
+            ];
+            let selectionMoney = await mba.dialog("GM Helper: Money Manager", choicesMoney, "<b>Select type:</b>");
+            if (!selectionMoney) return;
+            let path = `system.currency.${selectionMoney}`;
+            let oldValue = foundry.utils.getProperty(target.actor, path);
+            const formula = await warpgate.menu({
+                inputs: [{
+                    type: `text`,
+                    label: `Input formula<br>(+20 or -20 or similar)`,
+                    options: ``
+                }],
+                buttons: [{
+                    label: `Ok`,
+                    value: 1
+                }]
+            }, { title: `GM Helper: Money Manager` }
+            );
+            let input = +formula.inputs[0];
+            if ((oldValue + input) < 0) {
+                ui.notifications.warn("Wrong input!");
+                return;
+            }
+            await target.actor.update({ [path]: oldValue + input });
+        }
+        else if (selection === "mass") {
+            ui.notifications.info("Under Construction!");
+        }
     }
     else if (helperType === "seanse") {
         await seanse();
@@ -221,6 +274,65 @@ export async function gameMasterHelper() {
         await warpgate.wait(100)
         let targets = Array.from(game.user.targets);
         if (!targets.length) return;
-        for (let target of targets) await mba.addCondition(target.actor, "Surprised");
+        async function effectMacroDel() {
+            Sequencer.EffectManager.endEffects({ name: `${token.document.name} Surprise` })
+        };
+        let effectData = {
+            'name': "Surprised",
+            'icon': "modules/mba-premades/icons/conditions/surprised.webp",
+            'description': `
+                <p>If you're surprised, you can't move or take an action on your first turn of the combat, and you can't take a reaction until that turn ends. A member of a group can be surprised even if the other members aren't.</p>
+                <p>Существо, оказавшееся захваченным врасплох, не может перемещаться и совершать действия в первом ходу сражения, и, пока это состояние не окончится, не может совершать реакции.</p>
+            `,
+            'duration': {
+                'rounds': 1
+            },
+            'flags': {
+                'dae': {
+                    'showIcon': true,
+                },
+                'effectmacro': {
+                    'onDelete': {
+                        'script': mba.functionToString(effectMacroDel)
+                    }
+                }
+            }
+        };
+        for (let target of targets) {
+            new Sequence()
+
+                .effect()
+                .name("Surprise")
+                .file("modules/mba-premades/icons/conditions/overlay/surprise1.webp")
+                .attachTo(target, { bindAlpha: false })
+                .scaleToObject(0.6)
+                .anchor({ x: 0.5, y: 1.55 })
+                .scaleIn(0, 1000, { ease: "easeOutElastic" })
+                .scaleOut(0, 1000, { ease: "easeOutExpo" })
+                .loopProperty("sprite", "position.y", { from: 0, to: -15, duration: 1500, pingPong: true })
+                .persist()
+                .name(`${target.document.name} Surprise`)
+
+                .effect()
+                .name("Surprise")
+                .file("modules/mba-premades/icons/conditions/overlay/surprise2.webp")
+                .attachTo(target, { bindAlpha: false })
+                .scaleToObject(0.45)
+                .scaleIn(0, 1000, { ease: "easeOutElastic" })
+                .scaleOut(0, 1000, { ease: "easeOutExpo" })
+                .anchor({ x: -0.3, y: 1.25 })
+                .loopProperty("sprite", "position.y", { from: 0, to: -15, duration: 1500, pingPong: true })
+                .persist()
+                .name(`${target.document.name} Surprise`)
+
+                .thenDo(async () => {
+                    await mba.createEffect(target.actor, effectData);
+                })
+
+                .play();
+        }
+    }
+    else if (helperType === "weather") {
+        ui.notifications.info("Under construction!");
     }
 }

@@ -24,7 +24,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             },
             'walledtemplates': {
                 'hideBorder': "alwaysHide",
-                'wallRestriction': 'move',
+                'wallRestriction': 'light',
                 'wallsBlock': 'recurse',
             }
         },
@@ -33,7 +33,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let template = await mba.placeTemplate(templateData);
     if (!template) return;
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: "Fog Cloud" })
+        Sequencer.EffectManager.endEffects({ name: "Fog Cloud" })
     }
     let effectData = {
         'name': workflow.item.name,
@@ -151,20 +151,20 @@ async function hook(workflow) {
     if (!queueSetup) return;
     if (sourceCanSeeTarget && !targetCanSeeSource) {
         workflow.advantage = true;
-        //workflow.attackAdvAttribution.add('Fog Cloud: Target Can\'t See Source');
-        workflow.advReminderAttackAdvAttribution.add("ADV:Fog Cloud (target is unable to see you)");
+        //workflow.attackAdvAttribution.add("Fog Cloud: Target Can't See Source");
+        workflow.advReminderAttackAdvAttribution.add("ADV:Heavily Obscured (target is unable to see you)");
     }
     if (!sourceCanSeeTarget && targetCanSeeSource) {
         workflow.disadvantage = true;
         workflow.flankingAdvantage = false;
-        //workflow.attackAdvAttribution.add('Fog Cloud: Source Can\'t See Target');
-        workflow.advReminderAttackAdvAttribution.add("DIS:Fog Cloud (you are unable to see target)");
+        //workflow.attackAdvAttribution.add("Fog Cloud: Source Can't See Target");
+        workflow.advReminderAttackAdvAttribution.add("DIS:Heavily Obscured (you are unable to see target)");
     }
     if (!sourceCanSeeTarget && !targetCanSeeSource) {
         //workflow.advantage = true; Homeruled, uncomment to fix
         workflow.disadvantage = true;
         //workflow.attackAdvAttribution.add('Fog Cloud: Target And Source Can\'t See Eachother');
-        workflow.advReminderAttackAdvAttribution.add("DIS:Fog Cloud (you and target are unable to see eachother)");
+        workflow.advReminderAttackAdvAttribution.add("DIS:Heavily Obscured (you and target are unable to see eachother)");
     }
     queue.remove(workflow.item.uuid);
 }

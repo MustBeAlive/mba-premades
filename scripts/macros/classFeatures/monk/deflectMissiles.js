@@ -18,7 +18,7 @@ export async function deflectMissiles({ speaker, actor, token, character, item, 
     let monkLevel = monk.actor.classes.monk?.system?.levels;
     let deflectFormula = `1d10 + ${monk.actor.system.abilities.dex.mod} + ${monkLevel}`;
     let deflectRoll = await new Roll(deflectFormula).roll({ 'async': true });
-    await MidiQOL.displayDSNForRoll(deflectRoll, 'damageRoll');
+    await MidiQOL.displayDSNForRoll(deflectRoll);
     await deflectRoll.toMessage({
         flavor: `Deflect Missiles roll: <b>${deflectRoll.total}</b>`,
         speaker: ChatMessage.getSpeaker({ token: monk.document })
@@ -43,10 +43,7 @@ export async function deflectMissiles({ speaker, actor, token, character, item, 
     let throwSelection = await mba.remoteDialog("Deflect Missiles", constants.yesNo, mba.firstOwner(monk).id, "Would you like to spend 1 Ki Point<br>to throw the ammunition you caught at someone?");
     if (!throwSelection) return;
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Class Feature Items', 'Deflect Missiles: Throw Ammunition', false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Deflect Missiles: Throw Ammunition)");
-        return;
-    }
+    if (!featureData) return;
     let damageType = workflow.defaultDamageType;
     let monkDice = 4;
     if (monkLevel >= 5 && monkLevel < 11) monkDice = 6;

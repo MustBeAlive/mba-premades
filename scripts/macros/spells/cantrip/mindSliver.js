@@ -1,9 +1,9 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
 
 export async function mindSliver({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Mind Sliver`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Mind Sliver` })
     };
     const effectData = {
         'name': workflow.item.name,
@@ -44,7 +44,7 @@ export async function mindSliver({ speaker, actor, token, character, item, args,
 
         .effect()
         .file("animated-spell-effects-cartoon.magic.mind sliver")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target)
         .filter("ColorMatrix", { hue: 80 })
         .waitUntilFinished(-1300)
@@ -68,7 +68,7 @@ export async function mindSliver({ speaker, actor, token, character, item, args,
         })
 
         .effect()
-        .file("jb2a.template_square.symbol.normal.stun.purple")
+        .file("jb2a.template_circle.symbol.normal.stun.purple")
         .attachTo(target)
         .scaleToObject(1.4)
         .delay(200)

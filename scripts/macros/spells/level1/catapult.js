@@ -7,7 +7,7 @@ export async function catapult({ speaker, actor, token, character, item, args, s
 
         .effect()
         .file("jb2a.boulder.toss.01.02")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target)
         .playbackRate(0.9)
         .waitUntilFinished(-2000)

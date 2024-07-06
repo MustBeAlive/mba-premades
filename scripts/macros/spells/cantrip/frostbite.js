@@ -3,7 +3,7 @@ import {mba} from "../../../helperFunctions.js";
 export async function frostbite({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Frostbite`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Frostbite` })
     };
     const effectData = {
         'name': workflow.item.name,
@@ -50,7 +50,7 @@ export async function frostbite({ speaker, actor, token, character, item, args, 
 
         .effect()
         .file("jb2a.spell_projectile.ice_shard.blue")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target)
         .waitUntilFinished(-1200)
 

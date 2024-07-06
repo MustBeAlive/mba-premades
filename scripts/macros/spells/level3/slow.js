@@ -6,6 +6,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     mbaPremades.helpers.updateTargets(newTargets);
 }
 
+//To do: update, check for bugs, animations
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) {
         await mbaPremades.helpers.removeCondition(workflow.actor, 'Concentrating');
@@ -101,7 +103,7 @@ async function check({ speaker, actor, token, character, item, args, scope, work
     if (mbaPremades.helpers.findEffect(actor, 'Slow: Postponed Spell')) return;
     if (workflow.item.type != "spell" && workflow.item.system.activation.type != "action") return;
     let slowRoll = await new Roll('1d20').roll({ 'async': true }); // it would've been much better if it requested the roll from the player (don't want to use Monk's TokenBar)
-    await MidiQOL.displayDSNForRoll(slowRoll, 'damageRoll');
+    await MidiQOL.displayDSNForRoll(slowRoll);
     slowRoll.toMessage({
         rollMode: 'roll',
         speaker: { 'alias': name },

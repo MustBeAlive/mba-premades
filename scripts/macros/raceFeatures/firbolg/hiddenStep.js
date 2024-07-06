@@ -20,7 +20,7 @@ export async function hiddenStep({ speaker, actor, token, character, item, args,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are invisible until the start of your next turn or until you attack, make a damage roll or force someon to make a saving throw.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.2dEv6KlLgFA4wOni]{Invisible} until the start of your next turn or until you attack, make a damage roll or force someon to make a saving throw.</p>
         `,
         'changes': [
             {

@@ -1,11 +1,9 @@
-//Animation by EskieMoh#2969
 export async function swordBurst({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let targets = Array.from(workflow.targets);
     new Sequence()
 
         .effect()
         .file("jb2a.markers.light_orb.complete.blue")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scale(0.5)
         .playbackRate(1.5)
         .duration(3100)
@@ -14,7 +12,7 @@ export async function swordBurst({ speaker, actor, token, character, item, args,
         .effect()
         .delay(700)
         .file("jb2a.energy_strands.overlay.blue.01")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scale(0.1)
         .playbackRate(2.5)
         .duration(2400)
@@ -25,7 +23,7 @@ export async function swordBurst({ speaker, actor, token, character, item, args,
 
         .effect()
         .file("jb2a.energy_strands.complete.blue.01")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(5)
         .playbackRate(2.5)
         .belowTokens()
@@ -37,8 +35,8 @@ export async function swordBurst({ speaker, actor, token, character, item, args,
 
         .effect()
         .file("jb2a.melee_attack.01.shortsword.01.2")
-        .atLocation(token)
-        .stretchTo(token, { offset: { x: 0.75 * token.document.width, y: -0.75 * token.document.width }, gridUnits: true })
+        .atLocation(workflow.token)
+        .stretchTo(workflow.token, { offset: { x: 0.75 * workflow.token.document.width, y: -0.75 * workflow.token.document.width }, gridUnits: true })
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .rotateIn(360, 1700, { ease: "easeOutCubic" })
         .fadeOut(500)
@@ -48,8 +46,8 @@ export async function swordBurst({ speaker, actor, token, character, item, args,
 
         .effect()
         .file("jb2a.melee_attack.01.shortsword.01.2")
-        .atLocation(token)
-        .stretchTo(token, { offset: { x: -0.75 * token.document.width, y: -0.75 * token.document.width }, gridUnits: true })
+        .atLocation(workflow.token)
+        .stretchTo(workflow.token, { offset: { x: -0.75 * workflow.token.document.width, y: -0.75 * workflow.token.document.width }, gridUnits: true })
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .rotateIn(360, 1700, { ease: "easeOutCubic" })
         .fadeOut(500)
@@ -59,8 +57,8 @@ export async function swordBurst({ speaker, actor, token, character, item, args,
 
         .effect()
         .file("jb2a.melee_attack.01.shortsword.01.2")
-        .atLocation(token)
-        .stretchTo(token, { offset: { x: 0.75 * token.document.width, y: 0.75 * token.document.width }, gridUnits: true })
+        .atLocation(workflow.token)
+        .stretchTo(workflow.token, { offset: { x: 0.75 * workflow.token.document.width, y: 0.75 * workflow.token.document.width }, gridUnits: true })
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .rotateIn(360, 1700, { ease: "easeOutCubic" })
         .fadeOut(500)
@@ -70,8 +68,8 @@ export async function swordBurst({ speaker, actor, token, character, item, args,
 
         .effect()
         .file("jb2a.melee_attack.01.shortsword.01.2")
-        .atLocation(token)
-        .stretchTo(token, { offset: { x: -0.75 * token.document.width, y: 0.75 * token.document.width }, gridUnits: true })
+        .atLocation(workflow.token)
+        .stretchTo(workflow.token, { offset: { x: -0.75 * workflow.token.document.width, y: 0.75 * workflow.token.document.width }, gridUnits: true })
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .rotateIn(360, 1700, { ease: "easeOutCubic" })
         .fadeOut(500)
@@ -81,8 +79,7 @@ export async function swordBurst({ speaker, actor, token, character, item, args,
 
         .play()
 
-    for (let target of targets) {
-
+    for (let target of Array.from(workflow.targets)) {
         new Sequence()
 
             .effect()

@@ -4,16 +4,16 @@ async function web({ speaker, actor, token, character, item, args, scope, workfl
     if (!workflow.hitTargets.size) return;
     let target = workflow.targets.first();
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Giant Spider Web` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} GSWeb` })
     };
     const effectData = {
         'name': "Giant Spider: Web",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are restrained by Giant Spider's webbing.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.gfRbTxGiulUylAjE]{Restrained} by Giant Spider's webbing.</p>
             <p>As an action, you can make a DC 12 Strength check, bursting the webbing on a success.</p>
-            <p>The webbing can also be attacked and destroyed (AC 10; hp 5; vulnerability to fire damage; immunity to bludgeoning, poison, and psychic damage).</p>
+            <p>The webbing can also be attacked and destroyed (AC: 10; HP: 5; vulnerability to fire damage; immunity to bludgeoning, poison, and psychic damage).</p>
         `,
         'changes': [
             {
@@ -57,12 +57,15 @@ async function web({ speaker, actor, token, character, item, args, scope, workfl
         .opacity(0.6)
         .mask()
         .persist()
-        .name(`${target.document.name} Giant Spider Web`)
+        .name(`${target.document.name} GSWeb`)
+        .playIf(() => {
+            return (!mba.findEffect(target.actor, "Giant Spider: Web") && !mba.checkTrait(target.actor, "ci", "restrained"));
+        })
 
         .wait(300)
 
         .thenDo(async () => {
-            await mba.createEffect(target.actor, effectData);
+            if (!mba.findEffect(target.actor, "Giant Spider: Web") && !mba.checkTrait(target.actor, "ci", "restrained")) await mba.createEffect(target.actor, effectData);
         })
 
         .play()

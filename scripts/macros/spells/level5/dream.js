@@ -286,11 +286,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         let selectionAwake = await mba.dialog("Target is awake. Would you like to wait?", choicesAwake);
         if (!selectionAwake || selectionAwake === "no") return;
         if (selectionAwake === "yes") {
-            let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Dream: Retry', false);
-            if (!featureData) {
-                ui.notifications.warn("Unable to find item in Compendium! (Dream: Retry)");
-                return;
-            }
+            let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Dream: Retry", false);
+            if (!featureData) return;
             delete featureData._id;
             featureData.system.save.dc = saveDC;
             async function effectMacroDel() {
@@ -367,7 +364,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             else if (selectionGM2 === "fail") {
                 await mba.createEffect(workflow.actor, effectData);
                 let damageRoll = await new Roll("3d6[psychic]").roll({ 'async': true });
-                await MidiQOL.displayDSNForRoll(damageRoll, 'damageRoll');
+                await MidiQOL.displayDSNForRoll(damageRoll);
                 damageRoll.toMessage({
                     rollMode: 'roll',
                     speaker: { actor: workflow.actor },
@@ -452,7 +449,7 @@ async function wait({ speaker, actor, token, character, item, args, scope, workf
             }
             else if (selectionGM2 === "fail") {
                 let damageRoll = await new Roll("3d6[psychic]").roll({ 'async': true });
-                await MidiQOL.displayDSNForRoll(damageRoll, 'damageRoll');
+                await MidiQOL.displayDSNForRoll(damageRoll);
                 damageRoll.toMessage({
                     rollMode: 'roll',
                     speaker: { actor: workflow.actor },

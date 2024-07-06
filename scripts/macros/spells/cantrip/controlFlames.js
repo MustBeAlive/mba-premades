@@ -1,5 +1,7 @@
 import {mba} from "../../../helperFunctions.js";
 
+// To do: rewrite the shit out of this
+
 export async function controlFlames({ speaker, actor, token, character, item, args, scope, workflow }) {
     let config = {
         size: 5 / canvas.scene.grid.distance,

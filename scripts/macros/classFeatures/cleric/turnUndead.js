@@ -24,11 +24,8 @@ export async function turnUndead({ speaker, actor, token, character, item, args,
     }
     mba.updateTargets(validTargets);
     await warpgate.wait(100);
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Class Feature Items', 'Turn Undead: Save');
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Turn Undead: Save)")
-        return;
-    }
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Class Feature Items', 'Turn Undead: Save', false);
+    if (!featureData) return;
     delete featureData._id;
     featureData.system.save.dc = mba.getSpellDC(workflow.item);
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });

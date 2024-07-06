@@ -1,4 +1,4 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
 	let target = workflow.targets.first();
@@ -7,9 +7,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 		await mba.removeCondition(workflow.actor, "Concentrating");
 		return;
 	}
-	let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Beast Sense: See Through Beast');
+	let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Beast Sense: See Through Beast", false);
 	if (!featureData) {
-		ui.notifications.warn("Unable to find item in the compendium! (Beast Sense: See Through Beast)");
 		await mba.removeCondition(workflow.actor, "Concentrating");
 		return;
 	}
@@ -23,7 +22,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 		'origin': workflow.item.uuid,
 		'description': `
 			<p>For the duration of the spell, you can use your action to see through the beast's eyes (${target.document.name}) and hear what it hears, and continue to do so until you use your action to return to your normal senses.</p>
-			<p>While perceiving through the beast's senses, you gain the benefits of any special senses possessed by that creature, though you are blinded and deafened to your own surroundings.</p>
+			<p>While perceiving through the beast's senses, you gain the benefits of any special senses possessed by that creature, though you are @UUID[Compendium.mba-premades.MBA SRD.Item.3NxmNhGQQqUDnu73]{Blinded} and @UUID[Compendium.mba-premades.MBA SRD.Item.GmOl4GcI3fguwIJc]{Deafened} to your own surroundings.</p>
 		`,
 		'duration': {
 			'seconds': 3600
@@ -73,7 +72,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
 		.effect()
 		.file("jb2a.magic_signs.circle.02.divination.complete.blue")
-		.attachTo(token)
+		.attachTo(workflow.token)
 		.scaleToObject(2)
 		.waitUntilFinished(-8600)
 
@@ -187,12 +186,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
 			.effect()
 			.file("jb2a.magic_signs.rune.divination.complete.blue")
-			.attachTo(token)
+			.attachTo(workflow.token)
 			.scaleToObject(1.4)
 
 			.effect()
 			.file("jb2a.magic_signs.rune.divination.complete.blue")
-			.attachTo(token)
+			.attachTo(workflow.token)
 			.scaleToObject(1.4)
 			.mirrorX()
 

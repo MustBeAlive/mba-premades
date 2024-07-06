@@ -21,7 +21,7 @@ export async function faerieFire({ speaker, actor, token, character, item, args,
             hue = '250';
     }
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ 'name': `${token.document.name} Faerie Fire`, object: token });
+        Sequencer.EffectManager.endEffects({ 'name': `${token.document.name} FaeFir` });
     };
     const effectData = {
         'name': workflow.item.name,
@@ -54,6 +54,9 @@ export async function faerieFire({ speaker, actor, token, character, item, args,
             }
         ],
         'flags': {
+            'dae': {
+                'specialDuration': ["zeroHP"]
+            },
             'effectmacro': {
                 'onDelete': {
                     'script': mba.functionToString(effectMacroDel)
@@ -62,7 +65,7 @@ export async function faerieFire({ speaker, actor, token, character, item, args,
         }
     }
     let template = canvas.scene.collections.templates.get(workflow.templateId);
-    //let position = template.ray.project(0.5);
+    if (!template) return;
 
     new Sequence()
 
@@ -164,8 +167,6 @@ export async function faerieFire({ speaker, actor, token, character, item, args,
     }
     await warpgate.wait(1300);
     for (let target of workflow.failedSaves) {
-
-        await mba.createEffect(target.actor, effectData);
         new Sequence()
 
             .effect()
@@ -176,7 +177,7 @@ export async function faerieFire({ speaker, actor, token, character, item, args,
             .fadeIn(500, { 'delay': 500 })
             .fadeOut(1500, { 'ease': 'easeInSine' })
             .persist()
-            .name(`${target.document.name} Faerie Fire`)
+            .name(`${target.document.name} FaeFir`)
 
             .effect()
             .from(target)
@@ -189,7 +190,11 @@ export async function faerieFire({ speaker, actor, token, character, item, args,
             .fadeOut(1500, { 'ease': 'easeInSine' })
             .zIndex(0.1)
             .persist()
-            .name(`${target.document.name} Faerie Fire`)
+            .name(`${target.document.name} FaeFir`)
+
+            .thenDo(async () => {
+                await mba.createEffect(target.actor, effectData);
+            })
 
             .play();
     }

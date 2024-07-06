@@ -2,7 +2,6 @@ import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
 async function autoGrapple({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let targets = Array.from(workflow.targets);
     let saveDC = workflow.item.system.save.dc;
     let effectData = {
         'name': `${workflow.token.document.name}: Grapple`,
@@ -34,7 +33,7 @@ async function autoGrapple({ speaker, actor, token, character, item, args, scope
             }
         }
     };
-    for (let target of targets) {
+    for (let target of Array.from(workflow.targets)) {
         if (mba.findEffect(target.actor, "Grappled")) continue;
         if (mba.getSize(target.actor) > 3) continue;
         await new Sequence()
@@ -79,6 +78,7 @@ async function entangleCast({ speaker, actor, token, character, item, args, scop
     mba.updateTargets(newTargets);
     await warpgate.wait(100);
     let template = canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) return;
 
     new Sequence()
 
@@ -215,16 +215,15 @@ async function entangleCast({ speaker, actor, token, character, item, args, scop
 
 async function entangleItem({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves) return;
-    let targets = Array.from(workflow.failedSaves);
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Vine Blight` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} VBR` })
     };
     const effectData = {
         'name': "Vine Blight: Entangle",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are restrained by Vine Blight's entangling roots.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.gfRbTxGiulUylAjE]{Restrained} by Vine Blight's entangling roots.</p>
             <p>You can use your action to make a DC 12 Strength check, freeing yourself or another entangled creature within reach on a success.</p>
         `,
         'changes': [
@@ -252,8 +251,9 @@ async function entangleItem({ speaker, actor, token, character, item, args, scop
             }
         }
     };
-    for (let target of targets) {
+    for (let target of Array.from(workflow.failedSaves)) {
         if (mba.raceOrType(target.actor) === "plant") continue;
+        if (mba.findEffect(target.actor, "Restrained")) continue;
         new Sequence()
 
             .effect()
@@ -268,7 +268,7 @@ async function entangleItem({ speaker, actor, token, character, item, args, scop
             .mask(target)
             .fadeOut(500)
             .persist()
-            .name(`${target.document.name} Vine Blight`)
+            .name(`${target.document.name} VBR`)
 
             .thenDo(async () => {
                 await mba.createEffect(target.actor, effectData);

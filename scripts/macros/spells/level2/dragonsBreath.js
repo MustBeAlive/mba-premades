@@ -2,48 +2,40 @@ import {mba} from "../../../helperFunctions.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', "Dragon's Breath: Attack", false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Dragon's Breath: Attack", false);
     if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Dragon's Breath: Attack)");
         await mba.removeCondition(workflow.actor, "Concentrating");
         return;
     }
     delete featureData._id;
     let damageTypes = [
-        ['Acid 🧪', 'acid'],
-        ['Cold ❄️', 'cold'],
-        ['Fire 🔥', 'fire'],
-        ['Lightning ⚡', 'lightning'],
-        ['Poison ☠️', 'poison']
+        ["Acid", "acid", "modules/mba-premades/icons/spells/level2/dragon_breath_acid.webp"],
+        ["Cold", "cold", "modules/mba-premades/icons/spells/level2/dragon_breath_cold.webp"],
+        ["Fire", "fire", "modules/mba-premades/icons/spells/level2/dragon_breath_fire.webp"],
+        ["Lightning", "lightning", "modules/mba-premades/icons/spells/level2/dragon_breath_lightning.webp"],
+        ["Poison", "poison", "modules/mba-premades/icons/spells/level2/dragon_breath_poison.webp"]
     ];
-    let selectionType = await mba.dialog("Dragon's Breath", damageTypes, `<b>Choose damage type:</b>`);
-    if (!selectionType) {
-        ui.notifications.warn('Failed to choose damage type, try again!');
+    let selectionType = await mba.selectImage("Dragon's Breath", damageTypes, `<b>Choose damage type:</b>`, "both");
+    if (!selectionType.length) {
+        ui.notifications.warn("Failed to choose damage type, try again!");
         await mba.removeCondition(workflow.actor, "Concentrating");
         return;
     }
-    let icon = "modules/mba-premades/icons/spells/level2/dragon_breath_fire.webp";
-    switch (selectionType) {
-        case "acid": icon = "modules/mba-premades/icons/spells/level2/dragon_breath_acid.webp"; break;
-        case "cold": icon = "modules/mba-premades/icons/spells/level2/dragon_breath_cold.webp"; break;
-        case "lightning": icon = "modules/mba-premades/icons/spells/level2/dragon_breath_lightning.webp"; break;
-        case "poison": icon = "modules/mba-premades/icons/spells/level2/dragon_breath_poison.webp"; break;
-    }
     let damageValue = 1 + workflow.castData.castLevel;
-    let damageParts = [[`${damageValue}d6[${selectionType}]`, `${selectionType}`]];
-    featureData.img = icon;
+    let damageParts = [[`${damageValue}d6[${selectionType[0]}]`, `${selectionType[0]}`]];
+    featureData.img = selectionType[1];
     featureData.system.damage.parts = damageParts;
     featureData.system.save.dc = mba.getSpellDC(workflow.item);
     async function effectMacroDel() {
-        await warpgate.revert(token.document, "Dragon's Breath: Attack");
+        await warpgate.revert(token.document, "Dragon's Breath");
     }
     let effectData = {
         'name': workflow.item.name,
-        'icon': icon,
+        'icon': selectionType[1],
         'origin': workflow.item.uuid,
         'description': `
             <p>You are imbued with power to spew magical energy from your mouth.</p>
-            <p>Until the spell ends, you can use an action to exhale ${selectionType} energy in a 15-foot cone.</p>
+            <p>Until the spell ends, you can use an action to exhale ${selectionType[0]} energy in a 15-foot cone.</p>
             <p>Each creature in that area must make a Dexterity saving throw, taking ${damageValue}d6 damage of the chosen type on a failed save, or half as much damage on a successful one.</p>
         `,
         'duration': {
@@ -65,7 +57,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             'mba-premades': {
                 'spell': {
                     'dragonsBreath': {
-                        'damageType': selectionType
+                        'damageType': selectionType[0]
                     }
                 }
             }
@@ -83,8 +75,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     };
     let options = {
         'permanent': false,
-        'name': "Dragon's Breath: Attack",
-        'description': "Dragon's Breath: Attack"
+        'name': "Dragon's Breath",
+        'description': "Dragon's Breath"
     };
     await warpgate.mutate(target.document, updates, {}, options);
 }
@@ -98,30 +90,36 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     let damageType = effect.flags['mba-premades']?.spell?.dragonsBreath?.damageType;
     let animation;
     let rate;
+    let scale;
     switch (damageType) {
         case "acid": {
             animation = "jb2a.breath_weapons02.burst.cone.fire.green.01";
             rate = 1.4;
+            scale = 4;
             break;
         }
         case "cold": {
             animation = "jb2a.breath_weapons.cold.cone.blue";
             rate = 1.8;
+            scale = 3.8;
             break;
         }
         case "fire": {
             animation = "jb2a.breath_weapons.fire.cone.orange.02";
             rate = 1.5;
+            scale = 3.8;
             break;
         }
         case "lightning": {
             animation = "jb2a.template_cone_5e.lightning.01.complete.bluepurple";
             rate = 1.5;
+            scale = 4;
             break;
         }
         case "poison": {
             animation = "jb2a.breath_weapons.poison.cone.green";
             rate = 1.5;
+            scale = 3.5;
             break;
         }
     }
@@ -134,7 +132,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
         .file(animation)
         .atLocation(workflow.token)
         .rotateTowards(template)
-        .scaleToObject(1.2)
+        .scaleToObject(scale)
         .fadeIn(1500)
         .playbackRate(rate)
 

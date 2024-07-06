@@ -1,13 +1,13 @@
-import { constants } from "../../generic/constants.js";
-import { mba } from "../../../helperFunctions.js";
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel - 1;
-    let concEffect = await mba.findEffect(workflow.actor, 'Concentrating');
+    let concEffect = await mba.findEffect(workflow.actor, "Concentrating");
     if (workflow.targets.size > ammount) {
-        let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+        let selection = await mba.selectTarget("Hold Person", constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
         if (!selection.buttons) {
-            ui.notifications.warn('Failed to select right ammount of targets, try again!')
+            ui.notifications.warn("Failed to select right ammount of targets, try again!")
             await mba.removeEffect(concEffect);
             return;
         }
@@ -26,32 +26,30 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         await mba.removeEffect(concEffect);
         return;
     }
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Hold Person: Hold', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Hold Person: Save", false);
     if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compenidum! (Hold Person: Hold)");
-        return
+        await mba.removeEffect(concEffect);
+        return;
     }
     delete featureData._id;
-    featureData.system.save.dc = mba.getSpellDC(workflow.item);
+    let saveDC = mba.getSpellDC(workflow.item);
+    featureData.system.save.dc = saveDC;
     setProperty(featureData, 'mba-premades.spell.castData.school', workflow.item.system.school);
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
-    let targetUuids = [];
-    for (let i of targets) targetUuids.push(i.document.uuid);
+    let targetUuids = Array.from(targets).map(t => t.document.uuid);
     let [config, options] = constants.syntheticItemWorkflowOptions(targetUuids);
     await warpgate.wait(100);
     await game.messages.get(workflow.itemCardId).delete();
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
-
     if (!featureWorkflow.failedSaves.size) {
         await mba.removeEffect(concEffect);
         return;
     }
-    let failTargets = Array.from(featureWorkflow.failedSaves);
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Hold Person` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} HolPer` })
     }
     const effectData = {
-        'name': workflow.item.name,
+        'name': "Hold Person",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
@@ -63,17 +61,17 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         },
         'changes': [
             {
-                'key': 'flags.midi-qol.OverTime',
-                'mode': 0,
-                'value': `turn=end, saveAbility=wis, saveDC=${mba.getSpellDC(workflow.item)}, saveMagic=true, name=Hold Person: Turn End, killAnim=true`,
-                'priority': 20
-            },
-            {
                 'key': 'macro.CE',
                 'mode': 0,
                 'value': 'Paralyzed',
                 'priority': 20
-            }
+            },
+            {
+                'key': 'flags.midi-qol.OverTime',
+                'mode': 0,
+                'value': `turn=end, saveAbility=wis, saveDC=${saveDC}, saveMagic=true, name=Hold Person: Turn End (DC${saveDC}), killAnim=true`,
+                'priority': 20
+            },
         ],
         'flags': {
             'effectmacro': {
@@ -90,12 +88,12 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    for (let target of failTargets) {
+    for (let target of Array.from(featureWorkflow.failedSaves)) {
         new Sequence()
 
             .effect()
             .file("jb2a.energy_strands.range.multiple.purple.01")
-            .attachTo(token)
+            .attachTo(workflow.token)
             .stretchTo(target)
 
             .wait(500)
@@ -118,22 +116,22 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             .waitUntilFinished(-500)
 
             .effect()
-            .delay(300)
             .file("jb2a.impact.002.pinkpurple")
             .atLocation(target)
             .scaleToObject(2)
+            .delay(300)
             .opacity(1)
             .filter("ColorMatrix", { hue: 6 })
             .zIndex(0)
 
             .effect()
             .file("jb2a.particles.inward.white.02.03")
-            .scaleIn(0, 500, { ease: "easeOutQuint" })
-            .delay(300)
-            .fadeOut(1000)
             .atLocation(target)
-            .duration(1000)
             .size(1.75, { gridUnits: true })
+            .delay(300)
+            .duration(1000)
+            .fadeOut(1000)
+            .scaleIn(0, 500, { ease: "easeOutQuint" })
             .animateProperty("spriteContainer", "position.y", { from: 0, to: -0.5, gridUnits: true, duration: 1000 })
             .zIndex(1)
 
@@ -142,9 +140,9 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             .atLocation(target)
             .scaleToObject(2)
             .opacity(1)
-            .filter("ColorMatrix", { saturate: 1, brightness: 1.3 })
             .zIndex(0)
             .belowTokens()
+            .filter("ColorMatrix", { saturate: 1, brightness: 1.3 })
             .waitUntilFinished(-1600)
 
             .thenDo(async () => {
@@ -154,25 +152,23 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             .effect()
             .file("jb2a.markers.chain.spectral_standard.loop.02.purple")
             .attachTo(target)
-            .scaleIn(0, 1500, { ease: "easeOutCubic" })
             .scaleToObject(2 * target.document.texture.scaleX)
+            .fadeOut(1000)
+            .scaleIn(0, 1000, { ease: "easeOutCubic" })
             .playbackRate(0.8)
             .opacity(0.8)
-            .private()
-            .fadeOut(500)
             .persist()
-            .name(`${target.document.name} Hold Person`)
+            .name(`${target.document.name} HolPer`)
 
             .play();
     }
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let targets = Array.from(workflow.targets);
-    for (let target of targets) {
-        if (mba.raceOrType(target.actor) != 'humanoid') {
+    for (let target of Array.from(workflow.targets)) {
+        if (mba.raceOrType(target.actor) != "humanoid") {
             ChatMessage.create({ 
-                flavor: `<b>${target.name}</b> is unaffected by Hold Person! (Target is not humanoid)`, 
+                flavor: `<u>${target.document.name}</u> is unaffected by Hold Monster!`, 
                 speaker: ChatMessage.getSpeaker({ actor: workflow.actor }) 
             });
             await mba.createEffect(target.actor, constants.immunityEffectData);

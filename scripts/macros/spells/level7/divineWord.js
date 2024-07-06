@@ -1,6 +1,8 @@
 import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
+//To do: check fo bugs, animations
+
 async function cast({speaker, actor, token, character, item, args, scope, workflow}) {
     let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Choose which targets to keep');
     let newTargets = selection.inputs.filter(i => i).slice(0);

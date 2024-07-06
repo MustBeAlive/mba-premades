@@ -3,7 +3,7 @@ import {mba} from "../../../helperFunctions.js";
 export async function waterBreathing({ speaker, actor, token, character, item, args, scope, workflow }) {
     let targets = Array.from(workflow.targets);
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Water Breathing` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} WatBre` })
     }
     let effectData = {
         'name': workflow.item.name,
@@ -71,7 +71,7 @@ export async function waterBreathing({ speaker, actor, token, character, item, a
             .playbackRate(0.9)
             .mask(target)
             .persist()
-            .name(`${target.document.name} Water Breathing`)
+            .name(`${target.document.name} WatBre`)
 
             .thenDo(async () => {
                 await mba.createEffect(target.actor, effectData);

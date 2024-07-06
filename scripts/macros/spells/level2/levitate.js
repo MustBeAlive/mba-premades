@@ -4,11 +4,8 @@ import {mba} from "../../../helperFunctions.js";
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
 	if (!workflow.failedSaves.size) return;
 	let target = workflow.targets.first();
-	let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Levitate: Control Elevation', false);
-	if (!featureData) {
-		ui.notifications.warn('Missing item in the compendium! (Levitate: Control Elevation)');
-		return;
-	}
+	let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Levitate: Control Elevation", false);
+	if (!featureData) return;
 	delete featureData._id;
 	async function effectMacroSourceTurnStart() {
 		let effect = await mbaPremades.helpers.findEffect(actor, "Levitate");
@@ -90,7 +87,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 		await token.document.update({ "elevation": 0 });
 	}
 	let targetEffectData = {
-		'name': workflow.item.name,
+		'name': "Levitate: Target",
 		'icon': workflow.item.img,
 		'origin': workflow.item.uuid,
 		'description': "",
@@ -212,7 +209,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			}]
 		},
 		{
-			title: `Levitate: Control Elevation`
+			title: `Levitate: Change Elevation`
 		}
 	);
 	let input = +changeValue.inputs[0];
@@ -224,8 +221,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 	let updates = { token: { elevation: elevationChange } };
 	let options = {
 		'permanent': true,
-		'name': 'Levitate: Control Elevation',
-		'description': 'Levitate: Control Elevation'
+		'name': 'Levitate: Change Elevation',
+		'description': 'Levitate: Change Elevation'
 	};
 	await warpgate.mutate(target, updates, {}, options);
 	let sourceUpdates = { 'flags.mba-premades.spell.levitate.used': true };

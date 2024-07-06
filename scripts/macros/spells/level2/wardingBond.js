@@ -1,6 +1,8 @@
 import {constants} from '../../generic/constants.js';
 import {mba} from '../../../helperFunctions.js';
 
+// To do: animations
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.targets.size != 1) {
         ui.notifications.warn("No target selected!");
@@ -9,11 +11,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let target = workflow.targets.first();
     let effect = mba.findEffect(target.actor, 'Warding Bond: Target');
     if (effect) return;
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Warding Bond: Dismiss', false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Warding Bond: Dismiss)");
-        return;
-    }
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Warding Bond: Dismiss", false);
+    if (!featureData) return;
     featureData.name = `Warding Bond: Dismiss (${target.document.name})`;
     setProperty(featureData, 'flags.mba-premades.spell.wardingBond.targetUuid', target.document.uuid);
     async function effectMacroDel() {
@@ -187,10 +186,7 @@ async function onHit(workflow, targetToken) {
     if (!damageInfo) return;
     if (damageInfo.appliedDamage === 0) return;
     let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Warding Bond: Damage Transfer", false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Warding Bond: Damage Transfer)");
-        return;
-    }
+    if (!featureData) return;
     featureData.system.damage.parts = [[damageInfo.appliedDamage + '[none]', 'none']];
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': targetToken.actor });
     let sourceToken = await fromUuid(bondTokenUuid);

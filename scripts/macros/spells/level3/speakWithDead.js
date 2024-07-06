@@ -7,12 +7,12 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         return;
     }
     if (mba.raceOrType(target.actor) === 'undead') {
-        ui.notifications.warn("Unable to speak with target! (Target is undead)");
+        ui.notifications.warn("Speak with Dead fails!");
         return;
     }
     let options = [["Yes, proceed", "yes"], ["No, deny Speak with Dead", false]];
     await mba.gmDialogMessage();
-    let selection = await mba.remoteDialog(workflow.item.name, options, game.users.activeGM.id, `Is <b>${target.document.name}</b> eligible to use Speak with Dead on?`);
+    let selection = await mba.remoteDialog(workflow.item.name, options, game.users.activeGM.id, `Is <u>${target.document.name}</u> eligible to use Speak with Dead on?`);
     await mba.clearGMDialogMessage();
     if (!selection) {
         ui.notifications.info("GM has denied your request. Sorry!");

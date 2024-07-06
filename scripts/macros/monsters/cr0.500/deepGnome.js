@@ -1,11 +1,15 @@
 import {mba} from "../../../helperFunctions.js";
 
 async function poison({ speaker, actor, token, character, item, args, scope, workflow }) {
+    if (!workflow.hitTargets.size) return;
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
     if (mba.checkTrait(target.actor, "ci", "poisoned")) return;
     if (mba.findEffect(target.actor, "Deep Gnome: Poison")) return;
     let saveDC = workflow.item.system.save.dc;
+    async function effectMacroDel() {
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} DeGnPoi` })
+    };
     const effectData = {
         'name': `Deep Gnome: Poison`,
         'icon': "modules/mba-premades/icons/generic/generic_poison.webp",
@@ -30,10 +34,38 @@ async function poison({ speaker, actor, token, character, item, args, scope, wor
         'flags': {
             'dae': {
                 'showIcon': false
+            },
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDel)
+                }
             }
         }
     };
-    await mba.createEffect(target.actor, effectData);
+    new Sequence()
+
+        .effect()
+        .file("jb2a.smoke.puff.centered.green.2")
+        .attachTo(target)
+        .scaleToObject(2 * target.document.texture.scaleX)
+
+        .effect()
+        .file("jb2a.template_circle.symbol.normal.poison.dark_green")
+        .attachTo(target)
+        .scaleToObject(1 * target.document.texture.scaleX)
+        .delay(500)
+        .fadeIn(500)
+        .fadeOut(500)
+        .randomRotation()
+        .mask(target)
+        .persist()
+        .name(`${target.document.name} DeGnPoi`)
+
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData)
+        })
+
+        .play()
 }
 
 export let deepGnome = {

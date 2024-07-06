@@ -9,7 +9,7 @@ async function aversionToFire({ speaker, actor, token, character, item, args, sc
     if (!typeCheck) return;
     const effectData = {
         'name': "Oblex Spawn: Aversion to Fire",
-        'icon': "icons/magic/fire/flame-burning-creature-skeleton.webp",
+        'icon': "modules/mba-premades/icons/generic/generic_fire.webp",
         'description': `
             <p>${actor.prototypeToken.name} recieved fire damage and has disadvantage on attack rolls and ability checks until the end of its next turn.</p>
         `,
@@ -36,8 +36,6 @@ async function aversionToFire({ speaker, actor, token, character, item, args, sc
     };
     await mba.createEffect(actor, effectData);
 }
-
-
 
 export let oblexSpawn = {
     'aversionToFire': aversionToFire

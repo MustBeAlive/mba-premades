@@ -1,3 +1,7 @@
+
+
+//To do: update, check for bugs, animations
+
 async function cast({speaker, actor, token, character, item, args, scope, workflow}) {
     let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Fizban\'s Platinum Shield: Apply Shield', false);
     if (!featureData) return;

@@ -20,8 +20,5 @@ export async function deathSaves(combat, update, options, userId) {
             }
         );
     }
-    if (actor.system.attributes.hp.value <= 0 && actor.isOwner && actor.system.attributes.death.failure === 3) {
-        await mba.removeCondition(actor, "Unconscious");
-        await mba.addCondition(actor, "Dead", true);
-    }
+    if (actor.system.attributes.hp.value <= 0 && actor.isOwner && actor.system.attributes.death.failure === 3) await mba.addCondition(actor, "Dead", true);
 }

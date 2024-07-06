@@ -2,6 +2,8 @@ import {mba} from "../../../helperFunctions.js";
 import {summons} from "../../generic/summons.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
+    let oldEffect = await mba.findEffect(workflow.actor, "Find Steed");
+    if (oldEffect) await mba.removeEffect(oldEffect);
     let folder = 'Find Steed';
     let actors = game.actors.filter(i => i.folder?.name === folder);
     if (actors.length < 1) {
@@ -14,12 +16,15 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let creatureType = await mba.dialog(`Find Steed: Type`, choicesType, "Choose steed type:");
     if (!creatureType) return;
     let languageOptions = (Array.from(workflow.actor.system.traits.languages.value).map(i => [i.charAt(0).toUpperCase() + i.slice(1), i]));
-    if (!languageOptions) return;
+    if (!languageOptions) {
+        ui.notifications.warn("Caster doesn't know any languages!");
+        return;
+    }
     let languageSelected = new Set(await mba.dialog(`Find Steed: Language`, languageOptions, "Choose language:"));
     if (!languageSelected) return;
     let sourceActorIntelligence = sourceActor[0].system.abilities.int.value;
     if (sourceActorIntelligence < 6) sourceActorIntelligence = 6;
-    let tokenName = `${workflow.token.document.name} Mage Hand`;
+    let tokenName = `${workflow.token.document.name} Steed`;
     let updates = {
         'actor': {
             'name': tokenName,
@@ -70,7 +75,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'fiend': 'fire'
     };
     let animation = defaultAnimations[creatureType];
-    await summons.spawn(sourceActor, updates, 86400, workflow.item, workflow.token, workflow.item.system?.range?.value, { 'spawnAnimation': animation });
+    await summons.spawn(sourceActor, updates, 864000, workflow.item, undefined, undefined, 30, workflow.token, animation);
     let effect = mba.findEffect(workflow.actor, workflow.item.name);
     await mba.updateEffect(effect, updates2);
 }

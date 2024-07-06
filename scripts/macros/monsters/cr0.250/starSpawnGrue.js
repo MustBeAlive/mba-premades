@@ -2,7 +2,7 @@ import {mba} from "../../../helperFunctions.js";
 import {queue} from "../../mechanics/queue.js";
 
 async function auraOfShrieksSource({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let validTargets = Array.from(mba.findNearby(token, 20, null, false, false)).filter(i => mba.raceOrType(i.actor) != "aberration");
+    let validTargets = Array.from(mba.findNearby(token, 20, null, false, false)).filter(t => mba.raceOrType(t.actor) != "aberration");
     if (!validTargets.length) return;
     async function effectMacroEveryTurn() {
         let effect = await mbaPremades.helpers.findEffect(actor, "Aura of Shrieks");

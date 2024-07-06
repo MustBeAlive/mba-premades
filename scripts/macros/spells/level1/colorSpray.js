@@ -9,12 +9,13 @@ export async function colorSpray({ speaker, actor, token, character, item, args,
     let remainingBlindHp = blindHp;
     let blindTarget = [];
     let template = await canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) return;
 
     new Sequence()
 
         .effect()
         .file("jb2a.particles.outward.greenyellow.02.03")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .delay(150)
         .size(2.5, { gridUnits: true })
         .fadeIn(1400, { ease: "easeOutBack" })
@@ -26,8 +27,8 @@ export async function colorSpray({ speaker, actor, token, character, item, args,
 
         .effect()
         .file("jb2a.magic_signs.circle.02.illusion.loop.yellow")
-        .atLocation(token)
-        .attachTo(token)
+        .atLocation(workflow.token)
+        .attachTo(workflow.token)
         .size({ width: 0.4, height: 1 }, { gridUnits: true })
         .rotateTowards(template)
         .mirrorY()
@@ -48,7 +49,7 @@ export async function colorSpray({ speaker, actor, token, character, item, args,
 
             .effect()
             .file("jb2a.energy_strands.range.standard.blue.0{{num}}")
-            .atLocation(token, { offset: { x: 0.2 }, gridUnits: true, local: true })
+            .atLocation(workflow.token, { offset: { x: 0.2 }, gridUnits: true, local: true })
             .delay(500 * (i - 1))
             .stretchTo(template, { randomOffset: 1, gridUnits: true, cacheLocation: true })
             .extraEndDuration(5 * i)
@@ -67,7 +68,7 @@ export async function colorSpray({ speaker, actor, token, character, item, args,
 
             .effect()
             .file("jb2a.energy_strands.range.standard.blue.0{{num}}")
-            .atLocation(token, { offset: { x: 0.2, y: 0.2 }, gridUnits: true, local: true })
+            .atLocation(workflow.token, { offset: { x: 0.2, y: 0.2 }, gridUnits: true, local: true })
             .delay(500 * (i - 1))
             .stretchTo(template, { offset: { y: -1 }, randomOffset: 1, gridUnits: true, cacheLocation: true, local: true })
             .extraEndDuration(5 * i)
@@ -87,7 +88,7 @@ export async function colorSpray({ speaker, actor, token, character, item, args,
 
             .effect()
             .file("jb2a.energy_strands.range.standard.blue.0{{num}}")
-            .atLocation(token, { offset: { x: 0.2, y: -0.2 }, gridUnits: true, local: true })
+            .atLocation(workflow.token, { offset: { x: 0.2, y: -0.2 }, gridUnits: true, local: true })
             .delay(500 * (i - 1))
             .stretchTo(template, { offset: { y: 1 }, randomOffset: 1, gridUnits: true, cacheLocation: true, local: true })
             .extraEndDuration(5 * i)
@@ -122,7 +123,7 @@ export async function colorSpray({ speaker, actor, token, character, item, args,
                 'icon': workflow.item.img,
                 'origin': workflow.item.uuid,
                 'description': `
-                    <p>You are blinded until the end of ${workflow.token.document.name} next turn.</p>
+                    <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.3NxmNhGQQqUDnu73]{Blinded} until the end of ${workflow.token.document.name} next turn.</p>
                 `,
                 'changes': [
                     {
@@ -148,8 +149,8 @@ export async function colorSpray({ speaker, actor, token, character, item, args,
             };
             await mba.createEffect(target.actor, effectData);
             await warpgate.wait(200);
-
-        } else {
+        } 
+        else {
             console.log(`Color Spray Results => Target: ${target.name} | HP: ${targetHpValue} | HP Pool: ${remainingBlindHp - targetHpValue} | Status: Not enough HP remaining`);
             blindTarget.push(`<div class="midi-qol-flex-container"><div>Resisted: </div><div class="midi-qol-target-npc midi-qol-target-name" id="${target.id}"> ${target.document.name}</div><div><img src="${targetImg}" width="30" height="30" style="border:0px"></div></div>`);
         }

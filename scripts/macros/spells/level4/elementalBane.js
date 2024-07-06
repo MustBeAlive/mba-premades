@@ -1,29 +1,25 @@
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
+//To do: animations
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel - 3;
-    let concEffect = await mbaPremades.helpers.findEffect(workflow.actor, 'Concentrating');
+    let concEffect = await mba.findEffect(workflow.actor, 'Concentrating');
     if (workflow.targets.size > ammount) {
-        let selection = await mbaPremades.helpers.selectTarget(workflow.item.name, mbaPremades.constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+        let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
         if (!selection.buttons) {
             ui.notifications.warn('Failed to select right ammount of targets, try again!')
-            await mbaPremades.helpers.removeEffect(concEffect);
+            await mba.removeEffect(concEffect);
             return;
         }
         let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
-        await mbaPremades.helpers.updateTargets(newTargets);
+        await mba.updateTargets(newTargets);
     }
     let targets = Array.from(game.user.targets);
-    const distanceArray = [];
-    for (let i = 0; i < targets.length; i++) {
-        for (let k = i + 1; k < targets.length; k++) {
-            let target1 = fromUuidSync(targets[i].document.uuid).object;
-            let target2 = fromUuidSync(targets[k].document.uuid).object;
-            distanceArray.push(mbaPremades.helpers.getDistance(target1, target2));
-        }
-    }
-    const found = distanceArray.some((distance) => distance > 30);
-    if (found === true) {
-        ui.notifications.warn('Targets cannot be further than 30 ft. of each other!')
-        await mbaPremades.helpers.removeEffect(concEffect);
+    if (mba.within30(targets) === false) {
+        ui.notifications.warn('Targets cannot be further than 30 ft. of each other, try again!')
+        await mba.removeCondition(workflow.actor, "Concentrating");
         return;
     }
     await warpgate.wait(100);
@@ -32,46 +28,42 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             'mba-premades': {
                 'spell': {
                     'elementalBane': {
-                        'dc': mbaPremades.helpers.getSpellDC(workflow.item),
+                        'dc': mba.getSpellDC(workflow.item),
                         'sourceEffectUuid': concEffect.uuid
                     }
                 }
             }
         }
     };
-    await mbaPremades.helpers.updateEffect(concEffect, updates);
-    let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Elemental Bane: Bane', false);
-    if (!featureData) {
-        ui.notifications.warn('Can\'t find item in compenidum! (Elemental Bane: Bane)');
-        return
-    }
+    await mba.updateEffect(concEffect, updates);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Elemental Bane: Save", false);
+    if (!featureData) return;
     let originItem = workflow.item;
     if (!originItem) return;
-    featureData.system.save.dc = mbaPremades.helpers.getSpellDC(originItem);
+    featureData.system.save.dc = mba.getSpellDC(originItem);
     setProperty(featureData, 'mba-premades.spell.castData.school', originItem.system.school);
-    let feature = new CONFIG.Item.documentClass(featureData, {
-        'parent': workflow.actor
-    });
-    let targetUuids = [];
-    for (let i of targets) {
-        targetUuids.push(i.document.uuid);
-    }
-    let [config, options] = mbaPremades.constants.syntheticItemWorkflowOptions(targetUuids);
-    await warpgate.wait(100);
+    let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
+    let targetUuids = Array.from(targets).map(t => t.document.uuid);
+    let [config, options] = constants.syntheticItemWorkflowOptions(targetUuids);
     await game.messages.get(workflow.itemCardId).delete();
     await MidiQOL.completeItemUse(feature, config, options);
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
-    let concEffect = mbaPremades.helpers.findEffect(workflow.actor, 'Concentrating');
+    let concEffect = mba.findEffect(workflow.actor, 'Concentrating');
     let targets = Array.from(workflow.failedSaves);
-    for (let i = 0; i < targets.length; i++) {
-        let target = fromUuidSync(targets[i].document.uuid).object;
-        let selection = await mbaPremades.helpers.dialog('Choose damage type for ' + target.document.name, [['Acid 🧪', 'acid'], ['Cold ❄️', 'cold'], ['Fire 🔥', 'fire'], ['Lightning ⚡', 'lightning'], ['Thunder ☁️', 'thunder']]);
-        if (!selection)
-            return;
-        async function effectMacro() {
+    for (let target of targets) {
+        let choices = [
+            ['Acid 🧪', 'acid'],
+            ['Cold ❄️', 'cold'],
+            ['Fire 🔥', 'fire'],
+            ['Lightning ⚡', 'lightning'],
+            ['Thunder ☁️', 'thunder']
+        ];
+        let selection = await mba.dialog("Elemental Bane", choices, `Choose damage type for <u>${target.document.name}</u>:`);
+        if (!selection) return;
+        async function effectMacroEachTurn() {
             let effect = mbaPremades.helpers.findEffect(actor, 'Elemental Bane');
             let updates = {
                 'flags': {
@@ -84,7 +76,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                     }
                 }
             };
-            await mbaPremades.helpers.updateEffect(effect, updates);
+            if (effect) await mbaPremades.helpers.updateEffect(effect, updates);
         }
         const effectData = {
             'name': 'Elemental Bane',
@@ -108,17 +100,17 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 }
             ],
             'flags': {
+                'effectmacro': {
+                    'onEachTurn': {
+                        'script': mba.functionToString(effectMacroEachTurn)
+                    }
+                },
                 'mba-premades': {
                     'spell': {
                         'elementalBane': {
                             'type': selection,
                             'used': false
                         }
-                    }
-                },
-                'effectmacro': {
-                    'onEachTurn': {
-                        'script': mbaPremades.helpers.functionToString(effectMacro)
                     }
                 },
                 'midi-qol': {
@@ -130,20 +122,20 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 }
             }
         };
-        await mbaPremades.helpers.createEffect(target.actor, effectData);
+        await mba.createEffect(target.actor, effectData);
     }
 }
 
 async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let effect = await mbaPremades.helpers.findEffect(actor, 'Elemental Bane');
+    let effect = await mba.findEffect(actor, 'Elemental Bane');
     if (effect.flags['mba-premades']?.spell?.elementalBane?.used === true) return;
     let type = effect.flags['mba-premades']?.spell?.elementalBane?.type;
     let typeCheck = workflow.damageDetail?.some(d => d.type === type);
     if (!typeCheck) return;
-    let damageFormula = '2d6[' + type + ']';
-    if (workflow.damageItem.critical === true) damageFormula = '4d6[' + type + ']';
+    let damageFormula = `2d6[${type}]`;
+    if (workflow.damageItem.critical === true) damageFormula = `4d6[${type}]`;
     let damageRoll = await new Roll(damageFormula).roll({ 'async': true });
-    await MidiQOL.displayDSNForRoll(damageRoll, 'damageRoll');
+    await MidiQOL.displayDSNForRoll(damageRoll);
     damageRoll.toMessage({
         rollMode: 'roll',
         speaker: { 'alias': name },
@@ -168,7 +160,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
             }
         }
     };
-    await mbaPremades.helpers.updateEffect(effect, updates);
+    await mba.updateEffect(effect, updates);
 }
 
 export let elementalBane = {

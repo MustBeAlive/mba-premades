@@ -1,4 +1,4 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function touch({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.hitTargets.size) return;
@@ -17,9 +17,8 @@ async function touch({ speaker, actor, token, character, item, args, scope, work
 }
 
 async function yellowMuskCast({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let targets = Array.from(workflow.targets).filter(i => mba.raceOrType(i.actor) === "humanoid");
     let newTargets = [];
-    for (let target of targets) newTargets.push(target.document.id);
+    for (let target of Array.from(workflow.targets).filter(i => mba.raceOrType(i.actor) === "humanoid")) newTargets.push(target.document.id);
     if (!newTargets.length) ui.notifications.info("No humanoid targets available");
     mba.updateTargets(newTargets);
 
@@ -68,7 +67,7 @@ async function yellowMuskItem({ speaker, actor, token, character, item, args, sc
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are charmed by a strong musk of Yellow Musk Creeper.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.SVd8xu3mTZMqz8fL]{Charmed} by a strong musk of Yellow Musk Creeper.</p>
             <p>On your turn you do nothing except move as close as you can to the Creeper.</p>
             <p>You can repeat the saving throw at the end of each of your turns, ending the effect on a success.</p>
         `,
@@ -100,6 +99,7 @@ async function yellowMuskItem({ speaker, actor, token, character, item, args, sc
     let targets = Array.from(workflow.failedSaves);
     for (let target of targets) {
         if (mba.checkTrait(target.actor, "ci", "charmed")) continue;
+        if (mba.findEffect(target.actor, "Yellow Musk: Charm")) continue;
         await mba.createEffect(target.actor, effectData);
     }
 }

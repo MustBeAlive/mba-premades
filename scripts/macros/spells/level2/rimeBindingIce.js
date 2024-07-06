@@ -8,7 +8,7 @@ export async function rimeBindingIce({ speaker, actor, token, character, item, a
 
         .effect()
         .file('jb2a.magic_signs.circle.02.evocation.loop.blue')
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(1.25)
         .fadeOut(2000)
         .rotateIn(180, 600, { 'ease': 'easeOutCubic' })
@@ -19,7 +19,7 @@ export async function rimeBindingIce({ speaker, actor, token, character, item, a
 
         .effect()
         .file('jb2a.magic_signs.circle.02.evocation.loop.blue')
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(1.25)
         .duration(1200)
         .fadeIn(200, { 'ease': 'easeOutCirc', 'delay': 500 })
@@ -34,7 +34,7 @@ export async function rimeBindingIce({ speaker, actor, token, character, item, a
 
         .effect()
         .file('jb2a.particles.outward.white.01.02')
-        .atLocation(token)
+        .atLocation(workflow.token)
         .size(1.75, { 'gridUnits': true })
         .delay(500)
         .fadeOut(1000)
@@ -46,7 +46,7 @@ export async function rimeBindingIce({ speaker, actor, token, character, item, a
 
         .effect()
         .file('jb2a.dancing_light.blueteal')
-        .atLocation(token)
+        .atLocation(workflow.token)
         .rotateTowards(template)
         .size(0.9 * workflow.token.document.width, { 'gridUnits': true })
         .duration(5000)
@@ -59,7 +59,7 @@ export async function rimeBindingIce({ speaker, actor, token, character, item, a
 
         .effect()
         .file('jb2a.extras.tmfx.border.circle.outpulse.01.fast')
-        .atLocation(token)
+        .atLocation(workflow.token)
         .rotateTowards(template)
         .size(0.9 * workflow.token.document.width, { 'gridUnits': true })
         .spriteScale({ 'x': 0.5, 'y': 1.0 })
@@ -67,7 +67,7 @@ export async function rimeBindingIce({ speaker, actor, token, character, item, a
 
         .effect()
         .file('jb2a.particles.outward.white.02.03')
-        .atLocation(token, { 'cacheLocation': true })
+        .atLocation(workflow.token, { 'cacheLocation': true })
         .moveTowards(template)
         .size({ 'width': 6, 'height': 6 }, { 'gridUnits': true })
         .delay(250)
@@ -82,7 +82,7 @@ export async function rimeBindingIce({ speaker, actor, token, character, item, a
 
         .effect()
         .file('jb2a.breath_weapons.poison.cone.blue')
-        .atLocation(token, { 'cacheLocation': true })
+        .atLocation(workflow.token, { 'cacheLocation': true })
         .rotateTowards(template, { 'cacheLocation': true })
         .size(6.5, { 'gridUnits': true })
         .duration(5000)
@@ -97,7 +97,7 @@ export async function rimeBindingIce({ speaker, actor, token, character, item, a
 
         .effect()
         .file('jb2a.breath_weapons.poison.cone.blue')
-        .atLocation(token, { 'cacheLocation': true })
+        .atLocation(workflow.token, { 'cacheLocation': true })
         .rotateTowards(template, { 'cacheLocation': true })
         .size(6.5, { 'gridUnits': true })
         .fadeOut(1100)
@@ -122,7 +122,7 @@ export async function rimeBindingIce({ speaker, actor, token, character, item, a
             .wait(300)
 
             .thenDo(async () => {
-                Sequencer.EffectManager.endEffects({ 'name': `${token.document.name} RBI`, 'object': token });
+                Sequencer.EffectManager.endEffects({ 'name': `${token.document.name} RBI` });
             })
 
             .play();
@@ -162,8 +162,7 @@ export async function rimeBindingIce({ speaker, actor, token, character, item, a
         }
     };
     if (!workflow.failedSaves.size) return;
-    let targets = Array.from(workflow.failedSaves);
-    for (let target of targets) {
+    for (let target of Array.from(workflow.failedSaves)) {
         new Sequence()
 
             .effect()

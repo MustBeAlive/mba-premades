@@ -69,33 +69,32 @@ export async function protectionFromPoison({ speaker, actor, token, character, i
 
         .thenDo(async () => {
             await mba.createEffect(target.actor, effectData);
+            await warpgate.wait(100);
+            let effectsFirst = target.actor.effects.filter(i => i.name.includes("Poison") && i.name != "Protection from Poison");
+            if (!effectsFirst.length) return;
+            if (effectsFirst.length < 2) {
+                let poison = await mba.findEffect(target.actor, effectsFirst[0].name);
+                if (!poison) {
+                    ui.notifications.warn(`Unable to find Poison: ${effectsFirst[0].name}`);
+                    return;
+                }
+                await mba.removeEffect(poison);
+            } else {
+                let effects = effectsFirst.filter(i => i.name != "Poisoned" && i.name != "Protection from Poison");
+                if (effects.length < 2) {
+                    let poison = await mba.findEffect(target.actor, effects[0].name);
+                    if (!poison) {
+                        ui.notifications.warn(`Unable to find Poison: ${effects[0].name}`);
+                        return;
+                    }
+                    await mba.removeEffect(poison);
+                } else {
+                    let effectToRemove = await mba.selectEffect("Protection from Poison", effects, "<b>Choose one effect:</b>", false);
+                    if (!effectToRemove) return;
+                    await mba.removeEffect(effectToRemove);
+                }
+            }
         })
 
         .play()
-
-    await warpgate.wait(1500);
-    let effectsFirst = target.actor.effects.filter(i => i.name.includes("Poison") && i.name != "Protection from Poison");
-    if (!effectsFirst.length) return;
-    if (effectsFirst.length < 2) {
-        let poison = await mba.findEffect(target.actor, effectsFirst[0].name);
-        if (!poison) {
-            ui.notifications.warn(`Unable to find Poison: ${effectsFirst[0].name}`);
-            return;
-        }
-        await mba.removeEffect(poison);
-    } else {
-        let effects = effectsFirst.filter(i => i.name != "Poisoned" && i.name != "Protection from Poison");
-        if (effects.length < 2) {
-            let poison = await mba.findEffect(target.actor, effects[0].name);
-            if (!poison) {
-                ui.notifications.warn(`Unable to find Poison: ${effects[0].name}`);
-                return;
-            }
-            await mba.removeEffect(poison);
-        } else {
-            let effectToRemove = await mba.selectEffect("Protection from Poison", effects, "<b>Choose one effect:</b>", false);
-            if (effectToRemove === false) return;
-            await mba.removeEffect(effectToRemove);
-        }
-    }
 }

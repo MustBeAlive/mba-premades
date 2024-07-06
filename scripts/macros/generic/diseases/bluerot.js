@@ -13,7 +13,7 @@ export async function bluerot() {
         return;
     }
     let bluerotRoll = await new Roll("1d4").roll({ 'async': true });
-    await MidiQOL.displayDSNForRoll(bluerotRoll, 'damageRoll');
+    await MidiQOL.displayDSNForRoll(bluerotRoll);
     const description = [`
         <p>This disease targets humanoids. While afflicted with bluerot, a victim grows grotesque blue boils on their face and back. This disease is carried by undead (including the drowned ones in Tammeraut's Fate), and victims most often acquire it through wounds caused by infected creatures.</p>
         <p>The disease's boils manifest in 1d4 hours, causing the victim's Constitution and Charisma scores to decrease by 1d4 each, to a minimum of 3. This is quickly followed by a fever and tingling in the extremities. An infected creature is vulnerable to radiant damage and gains the ability to breathe underwater.</p>
@@ -35,12 +35,12 @@ export async function bluerot() {
             }
             let description = effect.flags['mba-premades']?.description;
             let conRoll = await new Roll("1d4").roll({ 'async': true });
-            MidiQOL.displayDSNForRoll(conRoll, 'damageRoll');
+            MidiQOL.displayDSNForRoll(conRoll);
             let targetCon = token.actor.system.abilities.con.value;
             let conPenalty = conRoll.total;
             while ((targetCon - conPenalty) < 3 && conPenalty > 0) conPenalty--;
             let chaRoll = await new Roll("1d4").roll({ 'async': true });
-            MidiQOL.displayDSNForRoll(chaRoll, 'damageRoll');
+            MidiQOL.displayDSNForRoll(chaRoll);
             let targetCha = token.actor.system.abilities.cha.value;
             let chaPenalty = chaRoll.total;
             while ((targetCha - chaPenalty) < 3 && chaPenalty > 0) chaPenalty--;
@@ -60,10 +60,7 @@ export async function bluerot() {
                 let saveRoll = await mbaPremades.helpers.rollRequest(token, 'save', 'con');
                 if (saveRoll.total < 12) {
                     let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Features', 'Bluerot: Boil Burst', false);
-                    if (!featureData) {
-                        ui.notifications.warn(`Unable to find item in the compenidum! (Bluerot: Boil Burst)`);
-                        return
-                    }
+                    if (!featureData) return;
                     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': token.actor });
                     let [config, options] = mbaPremades.constants.syntheticItemWorkflowOptions([token.document.uuid]);
                     await MidiQOL.completeItemUse(feature, config, options);
@@ -201,11 +198,11 @@ export async function bluerot() {
                 }
             },
             'mba-premades': {
+                'description': description,
                 'isDisease': true,
                 'name': "Bluerot",
                 'lesserRestoration': true,
                 'greaterRestoration': true,
-                'description': description,
                 'roll': bluerotRoll.total
             }
         }
@@ -213,7 +210,7 @@ export async function bluerot() {
     await mba.createEffect(target.actor, effectData);
     ChatMessage.create({
         whisper: ChatMessage.getWhisperRecipients("GM"),
-        content: `<p><b>${target.document.name}</b> is infected with <b>Bluerot</b></p><p>Symptoms will manifest in <b>${bluerotRoll.total} hours</b></p>`,
+        content: `<p><u>${target.document.name}</u> is infected with <b>Bluerot</b></p><p>Symptoms will manifest in <b>${bluerotRoll.total} hours</b></p>`,
         speaker: { actor: null, alias: "Disease Announcer" }
     });
 }

@@ -11,7 +11,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         let choices = [["Yes, light the lantern", "light"], ["No, cancel", false]];
         let selection = await mba.dialog("Hooded Lantern", choices, `Would you like to light a <b>Hooded Lantern</b>?`);
         if (!selection) return;
-        await mbaPremades.macros.hoodedLantern.light({ speaker, actor, token, character, item, args, scope, workflow })
+        await hoodedLantern.light(workflow)
         return;
     }
     let choices = [["Raise Lantern's hood (Bright Light)", "bright"], ["Lower Lantern's hood (Dim Light)", "dim"], ["Extinguish Lantern", "extinguish"]];
@@ -88,12 +88,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
                 .effect()
                 .file("modules/mba-premades/icons/gear/lantern_hooded_open.webp")
-                .atLocation(token)
-                .attachTo(token, { followRotation: true, local: true })
+                .atLocation(workflow.token)
+                .attachTo(workflow.token, { followRotation: true, local: true })
                 .scaleToObject(1, { considerTokenScale: true })
                 .scaleIn(0, 500, { ease: "easeOutElastic" })
                 .scaleOut(0, 250, { ease: "easeOutCubic" })
-                .spriteOffset({ x: 0.35 * token.document.width, y: 0.1 * token.document.width }, { gridUnits: true })
+                .spriteOffset({ x: 0.35 * workflow.token.document.width, y: 0.1 * workflow.token.document.width }, { gridUnits: true })
                 .animateProperty("sprite", "rotation", { from: 15, to: -15, duration: 300, ease: "easeInOutBack" })
                 .animateProperty("sprite", "rotation", { from: 0, to: 30, duration: 250, delay: 200, ease: "easeOutBack" })
                 .loopProperty("sprite", "rotation", { from: 3, to: -3, duration: 1500, ease: "easeOutQuad", pingPong: true })
@@ -181,12 +181,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
                 .effect()
                 .file("modules/mba-premades/icons/gear/lantern_hooded_close.webp")
-                .atLocation(token)
-                .attachTo(token, { followRotation: true, local: true })
+                .atLocation(workflow.token)
+                .attachTo(workflow.token, { followRotation: true, local: true })
                 .scaleToObject(1, { considerTokenScale: true })
                 .scaleIn(0, 500, { ease: "easeOutElastic" })
                 .scaleOut(0, 250, { ease: "easeOutCubic" })
-                .spriteOffset({ x: 0.35 * token.document.width, y: 0.1 * token.document.width }, { gridUnits: true })
+                .spriteOffset({ x: 0.35 * workflow.token.document.width, y: 0.1 * workflow.token.document.width }, { gridUnits: true })
                 .animateProperty("sprite", "rotation", { from: 15, to: -15, duration: 300, ease: "easeInOutBack" })
                 .animateProperty("sprite", "rotation", { from: 0, to: 30, duration: 250, delay: 200, ease: "easeOutBack" })
                 .loopProperty("sprite", "rotation", { from: 3, to: -3, duration: 1500, ease: "easeOutQuad", pingPong: true })
@@ -209,7 +209,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     }
 }
 
-async function light({ speaker, actor, token, character, item, args, scope, workflow }) {
+async function light(workflow) {
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Hooded Lantern` })
     }
@@ -298,12 +298,12 @@ async function light({ speaker, actor, token, character, item, args, scope, work
 
         .effect()
         .file("modules/mba-premades/icons/gear/lantern_hooded_open.webp")
-        .atLocation(token)
-        .attachTo(token, { followRotation: true, local: true })
+        .atLocation(workflow.token)
+        .attachTo(workflow.token, { followRotation: true, local: true })
         .scaleToObject(1, { considerTokenScale: true })
         .scaleIn(0, 500, { ease: "easeOutElastic" })
         .scaleOut(0, 250, { ease: "easeOutCubic" })
-        .spriteOffset({ x: 0.35 * token.document.width, y: 0.1 * token.document.width }, { gridUnits: true })
+        .spriteOffset({ x: 0.35 * workflow.token.document.width, y: 0.1 * workflow.token.document.width }, { gridUnits: true })
         .animateProperty("sprite", "rotation", { from: 15, to: -15, duration: 300, ease: "easeInOutBack" })
         .animateProperty("sprite", "rotation", { from: 0, to: 30, duration: 250, delay: 200, ease: "easeOutBack" })
         .loopProperty("sprite", "rotation", { from: 3, to: -3, duration: 1500, ease: "easeOutQuad", pingPong: true })
@@ -318,17 +318,17 @@ async function light({ speaker, actor, token, character, item, args, scope, work
 
         .play()
 
-    let oilFlaskItem = mba.getItem(workflow.actor, "Oil Flask");
+    let oilFlaskItem = await mba.getItem(workflow.actor, "Oil Flask");
     if (oilFlaskItem.system.quantity > 1) {
         await oilFlaskItem.update({ "system.quantity": oilFlaskItem.system.quantity - 1 });
     } else {
         await workflow.actor.deleteEmbeddedDocuments("Item", [oilFlaskItem.id]);
     }
-    let emptyFlaskItem = mba.getItem(workflow.actor, "Empty Flask");
+    let emptyFlaskItem = await mba.getItem(workflow.actor, "Empty Flask");
     if (!emptyFlaskItem) {
         const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
         if (!itemData) {
-            ui.notifications.warn("Unable to find item in compenidum! (Empty Flask)");
+            ui.notifications.warn("Unable to find item in compendium! (Empty Flask)");
             return
         }
         await workflow.actor.createEmbeddedDocuments("Item", [itemData]);

@@ -4,25 +4,25 @@ export async function skillEmpowerment({ speaker, actor, token, character, item,
     let target = workflow.targets.first();
     let options = Object.entries(CONFIG.DND5E.skills).filter(([key, value]) => target.actor.system.skills[key].value === 1).map(([i, j]) => ({ 'value': i, 'html': j.label }));
     let choices = [];
-    for (let i = 0; i < options.length; i++) {
-        choices.push([options[i].html, options[i].value]);
-    }
-    let selection = await mba.dialog('Choose one of the skills:', choices);
+    for (let i = 0; i < options.length; i++) choices.push([options[i].html, options[i].value]);
+    let selection = await mba.dialog("Skill Empowerment", choices, "Choose skill to gain expertise in:");
     if (!selection) return;
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Skill Empowerment` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Skill Empowerment` })
     }
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
-        'description': "For the next hour, you have expertise in one skill of your choosing.",
+        'description': `
+            <p>For the next hour, you have expertise in one skill of your choosing.</p>
+        `,
         'duration': {
             'seconds': 3600
         },
         'changes': [
             {
-                'key': 'system.skills.' + selection + '.value',
+                'key': `system.skills.${selection}.value`,
                 'mode': 4,
                 'value': 2,
                 'priority': 20

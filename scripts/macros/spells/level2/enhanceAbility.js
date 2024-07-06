@@ -3,26 +3,26 @@ import {mba} from "../../../helperFunctions.js";
 export async function enhanceAbility({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let choices = [
-        ["Bull's Strength (STR)", 'STR'],
-        ["Cat's Grace (DEX)", 'DEX'],
-        ["Bear's Endurance (CON)", 'CON'],
-        ["Fox's Cunning (INT)", 'INT'],
-        ["Owl's Wisdom (WIS)", 'WIS'],
-        ["Eagle's Splendor (CHA)", 'CHA']
+        ["Bull's Strength (STR)", "STR", "modules/mba-premades/icons/spells/level2/enhance_ability1.webp"],
+        ["Cat's Grace (DEX)", "DEX", "modules/mba-premades/icons/spells/level2/enhance_ability2.webp"],
+        ["Bear's Endurance (CON)", "CON", "modules/mba-premades/icons/spells/level2/enhance_ability3.webp"],
+        ["Fox's Cunning (INT)", "INT", "modules/mba-premades/icons/spells/level2/enhance_ability4.webp"],
+        ["Owl's Wisdom (WIS)", "WIS", "modules/mba-premades/icons/spells/level2/enhance_ability5.webp"],
+        ["Eagle's Splendor (CHA)", "CHA", "modules/mba-premades/icons/spells/level2/enhance_ability6.webp"]
     ];
-    let selection = await mba.dialog("Enhance Ability", choices, `<b>Choose ability to enhance:</b>`);
-    if (!selection) {
+    let selection = await mba.selectImage("Enhance Ability", choices, `<b>Choose ability to enhance:</b>`, "both");
+    if (!selection.length) {
         await mba.removeCondition(workflow.actor, "Concentrating");
         return;
     }
     let effectData;
-    if (selection === "STR") {
+    if (selection[0] === "STR") {
         async function effectMacroDel() {
             Sequencer.EffectManager.endEffects({ name: `${token.document.name} Enhance Ability`, object: token })
         }
         effectData = {
             'name': "Enhance Ability: Bull's Strength",
-            'icon': "modules/mba-premades/icons/spells/level2/enhance_ability1.webp",
+            'icon': selection[1],
             'origin': workflow.item.uuid,
             'description': "You have advantage on Strength checks and your carrying capacity doubles",
             'duration': {
@@ -58,13 +58,13 @@ export async function enhanceAbility({ speaker, actor, token, character, item, a
             }
         };
     }
-    else if (selection === "DEX") {
+    else if (selection[0] === "DEX") {
         async function effectMacroDel() {
             Sequencer.EffectManager.endEffects({ name: `${token.document.name} Enhance Ability`, object: token })
         }
         effectData = {
             'name': "Enhance Ability: Cat's Grace",
-            'icon': "modules/mba-premades/icons/spells/level2/enhance_ability2.webp",
+            'icon': selection[1],
             'origin': workflow.item.uuid,
             'description': "You have advantage on Dexterity checks and you don't take damage from falling 20 feet or less if you are not incapacitated",
             'duration': {
@@ -94,15 +94,10 @@ export async function enhanceAbility({ speaker, actor, token, character, item, a
             }
         };
     }
-    else if (selection === "CON") {
+    else if (selection[0] === "CON") {
         let damageFormula = '2d6[temphp]';
         let damageRoll = await new Roll(damageFormula).roll({ 'async': true });
-        await MidiQOL.displayDSNForRoll(damageRoll, 'damageRoll');
-        damageRoll.toMessage({
-            rollMode: 'roll',
-            speaker: { 'alias': name },
-            flavor: "Enhance Ability: Bear's Endurance"
-        });
+        await MidiQOL.displayDSNForRoll(damageRoll);
         async function effectMacroDel() {
             Sequencer.EffectManager.endEffects({ name: `${token.document.name} Enhance Ability`, object: token })
             if (actor.system.attributes.hp.temp > 0) {
@@ -111,7 +106,7 @@ export async function enhanceAbility({ speaker, actor, token, character, item, a
         }
         effectData = {
             'name': "Enhance Ability: Bear's Endurance",
-            'icon': "modules/mba-premades/icons/spells/level2/enhance_ability3.webp",
+            'icon': selection[1],
             'origin': workflow.item.uuid,
             'description': "You have advantage on Constitution checks and you gain 2d6 temporary hit points, which are lost when the spell ends",
             'duration': {
@@ -140,17 +135,15 @@ export async function enhanceAbility({ speaker, actor, token, character, item, a
                 }
             }
         };
-        if (target.actor.system.attributes.hp.temp < damageRoll.total) {
-            await mba.applyDamage([target.actor], damageRoll.total, 'temphp');
-        }
+        await mba.applyWorkflowDamage(workflow.token, damageRoll, "temphp", [target], undefined, workflow.itemCardId);
     }
-    else if (selection === "INT") {
+    else if (selection[0] === "INT") {
         async function effectMacroDel() {
             Sequencer.EffectManager.endEffects({ name: `${token.document.name} Enhance Ability`, object: token })
         }
         effectData = {
             'name': "Enhance Ability: Fox's Cunning",
-            'icon': "modules/mba-premades/icons/spells/level2/enhance_ability4.webp",
+            'icon': selection[1],
             'origin': workflow.item.uuid,
             'description': "You have advantage on Intelligence checks",
             'duration': {
@@ -180,13 +173,13 @@ export async function enhanceAbility({ speaker, actor, token, character, item, a
             }
         };
     }
-    else if (selection === "WIS") {
+    else if (selection[0] === "WIS") {
         async function effectMacroDel() {
             Sequencer.EffectManager.endEffects({ name: `${token.document.name} Enhance Ability`, object: token })
         }
         effectData = {
             'name': "Enhance Ability: Owl's Wisdom",
-            'icon': "modules/mba-premades/icons/spells/level2/enhance_ability5.webp",
+            'icon': selection[1],
             'origin': workflow.item.uuid,
             'description': "You have advantage on Wisdom checks",
             'duration': {
@@ -216,13 +209,13 @@ export async function enhanceAbility({ speaker, actor, token, character, item, a
             }
         };
     }
-    else if (selection === "CHA") {
+    else if (selection[0] === "CHA") {
         async function effectMacroDel() {
             Sequencer.EffectManager.endEffects({ name: `${token.document.name} Enhance Ability`, object: token })
         }
         effectData = {
             'name': "Enhance Ability: Eagle's Splendor",
-            'icon': "modules/mba-premades/icons/spells/level2/enhance_ability6.webp",
+            'icon': selection[1],
             'origin': workflow.item.uuid,
             'description': "You have advantage on Charisma checks",
             'duration': {

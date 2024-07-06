@@ -26,7 +26,6 @@ export async function shove({ speaker, actor, token, character, item, args, scop
     let selection = await mba.dialog("Shove", [['Push 5 ft.', 'move'], ['Knock Prone', 'prone']], `<b>What would you like to do?</b>`);
     if (!selection) return;
     if (selection === 'prone') {
-
         await new Sequence()
 
             .effect()

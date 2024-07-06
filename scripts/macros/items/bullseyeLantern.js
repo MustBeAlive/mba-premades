@@ -11,7 +11,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         let choices = [["Yes, light the lantern", "light"], ["No, cancel", false]];
         let selection = await mba.dialog("Bullseye Lantern", choices, `Would you like to light the <b>Bullseye Lantern</b>?`);
         if (!selection) return;
-        await mbaPremades.macros.bullseyeLantern.light({ speaker, actor, token, character, item, args, scope, workflow })
+        await bullseyeLantern.light(workflow)
         return;
     }
     let choices = [["Pour more Oil (restart duration)", "renew"], ["Extinguish Lantern", "extinguish"]];
@@ -20,13 +20,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     if (selection === "renew") {
         await mba.removeEffect(effect);
         await warpgate.wait(100);
-        await mbaPremades.macros.bullseyeLantern.light({ speaker, actor, token, character, item, args, scope, workflow })
-    } else {
+        await bullseyeLantern.light(workflow)
+    } 
+    else if (selection === "extinguish") {
         await mba.removeEffect(effect);
     }
 }
 
-async function light({ speaker, actor, token, character, item, args, scope, workflow }) {
+async function light(workflow) {
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Bullseye Lantern` })
     }
@@ -114,12 +115,12 @@ async function light({ speaker, actor, token, character, item, args, scope, work
 
         .effect()
         .file("modules/mba-premades/icons/gear/lantern_bullseye.webp")
-        .atLocation(token)
-        .attachTo(token, { followRotation: true, local: true })
+        .atLocation(workflow.token)
+        .attachTo(workflow.token, { followRotation: true, local: true })
         .scaleToObject(.7, { considerTokenScale: true })
         .scaleIn(0, 500, { ease: "easeOutElastic" })
         .scaleOut(0, 250, { ease: "easeOutCubic" })
-        .spriteOffset({ x: 0.0 * token.document.width, y: 0.45 * token.document.width }, { gridUnits: true })
+        .spriteOffset({ x: 0.0 * workflow.token.document.width, y: 0.45 * workflow.token.document.width }, { gridUnits: true })
         .animateProperty("sprite", "rotation", { from: 15, to: -15, duration: 300, ease: "easeInOutBack" })
         .animateProperty("sprite", "rotation", { from: 0, to: 30, duration: 250, delay: 200, ease: "easeOutBack" })
         .loopProperty("sprite", "rotation", { from: 3, to: -3, duration: 1500, ease: "easeOutQuad", pingPong: true })

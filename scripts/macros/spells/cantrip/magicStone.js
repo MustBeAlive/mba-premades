@@ -5,7 +5,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     let choices = [["One Stone", 1], ["Two Stones", 2], ["Three Stones", 3]];
     let ammount = await mba.dialog("Magic Stone", choices, `<b>Choose ammount of stones:</b>`);
     if (!ammount) return;
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Magic Stone: Throw Stone', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Magic Stone: Throw Stone", false);
     if (!featureData) return;
     delete featureData._id;
     const modEval = await new Roll('@mod', item.getRollData()).evaluate({ async: true });
@@ -70,7 +70,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.slingshot")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target)
         .missed(workflow.hitTargets.size === 0)
         .waitUntilFinished(-1000)

@@ -30,7 +30,7 @@ export async function speakWithAnimals({ speaker, actor, token, character, item,
 
         .effect()
         .file("jb2a.markers.light.nopulse.blue")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .size(4, { gridUnits: true })
         .fadeIn(500)
         .fadeOut(1500)
@@ -41,7 +41,7 @@ export async function speakWithAnimals({ speaker, actor, token, character, item,
         .effect()
         .file("jb2a.hunters_mark.loop.02.blue")
         .delay(1000)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(1)
         .scaleIn(0, 3000, { ease: "easeOutCubic" })
         .zIndex(0.1)
@@ -49,8 +49,11 @@ export async function speakWithAnimals({ speaker, actor, token, character, item,
         .duration(6000)
         .filter("ColorMatrix", { hue: 350 })
 
-        .play()
+        .wait(1000)
 
-    await warpgate.wait(1000);
-    await mba.createEffect(workflow.actor, effectData);
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
+        })
+
+        .play()
 }

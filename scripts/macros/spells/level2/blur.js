@@ -56,6 +56,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
+    await warpgate.wait(500);
     await mba.createEffect(workflow.actor, effectData);
 }
 

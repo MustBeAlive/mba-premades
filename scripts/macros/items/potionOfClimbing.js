@@ -90,7 +90,7 @@ export async function potionOfClimbing({ speaker, actor, token, character, item,
     if (!emptyVialItem) {
         const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Vial', false);
         if (!itemData) {
-            ui.notifications.warn("Unable to find item in compenidum! (Empty Vial)");
+            ui.notifications.warn("Unable to find item in compendium! (Empty Vial)");
             return
         }
         await workflow.actor.createEmbeddedDocuments("Item", [itemData]);

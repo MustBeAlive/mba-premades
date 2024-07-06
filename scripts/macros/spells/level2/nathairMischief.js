@@ -115,7 +115,7 @@ async function item(token, actor) {
         await mba.updateEffect(effect, updates);
     }
     let effectRoll = await new Roll("1d4").roll({ 'async': true });
-    await MidiQOL.displayDSNForRoll(effectRoll, 'damageRoll');
+    await MidiQOL.displayDSNForRoll(effectRoll);
     let content;
     let saveAbility;
     let type;
@@ -170,8 +170,8 @@ async function item(token, actor) {
                 'icon': "modules/mba-premades/icons/spells/level2/nathair_mischief.webp",
                 'origin': originUuid,
                 'description': `
-                <p>You are charmed until the start of Nathair's Mischief caster's next turn.</p>
-            `,
+                    <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.SVd8xu3mTZMqz8fL]{Charmed} until the start of Nathair's Mischief caster's next turn.</p>
+                `,
                 'changes': [
                     {
                         'key': "macro.CE",
@@ -221,8 +221,8 @@ async function item(token, actor) {
                 'icon': "modules/mba-premades/icons/spells/level2/nathair_mischief.webp",
                 'origin': originUuid,
                 'description': `
-                <p>You are blinded until the start of Nathair's Mischief caster's next turn.</p>
-            `,
+                    <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.3NxmNhGQQqUDnu73]{Blinded} until the start of Nathair's Mischief caster's next turn.</p>
+                `,
                 'changes': [
                     {
                         'key': "macro.CE",
@@ -273,8 +273,8 @@ async function item(token, actor) {
                 'icon': "modules/mba-premades/icons/spells/level2/nathair_mischief.webp",
                 'origin': originUuid,
                 'description': `
-                <p>You are incapacitated from giggling and must use <b>all of your movement</b> to <b>move in a random direction</b>.</p>
-            `,
+                    <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.LCcuJNMKrGouZbFJ]{Incapacitated} from giggling and must use <u>all of your movement to move in a random direction</u>.</p>
+                `,
                 'changes': [
                     {
                         'key': "macro.CE",

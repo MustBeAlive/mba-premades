@@ -14,7 +14,7 @@ async function touch({ speaker, actor, token, character, item, args, scope, work
         await mbaPremades.helpers.removeEffect(effect);
     }
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Fire Elemental Igniting Touch` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} FiEl IgT` })
     }
     const effectData = {
         'name': "Fire Elemental: Igniting Touch",
@@ -79,7 +79,7 @@ async function touch({ speaker, actor, token, character, item, args, scope, work
         .fadeOut(1000)
         .mask()
         .persist()
-        .name(`${target.document.name} Fire Elemental Igniting Touch`)
+        .name(`${target.document.name} FiEl IgT`)
 
         .thenDo(async () => {
             await mba.createEffect(target.actor, effectData);
@@ -93,10 +93,7 @@ async function fireFormCast({ speaker, actor, token, character, item, args, scop
     if (!(workflow.item.system.actionType === 'mwak' || workflow.item.system.actionType === 'msak')) return;
     if (mba.getDistance(workflow.token, token) > 5) return;
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Monster Features', 'Fire Elemental: Fire Form', false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Fire Elemental: Fire Form)");
-        return;
-    }
+    if (!featureData) return;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': token.actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([workflow.token.document.uuid]);
     await warpgate.wait(100);
@@ -145,7 +142,7 @@ async function fireFormItem({ speaker, actor, token, character, item, args, scop
             await mbaPremades.helpers.removeEffect(effect);
         }
         async function effectMacroDel() {
-            Sequencer.EffectManager.endEffects({ name: `${token.document.name} Fire Elemental Igniting Touch` })
+            Sequencer.EffectManager.endEffects({ name: `${token.document.name} FiEl IgT` })
         }
         const effectData = {
             'name': "Fire Elemental: Igniting Touch",
@@ -210,7 +207,7 @@ async function fireFormItem({ speaker, actor, token, character, item, args, scop
             .fadeOut(1000)
             .mask()
             .persist()
-            .name(`${target.document.name} Fire Elemental Igniting Touch`)
+            .name(`${target.document.name} FiEl IgT`)
 
             .thenDo(async () => {
                 await mba.createEffect(target.actor, effectData);

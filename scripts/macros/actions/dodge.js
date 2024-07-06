@@ -8,7 +8,7 @@ export async function dodge({ speaker, actor, token, character, item, args, scop
         await mbaPremades.helpers.removeEffect(effect);
     }
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Dodge` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Dodge` })
     }
     let effectData = {
         'name': workflow.item.name,

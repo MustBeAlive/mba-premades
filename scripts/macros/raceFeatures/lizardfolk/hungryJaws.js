@@ -26,7 +26,7 @@ export async function hungryJaws({ speaker, actor, token, character, item, args,
         .effect()
         .file("jb2a.energy_strands.range.multiple.dark_red.01")
         .attachTo(target)
-        .stretchTo(token)
+        .stretchTo(workflow.token)
         .delay(300)
         .playIf(() => {
             return workflow.hitTargets.size

@@ -3,8 +3,9 @@ import {queue} from "../../mechanics/queue.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
+    let saveDC = mba.getSpellDC(workflow.item);
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} RoE`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} RayOE` })
     };
     const effectData = {
         'name': workflow.item.name,
@@ -21,7 +22,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': `turn=end, saveAbility=con, saveDC=${mba.getSpellDC(workflow.item)}, saveMagic=true, name=Ray of Enfeeblement: Turn End, killAnim=true`,
+                'value': `turn=end, saveAbility=con, saveDC=${saveDC}, saveMagic=true, name=Ray of Enfeeblement: Turn End (DC${saveDC}), killAnim=true`,
                 'priority': 20
             },
             {
@@ -51,7 +52,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.scorching_ray.grey.01")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target)
         .filter("ColorMatrix", { brightness: 0 })
         .missed(!workflow.hitTargets.size)
@@ -61,7 +62,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.scorching_ray.grey.01")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target)
         .filter("ColorMatrix", { brightness: 0 })
         .repeats(3, 800)
@@ -79,7 +80,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .fadeIn(500)
         .fadeOut(1000)
         .persist()
-        .name(`${target.document.name} RoE`)
+        .name(`${target.document.name} RayOE`)
         .playIf(() => {
             return workflow.hitTargets.size
         })

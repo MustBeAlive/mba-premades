@@ -13,7 +13,7 @@ export async function chromaticOrb({ speaker, actor, token, character, item, arg
 
             .effect()
             .file("jb2a.ranged.03.projectile.01.yellow")
-            .attachTo(token)
+            .attachTo(workflow.token)
             .stretchTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
 
             .play()
@@ -31,7 +31,6 @@ export async function chromaticOrb({ speaker, actor, token, character, item, arg
         ['Thunder', 'thunder', "modules/mba-premades/icons/spells/level1/chromatic_orb_thunder.webp"]
     ];
     let selection = await mba.selectImage('Chromatic Orb', choices, `<b>Choose damage type:</b>`, "both");
-    console.log(selection);
     if (!selection) {
         queue.remove(workflow.item.uuid);
         return;
@@ -80,7 +79,7 @@ export async function chromaticOrb({ speaker, actor, token, character, item, arg
 
         .effect()
         .file(animation1)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target)
         .filter("ColorMatrix", { hue: hue1 })
         .waitUntilFinished(-900)

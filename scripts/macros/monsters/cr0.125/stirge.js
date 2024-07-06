@@ -33,10 +33,7 @@ async function attach({ speaker, actor, token, character, item, args, scope, wor
         let target = await fromUuid(effect.flags['mba-premades']?.feature?.bloodDrain?.targetUuid);
         let total = effect.flags['mba-premades']?.feature?.bloodDrain?.total;
         let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Monster Features', 'Blood Drain: Turn Start', false);
-        if (!featureData) {
-            ui.notifications.warn("Can't find item in compenidum! (Blood Drain: Turn Start)");
-            return
-        }
+        if (!featureData) return;
         let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
         let [config, options] = mbaPremades.constants.syntheticItemWorkflowOptions([target.uuid]);
         new Sequence()

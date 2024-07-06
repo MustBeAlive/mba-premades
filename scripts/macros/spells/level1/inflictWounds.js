@@ -5,7 +5,7 @@ export async function inflictWounds({ speaker, actor, token, character, item, ar
 
         .effect()
         .file("jb2a.unarmed_strike.magical.01.green")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target)
 
         .effect()

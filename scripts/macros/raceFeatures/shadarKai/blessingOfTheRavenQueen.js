@@ -118,7 +118,11 @@ export async function blessingOfTheRavenQueen({ speaker, actor, token, character
         .name(`${workflow.token.document.name} BotRQ`)
 
         .thenDo(async () => {
-            if (level >= 3) await mba.createEffect(workflow.actor, effectData);
+            if (level >= 3) {
+                let oldEffect = await mba.findEffect(workflow.actor, "Blessing of the Raven Queen");
+                if (oldEffect) await mba.removeEffect(oldEffect);
+                await mba.createEffect(workflow.actor, effectData);
+            }
         })
 
         .play();

@@ -1,6 +1,8 @@
 import {mba} from "../../../helperFunctions.js";
 import {queue} from "../../mechanics/queue.js";
 
+// To do: everything, I guess
+
 async function magicalGift({ speaker, actor, token, character, item, args, scope, workflow }) {
     let choices = [
         ['Charm of Nine Lives', 'nine'],

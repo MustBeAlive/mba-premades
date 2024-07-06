@@ -1,5 +1,5 @@
-import { mba } from "../../../helperFunctions.js";
-import { constants } from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+import {constants} from "../../generic/constants.js";
 
 export async function animalFriendship({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel;
@@ -15,29 +15,27 @@ export async function animalFriendship({ speaker, actor, token, character, item,
         ui.notifications.info("No valid targets selected!");
         return false;
     }
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Animal Friendship: Save', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Animal Friendship: Save", false);
     if (!featureData) return;
     delete featureData._id;
     let originItem = workflow.item;
     if (!originItem) return;
     featureData.system.save.dc = mba.getSpellDC(originItem);
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
-    let targetUuids = [];
-    for (let target of targets) targetUuids.push(target.document.uuid);
+    let targetUuids = Array.from(targets).map(t => t.document.uuid);
     let [config, options] = constants.syntheticItemWorkflowOptions(targetUuids);
     await game.messages.get(workflow.itemCardId).delete();
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow.failedSaves.size) return;
-    let failedTargets = Array.from(featureWorkflow.failedSaves);
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Animal Friendship`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} AniFri` })
     };
     const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are charmed by ${workflow.token.document.name} and his companions.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.SVd8xu3mTZMqz8fL]{Charmed} by ${workflow.token.document.name} and his companions.</p>
             <p>If any of them does to you any harm, the spell ends.</p>
         `,
         'duration': {
@@ -71,7 +69,7 @@ export async function animalFriendship({ speaker, actor, token, character, item,
             }
         }
     };
-    for (let target of failedTargets) {
+    for (let target of Array.from(featureWorkflow.failedSaves)) {
         new Sequence()
 
             .effect()
@@ -89,7 +87,7 @@ export async function animalFriendship({ speaker, actor, token, character, item,
             .fadeOut(1000)
             .mask()
             .persist()
-            .name(`${target.document.name} Animal Friendship`)
+            .name(`${target.document.name} AniFri`)
 
             .thenDo(async () => {
                 await mba.createEffect(target.actor, effectData)

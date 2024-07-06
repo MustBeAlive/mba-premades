@@ -71,7 +71,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         }
     });
     if (!workflow.failedSaves.size) return;
-    for (let i of Array.from(workflow.failedSaves)) await mba.addCondition(i.actor, 'Prone');
+    for (let target of Array.from(workflow.failedSaves)) await mba.addCondition(target.actor, 'Prone');
 }
 
 async function enter(template, token) {
@@ -107,7 +107,7 @@ async function trigger(token, trigger) {
     }
     let originItem = await fromUuid(trigger.itemUuid);
     if (!originItem) return;
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Grease: Fall', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Grease: Fall", false);
     if (!featureData) return;
     delete featureData._id;
     featureData.system.save.dc = trigger.saveDC;

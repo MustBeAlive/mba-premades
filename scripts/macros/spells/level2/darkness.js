@@ -1,3 +1,4 @@
+import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 import {queue} from "../../mechanics/queue.js";
 
@@ -11,15 +12,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 'spell': {
                     'darkness': true
                 }
-            },
-            'walledtemplates': {
-                'hideBorder': "alwaysHide",
-                'wallRestriction': 'move',
-                'wallsBlock': 'recurse'
             }
         }
     });
-    let attachToken = await mba.dialog('Darkness', [['Yes', true], ['No', false]], `<b>Attach template to yourself?</b>`) || false;
+    let attachToken = await mba.dialog('Darkness', constants.yesNo, `<b>Attach template to yourself?</b>`) || false;
     if (attachToken) {
         let tokenObject = workflow.token;
         await template.update(
@@ -37,37 +33,37 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .file(`jb2a.magic_signs.circle.02.evocation.complete.red`)
         .size(6, { gridUnits: true })
         .fadeIn(600)
-        .opacity(1)
-        .rotateIn(180, 600, { ease: "easeOutCubic" })
         .scaleIn(0, 600, { ease: "easeOutCubic" })
+        .rotateIn(180, 600, { ease: "easeOutCubic" })
+        .opacity(1)
         .belowTokens()
         .playbackRate(1.2)
 
         .effect()
         .file("jaamod.smoke.poison_cloud")
         .attachTo(template)
-        .scaleIn(0, 1500, { ease: "easeOutCubic" })
-        .scaleOut(0, 1500, { ease: "linear" })
+        .size(6, { gridUnits: true })
+        .delay(1500)
         .fadeIn(200)
         .fadeOut(1000)
-        .zIndex(2)
-        .delay(1500)
-        .filter("ColorMatrix", { brightness: 0 })
+        .scaleIn(0, 1500, { ease: "easeOutCubic" })
+        .scaleOut(0, 1500, { ease: "linear" })
         .playbackRate(0.7)
-        .size(6, { gridUnits: true })
+        .zIndex(2)
+        .filter("ColorMatrix", { brightness: 0 })
 
         .effect()
-        .delay(2500)
         .file("jb2a.darkness.black")
         .attachTo(template)
+        .size(6.8, { gridUnits: true })
+        .delay(2500)
         .fadeIn(3000)
         .fadeOut(1500)
+        .scaleOut(0, 1500, { ease: "linear" })
+        .scaleIn(0, 5000, { ease: "easeOutCubic" })
         .opacity(0.7)
         .zIndex(1)
         .randomRotation()
-        .scaleOut(0, 1500, { ease: "linear" })
-        .scaleIn(0, 5000, { ease: "easeOutCubic" })
-        .size(6.8, { gridUnits: true })
         .persist()
         .name(`Darkness`)
 
@@ -118,17 +114,17 @@ async function hook(workflow) {
     if (!queueSetup) return;
     if (sourceCanSeeTarget && !targetCanSeeSource) {
         workflow.advantage = true;
-        workflow.advReminderAttackAdvAttribution.add("ADV:Darkness (target is unable to see you)");
+        workflow.advReminderAttackAdvAttribution.add("ADV:Heavily Obscured (target is unable to see you)");
     }
     if (!sourceCanSeeTarget && targetCanSeeSource) {
         workflow.disadvantage = true;
         workflow.flankingAdvantage = false;
-        workflow.advReminderAttackAdvAttribution.add("DIS:Darkness (you are unable to see target)");
+        workflow.advReminderAttackAdvAttribution.add("DIS:Heavily Obscured (you are unable to see target)");
     }
     if (!sourceCanSeeTarget && !targetCanSeeSource) {
         //workflow.advantage = true; Homeruled, uncomment to fix
         workflow.disadvantage = true;
-        workflow.advReminderAttackAdvAttribution.add("DIS:Darkness (you and target are unable to see eachother)");
+        workflow.advReminderAttackAdvAttribution.add("DIS:Heavily Obscured (you and target are unable to see eachother)");
     }
     queue.remove(workflow.item.uuid);
 }

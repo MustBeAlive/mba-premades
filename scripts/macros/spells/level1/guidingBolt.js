@@ -3,7 +3,7 @@ import {mba} from "../../../helperFunctions.js";
 export async function guidingBolt({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Guiding Bolt`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} GuiBol` })
     }
     const effectData = {
         'name': workflow.item.name,
@@ -46,7 +46,7 @@ export async function guidingBolt({ speaker, actor, token, character, item, args
         new Sequence()
 
             .effect()
-            .atLocation(token)
+            .atLocation(workflow.token)
             .file(`jb2a.markers.light.complete.yellow`)
             .scaleToObject(2)
             .scaleIn(0, 600, { ease: "easeOutCubic" })
@@ -59,7 +59,7 @@ export async function guidingBolt({ speaker, actor, token, character, item, args
 
             .effect()
             .file("jb2a.guiding_bolt.01.yellow")
-            .attachTo(token)
+            .attachTo(workflow.token)
             .stretchTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
             .scaleIn(0, 500, { ease: "easeOutCubic" })
             .zIndex(2)
@@ -72,7 +72,7 @@ export async function guidingBolt({ speaker, actor, token, character, item, args
     new Sequence()
 
         .effect()
-        .atLocation(token)
+        .atLocation(workflow.token)
         .file(`jb2a.markers.light.complete.yellow`)
         .scaleToObject(2)
         .scaleIn(0, 600, { ease: "easeOutCubic" })
@@ -85,7 +85,7 @@ export async function guidingBolt({ speaker, actor, token, character, item, args
 
         .effect()
         .file("jb2a.guiding_bolt.01.yellow")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target, { attachTo: true })
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .zIndex(2)
@@ -101,7 +101,7 @@ export async function guidingBolt({ speaker, actor, token, character, item, args
         .belowTokens()
         .zIndex(1)
         .persist()
-        .name(`${target.document.name} Guiding Bolt`)
+        .name(`${target.document.name} GuiBol`)
 
         .effect()
         .from(target)
@@ -123,7 +123,7 @@ export async function guidingBolt({ speaker, actor, token, character, item, args
         .zIndex(1)
         .mask()
         .persist()
-        .name(`${target.document.name} Guiding Bolt`)
+        .name(`${target.document.name} GuiBol`)
 
         .thenDo(async () => {
             await mba.createEffect(target.actor, effectData);
@@ -141,7 +141,7 @@ export async function guidingBolt({ speaker, actor, token, character, item, args
         .randomRotation()
         .mask()
         .persist()
-        .name(`${target.document.name} Guiding Bolt`)
+        .name(`${target.document.name} GuiBol`)
 
         .play();
 }

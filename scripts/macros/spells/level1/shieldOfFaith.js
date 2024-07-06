@@ -13,7 +13,7 @@ export async function shieldOfFaith({ speaker, actor, token, character, item, ar
             .waitUntilFinished(-500)
 
             .thenDo(function () {
-                Sequencer.EffectManager.endEffects({ name: `${token.document.name} Shield of Faith`, object: token })
+                Sequencer.EffectManager.endEffects({ name: `${token.document.name} ShOfFa` })
             })
 
             .play()
@@ -72,7 +72,7 @@ export async function shieldOfFaith({ speaker, actor, token, character, item, ar
         .playbackRate(0.8)
         .zIndex(5)
         .persist()
-        .name(`${target.document.name} Shield of Faith`)
+        .name(`${target.document.name} ShOfFa`)
 
         .thenDo(async () => {
             await mba.createEffect(target.actor, effectData)

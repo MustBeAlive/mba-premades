@@ -53,8 +53,10 @@ async function autoPronePush({ speaker, actor, token, character, item, args, sco
         .delay(850)
 
         .thenDo(async () => {
-            if (!mba.findEffect(target.actor, "Prone")) await mba.addCondition(target.actor, 'Prone', false, null);
-            await mba.pushToken(workflow.token, target, 10);
+            if (!mba.findEffect(target.actor, "Prone")) {
+                await mba.addCondition(target.actor, 'Prone', false, null);
+                await mba.pushToken(workflow.token, target, 10);
+            }
         })
 
         .play();

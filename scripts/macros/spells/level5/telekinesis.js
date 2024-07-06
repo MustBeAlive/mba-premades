@@ -1,63 +1,57 @@
+import {mba} from "../../../helperFunctions.js";
+
+// To do: fix distance calculation (horisonal movement); animations;
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Telekinesis: Push Creature', false);
+    let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Telekinesis: Move Creature', false);
     if (!featureData) return;
     async function effectMacroDel() {
-        await warpgate.revert(token.document, 'Telekinesis: Push Creature');
+        await warpgate.revert(token.document, "Telekinesis");
     }
     async function effectMacroStart() {
         let effect = mbaPremades.helpers.findEffect(actor, "Telekinesis");
-        let targetEffectUuid = effect.flags['mba-premades']?.spell?.telekinesis?.targetEffectUuid;
-        if (!targetEffectUuid) return;
-        let targetEffect = await fromUuid(targetEffectUuid);
+        let targetEffect = await fromUuid(effect.flags['mba-premades']?.spell?.telekinesis?.targetEffectUuid);
         if (!targetEffect) return;
-        let choices = [['Yes', 'yes'],['No', 'no']];
-        let selection = await mbaPremades.helpers.dialog('Use action to keep the creature restrained?', choices);
-        if (!selection) return;
-        switch (selection) {
-            case 'yes': {
-                let targetUuid = effect.flags['mba-premades']?.spell?.telekinesis?.targetUuid;
-                let target = await fromUuidSync(targetUuid).object;
-                let spellAbility = actor.system.attributes.spellcasting;
-                let casterRoll = await mbaPremades.helpers.rollRequest(token, 'abil', spellAbility);
-                let targetRoll = await mbaPremades.helpers.rollRequest(target, 'abil', 'str');
-                if (casterRoll.total <= targetRoll.total) {
-                    let updates = {
-                        'flags': {
-                            'dae': {
-                                'specialDuration': ['turnEndSource']
-                            }
-                        }
-                    };
-                    await mbaPremades.helpers.updateEffect(targetEffect, updates)
-                }
-                break;
-            }
-            case 'no': {
-                let updates = {
-                    'flags': {
-                        'dae': {
-                            'specialDuration': ['turnEndSource']
-                        }
+        let selection = await mbaPremades.helpers.dialog('Use action to keep the creature restrained?', mbaPremades.constants.yesNo, "<b></b>");
+        if (!selection) {
+            let updates = {
+                'flags': {
+                    'dae': {
+                        'specialDuration': ['turnEndSource']
                     }
-                };
-                await mbaPremades.helpers.updateEffect(targetEffect, updates)
-            }
+                }
+            };
+            await mbaPremades.helpers.updateEffect(targetEffect, updates)
         }
+        let targetUuid = effect.flags['mba-premades']?.spell?.telekinesis?.targetUuid;
+        let target = await fromUuidSync(targetUuid).object;
+        let spellAbility = token.actor.system.attributes.spellcasting;
+        let casterRoll = await mbaPremades.helpers.rollRequest(token, 'abil', spellAbility);
+        let targetRoll = await mbaPremades.helpers.rollRequest(target, 'abil', 'str');
+        if (casterRoll.total > targetRoll.total) return;
+        let updates = {
+            'flags': {
+                'dae': {
+                    'specialDuration': ['turnEndSource']
+                }
+            }
+        };
+        await mbaPremades.helpers.updateEffect(targetEffect, updates)
     };
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
         'duration': {
             'seconds': 600
         },
-        'origin': workflow.item.uuid,
         'flags': {
             'effectmacro': {
                 'onTurnStart': {
-                    'script': mbaPremades.helpers.functionToString(effectMacroStart)
+                    'script': mba.functionToString(effectMacroStart)
                 },
                 'onDelete': {
-                    'script': mbaPremades.helpers.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'midi-qol': {
@@ -81,138 +75,139 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     };
     let options = {
         'permanent': false,
-        'name': featureData.name,
-        'description': featureData.name
+        'name': "Telekinesis",
+        'description': "Telekinesis"
     };
     await warpgate.mutate(workflow.token.document, updates, {}, options);
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    let effect = mbaPremades.helpers.findEffect(workflow.actor, "Telekinesis");
-    let size = await mbaPremades.helpers.getSize(target.actor);
-    if (size > 4) {
+    let effect = mba.findEffect(workflow.actor, "Telekinesis");
+    if (mba.getSize(target.actor) > 4) {
         ui.notifications.warn("Target is too big to push!");
         return;
     }
     let spellAbility = workflow.actor.system.attributes.spellcasting;
-    let casterRoll = await mbaPremades.helpers.rollRequest(workflow.token, 'abil', spellAbility);
-    let targetRoll = await mbaPremades.helpers.rollRequest(target, 'abil', 'str');
+    let casterRoll = await mba.rollRequest(workflow.token, 'abil', spellAbility);
+    let targetRoll = await mba.rollRequest(target, 'abil', 'str');
     if (casterRoll.total <= targetRoll.total) return;
     let distance = 30;
     while (distance > 0) {
-        let choices = [["Distance left: " + distance + " ft.", 'nope'], ['Horisontally', 'hor'], ['Vertically', 'ver'], ['Stop Moving', 'stop']];
-        let selection = await mbaPremades.helpers.dialog('Which way do you wish move the target?', choices);
+        let choices = [
+            ['Horisontally', 'hor'],
+            ['Vertically', 'ver'],
+            ['Stop Moving', 'stop']
+        ];
+        let selection = await mba.dialog("Telekinesis", choices, `<p>Which way would you like to move the <u>${target.document.name}</u>?</p><p>Distance left: ${distance} feet</p>`);
         if (!selection) return;
-        switch (selection) {
-            case 'hor': {
-                let maxRange = distance;
-                let icon = target.document.texture.src;
-                let interval = target.document.width % 2 === 0 ? 1 : -1;
-                let oldCenter = target.center;
-                let position = await mbaPremades.helpers.aimCrosshair(target, maxRange, icon, interval, target.document.width);
-                if (position.cancelled) return;
-                let newCenter = canvas.grid.getSnappedPosition(position.x - target.w / 2, position.y - target.h / 2, 1);
-                let targetUpdate = {
-                    'token': {
-                        'x': newCenter.x,
-                        'y': newCenter.y
-                    }
-                };
-                let options = {
-                    'permanent': true,
-                    'name': workflow.item.name,
-                    'description': workflow.item.name,
-                    'updateOpts': { 'token': { 'animate': true } }
-                };
-                let diff = canvas.grid.measureDistance(oldCenter, newCenter, { 'gridSpaces': true });
-                await warpgate.mutate(target.document, targetUpdate, {}, options);
-                distance -= diff;
-                if (distance < 5) distance = 0;
-                break;
-            }
-            case 'ver': {
-                await new Promise((resolve) => {
-                    new Dialog({
-                        title: `Set elevation (Max: ${distance})`,
-                        content: `<input id="ammount" type="number" value=""/>`,
-                        buttons: {
-                            up: {
-                                label: "Up",
-                                callback: async (html) => {
-                                    let targetElevation = target.document.elevation;
-                                    let change = +Math.abs(ammount.value);
-                                    if (change > distance) resolve(distance);
-                                    let newElevation = targetElevation + change;
-                                    let elevationUpdate = {
-                                        'token': {
-                                            'elevation': newElevation
-                                        }
-                                    };
-                                    distance -= change;
-                                    if (distance < 5) distance = 0;
-                                    await warpgate.mutate(target.document, elevationUpdate, {}, { permanent: true });
-                                    resolve(distance);
-                                },
-                            },
-                            down: {
-                                label: "Down",
-                                callback: async (html) => {
-                                    let targetElevation = target.document.elevation;
-                                    let change = +Math.abs(ammount.value);
-                                    if (change > distance) resolve(distance);
-                                    let newElevation = targetElevation - change;
-                                    if (newElevation < 0) resolve(distance);
-                                    let elevationUpdate = {
-                                        'token': {
-                                            'elevation': newElevation
-                                        }
-                                    };
-                                    distance -= change;
-                                    if (distance < 5) distance = 0;
-                                    await warpgate.mutate(target.document, elevationUpdate, {}, { permanent: true });
-                                    resolve(distance);
-                                },
-                            },
-                            cancel: {
-                                label: "Cancel",
-                                callback: async (html) => {
-                                    resolve(distance);
-                                },
+        if (selection === "hor") {
+            let oldCenter = target.center;
+            let interval = target.document.width % 2 === 0 ? 1 : -1;
+            let position = await mba.aimCrosshair(target, distance, workflow.item.img, interval, target.document.width);
+            if (position.cancelled) return;
+            let newCenter = canvas.grid.getSnappedPosition(position.x - target.w / 2, position.y - target.h / 2, 1);
+            let targetUpdate = {
+                'token': {
+                    'x': newCenter.x,
+                    'y': newCenter.y
+                }
+            };
+            let options = {
+                'permanent': true,
+                'name': workflow.item.name,
+                'description': workflow.item.name,
+            };
+            //let diff = canvas.grid.measureDistance(oldCenter, newCenter, { 'gridSpaces': true });
+            let ray = new Ray(oldCenter, newCenter);
+            let diff = canvas.grid.measureDistances([{ ray }], { 'gridSpaces': true });//[0];
+            console.log(diff);
+            await warpgate.mutate(target.document, targetUpdate, {}, options);
+            //distance -= diff; debugging
+            if (distance < 5) distance = 0;
+        }
+        else if (selection === "ver") {
+            await new Promise((resolve) => {
+                new Dialog({
+                    title: `Set elevation (Max: ${distance})`,
+                    content: `<input id="ammount" type="number" value=""/>`,
+                    buttons: {
+                        up: {
+                            label: "Up",
+                            callback: async () => {
+                                let targetElevation = target.document.elevation;
+                                let change = +Math.abs(ammount.value);
+                                if (change > distance) resolve(distance);
+                                let newElevation = targetElevation + change;
+                                let elevationUpdate = {
+                                    'token': {
+                                        'elevation': newElevation
+                                    }
+                                };
+                                //distance -= change; debugging
+                                if (distance < 5) distance = 0;
+                                await warpgate.mutate(target.document, elevationUpdate, {}, { permanent: true });
+                                resolve(distance);
                             },
                         },
-                        default: "Apply"
-                    }).render(true);
-                });
-                break;
-            }
-            case 'stop': {
-                distance = 0;
-                break;
-            }
+                        down: {
+                            label: "Down",
+                            callback: async () => {
+                                let targetElevation = target.document.elevation;
+                                let change = +Math.abs(ammount.value);
+                                if (change > distance) resolve(distance);
+                                let newElevation = targetElevation - change;
+                                if (newElevation < 0) resolve(distance);
+                                let elevationUpdate = {
+                                    'token': {
+                                        'elevation': newElevation
+                                    }
+                                };
+                                //distance -= change; debugging
+                                if (distance < 5) distance = 0;
+                                await warpgate.mutate(target.document, elevationUpdate, {}, { permanent: true });
+                                resolve(distance);
+                            },
+                        },
+                        cancel: {
+                            label: "Cancel",
+                            callback: async (html) => {
+                                resolve(distance);
+                            },
+                        },
+                    },
+                    default: "Apply"
+                }).render(true);
+            });
         }
+        else if (selection === "stop") distance = 0;
     }
     async function effectMacroElev() {
-        const tokenDoc = token.document;
-        let elevation = tokenDoc.elevation;
+        let elevation = token.document.elevation;
         if (elevation <= 0) return;
         let calc = Math.floor(elevation / 10);
         if (calc < 1) {
-            tokenDoc.update({ "elevation": 0 })
-            await mbaPremades.helpers.addCondition(actor, 'Prone');
+            token.document.update({ "elevation": 0 })
+            if (!mbaPremades.helpers.findEffect(token.actor, "Prone")) await mbaPremades.helpers.addCondition(token.actor, 'Prone');
             return;
         }
         let damageFormula = calc + "d6[bludgeoning]";
         let damageRoll = await new Roll(damageFormula).roll({ async: true });
-        damageRoll.toMessage({ rollMode: 'roll', speaker: { 'alias': name }, flavor: 'Fall Damage' });
+        damageRoll.toMessage({ 
+            rollMode: 'roll',
+            speaker: { 'alias': name },
+            flavor: 'Fall Damage'
+        });
         await mbaPremades.helpers.applyDamage([token], damageRoll.total, 'bludgeoning');
-        await mbaPremades.helpers.addCondition(actor, 'Prone');
-        tokenDoc.update({ "elevation": 0 })
+        if (!mbaPremades.helpers.findEffect(actor, "Prone")) await mbaPremades.helpers.addCondition(actor, 'Prone');
+        token.document.update({ "elevation": 0 })
     }
     let effectData = {
         'name': "Telekinesis: Restrained",
         'icon': "modules/mba-premades/icons/spells/level5/telekinesis.webp",
-        'description': "You are restrained by telekinetic power.",
+        'description': `
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.gfRbTxGiulUylAjE]{Restrained} by telekinetic power.</p>
+        `,
         'origin': effect.flags['midi-qol'].castData.itemUuid,
         'changes': [
             {
@@ -226,6 +221,11 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             'dae': {
                 'showIcon': true
             },
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroElev)
+                }
+            },
             'midi-qol': {
                 'castData': {
                     baseLevel: 5,
@@ -233,14 +233,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                     itemUuid: effect.flags['midi-qol'].castData.itemUuid
                 }
             },
-            'effectmacro': {
-                'onDelete': {
-                    'script': mbaPremades.helpers.functionToString(effectMacroElev)
-                }
-            }
         }
     };
-    let targetEffect = await mbaPremades.helpers.createEffect(target.actor, effectData);
+    let targetEffect = await mba.createEffect(target.actor, effectData);
     let updates = {
         'flags': {
             'mba-premades': {
@@ -253,7 +248,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     }
-    await mbaPremades.helpers.updateEffect(effect, updates)
+    await mba.updateEffect(effect, updates)
 }
 
 export let telekinesis = {

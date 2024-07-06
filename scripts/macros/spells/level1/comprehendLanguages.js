@@ -2,14 +2,15 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function comprehendLanguages({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Comprehend Languages` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} ComLan` })
     }
     let effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>For the duration, you understand the literal meaning of any spoken language that you hear. You also understand any written language that you see, but you must be touching the surface on which the words are written. It takes about 1 minute to read one page of text.</p>
+            <p>For the duration, you understand the literal meaning of any spoken language that you hear.</p>
+            <p>You also understand any written language that you see, but you must be touching the surface on which the words are written. It takes about 1 minute to read one page of text.</p>
             <p>This spell doesn't decode secret messages in a text or a glyph, such as an arcane sigil, that isn't part of a written language.</p>
         `,
         'duration': {
@@ -59,7 +60,7 @@ export async function comprehendLanguages({ speaker, actor, token, character, it
                     .effect()
                     .delay(250)
                     .file("jb2a.icon.runes02.blue")
-                    .attachTo(token, { offset: offset[i], gridUnits: true, followRotation: false })
+                    .attachTo(workflow.token, { offset: offset[i], gridUnits: true, followRotation: false })
                     .scaleToObject(0.4)
                     .scaleIn(0, 250, { ease: "easeOutBack" })
                     .animateProperty("sprite", "position.x", { from: -0, to: -offset[i].x, duration: 500, gridUnits: true, delay: 500, ease: "easeInBack" })
@@ -69,7 +70,7 @@ export async function comprehendLanguages({ speaker, actor, token, character, it
 
                     .effect()
                     .file("jb2a.template_circle.out_pulse.02.burst.bluewhite")
-                    .attachTo(token, { offset: offset[i], gridUnits: true })
+                    .attachTo(workflow.token, { offset: offset[i], gridUnits: true })
                     .scaleToObject(0.5)
                     .opacity(0.5)
 
@@ -82,7 +83,7 @@ export async function comprehendLanguages({ speaker, actor, token, character, it
 
         .effect()
         .file("jb2a.energy_attack.01.blue")
-        .attachTo(token, { followRotation: false })
+        .attachTo(workflow.token, { followRotation: false })
         .scaleToObject(2.25)
         .belowTokens()
         .startTime(500)
@@ -92,7 +93,7 @@ export async function comprehendLanguages({ speaker, actor, token, character, it
 
         .effect()
         .file("jb2a.impact.010.blue")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(0.9)
         .zIndex(2)
         .waitUntilFinished(-1000)
@@ -103,18 +104,18 @@ export async function comprehendLanguages({ speaker, actor, token, character, it
 
         .effect()
         .file("jb2a.template_circle.symbol.normal.runes.blue")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(1.5)
         .fadeIn(500)
         .fadeOut(1000)
         .randomRotation()
-        .mask(token)
+        .mask(workflow.token)
         .persist()
-        .name(`${token.document.name} Comprehend Languages`)
+        .name(`${workflow.token.document.name} ComLan`)
 
         .effect()
         .file("jb2a.extras.tmfx.outflow.circle.01")
-        .attachTo(token, { cacheLocation: true, offset: { y: 0 }, gridUnits: true, bindAlpha: false })
+        .attachTo(workflow.token, { cacheLocation: true, offset: { y: 0 }, gridUnits: true, bindAlpha: false })
         .scaleToObject(1.55, { considerTokenScale: true })
         .randomRotation()
         .fadeIn(500)
@@ -124,13 +125,13 @@ export async function comprehendLanguages({ speaker, actor, token, character, it
         .loopProperty("alphaFilter", "alpha", { from: 0.75, to: 1, duration: 1500, pingPong: true, ease: "easeOutSine" })
         .tint("#30effd")
         .persist()
-        .name(`${token.document.name} Comprehend Languages`)
+        .name(`${workflow.token.document.name} ComLan`)
 
         .effect()
-        .from(token)
-        .attachTo(token, { bindAlpha: false })
+        .from(workflow.token)
+        .attachTo(workflow.token, { bindAlpha: false })
         .belowTokens()
-        .mirrorX(token.document.data.mirrorX)
+        .mirrorX(workflow.token.document.data.mirrorX)
         .scaleToObject(1, { considerTokenScale: true })
         .loopProperty("alphaFilter", "alpha", { from: 0.75, to: 1, duration: 1500, pingPong: true, ease: "easeOutSine" })
         .filter("Glow", { color: 0x30effd, distance: 3, outerStrength: 4, innerStrength: 0 })
@@ -138,7 +139,7 @@ export async function comprehendLanguages({ speaker, actor, token, character, it
         .fadeOut(1000)
         .zIndex(0.1)
         .persist()
-        .name(`${token.document.name} Comprehend Languages`)
+        .name(`${workflow.token.document.name} ComLan`)
 
         .play()
 }

@@ -1,6 +1,6 @@
 import {mba} from "../../helperFunctions.js";
-import {socket} from "../../module.js";
 import {queue} from "../mechanics/queue.js";
+import {socket} from "../../module.js";
 
 async function setupFolder() {
     let folder = game.folders.find(i => i.name === 'MBA Summons' && i.type === 'Actor');
@@ -11,12 +11,32 @@ async function setupFolder() {
             'color': '#9580FF'
         });
     }
+    let folderFamiliar = game.folders.find(i => i.name === 'Find Familiar' && i.type === 'Actor');
+    if (!folderFamiliar) {
+        folderFamiliar = await Folder.create({
+            'name': 'Find Familiar',
+            'depth': 2,
+            'parent': folder,
+            'type': 'Actor',
+        });
+    }
+    let folderSteed = game.folders.find(i => i.name === 'Find Steed' && i.type === 'Actor');
+    if (!folderSteed) {
+        folderSteed = await Folder.create({
+            'name': 'Find Steed',
+            'depth': 2,
+            'parent': folder,
+            'type': 'Actor',
+        });
+    }
     let summonsCompendium = game.packs.get('mba-premades.MBA Summons');
     if (!summonsCompendium) return;
     let documents = await summonsCompendium.getDocuments();
     if (documents.length === 0) return;
     for (let actor of documents) {
         let folderActor = folder.contents.find(act => act.name === actor.name);
+        if (!folderActor) folderActor = folderFamiliar.contents.find(act => act.name === actor.name);
+        if (!folderActor) folderActor = folderSteed.contents.find(act => act.name === actor.name);
         let avatarImg;
         let tokenImg;
         let imageFlags;
@@ -30,7 +50,9 @@ async function setupFolder() {
             await folderActor.delete();
         }
         let actorData = actor.toObject();
-        actorData.folder = folder.id;
+        if (actorData.name.includes("MBA")) actorData.folder = folder.id;
+        else if (actorData.name.includes("FF")) actorData.folder = folderFamiliar.id;
+        else if (actorData.name.includes("FS")) actorData.folder = folderSteed.id;
         if (avatarImg) actorData.img = avatarImg;
         if (tokenImg) actorData.prototypeToken.texture.src = tokenImg;
         if (imageFlags) actorData.flags['mba-premades'].summon = imageFlags;
@@ -110,7 +132,7 @@ async function spawn(sourceActor, updates = {}, duration, originItem, maxRange, 
                 }
             },
             'midi-qol': {
-              'castData': {
+                'castData': {
                     baseLevel: originItem.system.level,
                     castLevel: castLevel,
                     itemUuid: originItem.uuid

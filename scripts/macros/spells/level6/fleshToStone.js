@@ -1,17 +1,35 @@
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+
+// To do: cast animation
+
 export async function fleshToStone({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
-    let choices = [['Yes', 'yes'], ['No', 'no']];
-    let selection = await mbaPremades.helpers.dialog('Is target made of flesh? (Ask your GM)', choices);
-    if (selection === 'no') return;
     let target = workflow.targets.first();
+    if (mba.checkTrait(target.actor, "ci", "petrified")) {
+        ui.notifications.warn("Target is immune to Petrified condition!");
+        return;
+    }
+    await mba.gmDialogMessage();
+    let selectionGM = await mba.remoteDialog("Flesh to Stone", constants.yesNo, game.users.activeGM.id, `Is <b>${target.document.name}</b> made of flesh?`);
+    await mba.clearGMDialogMessage();
+    if (!selectionGM) {
+        ui.notifications.info("Target is not made of flesh!");
+        return;
+    }
     async function effectMacroEnd() {
         let effect = await mbaPremades.helpers.findEffect(actor, "Flesh to Stone: Restrained");
         if (!effect) return;
         let success = effect.flags['mba-premades']?.spell?.fleshToStone?.success;
         let fail = effect.flags['mba-premades']?.spell?.fleshToStone?.fail;
-        let saveDC = effect.flags['mba-premades']?.spell?.fleshToStone?.saveDC;
-        let saveRoll = await mbaPremades.helpers.rollRequest(token, 'save', 'con');
-        if (saveRoll.total < saveDC) fail += 1;
+        let featureData = await mbaPremades.helpers.getItemFromCompendium("mba-premades.MBA Spell Features", "Flesh to Stone: Save", false);
+        if (!featureData) return;
+        delete featureData._id;
+        featureData.system.save.dc = effect.flags['mba-premades']?.spell?.fleshToStone?.saveDC;
+        let feature = new CONFIG.Item.documentClass(featureData, { 'parent': token.actor });
+        let [config, options] = mbaPremades.constants.syntheticItemWorkflowOptions([token.document.uuid]);
+        let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
+        if (featureWorkflow.failedSaves.size) fail += 1;
         else success += 1;
         let updates = {
             'flags': {
@@ -26,15 +44,7 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
             }
         };
         await mbaPremades.helpers.updateEffect(effect, updates);
-        await new Dialog({
-            title: "Flesh to Stone progress:",
-            content: `<p><b>Success:</b> ${success}</p><p><b>Fails:</b> ${fail}</p>`,
-            buttons: {
-                ok: {
-                    label: "Ok!"
-                }
-            }
-        }).render(true);
+        mbaPremades.helpers.dialog("Flesh to Stone: Progress", [["Ok", true]], `<p><b>Success:</b> ${success}</p><p><b>Fails:</b> ${fail}</p>`);
         if (effect.flags['mba-premades']?.spell?.fleshToStone?.success > 2) await mbaPremades.helpers.removeEffect(effect);
         if (effect.flags['mba-premades']?.spell?.fleshToStone?.fail > 2) {
             async function effectMacroPermanent() {
@@ -42,7 +52,7 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
                 let duration = effect.duration.remaining;
                 if (duration > 6) return;
                 async function effectMacro() {
-                    await Sequencer.EffectManager.endEffects({ name: "Flesh to Stone", object: token })
+                    Sequencer.EffectManager.endEffects({ name: `${token.document.name} FTS` })
                 }
                 let effectData = {
                     'name': "Flesh to Stone: Petrification",
@@ -75,40 +85,45 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
                     .effect()
                     .from(token)
                     .atLocation(token)
-                    .mask(token)
+                    .attachTo(token)
+                    .duration(5000)
+                    .fadeIn(3000)
+                    .fadeOut(1000)
                     .opacity(0.4)
+                    .zIndex(1)
                     .filter("ColorMatrix", { contrast: 1, saturate: -1 })
                     .filter("Glow", { color: 0x000000, distance: 3, outerStrength: 4 })
-                    .attachTo(token)
-                    .fadeIn(3000)
-                    .duration(5000)
-                    .zIndex(1)
+                    .mask(token)
                     .persist()
-                    .name("Flesh to Stone")
+                    .name(`${token.document.name} FTS`)
 
                     .effect()
-                    .file("https://i.imgur.com/4P2tITB.png")
+                    .file("modules/mba-premades/icons/conditions/overlay/pertrification.webp")
                     .atLocation(token)
-                    .mask(token)
-                    .opacity(1)
-                    .filter("Glow", { color: 0x000000, distance: 3, outerStrength: 4 })
-                    .zIndex(0)
-                    .fadeIn(3000)
-                    .duration(5000)
                     .attachTo(token)
+                    .fadeIn(3000)
+                    .fadeOut(1000)
+                    .duration(5000)
+                    .opacity(1)
+                    .zIndex(0)
+                    .filter("Glow", { color: 0x000000, distance: 3, outerStrength: 4 })
+                    .mask(token)
                     .persist()
-                    .name("Flesh to Stone")
+                    .name(`${token.document.name} FTS`)
 
                     .play()
             }
             async function effectMacroDel() {
-                await Sequencer.EffectManager.endEffects({ name: "Flesh to Stone", object: token })
+                Sequencer.EffectManager.endEffects({ name: `${token.document.name} FTS` })
             }
             let effectData = {
                 'name': "Flesh to Stone: Petrification",
                 'icon': effect.flags['mba-premades']?.spell?.fleshToStone?.icon,
                 'origin': effect.flags['midi-qol']?.castData.itemUuid,
-                'description': "You are subjected to petrified condition for the duration. If caster of the 'Flesh to Stone' spell manages to maintain his concentration for the remaining time, petrification effect becomes permanent.",
+                'description': `
+                    <p>You are subjected to petrified condition for the duration.</p>
+                    <p>If caster of the Flesh to Stone spell manages to maintain his concentration for the remaining time, petrification effect becomes permanent.
+                `,
                 'duration': {
                     'seconds': effect.duration.remaining,
                 },
@@ -161,7 +176,7 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
                 .name("Flesh to Stone")
 
                 .effect()
-                .file("https://i.imgur.com/4P2tITB.png")
+                .file("modules/mba-premades/icons/conditions/overlay/pertrification.webp")
                 .atLocation(token)
                 .mask(token)
                 .opacity(1)
@@ -180,7 +195,12 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
         'name': "Flesh to Stone: Restrained",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
-        'description': "<p>You are affected by 'Flesh to Stone' spell and begin to turn into stone.</p><p>You are restrained for the duration and must make another Constitution saving throw at the end of each of your turns. If you successfuly save against this spell three times, the spell ends. If you fail your save three times, you turn into stone and are subjected to the petrified condition for the duration.</p>",
+        'description': `
+            <p>You are affected by Flesh to Stone spell and begin to turn into stone.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.gfRbTxGiulUylAjE]{Restrained} for the duration and must make another Constitution saving throw at the end of each of your turns.</p>
+            <p>If you successfuly save against this spell three times, the spell ends.</p>
+            <p>If you fail your save three times, you turn into stone and are subjected to the @UUID[Compendium.mba-premades.MBA SRD.Item.rrTzCb9szWTmyXwH]{Petrified} condition for the duration.</p>
+        `,
         'duration': {
             'seconds': 66
         },
@@ -198,16 +218,16 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
             },
             'effectmacro': {
                 'onTurnEnd': {
-                    'script': mbaPremades.helpers.functionToString(effectMacroEnd)
+                    'script': mba.functionToString(effectMacroEnd)
                 }
             },
             'mba-premades': {
                 'spell': {
                     'fleshToStone': {
-                        'saveDC': mbaPremades.helpers.getSpellDC(workflow.item),
-                        'success': 0,
                         'fail': 0,
-                        'icon': workflow.item.img
+                        'icon': workflow.item.img,
+                        'saveDC': mba.getSpellDC(workflow.item),
+                        'success': 0,
                     }
                 }
             },
@@ -220,5 +240,5 @@ export async function fleshToStone({ speaker, actor, token, character, item, arg
             }
         }
     };
-    await mbaPremades.helpers.createEffect(target.actor, effectData)
+    await mba.createEffect(target.actor, effectData)
 }

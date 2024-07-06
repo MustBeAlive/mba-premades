@@ -5,7 +5,7 @@ export async function elementalWeapon({ speaker, actor, token, character, item, 
     let target = workflow.targets.first();
     let weapons = target.actor.items.filter(i => i.type === 'weapon' && i.system.properties.mgc != true && i.system.equipped && i.name != "Unarmed Strike");
     if (!weapons.length) {
-        ui.notifications.warn('Target has no valid non-magical weapons equipped!');
+        ui.notifications.warn("Target has no valid non-magical weapons equipped!");
         await mba.removeCondition(workflow.actor, "Concentrating");
         return;
     }
@@ -24,19 +24,28 @@ export async function elementalWeapon({ speaker, actor, token, character, item, 
         ["Thunder", "thunder", "modules/mba-premades/icons/spells/level3/elemental_weapon_thunder.webp"],
     ];
     let selection = await mba.selectImage("Elemental Weapon", choices, `<b>Choose damage type:</b>`, "both");
-    if (!selection) {
+    if (!selection.length) {
         await mba.removeCondition(workflow.actor, "Concentrating");
         return;
+    }
+    let hue = 0;
+    switch (selection[0]) {
+        case "acid": hue = 200; break;
+        case "cold": hue = 280; break;
+        case "fire": hue = 95; break;
+        case "lightning": hue = 310; break;
+        case "thunder": hue = 0; break;
     }
     let castLevel = workflow.castData.castLevel;
     let bonus = 1;
     if (castLevel >= 5 && castLevel < 7) bonus = 2;
-    else if (castLevel > 6) bonus = 3;
+    else if (castLevel >= 7) bonus = 3;
     let damageParts = duplicate(weaponItem[0].system.damage.parts);
     damageParts.push([`+ ${bonus}d4[${selection[0]}]`, selection[0]]);
     let versatile = duplicate(weaponItem[0].system.damage.versatile);
     if (versatile != '') versatile += `+ ${bonus}d4[${selection[0]}]`;
     async function effectMacroDel() {
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} EW`, object: token })
         await warpgate.revert(token.document, 'Elemental Weapon');
     }
     let effectData = {
@@ -91,5 +100,23 @@ export async function elementalWeapon({ speaker, actor, token, character, item, 
         'name': 'Elemental Weapon',
         'description': 'Elemental Weapon'
     };
-    await warpgate.mutate(target.document, updates, {}, options);
+
+    new Sequence()
+
+        .effect()
+        .file("jb2a.token_border.circle.static.purple.011")
+        .attachTo(target)
+        .scaleToObject(1.85)
+        .fadeIn(1000)
+        .fadeOut(1500)
+        .belowTokens()
+        .filter("ColorMatrix", { hue: hue })
+        .persist()
+        .name(`${target.document.name} EW`)
+
+        .thenDo(async () => {
+            await warpgate.mutate(target.document, updates, {}, options);
+        })
+
+        .play()
 }

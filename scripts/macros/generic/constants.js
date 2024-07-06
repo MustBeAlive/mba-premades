@@ -1,5 +1,5 @@
 const advantageEffectData = {
-    'name': 'Save Advantage',
+    'name': 'Save: Advantage',
     'icon': 'modules/mba-premades/icons/generic/generic_buff.webp',
     'description': "You have advantage on the next save you make",
     'duration': {
@@ -16,12 +16,17 @@ const advantageEffectData = {
     'flags': {
         'dae': {
             'specialDuration': ['isSave']
+        },
+        'mba-premades': {
+            'effect': {
+                'noAnimation': true
+            }
         }
     }
 };
 
 const immunityEffectData = {
-    'name': 'Save Immunity',
+    'name': 'Save: Immunity',
     'icon': 'modules/mba-premades/icons/generic/generic_buff.webp',
     'description': "You succeed on the next save you make",
     'duration': {
@@ -30,7 +35,7 @@ const immunityEffectData = {
     'changes': [
         {
             'key': 'flags.midi-qol.min.ability.save.all',
-            'value': '100',
+            'value': '500',
             'mode': 2,
             'priority': 120
         }
@@ -38,12 +43,17 @@ const immunityEffectData = {
     'flags': {
         'dae': {
             'specialDuration': ['isSave']
+        },
+        'mba-premades': {
+            'effect': {
+                'noAnimation': true
+            }
         }
     }
 };
 
 const disadvantageEffectData = {
-    'name': 'Save Disadvantage',
+    'name': 'Save: Disadvantage',
     'icon': 'modules/mba-premades/icons/generic/generic_debuff.webp',
     'description': "You have disadvantage on the next save you make",
     'duration': {
@@ -60,6 +70,38 @@ const disadvantageEffectData = {
     'flags': {
         'dae': {
             'specialDuration': ['isSave']
+        },
+        'mba-premades': {
+            'effect': {
+                'noAnimation': true
+            }
+        }
+    }
+};
+
+const failEffectData = {
+    'name': 'Save: Fail',
+    'icon': 'modules/mba-premades/icons/generic/generic_debuff.webp',
+    'description': "You automatically fail the next save you make.",
+    'duration': {
+        'turns': 1
+    },
+    'changes': [
+        {
+            'key': 'flags.midi-qol.fail.ability.save.all',
+            'mode': 0,
+            'value': 1,
+            'priority': 20
+        }
+    ],
+    'flags': {
+        'dae': {
+            'specialDuration': ["isSave"]
+        },
+        'mba-premades': {
+            'effect': {
+                'noAnimation': true
+            }
         }
     }
 };
@@ -676,12 +718,172 @@ const spellsLevel9 = [
     "Wish",
 ];
 
+const weapons = [
+    "Battleaxe",
+    "Blowgun",
+    "Club",
+    "Dagger",
+    "Dart",
+    "Flail",
+    "Glaive",
+    "Greataxe",
+    "Greatclub",
+    "Greatsword",
+    "Halberd",
+    "Hand Crossbow",
+    "Handaxe",
+    "Heavy Crossbow",
+    "Javelin",
+    "Lance",
+    "Light Crossbow",
+    "Light Hammer",
+    "Longbow",
+    "Longsword",
+    "Mace",
+    "Maul",
+    "Morningstar",
+    "Net", //
+    "Pike",
+    "Quarterstaff",
+    "Rapier",
+    "Scimitar",
+    "Shortbow",
+    "Shortsword",
+    "Sickle",
+    "Sling",
+    "Spear",
+    "Staff", //
+    "Trident",
+    "War Pick",
+    "Warhammer",
+    "Whip",
+    "Wooden Staff" //
+];
+
+const weaponsMelee = [
+    "Battleaxe",
+    "Club",
+    "Dagger",
+    "Flail",
+    "Glaive",
+    "Greataxe",
+    "Greatclub",
+    "Greatsword",
+    "Halberd",
+    "Handaxe",
+    "Javelin",
+    "Lance",
+    "Light Hammer",
+    "Longsword",
+    "Mace",
+    "Maul",
+    "Morningstar",
+    "Pike",
+    "Quarterstaff",
+    "Rapier",
+    "Scimitar",
+    "Shortsword",
+    "Sickle",
+    "Spear",
+    "Staff", //?
+    "Trident",
+    "War Pick",
+    "Warhammer",
+    "Whip"
+];
+
+const weaponsRanged = [
+    "Blowgun",
+    "Dart",
+    "Hand Crossbow",
+    "Heavy Crossbow",
+    "Light Crossbow",
+    'Longbow',
+    'Net', //?
+    "Shortbow",
+    "Sling",
+];
+
+const cleave = [
+    "greataxe",
+    "halberd"
+];
+
+const graze = [
+    "glaive",
+    "greatsword"
+];
+
+const nick = [
+    "dagger",
+    "lighthammer",
+    "scimitar",
+    "sickle"
+];
+
+const push = [
+    "greatclub",
+    "heavycrossbow",
+    "pike",
+    "warhammer"
+];
+
+const sap = [
+    "flail",
+    "longsword",
+    "mace",
+    "morningstar",
+    "spear",
+    "warpick"
+];
+
+const slow = [
+    "club",
+    "javelin",
+    "lightcrossbow",
+    "longbow",
+    "musket", //?
+    "sling",
+    "whip",
+];
+
+const topple = [
+    "battleaxe",
+    "lance",
+    "maul",
+    "quarterstaff",
+    "trident"
+];
+
+const vex = [
+    "blowgun",
+    "dart",
+    "handcrossbow",
+    "handaxe",
+    "pistol", //?
+    "rapier",
+    "shortbow",
+    "shortsword"
+];
+
+const weaponTypes = {
+    'cleave': cleave,
+    'graze': graze,
+    'nick': nick,
+    'push': push,
+    'sap': sap,
+    'slow': slow,
+    'topple': topple,
+    'vex': vex
+}
+
 export let constants = {
     'advantageEffectData': advantageEffectData,
     'attacks': attacks,
     'damageTypeMenu': damageTypeMenu,
     'disadvantageEffectData': disadvantageEffectData,
     'immunityEffectData': immunityEffectData,
+    'failEffectData': failEffectData,
     'meleeAttacks': meleeAttacks,
     'nonDamageTypes': nonDamageTypes,
     'okCancel': okCancel,
@@ -700,5 +902,9 @@ export let constants = {
     'syntheticItemWorkflowOptions': syntheticItemWorkflowOptions,
     'yesNo': yesNo,
     'yesNoButton': yesNoButton,
+    'weapons': weapons,
     'weaponAttacks': weaponAttacks,
+    'weaponsMelee': weaponsMelee,
+    'weaponsRanged': weaponsRanged,
+    'weaponTypes': weaponTypes,
 };

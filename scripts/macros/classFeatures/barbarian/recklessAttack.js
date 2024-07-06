@@ -63,13 +63,13 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
 
         .effect()
         .file("jb2a.extras.tmfx.outpulse.circle.02.normal")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .size(4, { gridUnits: true })
         .opacity(0.25)
 
         .effect()
         .file("jb2a.impact.ground_crack.orange.02")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .belowTokens()
         .filter("ColorMatrix", { hue: -15, saturate: 1 })
         .size(3.5, { gridUnits: true })
@@ -77,7 +77,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
 
         .effect()
         .file("jb2a.impact.ground_crack.still_frame.02")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .belowTokens()
         .fadeIn(1000)
         .filter("ColorMatrix", { hue: -15, saturate: 1 })
@@ -86,8 +86,8 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
 
         .effect()
         .file("jb2a.token_border.circle.static.orange.012")
-        .atLocation(token)
-        .attachTo(token)
+        .atLocation(workflow.token)
+        .attachTo(workflow.token)
         .opacity(0.6)
         .scaleToObject(2)
         .filter("ColorMatrix", { saturate: 1 })
@@ -95,7 +95,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
         .fadeOut(500)
         .mask()
         .persist()
-        .name(`${token.document.name} Reckless Attack`)
+        .name(`${workflow.token.document.name} Reckless Attack`)
 
         .play()
 

@@ -21,7 +21,7 @@ export async function shiveringSickness() {
         return;
     }
     let shiveringSicknessRoll = await new Roll("2d6").roll({ 'async': true });
-    await MidiQOL.displayDSNForRoll(shiveringSicknessRoll, 'damageRoll');
+    await MidiQOL.displayDSNForRoll(shiveringSicknessRoll);
     const description = [`
         <p>Insects native to the jungles and marshes of Chult carry this disease, shivering sickness. A giant or humanoid that takes damage from insect swarms or from giant centipedes, giant scorpions, or giant wasps is exposed to the disease at the end of the encounter. Those who haven't applied insect repellent since their previous long rest are exposed to the disease when they finish a long rest.</p>
         <p>Creature exposed to the Shivering Sickness must succeed on a DC 11 Constitution saving throw or become infected. A creature with natural armor has advantage on the saving throw. It takes 2d6 hours for symptoms to manifest in an infected creature. Symptoms include blurred vision, disorientation, and a sudden drop in body temperature that causes uncontrollable shivering and chattering of the teeth.</p>
@@ -122,7 +122,7 @@ export async function shiveringSickness() {
     await mba.createEffect(target.actor, effectData);
     ChatMessage.create({
         whisper: ChatMessage.getWhisperRecipients("GM"),
-        content: `<p><b>${target.document.name}</b> is infected with <b>Shivering Sickness</b></p><p>Symptoms will manifest in <b>${shiveringSicknessRoll.total} hours</b></p>`,
+        content: `<p><u>${target.document.name}</u> is infected with <b>Shivering Sickness</b></p><p>Symptoms will manifest in <b>${shiveringSicknessRoll.total} hours</b></p>`,
         speaker: { actor: null, alias: "Disease Announcer" }
     });
 }

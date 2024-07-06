@@ -20,7 +20,6 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
-    let targets = Array.from(workflow.failedSaves);
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} Bane` })
     }
@@ -49,6 +48,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         ],
         'flags': {
+            'dae': {
+                'specialDuration': ["zeroHP"]
+            },
             'effectmacro': {
                 'onDelete': {
                     'script': mba.functionToString(effectMacroDel)
@@ -63,7 +65,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    for (let target of targets) {
+    for (let target of Array.from(workflow.failedSaves)) {
         let delay1 = 100 + Math.floor(Math.random() * (Math.floor(1000) - Math.ceil(100)) + Math.ceil(100));
         let delay2 = 1500 + delay1;
         let delay3 = 500 + delay2;
@@ -89,6 +91,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .scaleToObject(1.9 * target.document.texture.scaleX)
             .opacity(0.8)
             .playbackRate(0.8)
+            .randomRotation()
             .belowTokens()
             .persist()
             .name(`${target.document.name} Bane`)

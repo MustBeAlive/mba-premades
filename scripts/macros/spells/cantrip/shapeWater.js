@@ -1,11 +1,11 @@
 export async function shapeWater({ speaker, actor, token, character, item, args, scope, workflow }) {
     new Sequence()
     
-        .wait(1000)
+        .wait(750)
 
         .effect()
         .file("animated-spell-effects-cartoon.water.49")
-        .attachTo(token, { offset: { x: 0.5, y: 0 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { x: 0.5, y: 0 }, gridUnits: true, followRotation: false })
         .scaleToObject(2)
         .fadeIn(250)
         .fadeOut(500)
@@ -16,7 +16,7 @@ export async function shapeWater({ speaker, actor, token, character, item, args,
 
         .effect()
         .file("animated-spell-effects-cartoon.water.49")
-        .attachTo(token, { offset: { x: -0, y: 0.5 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { x: -0, y: 0.5 }, gridUnits: true, followRotation: false })
         .scaleToObject(2)
         .fadeIn(250)
         .fadeOut(500)
@@ -27,7 +27,7 @@ export async function shapeWater({ speaker, actor, token, character, item, args,
 
         .effect()
         .file("animated-spell-effects-cartoon.water.49")
-        .attachTo(token, { offset: { x: -0, y: -0.5 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { x: -0, y: -0.5 }, gridUnits: true, followRotation: false })
         .scaleToObject(2)
         .fadeIn(250)
         .fadeOut(500)
@@ -38,7 +38,7 @@ export async function shapeWater({ speaker, actor, token, character, item, args,
 
         .effect()
         .file("animated-spell-effects-cartoon.water.49")
-        .attachTo(token, { offset: { x: -0.5, y: -0 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { x: -0.5, y: -0 }, gridUnits: true, followRotation: false })
         .scaleToObject(2)
         .fadeIn(250)
         .scaleIn(0, 500, { ease: "easeOutCubic" })
@@ -49,14 +49,14 @@ export async function shapeWater({ speaker, actor, token, character, item, args,
 
         .effect()
         .file("animated-spell-effects-cartoon.water.63")
-        .attachTo(token, { offset: { x: 0, y: 0 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { x: 0, y: 0 }, gridUnits: true, followRotation: false })
         .scaleToObject(2)
         .fadeOut(250)
         .belowTokens()
 
         .effect()
         .file("jb2a.wind_stream.200.white")
-        .attachTo(token, { offset: { x: 0, y: 0 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { x: 0, y: 0 }, gridUnits: true, followRotation: false })
         .scaleToObject(2)
         .fadeIn(1000)
         .fadeOut(1000)
@@ -70,7 +70,7 @@ export async function shapeWater({ speaker, actor, token, character, item, args,
 
         .effect()
         .file("animated-spell-effects-cartoon.water.69")
-        .attachTo(token, { offset: { x: -0.23 * token.document.width, y: -0.05 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { x: -0.23 * workflow.token.document.width, y: -0.05 }, gridUnits: true, followRotation: false })
         .scaleToObject(1.35, { considerTokenScale: true })
         .fadeIn(1000)
         .fadeOut(1000)
@@ -82,7 +82,7 @@ export async function shapeWater({ speaker, actor, token, character, item, args,
         .effect()
         .delay(700)
         .file("animated-spell-effects-cartoon.water.69")
-        .attachTo(token, { offset: { x: 0.23 * token.document.width, y: -0.05 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { x: 0.23 * workflow.token.document.width, y: -0.05 }, gridUnits: true, followRotation: false })
         .scaleToObject(1.35, { considerTokenScale: true })
         .fadeIn(1000)
         .fadeOut(1000)
@@ -94,7 +94,7 @@ export async function shapeWater({ speaker, actor, token, character, item, args,
 
         .effect()
         .file("animated-spell-effects-cartoon.water.69")
-        .attachTo(token, { offset: { x: -0.33 * token.document.width, y: -0.05 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { x: -0.33 * workflow.token.document.width, y: -0.05 }, gridUnits: true, followRotation: false })
         .scaleToObject(1.35, { considerTokenScale: true })
         .fadeIn(1000)
         .fadeOut(1000)
@@ -104,7 +104,7 @@ export async function shapeWater({ speaker, actor, token, character, item, args,
         .effect()
         .delay(700)
         .file("animated-spell-effects-cartoon.water.69")
-        .attachTo(token, { offset: { x: 0.33 * token.document.width, y: -0.05 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { x: 0.33 * workflow.token.document.width, y: -0.05 }, gridUnits: true, followRotation: false })
         .scaleToObject(1.35, { considerTokenScale: true })
         .fadeIn(1000)
         .fadeOut(1000)

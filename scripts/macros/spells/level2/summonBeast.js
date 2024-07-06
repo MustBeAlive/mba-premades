@@ -1,15 +1,20 @@
 import {mba} from "../../../helperFunctions.js";
-import {queue} from "../../mechanics/queue.js";
 import {tashaSummon} from "../../generic/tashaSummon.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let selection = await mba.dialog('Summon Beast', [['Air', 'Air'], ['Land', 'Land'], ['Water', 'Water']], "<b>Choose type:</b>");
-    if (!selection) return;
     let sourceActor = game.actors.getName('MBA: Bestial Spirit');
     if (!sourceActor) {
         ui.notifications.warn("Missing actor in the side panel! (MBA: Bestial Spirit)");
         return;
     }
+    let choices = [
+        ["Air", "Air", "modules/mba-premades/icons/spells/level2/summon_beast/spirit_air.webp"],
+        ["Land", "Land", "modules/mba-premades/icons/spells/level2/summon_beast/spirit_land.webp"],
+        ["Water", "Water", "modules/mba-premades/icons/spells/level2/summon_beast/spirit_water.webp"]
+    ];
+    let selection = await mba.selectImage('Summon Beast', choices, "<b>Choose type:</b>", "both");
+    if (!selection) return;
+    let avatarImg = selection[1];
     let multiAttackFeatureData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Bestial Spirit: Multiattack', false);
     if (!multiAttackFeatureData) {
         ui.notifications.warn("Unable to find item in the compendium!! (Bestial Spirit: Multiattack)");
@@ -22,15 +27,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ui.notifications.warn("Unable to find item in the compendium!! (Bestial Spirit: Maul)");
         return;
     }
+    let castMod = await mba.getSpellMod(workflow.item);
+    maulData.system.attackBonus = -4 + castMod;
     maulData.system.damage.parts[0][0] += ' + ' + workflow.castData.castLevel;
     let hpFormula;
     let name = `${workflow.token.document.name} Bestial Spirit`;
-    let meleeAttackBonus = await new Roll(workflow.actor.system.bonuses.msak.attack + ' + 0', workflow.actor.getRollData()).roll({ 'async': true });
-    let rangedAttackBonus = await new Roll(workflow.actor.system.bonuses.rsak.attack + ' + 0', workflow.actor.getRollData()).roll({ 'async': true });
-    console.log(meleeAttackBonus.total);
-    console.log(rangedAttackBonus.total);
     let updates = {
         'actor': {
+            'img': avatarImg,
             'name': name,
             'system': {
                 'details': {
@@ -43,23 +47,19 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 }
             },
             'prototypeToken': {
+                'disposition': workflow.token.document.disposition,
                 'name': name,
-                'disposition': workflow.token.document.disposition
-            },
-            'flags': {
-                'mba-premades': {
-                    'summon': {
-                        'attackBonus': {
-                            'melee': mba.getSpellMod(workflow.item) - sourceActor.system.abilities.str.mod + meleeAttackBonus.total,
-                            'ranged': mba.getSpellMod(workflow.item) - sourceActor.system.abilities.str.mod + rangedAttackBonus.total
-                        }
-                    }
+                'texture': {
+                    'src': avatarImg
                 }
-            }
+            },
         },
         'token': {
+            'disposition': workflow.token.document.disposition,
             'name': name,
-            'disposition': workflow.token.document.disposition
+            'texture': {
+                'src': avatarImg
+            }
         },
         'embedded': {
             'Item': {
@@ -68,15 +68,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    /*
-    let avatarImg = mba.getConfiguration(workflow.item, 'avatar-' + selection);
-    let tokenImg = mba.getConfiguration(workflow.item, 'token-' + selection);
-    if (avatarImg) updates.actor.img = avatarImg;
-    if (tokenImg) {
-        setProperty(updates, 'actor.prototypeToken.texture.src', tokenImg);
-        setProperty(updates, 'token.texture.src', tokenImg);
-    }*/
-    switch (selection) {
+    switch (selection[0]) {
         case 'Air':
             let flybyData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Bestial Spirit: Flyby', false);
             if (!flybyData) {
@@ -137,22 +129,37 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'Land': 'earth',
         'Water': 'water'
     };
-    let animation = defaultAnimations[selection];
+    let animation = defaultAnimations[selection[0]];
     await tashaSummon.spawn(sourceActor, updates, 3600, workflow.item, 90, workflow.token, animation, {}, workflow.castData.castLevel);
 }
 
-async function packTactics({ speaker, actor, token, character, item, args, scope, workflow }) {
-    if (workflow.targets.size != 1) return;
-    let nearbyTargets = mba.findNearby(workflow.targets.first(), 5, 'enemy', false).filter(i => i.document.uuid != workflow.token.document.uuid);
-    if (!nearbyTargets.length) return;
-    let queueSetup = await queue.setup(workflow.item.uuid, 'packTactics', 150);
-    if (!queueSetup) return;
-    workflow.advantage = true;
-    workflow.advReminderAttackAdvAttribution.add("ADV:Pack Tactics");
-    queue.remove(workflow.item.uuid);
+async function attack({ speaker, actor, token, character, item, args, scope, workflow }) {
+    let target = workflow.targets.first();
+    new Sequence()
+
+        .effect()
+        .file("jb2a.claws.400px.bright_green")
+        .attachTo(target)
+        .scaleToObject(2 * target.document.texture.scaleX)
+        .missed(!workflow.hitTargets.size)
+
+        .effect()
+        .file("jaamod.sequencer_fx_master.blood_splat.red.2")
+        .delay(200)
+        .attachTo(target)
+        .scaleIn(0, 500, { 'ease': 'easeOutCubic' })
+        .scaleToObject(1.65 * target.document.texture.scaleX)
+        .duration(2500)
+        .fadeOut(1000)
+        .belowTokens()
+        .playIf(() => {
+            return workflow.hitTargets.size
+        })
+
+        .play()
 }
 
 export let summonBeast = {
     'item': item,
-    'packTactics': packTactics
+    'attack': attack
 }

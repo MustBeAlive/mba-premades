@@ -1,9 +1,9 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
 
 export async function rayOfFrost({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Ray of Frost`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} RaOfF`})
     };
     const effectData = {
         'name': workflow.item.name,
@@ -44,7 +44,7 @@ export async function rayOfFrost({ speaker, actor, token, character, item, args,
 
         .effect()
         .file("jb2a.ray_of_frost.blue")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target)
         .missed(!workflow.hitTargets.size)
         .playIf(() => {
@@ -53,7 +53,7 @@ export async function rayOfFrost({ speaker, actor, token, character, item, args,
 
         .effect()
         .file("jb2a.ray_of_frost.blue")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target)
         .repeats(4, 500)
         .waitUntilFinished(-3000)
@@ -72,7 +72,7 @@ export async function rayOfFrost({ speaker, actor, token, character, item, args,
         .mask()
         .persist()
         .noLoop()
-        .name(`${target.document.name} Ray of Frost`)
+        .name(`${target.document.name} RaOfF`)
         .playIf(() => {
             return workflow.hitTargets.size
         })

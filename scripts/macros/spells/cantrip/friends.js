@@ -55,7 +55,7 @@ export async function friends({ speaker, actor, token, character, item, args, sc
         .waitUntilFinished(-1000)
 
         .effect()
-        .file("jb2a.template_square.symbol.normal.heart.pink")
+        .file("jb2a.template_circle.symbol.normal.heart.pink")
         .attachTo(target)
         .fadeIn(500)
         .fadeOut(1000)

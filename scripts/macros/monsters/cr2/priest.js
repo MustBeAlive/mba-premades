@@ -21,13 +21,13 @@ async function divineEminenceCast({ speaker, actor, token, character, item, args
     let newValue = foundry.utils.getProperty(workflow.actor, path) - 1;
     await workflow.actor.update({ [path]: newValue })
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Divine Eminence` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} DivEm` })
     }
     const effectData = {
         'name': "Divine Eminence",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
-        'description': ``,
+        'description': `Until the end of your next turn, your melee weapon attacks deal extra ${2 + level}d6 radiant damage.`,
         'duration': {
             'turns': 1
         },
@@ -40,9 +40,6 @@ async function divineEminenceCast({ speaker, actor, token, character, item, args
             },
         ],
         'flags': {
-            'dae': {
-                'specialDuration': ['1Hit']
-            },
             'effectmacro': {
                 'onDelete': {
                     'script': mba.functionToString(effectMacroDel)
@@ -90,7 +87,7 @@ async function divineEminenceCast({ speaker, actor, token, character, item, args
         .filter("ColorMatrix", { saturate: -1, brightness: 0.8 })
         .fadeOut(500)
         .persist()
-        .name(`${token.document.name} Divine Eminence`)
+        .name(`${token.document.name} DivEm`)
 
         .thenDo(async () => {
             await mba.createEffect(workflow.actor, effectData);

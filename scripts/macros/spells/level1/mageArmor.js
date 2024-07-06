@@ -46,7 +46,6 @@ export async function mageArmor({ speaker, actor, token, character, item, args, 
         .playbackRate(0.9)
         .belowTokens()
         .tint("#1fdaff")
-        .name(`${target.document.name} Mage Armor`)
 
         .effect()
         .file("jb2a.energy_field.02.below.blue")
@@ -56,7 +55,6 @@ export async function mageArmor({ speaker, actor, token, character, item, args, 
         .fadeIn(1000)
         .fadeOut(1000)
         .playbackRate(0.9)
-        .name(`${target.document.name} Mage Armor`)
 
         .thenDo(async () => {
             await mba.createEffect(target.actor, effectData);

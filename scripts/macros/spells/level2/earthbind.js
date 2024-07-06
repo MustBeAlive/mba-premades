@@ -28,7 +28,7 @@ export async function earthbind({ speaker, actor, token, character, item, args, 
             .play()
     };
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Earthbind` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Earthb` })
     };
     const effectData = {
         'name': workflow.item.name,
@@ -89,7 +89,7 @@ export async function earthbind({ speaker, actor, token, character, item, args, 
         .fadeOut(500)
         .belowTokens()
         .persist()
-        .name(`${target.document.name} Earthbind`)
+        .name(`${target.document.name} Earthb`)
         .playIf(() => {
             return workflow.failedSaves.size
         })

@@ -1,4 +1,4 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
@@ -9,7 +9,9 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         'name': "Shocking Grasp: Metal Armor Advantage",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
-        'description': "You have advantage on Shocking Grasp melee spell attack since the target is wearing armor made of metal.",
+        'description': `
+            <p>You have advantage on Shocking Grasp melee spell attack since the target is wearing armor made of metal.</p>
+        `,
         'duration': {
             'turns': 1
         },
@@ -33,7 +35,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.chain_lightning.secondary.blue")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target)
         .missed(workflow.hitTargets.size === 0)
 

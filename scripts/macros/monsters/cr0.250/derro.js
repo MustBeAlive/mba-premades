@@ -4,6 +4,7 @@ async function spear({ speaker, actor, token, character, item, args, scope, work
     if (!workflow.hitTargets.size) return;
     let target = workflow.targets.first();
     if (mba.getSize(target.actor) > 2) return;
+    if (mba.checkTrait(target.actor, "ci", "prone")) return;
     if (mba.findEffect(target.actor, "Prone")) return;
     let choices = [["Deal damage", false], ["Knock Prone", "prone"]];
     let selection = await mba.dialog("Derro: Spear", choices, "<b>What would you like to do?</b>");

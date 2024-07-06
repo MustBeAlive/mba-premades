@@ -2,7 +2,6 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function divineSense({ speaker, actor, token, character, item, args, scope, workflow }) {
     //not behind total cover
-
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `Divine Sense` })
     }
@@ -70,21 +69,21 @@ export async function divineSense({ speaker, actor, token, character, item, args
 
     for (let target of targets) {
         if (target.name === workflow.token.document.name) continue;
-        const distance = Math.sqrt(
-            Math.pow(target.x - workflow.token.x, 2) + Math.pow(target.y - workflow.token.y, 2)
-        );
+        const distance = Math.sqrt(Math.pow(target.x - workflow.token.x, 2) + Math.pow(target.y - workflow.token.y, 2));
         const gridDistance = distance / canvas.grid.size
-        let [canSee] = await MidiQOL.findNearby(null, target, 60, { includeIncapacitated: false, canSee: true }).filter(i => i.name === workflow.token.document.name);
+        let [canSee] = await mba.findNearby(target, 60, "any", false, false, true, false).filter(t => t.document.uuid === workflow.token.document.uuid);
         let type = await mba.raceOrType(target.actor);
         let nystul = await mba.findEffect(target.actor, "Nystul's Magic Aura");
         if (nystul) type = nystul.flags['mba-premades']?.spell?.nystulMagicAura?.type;
+        let nondetection = target.actor.flags['mba-premades']?.spell?.nondetection;
+
         new Sequence()
 
             .effect()
             .file("jb2a.markers.circle_of_stars.green")
             .attachTo(target)
             .scaleToObject(2.5)
-            .delay(gridDistance * 130)
+            .delay(gridDistance * canvas.grid.size)
             .duration(5000)
             .fadeIn(1000)
             .fadeOut(1000)
@@ -98,20 +97,19 @@ export async function divineSense({ speaker, actor, token, character, item, args
             .from(target)
             .attachTo(target, { locale: true })
             .scaleToObject(1, { considerTokenScale: true })
-            .delay(gridDistance * 130)
+            .delay(gridDistance * canvas.grid.size)
             .fadeIn(1000, { delay: 1000 })
             .fadeOut(3500, { ease: "easeInSine" })
             .spriteRotation(target.rotation * -1)
-            .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
-            .filter("Glow", { color: 0xffd000, distance: 20 })
+            .loopProperty("alphaFilter", "alpha", { values: [0.1, 0.8], duration: 1500, pingPong: true, delay: 500 })
+            .filter("Glow", { color: 0xffd000, distance: 10 })
             .opacity(0.75)
             .belowTokens()
             .zIndex(0.1)
             .persist()
             .name(`Divine Sense`)
             .playIf(() => {
-                if (mba.findEffect(target.actor, "Nondetection")) return false;
-                if (!canSee) return false;
+                if (nondetection || !canSee) return false;
                 return type === "celestial";
             })
 
@@ -119,7 +117,7 @@ export async function divineSense({ speaker, actor, token, character, item, args
             .file("jb2a.extras.tmfx.outflow.circle.01")
             .attachTo(target, { locale: true })
             .scaleToObject(1.5, { considerTokenScale: false })
-            .delay(gridDistance * 130)
+            .delay(gridDistance * canvas.grid.size)
             .fadeIn(4000, { delay: 0 })
             .fadeOut(3500, { ease: "easeInSine" })
             .scaleIn(0, 3500, { ease: "easeInOutCubic" })
@@ -130,8 +128,7 @@ export async function divineSense({ speaker, actor, token, character, item, args
             .persist()
             .name(`Divine Sense`)
             .playIf(() => {
-                if (mba.findEffect(target.actor, "Nondetection")) return false;
-                if (!canSee) return false;
+                if (nondetection || !canSee) return false;
                 return type === "celestial";
             })
 
@@ -140,20 +137,19 @@ export async function divineSense({ speaker, actor, token, character, item, args
             .from(target)
             .attachTo(target, { locale: true })
             .scaleToObject(1, { considerTokenScale: true })
-            .delay(gridDistance * 130)
+            .delay(gridDistance * canvas.grid.size)
             .fadeIn(1000, { delay: 1000 })
             .fadeOut(3500, { ease: "easeInSine" })
             .spriteRotation(target.rotation * -1)
-            .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
-            .filter("Glow", { color: 0x911a1a, distance: 20 })
+            .loopProperty("alphaFilter", "alpha", { values: [0.1, 0.8], duration: 1500, pingPong: true, delay: 500 })
+            .filter("Glow", { color: 0x911a1a, distance: 10 })
             .belowTokens()
             .opacity(0.75)
             .zIndex(0.1)
             .persist()
             .name(`Divine Sense`)
             .playIf(() => {
-                if (mba.findEffect(target.actor, "Nondetection")) return false;
-                if (!canSee) return false;
+                if (nondetection || !canSee) return false;
                 return type === "fiend";
             })
 
@@ -161,7 +157,7 @@ export async function divineSense({ speaker, actor, token, character, item, args
             .file("jb2a.extras.tmfx.outflow.circle.01")
             .attachTo(target, { locale: true })
             .scaleToObject(1.5, { considerTokenScale: false })
-            .delay(gridDistance * 130)
+            .delay(gridDistance * canvas.grid.size)
             .fadeIn(4000, { delay: 0 })
             .fadeOut(3500, { ease: "easeInSine" })
             .scaleIn(0, 3500, { ease: "easeInOutCubic" })
@@ -172,8 +168,7 @@ export async function divineSense({ speaker, actor, token, character, item, args
             .persist()
             .name(`Divine Sense`)
             .playIf(() => {
-                if (mba.findEffect(target.actor, "Nondetection")) return false;
-                if (!canSee) return false;
+                if (nondetection || !canSee) return false;
                 return type === "fiend";
             })
 
@@ -183,19 +178,18 @@ export async function divineSense({ speaker, actor, token, character, item, args
             .belowTokens()
             .attachTo(target, { locale: true })
             .scaleToObject(1, { considerTokenScale: true })
-            .delay(gridDistance * 130)
+            .delay(gridDistance * canvas.grid.size)
             .fadeIn(1000, { delay: 1000 })
             .fadeOut(3500, { ease: "easeInSine" })
             .spriteRotation(target.rotation * -1)
-            .loopProperty("alphaFilter", "alpha", { values: [0.9, 0.1], duration: 1500, pingPong: true, delay: 500 })
-            .filter("Glow", { color: 0x111111, distance: 20 })
+            .loopProperty("alphaFilter", "alpha", { values: [0.1, 0.9], duration: 1500, pingPong: true, delay: 500 })
+            .filter("Glow", { color: 0x111111, distance: 10 })
             .opacity(0.9)
             .zIndex(0.1)
             .persist()
             .name(`Divine Sense`)
             .playIf(() => {
-                if (mba.findEffect(target.actor, "Nondetection")) return false;
-                if (!canSee) return false;
+                if (nondetection || !canSee) return false;
                 return type === "undead";
             })
 
@@ -203,7 +197,7 @@ export async function divineSense({ speaker, actor, token, character, item, args
             .file("jb2a.extras.tmfx.outflow.circle.01")
             .attachTo(target, { locale: true })
             .scaleToObject(1.5, { considerTokenScale: false })
-            .delay(gridDistance * 130)
+            .delay(gridDistance * canvas.grid.size)
             .fadeIn(4000, { delay: 0 })
             .fadeOut(3500, { ease: "easeInSine" })
             .scaleIn(0, 3500, { ease: "easeInOutCubic" })
@@ -214,8 +208,7 @@ export async function divineSense({ speaker, actor, token, character, item, args
             .persist()
             .name(`Divine Sense`)
             .playIf(() => {
-                if (mba.findEffect(target.actor, "Nondetection")) return false;
-                if (!canSee) return false;
+                if (nondetection || !canSee) return false;
                 return type === "undead";
             })
 

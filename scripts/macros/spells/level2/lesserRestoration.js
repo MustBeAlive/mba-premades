@@ -3,21 +3,21 @@ import {mba} from "../../../helperFunctions.js";
 export async function lesserRestoration({ speaker, actor, token, character, item, args, scope, workflow }) {
     
 const target = workflow.targets.first();
-let resorationType = await mba.dialog('Lesser Restoration: Type', [['Condition', 'condition'], ['Disease', 'disease']], `<b>Choose type of effect to remove:</b>`);
+let resorationType = await mba.dialog("Lesser Restoration: Type", [["Condition", "condition"], ["Disease", "disease"]], `<b>Choose type of effect to remove:</b>`);
 if (!resorationType) return;
-if (resorationType === 'condition') {
+if (resorationType === "condition") {
     let conditions = [
-        ['Blindned', 'blindness'],
-        ['Deafened', 'deafness'],
-        ['Paralyzed', 'paralyzed'],
-        ['Poisoned', 'poisoned'],
-        ['Level of Exhaustion', 'exhaustion']
+        ["Blindned", "blindness", "modules/mba-premades/icons/conditions/blinded.webp"],
+        ["Deafened", "deafness", "modules/mba-premades/icons/conditions/deafened.webp"],
+        ["Paralyzed", "paralyzed", "modules/mba-premades/icons/conditions/paralyzed.webp"],
+        ["Poisoned", "poisoned", "modules/mba-premades/icons/conditions/poisoned.webp"],
+        ["Level of Exhaustion", "exhaustion", "modules/mba-premades/icons/conditions/exhausted.webp"]
     ];
     let effect;
-    let conditionType = await mba.dialog("Lesser Restoration: Condition", conditions, `<b>Which condition would you like to remove?</b>`);
+    let conditionType = await mba.selectImage("Lesser Restoration: Condition", conditions, `<b>Which condition would you like to remove?</b>`, "value");
     if (!conditionType) return;
     switch (conditionType) {
-        case 'blindness': {
+        case "blindness": {
             effect = await mba.findEffect(target.actor, "Blinded");
             if (!effect) {
                 ui.notifications.warn("Target is not blinded!");
@@ -26,7 +26,7 @@ if (resorationType === 'condition') {
             await mba.removeEffect(effect);
             break;
         }
-        case 'deafness': {
+        case "deafness": {
             effect = await mba.findEffect(target.actor, "Deafened");
             if (!effect) {
                 ui.notifications.warn("Target is not deafened!");
@@ -35,7 +35,7 @@ if (resorationType === 'condition') {
             await mba.removeEffect(effect);
             break;
         }
-        case 'paralyzed': {
+        case "paralyzed": {
             effect = await mba.findEffect(target.actor, "Paralyzed");
             if (!effect) {
                 ui.notifications.warn("Target is not paralyzed!");
@@ -44,7 +44,7 @@ if (resorationType === 'condition') {
             await mba.removeEffect(effect);
             break;
         }
-        case 'poisoned': {
+        case "poisoned": {
             let effectsFirst = target.actor.effects.filter(i => i.name.includes("Poison"));
             if (!effectsFirst.length) {
                 ui.notifications.warn("Target is not poisoned!");
@@ -57,7 +57,8 @@ if (resorationType === 'condition') {
                     return;
                 }
                 await mba.removeEffect(poison);
-            } else {
+            }
+            else {
                 let effects = effectsFirst.filter(i => i.name != "Poisoned");
                 if (effects.length < 2) {
                     let poison = await mba.findEffect(target.actor, effects[0].name);
@@ -68,13 +69,13 @@ if (resorationType === 'condition') {
                     await mba.removeEffect(poison);
                 } else {
                     let effectToRemove = await mba.selectEffect("Lesser Restoration: Poison", effects, "<b>Choose one effect:</b>", false);
-                    if (effectToRemove === false) return;
+                    if (!effectToRemove) return;
                     await mba.removeEffect(effectToRemove);
                 }
             }
             break;
         }
-        case 'exhaustion': {
+        case "exhaustion": {
             let exhaustion = target.actor.effects.filter(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
             if (!exhaustion.length) {
                 ui.notifications.warn("Target has no levels of Exhaustion!");
@@ -92,14 +93,14 @@ if (resorationType === 'condition') {
     }
 }
 else if (resorationType === "disease") {
-    let curable = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true).filter(e => e.flags['mba-premades']?.lesserRestoration === true);
+    let curable = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true && e.flags['mba-premades']?.lesserRestoration === true);
     if (!curable.length) {
-        let uncurable = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true).filter(e => !e.flags['mba-premades']?.lesserRestoration === true);
+        let uncurable = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true && !e.flags['mba-premades']?.lesserRestoration === true);
         if (!uncurable.length) {
-            ui.notifications.warn('Target is not affected by any disease!');
+            ui.notifications.warn("Target is not affected by any disease!");
             return;
         }
-        ui.notifications.warn('Targeted creature is affected by a disease which can not be cured with Lesser Restoration!');
+        ui.notifications.warn("Targeted creature is affected by a disease which can not be cured with Lesser Restoration!");
         return;
     }
     const [diseaseEffect] = await new Promise(async (resolve) => {

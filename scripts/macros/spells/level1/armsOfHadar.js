@@ -3,8 +3,9 @@ import {mba} from "../../../helperFunctions.js";
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let targets = Array.from(workflow.targets);
     new Sequence()
-        .thenDo(function () {
-            targets.forEach(target => {
+
+        .thenDo(async () => {
+            for (let target of targets) {
                 new Sequence()
 
                     .effect()
@@ -13,7 +14,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                     .scaleToObject(target.document.texture.scaleX)
                     .fadeOut(100)
                     .persist()
-                    .name(`${target.document.name} Arms of Hadar`)
+                    .name(`${target.document.name} ArOfHa`)
 
                     .wait(150)
 
@@ -22,12 +23,12 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                     .opacity(0)
 
                     .play()
-            })
+            }
         })
 
         .effect()
         .file(`jb2a.ward.rune.dark_purple.01`)
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(1.85)
         .scaleIn(0, 600, { ease: "easeOutCubic" })
         .belowTokens()
@@ -36,7 +37,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.arms_of_hadar.dark_purple")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .randomRotation()
         .scaleIn(0, 1500, { ease: "easeOutCirc" })
         .fadeOut(500)
@@ -46,7 +47,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.extras.tmfx.outflow.circle.01")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .filter("ColorMatrix", { brightness: -1 })
         .randomRotation()
         .size(1.5, { gridUnits: true })
@@ -57,7 +58,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.particles.outward.purple.01.02")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleIn(0, 1000, { ease: "easeOutQuint" })
         .delay(500)
         .fadeOut(1000)
@@ -71,14 +72,14 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.extras.tmfx.border.circle.inpulse.01.fast")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(1.5)
         .filter("ColorMatrix", { brightness: -1 })
         .waitUntilFinished()
 
         .effect()
         .file("jb2a.impact.ground_crack.dark_red.02")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .delay(150)
         .belowTokens()
         .size(3.5, { gridUnits: true })
@@ -86,7 +87,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.impact.004.dark_purple")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .delay(150)
         .scaleToObject(4)
         .filter("ColorMatrix", { hue: -100, brightness: -1 })
@@ -94,7 +95,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.arms_of_hadar.dark_purple")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .delay(150)
         .randomRotation()
         .scaleIn(0, 750, { ease: "easeOutCirc" })
@@ -106,10 +107,10 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .zIndex(1)
         .duration(2000)
 
-        .thenDo(function () {
-            targets.forEach(target => {
-                let tokenCenterX = token.x + canvas.grid.size * target.document.width / 2
-                let tokenCenterY = token.y + canvas.grid.size * target.document.width / 2
+        .thenDo(async () => {
+            for (let target of targets) {
+                let tokenCenterX = workflow.token.x + canvas.grid.size * target.document.width / 2
+                let tokenCenterY = workflow.token.y + canvas.grid.size * target.document.width / 2
                 let targetCenterX = target.x + canvas.grid.size * target.document.width / 2
                 let targetCenterY = target.y + canvas.grid.size * target.document.width / 2
                 let newX = targetCenterX - (canvas.grid.size / 2.5 * Math.sign(tokenCenterX - targetCenterX))
@@ -125,7 +126,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                     .opacity(0.75)
 
                     .thenDo(function () {
-                        Sequencer.EffectManager.endEffects({ name: `${target.document.name} Arms of Hadar` })
+                        Sequencer.EffectManager.endEffects({ name: `${target.document.name} ArOfHa` })
                     })
 
                     .effect()
@@ -159,7 +160,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
                     .opacity(1)
 
                     .play()
-            })
+            }
         })
         .play()
 }
@@ -167,8 +168,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     for (let target of Array.from(workflow.failedSaves)) {
-        if (mba.findEffect(target.actor, 'Reaction')) continue;
-        await mba.addCondition(target.actor, 'Reaction');
+        if (!mba.findEffect(target.actor, "Reaction")) await mba.addCondition(target.actor, "Reaction");
     }
 }
 

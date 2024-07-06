@@ -66,10 +66,7 @@ async function chromatic({ speaker, actor, token, character, item, args, scope, 
         .play()
 
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Race Feature Items', "Breath Weapon: Save", false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Breath Weapon: Save)");
-        return;
-    }
+    if (!featureData) return;
     delete featureData._id;
     let level = workflow.actor.system.details.level;
     let damageDice = 1;
@@ -148,10 +145,7 @@ async function metallic({ speaker, actor, token, character, item, args, scope, w
         .play()
 
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Race Feature Items', "Breath Weapon: Save", false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Breath Weapon: Save)");
-        return;
-    }
+    if (!featureData) return;
     delete featureData._id;
     let damageDice = 1;
     if (level >= 5 && level < 11) damageDice = 2;
@@ -232,10 +226,7 @@ async function metallic5({ speaker, actor, token, character, item, args, scope, 
         .play()
 
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Race Feature Items', "Breath Weapon: Save", false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Breath Weapon: Save)");
-        return;
-    }
+    if (!featureData) return;
     delete featureData._id;
     featureData.system.save.dc = 8 + workflow.actor.system.abilities.con.mod + workflow.actor.system.attributes.prof;
     featureData.system.save.ability = "con";
@@ -254,7 +245,7 @@ async function metallic5({ speaker, actor, token, character, item, args, scope, 
             'icon': icon,
             'origin': workflow.item.uuid,
             'description': `
-                <p>You are Incapacitated until the start of <b>${workflow.token.document.name}</b> next turn.</p>
+                <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.LCcuJNMKrGouZbFJ]{Incapacitated} until the start of <b>${workflow.token.document.name}</b> next turn.</p>
             `,
             'changes': [
                 {

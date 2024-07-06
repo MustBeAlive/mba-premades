@@ -14,10 +14,7 @@ export async function circletOfBlasting({ speaker, actor, token, character, item
         return;
     }
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Scorching Ray: Bolt', false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Scorching Ray: Bolt)");
-        return;
-    }
+    if (!featureData) return;
     delete featureData._id;
     featureData.system.formula = `1d20 + 5`;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });

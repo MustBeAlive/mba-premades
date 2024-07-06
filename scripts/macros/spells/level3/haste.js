@@ -100,7 +100,6 @@ export async function haste({ speaker, actor, token, character, item, args, scop
         .effect()
         .file("animated-spell-effects-cartoon.air.portal")
         .attachTo(target, { offset: { x: 0, y: -0.0 }, gridUnits: true, followRotation: false })
-        .attachTo(target, { offset: { x: 0, y: -0.0 }, gridUnits: true, followRotation: false })
         .scaleToObject(2.5)
         .fadeIn(250)
         .scaleIn(0, 500, { ease: "easeOutCubic" })
@@ -163,10 +162,10 @@ export async function haste({ speaker, actor, token, character, item, args, scop
         .tint("#fef848")
 
         .effect()
-        .delay(700)
         .file("animated-spell-effects-cartoon.smoke.19")
         .attachTo(target, { offset: { x: -0.4 * target.document.width, y: -0.25 * target.document.width }, gridUnits: true, followRotation: false })
         .scaleToObject(1.2, { considerTokenScale: true })
+        .delay(700)
         .belowTokens(false)
         .mirrorY(true)
         .rotate(110)
@@ -175,18 +174,21 @@ export async function haste({ speaker, actor, token, character, item, args, scop
         .tint("#fef848")
 
         .effect()
-        .delay(700)
         .file("animated-spell-effects-cartoon.smoke.19")
         .attachTo(target, { offset: { x: -0.4 * target.document.width, y: -0.35 * target.document.width }, gridUnits: true, followRotation: false })
         .scaleToObject(1.2, { considerTokenScale: true })
+        .delay(700)
         .belowTokens(false)
         .mirrorY(true)
         .rotate(110)
         .zIndex(0.1)
         .tint("#fef848")
+        
+        .wait(1400)
+
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
+        })
 
         .play()
-
-    await warpgate.wait(1400);
-    await mba.createEffect(target.actor, effectData);
 }

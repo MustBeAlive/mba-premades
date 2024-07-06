@@ -4,16 +4,16 @@ async function redBlossom({ speaker, actor, token, character, item, args, scope,
     if (!workflow.hitTargets.size) return;
     let target = workflow.targets.first();
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Red Blossom` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} RedB` })
     }
     const effectData = {
         'name': `Tri-flower Frond: Grapple`,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are grappled by Tri-flower Frond's Reb Blossom vines.</p>
-            <p>Until this grapple ends, you take 2d4poison damage at the start of each of your turns.</p>
-            <p>Another creature within reach of the Tri-flower Frond can use its Action to end the grapple on you.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.EthsAglVRC2bOxun]{Grappled} by Tri-flower Frond's Reb Blossom vines.</p>
+            <p>Until this @UUID[Compendium.mba-premades.MBA SRD.Item.EthsAglVRC2bOxun]{Grappled} ends, you take 2d4poison damage at the start of each of your turns.</p>
+            <p>Another creature within reach of the Tri-flower Frond can use its Action to end the @UUID[Compendium.mba-premades.MBA SRD.Item.EthsAglVRC2bOxun]{Grappled} on you.</p>
         `,
         'changes': [
             {
@@ -46,25 +46,26 @@ async function redBlossom({ speaker, actor, token, character, item, args, scope,
             }
         }
     };
+    if (!mba.findEffect(target.actor, "Tri-flower Frond: Grapple") && !mba.checkTrait(target.actor, "ci", "grappled")) {
+        new Sequence()
 
-    new Sequence()
+            .effect()
+            .file("jb2a.entangle.brown")
+            .attachTo(target)
+            .scaleToObject(1.5)
+            .fadeIn(1000)
+            .fadeOut(1000)
+            .filter("ColorMatrix", { hue: 335 })
+            .mask()
+            .persist()
+            .name(`${target.document.name} RedB`)
 
-        .effect()
-        .file("jb2a.entangle.brown")
-        .attachTo(target)
-        .scaleToObject(1.5)
-        .fadeIn(1000)
-        .fadeOut(1000)
-        .filter("ColorMatrix", { hue: 335 })
-        .mask()
-        .persist()
-        .name(`${target.document.name} Red Blossom`)
+            .thenDo(async () => {
+                await mba.createEffect(target.actor, effectData);
+            })
 
-        .thenDo(async () => {
-            await mba.createEffect(target.actor, effectData);
-        })
-
-        .play()
+            .play()
+    }
 }
 
 async function orangeBlossom({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -80,7 +81,7 @@ async function orangeBlossom({ speaker, actor, token, character, item, args, sco
         });
     }
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Orange Blossom` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} OraB` })
     }
     const effectData = {
         'name': `Tri-flower Frond: Poison`,
@@ -90,8 +91,8 @@ async function orangeBlossom({ speaker, actor, token, character, item, args, sco
             'seconds': 3600
         },
         'description': `
-            <p>You are poisoned by Tri-flower Frond's Orange Blossom vines.</p>
-            <p>While poisoned in this way, you are unconscious.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.pAjPUbk2oPUTfva2]{Poisoned} by Tri-flower Frond's Orange Blossom vines.</p>
+            <p>While @UUID[Compendium.mba-premades.MBA SRD.Item.pAjPUbk2oPUTfva2]{Poisoned} in this way, you are @UUID[Compendium.mba-premades.MBA SRD.Item.kIUR1eRcTTtaMFao]{Unconscious}.</p>
             <p>At the end of each minute, you can repeat the saving throw, ending the effect on a success.</p>
         `,
         'changes': [
@@ -119,24 +120,25 @@ async function orangeBlossom({ speaker, actor, token, character, item, args, sco
             }
         }
     };
+    if (!mba.findEffect(target.actor, "Tri-flower Frond: Poison") && !mba.checkTrait(target.actor, "ci", "poisoned")) {
+        new Sequence()
 
-    new Sequence()
+            .effect()
+            .file("jb2a.entangle.brown")
+            .attachTo(target)
+            .scaleToObject(1.5)
+            .fadeIn(1000)
+            .fadeOut(1000)
+            .mask()
+            .persist()
+            .name(`${target.document.name} OraB`)
 
-        .effect()
-        .file("jb2a.entangle.brown")
-        .attachTo(target)
-        .scaleToObject(1.5)
-        .fadeIn(1000)
-        .fadeOut(1000)
-        .mask()
-        .persist()
-        .name(`${target.document.name} Orange Blossom`)
+            .thenDo(async () => {
+                await mba.createEffect(target.actor, effectData);
+            })
 
-        .thenDo(async () => {
-            await mba.createEffect(target.actor, effectData);
-        })
-
-        .play()
+            .play()
+    }
 }
 
 async function yellowBlossom({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -150,7 +152,7 @@ async function yellowBlossom({ speaker, actor, token, character, item, args, sco
         await mbaPremades.helpers.applyDamage(actor, damage, 'acid');
     };
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Yellow Blossom` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} YelB` })
     };
     const effectData = {
         'name': `Tri-flower Frond: Corrosion`,
@@ -183,25 +185,26 @@ async function yellowBlossom({ speaker, actor, token, character, item, args, sco
             }
         }
     };
+    if (!mba.findEffect(target.actor, "Tri-flower Frond: Corrosion")) {
+        new Sequence()
 
-    new Sequence()
+            .effect()
+            .file("jb2a.entangle.yellow")
+            .attachTo(target)
+            .scaleToObject(1.5)
+            .fadeIn(1000)
+            .fadeOut(1000)
+            .filter("ColorMatrix", { hue: 25 })
+            .mask()
+            .persist()
+            .name(`${target.document.name} YelB`)
 
-        .effect()
-        .file("jb2a.entangle.yellow")
-        .attachTo(target)
-        .scaleToObject(1.5)
-        .fadeIn(1000)
-        .fadeOut(1000)
-        .filter("ColorMatrix", { hue: 25 })
-        .mask()
-        .persist()
-        .name(`${target.document.name} Yellow Blossom`)
+            .thenDo(async () => {
+                await mba.createEffect(target.actor, effectData);
+            })
 
-        .thenDo(async () => {
-            await mba.createEffect(target.actor, effectData);
-        })
-
-        .play()
+            .play()
+    }
 }
 
 

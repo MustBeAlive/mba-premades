@@ -21,7 +21,7 @@ export async function hide({ speaker, actor, token, character, item, args, scope
             .wait(500)
 
             .thenDo(async () => {
-                Sequencer.EffectManager.endEffects({ name: `${token.document.name} Hide`, object: token })
+                Sequencer.EffectManager.endEffects({ name: `${token.document.name} Hide`})
             })
 
             .play();

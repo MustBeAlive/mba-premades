@@ -5,7 +5,7 @@ export async function healingHands({ speaker, actor, token, character, item, arg
     let prof = workflow.actor.system.attributes.prof;
     let formula = `${prof}d4[healing]`;
     let healingRoll = await new Roll(formula).roll({ 'async': true });
-    await MidiQOL.displayDSNForRoll(healingRoll, 'damageRoll');
+    await MidiQOL.displayDSNForRoll(healingRoll);
     new Sequence()
 
         .effect()

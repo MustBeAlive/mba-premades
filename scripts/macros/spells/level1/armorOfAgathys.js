@@ -1,6 +1,6 @@
-import { constants } from "../../generic/constants.js";
-import { mba } from "../../../helperFunctions.js";
-import { queue } from "../../mechanics/queue.js";
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroStart() {
@@ -63,7 +63,7 @@ async function onHit(workflow, targetToken) {
     let queueSetup = await queue.setup(workflow.uuid, 'armorOfAgathys', 50);
     if (!queueSetup) return;
     if (tempHP === 0) await mba.removeEffect(effect);
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Armor of Agathys: Damage Reflect');
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Armor of Agathys: Damage Reflect", false);
     if (!featureData) {
         queue.remove(workflow.uuid);
         return;
@@ -148,7 +148,7 @@ async function start(token) {
         .opacity(0.9)
         .zIndex(2)
         .persist()
-        .name(`${token.document.name} Armor of Agathys`)
+        .name(`${token.document.name} ArOfAg`)
 
         .effect()
         .file('jb2a.extras.tmfx.outflow.circle.01')
@@ -163,7 +163,7 @@ async function start(token) {
         .opacity(0.9)
         .zIndex(1)
         .persist()
-        .name(`${token.document.name} Armor of Agathys`)
+        .name(`${token.document.name} ArOfAg`)
 
         .effect()
         .file('jb2a.template_circle.symbol.normal.snowflake.blue')
@@ -178,7 +178,7 @@ async function start(token) {
         .opacity(0.75)
         .zIndex(2)
         .persist()
-        .name(`${token.document.name} Armor of Agathys`)
+        .name(`${token.document.name} ArOfAg`)
 
         .effect()
         .file('jb2a.shield.01.loop.blue')
@@ -189,7 +189,7 @@ async function start(token) {
         .opacity(0.75)
         .zIndex(1)
         .persist()
-        .name(`${token.document.name} Armor of Agathys`)
+        .name(`${token.document.name} ArOfAg`)
 
         .waitUntilFinished(-1000)
 
@@ -197,7 +197,7 @@ async function start(token) {
 }
 
 async function end(token) {
-    Sequencer.EffectManager.endEffects({ 'name': `${token.document.name} Armor of Agathys`, 'object': token });
+    Sequencer.EffectManager.endEffects({ 'name': `${token.document.name} ArOfAg` });
     new Sequence()
 
         .effect()

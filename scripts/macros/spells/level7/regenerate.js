@@ -1,10 +1,12 @@
 import {mba} from "../../../helperFunctions.js";
 
+// To do: animations
+
 export async function regenerate({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacro() {
         await game.Gametime.doEvery({ second: 6 }, async () => {
-            if (actor.system.attributes.hp.value < actor.system.attributes.hp.max) {
+            if (token.actor.system.attributes.hp.value < token.actor.system.attributes.hp.max) {
                 await mbaPremades.helpers.applyDamage([token], 1, 'healing');
             }
         });

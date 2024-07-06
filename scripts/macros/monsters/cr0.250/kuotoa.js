@@ -30,7 +30,7 @@ async function stickyShield(workflow) {
         'icon': "icons/equipment/shield/heater-emossed-spiral-green.webp",
         'description': `
             <p>Your weapon is stuck in Kuo-toa's Sticky Shield</p>
-            <p>Since you keep holding it, you are grappled while the weapon is still stuck.</p>
+            <p>Since you keep holding it, you are @UUID[Compendium.mba-premades.MBA SRD.Item.EthsAglVRC2bOxun]{Grappled} while the weapon is still stuck.</p>
             <p>While stuck, this weapon cannot be used.</p>
             <p>You can try to pull the weapon free by taking an action to make a DC 11 Strength check and succeeding.</p>
         `,

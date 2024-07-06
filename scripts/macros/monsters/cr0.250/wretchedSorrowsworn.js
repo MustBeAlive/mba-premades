@@ -14,15 +14,12 @@ async function attach({ speaker, actor, token, character, item, args, scope, wor
     let effect = await mba.findEffect(workflow.actor, `Wretched Sorrowsworn: Attach`);
     if (effect) return;
     async function effectMacroStart() {
-        let effect = await mbaPremades.helpers.findEffect(actor, "Wretched Sorrowsworn: Attach");
+        let effect = await mbaPremades.helpers.findEffect(token.actor, "Wretched Sorrowsworn: Attach");
         if (!effect) return;
         let target = await fromUuid(effect.flags['mba-premades']?.feature?.wretchedSorrowsworn?.targetUuid);
         let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Monster Features', 'Wretched Sorrowsworn: Turn Start', false);
-        if (!featureData) {
-            ui.notifications.warn("Can't find item in compenidum! (Wretched Sorrowsworn: Turn Start)");
-            return
-        }
-        let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
+        if (!featureData) return;
+        let feature = new CONFIG.Item.documentClass(featureData, { 'parent': token.actor });
         let [config, options] = mbaPremades.constants.syntheticItemWorkflowOptions([target.uuid]);
         await MidiQOL.completeItemUse(feature, config, options);
     }

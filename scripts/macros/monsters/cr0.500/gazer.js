@@ -6,7 +6,7 @@ async function rayRoll({ speaker, actor, token, character, item, args, scope, wo
     let rollFormula = "1d4";
     if (mba.getSize(target.actor) > 2) rollFormula = "1d3";
     let rayRoll = await new Roll(rollFormula).roll({ 'async': true });
-    await MidiQOL.displayDSNForRoll(rayRoll, 'damageRoll');
+    await MidiQOL.displayDSNForRoll(rayRoll);
     rayRoll.toMessage({
         rollMode: 'roll',
         speaker: { 'alias': name },
@@ -17,34 +17,22 @@ async function rayRoll({ speaker, actor, token, character, item, args, scope, wo
     let ray = rayRoll.total;
     if (ray === 1) {
         featureData = await mba.getItemFromCompendium('mba-premades.MBA Monster Features', 'Gazer: Dazing Ray', false);
-        if (!featureData) {
-            ui.notifications.warn("Unable to find item in the compenidum! (Gazer: Dazing Ray)");
-            return
-        }
+        if (!featureData) return;
         animation = "jb2a.scorching_ray.01.pink";
     }
     if (ray === 2) {
         featureData = await mba.getItemFromCompendium('mba-premades.MBA Monster Features', 'Gazer: Fear Ray', false);
-        if (!featureData) {
-            ui.notifications.warn("Unable to find item in the compenidum! (Gazer: Fear Ray)");
-            return
-        }
+        if (!featureData) return;
         animation = "jb2a.scorching_ray.01.green";
     }
     if (ray === 3) {
         featureData = await mba.getItemFromCompendium('mba-premades.MBA Monster Features', 'Gazer: Frost Ray', false);
-        if (!featureData) {
-            ui.notifications.warn("Unable to find item in the compenidum! (Gazer: Frost Ray)");
-            return
-        }
+        if (!featureData) return;
         animation = "jb2a.scorching_ray.blue.01";
     }
     if (ray === 4) {
         featureData = await mba.getItemFromCompendium('mba-premades.MBA Monster Features', 'Gazer: Telekinetic Ray', false);
-        if (!featureData) {
-            ui.notifications.warn("Unable to find item in the compenidum! (Gazer: Telekinetic Ray)");
-            return
-        }
+        if (!featureData) return;
         animation = "jb2a.scorching_ray.01.red";
     }
     delete featureData._id;
@@ -82,7 +70,7 @@ async function rayDazing({ speaker, actor, token, character, item, args, scope, 
             },
             {
                 'key': 'system.attributes.movement.walk',
-                'mode': 2,
+                'mode': 1,
                 'value': '*0.5',
                 'priority': 20
             },
@@ -100,7 +88,7 @@ async function rayDazing({ speaker, actor, token, character, item, args, scope, 
             }
         }
     };
-    await mba.createEffect(target.actor, effectData);
+    if (!mba.findEffect(target.actor, "Gazer: Dazing Ray") && !mba.checkTrait(target.actor, "ci", "charmed")) await mba.createEffect(target.actor, effectData);
 }
 
 async function rayFear({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -128,7 +116,7 @@ async function rayFear({ speaker, actor, token, character, item, args, scope, wo
             }
         }
     };
-    await mba.createEffect(target.actor, effectData);
+    if (!mba.findEffect(target.actor, "Gazer: Fear Ray") && !mba.checkTrait(target.actor, "ci", "frightened")) await mba.createEffect(target.actor, effectData);
 }
 
 async function rayTelekinetic({ speaker, actor, token, character, item, args, scope, workflow }) {

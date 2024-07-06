@@ -5,11 +5,8 @@ import {queue} from '../../mechanics/queue.js';
 
 export async function scorchingRay({ speaker, actor, token, character, item, args, scope, workflow }) {
     let maxRays = workflow.castData.castLevel + 1;
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Scorching Ray: Bolt', false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Scorching Ray: Bolt)");
-        return;
-    }
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Scorching Ray: Bolt", false);
+    if (!featureData) return;
     delete featureData._id;
     featureData.system.ability = workflow.item.system.ability;
     featureData.flags['mba-premades'] = { 'spell': { 'castData': workflow.castData } };

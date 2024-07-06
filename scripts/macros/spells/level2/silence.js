@@ -1,4 +1,4 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
@@ -18,7 +18,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         }
     });
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Silence`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Silence` })
     };
     const effectData = {
         'name': "Silence",
@@ -130,7 +130,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         })
 
         .effect()
-        .file("jb2a.markers.bubble.complete.blue")
+        .file("jb2a.markers.bubble.loop.blue")
         .attachTo(template)
         .size(9, { gridUnits: true })
         .fadeIn(500)
@@ -149,7 +149,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .size(9, { gridUnits: true })
         .opacity(0.2)
         .fadeIn(500)
-        .fadeOut(2000, { delay: 5000 })
+        .fadeOut(2000)
         .scaleIn(0.1, 1000, { ease: "easeOutBack" })
         .zIndex(2)
         .playbackRate(0.8)
@@ -186,7 +186,7 @@ async function trigger(token, trigger) {
     if (!template) return;
     await template.setFlag('mba-premades', 'spell.silence.tokens.' + token.id, token.id);
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Silence`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Silence` })
     };
     const effectData = {
         'name': "Silence",
@@ -272,12 +272,8 @@ async function end(template) {
     for (let token of tokens) {
         let effect = mba.findEffect(token.actor, 'Silence');
         if (!effect) continue;
-        console.log(token);
-        console.log(effect);
         let originUuid = template.flags.dnd5e?.origin;
         if (!originUuid) continue;
-        console.log(originUuid);
-        console.log(effect.origin);
         if (effect.origin != originUuid) continue;
         await mba.removeEffect(effect);
     }

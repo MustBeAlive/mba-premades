@@ -9,12 +9,7 @@ export async function prayerOfHealing({ speaker, actor, token, character, item, 
     let diceNumber = workflow.castData.castLevel;
     let damageFormula = `${diceNumber}d8[healing] + ${mba.getSpellMod(workflow.item)}`;
     let damageRoll = await new Roll(damageFormula).roll({ 'async': true });
-    await MidiQOL.displayDSNForRoll(damageRoll, 'damageRoll');
-    damageRoll.toMessage({
-        rollMode: 'roll',
-        speaker: { 'alias': name },
-        flavor: workflow.item.name
-    });
+    await MidiQOL.displayDSNForRoll(damageRoll);
     let selection = await mba.selectTarget('Prayer of Healing', constants.okCancel, targets, true, 'multiple', undefined, false, `Choose targets you'd like to heal: (Max: 6)`);
     if (!selection.buttons) return;
     let selectedTokens = [];

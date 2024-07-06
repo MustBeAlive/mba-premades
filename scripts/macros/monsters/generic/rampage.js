@@ -1,15 +1,17 @@
+import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
 export async function rampage({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.hitTargets.size) return;
     let target = workflow.targets.first();
     if (target.actor.system.attributes.hp.value > 0) return;
-    let originFeature = workflow.actor.items.find(i => i.name === "Rampage");
-    if (!originFeature) return;
+    if (!constants.meleeAttacks.includes(workflow.item?.system?.actionType)) return;
+    let feature = mba.getItem(workflow.actor, "Rampage")
+    if (!feature) return;
     let moveBonus = Math.min(workflow.actor.system.attributes.movement.walk / 2);
     const effectData = {
         'name': "Rampage",
-        'icon': "icons/skills/social/intimidation-impressing.webp",
+        'icon': "modules/mba-premades/icons/generic/rampage.webp",
         'origin': workflow.item.uuid,
         'description': `
             <p>After ${token.document.name} reduces a creature to 0 hit points with a melee attack on its turn, he moves up to half its speed (${moveBonus} ft.) and makes one Bite attack.</p>
@@ -25,7 +27,7 @@ export async function rampage({ speaker, actor, token, character, item, args, sc
                 'priority': 20
             }
         ]
-    }
+    };
     new Sequence()
 
         .effect()
@@ -42,7 +44,7 @@ export async function rampage({ speaker, actor, token, character, item, args, sc
         .playbackRate(0.6)
 
         .thenDo(async () => {
-            await originFeature.use();
+            await feature.displayCard();
             await mba.createEffect(workflow.actor, effectData);
         })
 

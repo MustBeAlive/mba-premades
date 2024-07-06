@@ -10,13 +10,12 @@ export async function heroism({ speaker, actor, token, character, item, args, sc
         mba.updateTargets(newTargets);
     }
     await warpgate.wait(100);
-    let targets = Array.from(game.user.targets);
     async function effectMacroTurnStart() {
         let tempHP = mbaPremades.helpers.getSpellMod(origin);
         if (actor.system.attributes.hp.temp < tempHP) await mbaPremades.helpers.applyDamage([token], tempHP, 'temphp');
     };
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Heroism`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Heroism` })
         if (actor.system.attributes.hp.temp === 0) return;
         await actor.update({ 'system.attributes.hp.temp': 0 });
     };
@@ -25,7 +24,7 @@ export async function heroism({ speaker, actor, token, character, item, args, sc
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are imbued with bravery. Until the spell ends, you are immune to being frightened and gain temporary hit points equal to caster's spellcasting ability modifier at the start of each of your turn.</p>
+            <p>You are imbued with bravery. Until the spell ends, you are immune to being @UUID[Compendium.mba-premades.MBA SRD.Item.oR1wUvem3zVVUv5Q]{Frightened} and gain temporary hit points equal to caster's spellcasting ability modifier at the start of each of your turn.</p>
             <p>When the spell ends, you lose any remaining temporary hit points from this spell.</p>
         `,
         'duration': {
@@ -57,14 +56,14 @@ export async function heroism({ speaker, actor, token, character, item, args, sc
             }
         }
     };
-    for (let target of targets) {
+    for (let target of Array.from(game.user.targets)) {
         let delay = 500 + Math.floor(Math.random() * (Math.floor(1000) - Math.ceil(50)) + Math.ceil(50));
 
         new Sequence()
 
             .effect()
             .file("jb2a.energy_beam.normal.yellow.03")
-            .attachTo(token)
+            .attachTo(workflow.token)
             .stretchTo(target)
             .delay(delay)
             .duration(3000)

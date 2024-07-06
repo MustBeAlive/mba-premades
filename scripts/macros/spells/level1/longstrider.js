@@ -14,8 +14,6 @@ export async function longstrider({ speaker, actor, token, character, item, args
         let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
         mba.updateTargets(newTargets);
     }
-    await warpgate.wait(100);
-    let targets = Array.from(game.user.targets);
     const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
@@ -44,14 +42,14 @@ export async function longstrider({ speaker, actor, token, character, item, args
             }
         }
     };
-    for (let target of targets) {
+    for (let target of Array.from(game.user.targets)) {
         new Sequence()
 
             .wait(500)
 
             .effect()
             .file("jb2a.energy_beam.normal.yellow.03")
-            .attachTo(token)
+            .attachTo(workflow.token)
             .stretchTo(target)
             .duration(10500)
             .fadeIn(1000)
@@ -69,7 +67,6 @@ export async function longstrider({ speaker, actor, token, character, item, args
             .scaleOut(0, 3500, { ease: "easeInSine" })
             .belowTokens()
             .playbackRate(0.9)
-            .name(`${target.document.name} Longstrider`)
 
             .effect()
             .file("jb2a.energy_field.02.below.yellow")
@@ -79,7 +76,6 @@ export async function longstrider({ speaker, actor, token, character, item, args
             .fadeIn(1000)
             .fadeOut(1000)
             .playbackRate(0.9)
-            .name(`${target.document.name} Longstrider`)
 
             .wait(2000)
 

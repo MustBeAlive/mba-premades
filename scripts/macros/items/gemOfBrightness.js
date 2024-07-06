@@ -146,10 +146,7 @@ export async function gemOfBrightness({ speaker, actor, token, character, item, 
             return;
         }
         let featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Gem of Brightness: Blinding Light', false);
-        if (!featureData) {
-            ui.notifications.warn("Can't find item in compenidum! (Gem of Brightness: Blinding Light)");
-            return
-        }
+        if (!featureData) return;
         let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
         let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
         await game.messages.get(workflow.itemCardId).delete();
@@ -184,7 +181,8 @@ export async function gemOfBrightness({ speaker, actor, token, character, item, 
                     'originUuid': workflow.item.uuid
                 },
                 'walledtemplates': {
-                    'wallRestriction': 'move',
+                    'hideBorder': "alwaysHide",
+                    'wallRestriction': 'light',
                     'wallsBlock': 'recurse',
                 }
             },
@@ -220,10 +218,7 @@ export async function gemOfBrightness({ speaker, actor, token, character, item, 
         let targetUuids = [];
         for (let target of targets) targetUuids.push(target.document.uuid);
         let featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Gem of Brightness: Blinding Light', false);
-        if (!featureData) {
-            ui.notifications.warn("Can't find item in compenidum! (Gem of Brightness: Blinding Light)");
-            return
-        }
+        if (!featureData) return;
         let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
         let [config, options] = constants.syntheticItemWorkflowOptions(targetUuids);
         await game.messages.get(workflow.itemCardId).delete();

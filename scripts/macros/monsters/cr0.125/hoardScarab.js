@@ -2,9 +2,8 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function scaleDust({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
-    let targets = Array.from(workflow.failedSaves);
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ 'name': 'Scale Dust', object: token });
+        Sequencer.EffectManager.endEffects({ 'name': `${token.document.name} ScaD`});
     }
     let effectData = {
         'name': `${workflow.token.document.name}: Scale Dust`,
@@ -12,7 +11,7 @@ export async function scaleDust({ speaker, actor, token, character, item, args, 
         'origin': workflow.item.uuid,
         'description': `
             <p>You are outlined in blue light.</p>
-            <p>While outlined this way, you shed dim light in 10-foot radius and can't benefit from being invisible.</p>
+            <p>While outlined this way, you shed dim light in 10-foot radius and can't benefit from being @UUID[Compendium.mba-premades.MBA SRD.Item.2dEv6KlLgFA4wOni]{Invisible}.</p>
         `,
         'duration': {
             'seconds': 600
@@ -51,7 +50,7 @@ export async function scaleDust({ speaker, actor, token, character, item, args, 
             }
         }
     };
-    for (let target of targets) {
+    for (let target of Array.from(workflow.failedSaves)) {
         if (target.document.id === workflow.token.document.id) continue;
         new Sequence()
 
@@ -63,7 +62,7 @@ export async function scaleDust({ speaker, actor, token, character, item, args, 
             .fadeIn(500, { 'delay': 500 })
             .fadeOut(1500, { 'ease': 'easeInSine' })
             .persist()
-            .name('Scale Dust')
+            .name(`${target.document.name} ScaD`)
 
             .effect()
             .from(target)
@@ -76,7 +75,7 @@ export async function scaleDust({ speaker, actor, token, character, item, args, 
             .fadeOut(1500, { 'ease': 'easeInSine' })
             .zIndex(0.1)
             .persist()
-            .name('Scale Dust')
+            .name(`${target.document.name} ScaD`)
 
             .thenDo(async () => {
                 await mba.createEffect(target.actor, effectData)

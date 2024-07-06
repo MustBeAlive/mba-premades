@@ -8,14 +8,14 @@ async function net({ speaker, actor, token, character, item, args, scope, workfl
         return;
     }
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Weighted Net` });
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} WeigNet` });
     }
     const effectData = {
-        'name': workflow.item.name,
+        'name': "Frost Giant: Weighted Net",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are restrained by the Weighted Net.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.gfRbTxGiulUylAjE]{Restrained} by the Weighted Net.</p>
             <p>You can attempt to free yourself by making a Strength Ability Check (DC17).</p>
             <p>Another creature can make this check for you, or can deal at least 15 slashing damage to the net (AC12) to achieve same goal.</p>
         `,
@@ -53,12 +53,17 @@ async function net({ speaker, actor, token, character, item, args, scope, workfl
         .fadeOut(500)
         .persist()
         .noLoop()
-        .name(`${target.document.name} Weighted Net`)
+        .name(`${target.document.name} WeigNet`)
+        .playIf(() => {
+            return (!mba.checkTrait(target.actor, "ci", "restrained") && !mba.findEffect(target.actor, "Frost Giant: Weighted Net"))
+        })
 
         .wait(1000)
 
         .thenDo(async () => {
-            await mba.createEffect(target.actor, effectData)
+            if (!mba.checkTrait(target.actor, "ci", "restrained") && !mba.findEffect(target.actor, "Frost Giant: Weighted Net")) {
+                await mba.createEffect(target.actor, effectData);
+            }
         })
 
         .play()

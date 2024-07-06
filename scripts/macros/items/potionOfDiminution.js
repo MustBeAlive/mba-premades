@@ -2,7 +2,7 @@ import {mba} from "../../helperFunctions.js";
 
 export async function potionOfDiminution({ speaker, character, item, args, scope, workflow }) {
     let durationRoll = await new Roll("1d4").roll({ 'async': true });
-    await MidiQOL.displayDSNForRoll(durationRoll, 'damageRoll');
+    await MidiQOL.displayDSNForRoll(durationRoll);
     ChatMessage.create({
         content: `Potion of Diminution duration: <b>${durationRoll.total} hours</b>`,
         speaker: { actor: workflow.actor }
@@ -262,7 +262,7 @@ export async function potionOfDiminution({ speaker, character, item, args, scope
             if (!emptyVialItem) {
                 const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Vial', false);
                 if (!itemData) {
-                    ui.notifications.warn("Unable to find item in compenidum! (Empty Vial)");
+                    ui.notifications.warn("Unable to find item in compendium! (Empty Vial)");
                     return
                 }
                 await workflow.actor.createEmbeddedDocuments("Item", [itemData]);

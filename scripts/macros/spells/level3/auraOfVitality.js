@@ -1,16 +1,14 @@
 import {mba} from "../../../helperFunctions.js";
 
-export async function auraOfVitality({ speaker, actor, token, character, item, args, scope, workflow }) {
+async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Aura of Vitality: Heal Creature', false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Aura of Vitality: Heal Creature)");
-        return;
-    }
+    if (!featureData) return;
     async function effectMacroDel() {
-        await warpgate.revert(token.document, 'Aura of Vitality: Heal Creature');
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} AoV` })
+        await warpgate.revert(token.document, 'Aura of Vitality');
     }
     const effectData = {
-        'name': workflow.item.name,
+        'name': "Aura of Vitality",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
@@ -26,13 +24,11 @@ export async function auraOfVitality({ speaker, actor, token, character, item, a
                     'script': mba.functionToString(effectMacroDel)
                 }
             },
-            'flags': {
-                'midi-qol': {
-                    'castData': {
-                        baseLevel: 3,
-                        castLevel: workflow.castData.castLevel,
-                        itemUuid: workflow.item.uuid
-                    }
+            'midi-qol': {
+                'castData': {
+                    baseLevel: 3,
+                    castLevel: workflow.castData.castLevel,
+                    itemUuid: workflow.item.uuid
                 }
             }
         }
@@ -40,17 +36,67 @@ export async function auraOfVitality({ speaker, actor, token, character, item, a
     let updates = {
         'embedded': {
             'Item': {
-                [featureData.name]: featureData
+                [featureData.name]: featureData,
             },
             'ActiveEffect': {
-                [workflow.item.name]: effectData
+                [effectData.name]: effectData
             }
         }
     };
     let options = {
         'permanent': false,
-        'name': featureData.name,
-        'description': featureData.name,
+        'name': 'Aura of Vitality',
+        'description': 'Aura of Vitality'
     };
-    await warpgate.mutate(workflow.token.document, updates, {}, options);
+    new Sequence()
+
+        .effect()
+        .file("animated-spell-effects-cartoon.energy.10")
+        .attachTo(workflow.token)
+        .scaleToObject(1.4)
+        .filter("ColorMatrix", { hue: 260 })
+
+        .effect()
+        .file("jb2a.aura_themed.01.outward.complete.cold.01.green")
+        .attachTo(workflow.token)
+        .scaleToObject(3)
+        .belowTokens()
+        .fadeOut(1000)
+        .persist()
+        .name(`${workflow.token.document.name} AoV`)
+
+        .wait(400)
+
+        .thenDo(async () => {
+            await warpgate.mutate(workflow.token.document, updates, {}, options);
+        })
+
+        .play()
+}
+
+async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
+    let target = workflow.targets.first();
+
+    new Sequence()
+
+        .effect()
+        .file("animated-spell-effects-cartoon.energy.10")
+        .attachTo(target)
+        .scaleToObject(1.4)
+        .filter("ColorMatrix", { hue: 280 })
+        .waitUntilFinished(-700)
+
+        .effect()
+        .file("jb2a.healing_generic.burst.yellowwhite")
+        .attachTo(target)
+        .scaleToObject(1.35)
+        .filter("ColorMatrix", { hue: 80 })
+        .playbackRate(0.9)
+
+        .play()
+}
+
+export let auraOfVitality = {
+    'cast': cast,
+    'item': item
 }

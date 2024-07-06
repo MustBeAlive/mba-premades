@@ -57,7 +57,7 @@ async function shieldBash({ speaker, actor, token, character, item, args, scope,
         .delay(850)
 
         .thenDo(async () => {
-            await mba.addCondition(target.actor, 'Prone', false, null);
+            await mba.addCondition(target.actor, 'Prone');
         })
 
         .play();

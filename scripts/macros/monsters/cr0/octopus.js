@@ -3,6 +3,15 @@ import {mba} from "../../../helperFunctions.js";
 async function inkCloud({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
     if (!template) return;
+    await template.update({
+        'flags': {
+            'mba-premades': {
+                'spell': {
+                    'fogCloud': true
+                }
+            }
+        }
+    });
     let size = 3.5;
     if (workflow.token.document.name === "Giant Octopus") size = 8.5;
     new Sequence()

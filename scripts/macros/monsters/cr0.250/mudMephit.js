@@ -88,7 +88,7 @@ async function mudBreathItem({ speaker, actor, token, character, item, args, sco
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': `turn=end, saveAbility=dex, saveDC=11, saveMagic=false, name=Mud Breath: Action Save, killAnim=true`,
+                'value': `turn=end, saveAbility=dex, saveDC=11, saveMagic=false, name=Mud Breath: Action Save (DC11), killAnim=true`,
                 'priority': 20
             }
         ],

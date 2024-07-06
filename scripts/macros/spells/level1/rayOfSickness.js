@@ -3,14 +3,14 @@ import {mba} from "../../../helperFunctions.js";
 export async function rayOfSickness({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Ray of Sickness`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} RaOfSi` })
     };
     const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are poisoned until the end of the caster's next turn.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.pAjPUbk2oPUTfva2]{Poisoned} until the end of the caster's next turn.</p>
         `,
         'changes': [
             {
@@ -44,7 +44,7 @@ export async function rayOfSickness({ speaker, actor, token, character, item, ar
 
         .effect()
         .file("jb2a.scorching_ray.01.green")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target)
         .repeats(3, 600, 600)
 
@@ -57,7 +57,7 @@ export async function rayOfSickness({ speaker, actor, token, character, item, ar
         .fadeOut(1500)
         .mask()
         .persist()
-        .name(`${target.document.name} Ray of Sickness`)
+        .name(`${target.document.name} RaOfSi`)
         .playIf(() => {
             return workflow.failedSaves.size
         })

@@ -1,16 +1,13 @@
 import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Detect Thoughts: Probe Mind', false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Detect Thoughts: Probe Mind)");
-        return;
-    }
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Detect Thoughts: Probe Mind", false);
+    if (!featureData) return;
     delete featureData._id;
     featureData.system.save.dc = mba.getSpellDC(workflow.item);
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Detect Thoughts` })
-        await warpgate.revert(token.document, 'Detect Thoughts: Probe Mind');
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} DetTho` })
+        await warpgate.revert(token.document, "Detect Thoughts");
     }
     let effectData = {
         'name': workflow.item.name,
@@ -51,14 +48,13 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     };
     let options = {
         'permanent': false,
-        'name': featureData.name,
-        'description': featureData.name
+        'name': "Detect Thoughts",
+        'description': "Detect Thoughts"
     };
-
     const aoeDistance = 30;
     const captureArea = {
-        x: token.x + (canvas.grid.size * token.document.width) / 2,
-        y: token.y + (canvas.grid.size * token.document.width) / 2,
+        x: workflow.token.x + (canvas.grid.size * workflow.token.document.width) / 2,
+        y: workflow.token.y + (canvas.grid.size * workflow.token.document.width) / 2,
         scene: canvas.scene,
         radius: aoeDistance / canvas.scene.grid.distance * canvas.grid.size
     };
@@ -69,7 +65,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.detect_magic.circle.purple")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .size(12.5, { gridUnits: true })
         .fadeOut(4000)
         .opacity(0.75)
@@ -77,13 +73,13 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.token_border.circle.spinning.purple.001")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(2)
         .delay(1500)
         .fadeOut(1000)
         .scaleIn(0, 4000, { ease: "easeOutCubic" })
         .persist()
-        .name(`${token.document.name} Detect Thoughts`)
+        .name(`${workflow.token.document.name} DetTho`)
 
         .thenDo(async () => {
             await warpgate.mutate(workflow.token.document, updates, {}, options);
@@ -92,9 +88,12 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .play()
 
     for (let target of targets) {
-        if (target.name === workflow.token.document.name) continue;
-        const distance = Math.sqrt(Math.pow(target.x - token.x, 2) + Math.pow(target.y - token.y, 2));
-        const gridDistance = distance / canvas.grid.size
+        if (target.uuid === workflow.token.document.uuid) continue;
+        const distance = Math.sqrt(Math.pow(target.x - workflow.token.x, 2) + Math.pow(target.y - workflow.token.y, 2));
+        const gridDistance = distance / canvas.grid.size;
+        let targetIntValue = target.actor.system.abilities.int.value;
+        let languages = target.actor.system.traits.languages.value;
+        let nondetection = target.actor.flags['mba-premades']?.spell?.nondetection;
 
         new Sequence()
 
@@ -102,7 +101,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             .file("jb2a.markers.circle_of_stars.orangepurple")
             .atLocation(target)
             .scaleToObject(2.5)
-            .delay(gridDistance * 125)
+            .delay(gridDistance * canvas.grid.size)
             .duration(5000)
             .fadeIn(1000)
             .fadeOut(1000)
@@ -114,20 +113,18 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             .from(target)
             .attachTo(target, { locale: true })
             .scaleToObject(1, { considerTokenScale: true })
-            .delay(gridDistance * 125)
+            .delay(gridDistance * canvas.grid.size)
             .duration(17500)
             .fadeIn(1000, { delay: 1000 })
             .fadeOut(3500, { ease: "easeInSine" })
-            .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+            .loopProperty("alphaFilter", "alpha", { values: [0.1, 0.8], duration: 1500, pingPong: true, delay: 500 })
             .spriteRotation(target.rotation * -1)
-            .belowTokens()
-            .filter("Glow", { color: 0xab00ad, distance: 15 })
             .opacity(0.75)
             .zIndex(0.1)
+            .belowTokens()
+            .filter("Glow", { color: 0xab00ad, distance: 20 })
             .playIf(() => {
-                let targetIntValue = target.actor.system.abilities.int.value;
-                let languages = target.actor.system.traits.languages.value;
-                if (targetIntValue <= 3 || !languages.size || mba.findEffect(target.actor, "Nondetection")) return false;
+                if (targetIntValue <= 3 || !languages.size || nondetection) return false;
                 return true;
             })
 
@@ -135,7 +132,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             .file("jb2a.extras.tmfx.outflow.circle.01")
             .attachTo(target, { locale: true })
             .scaleToObject(1.5, { considerTokenScale: false })
-            .delay(gridDistance * 125)
+            .delay(gridDistance * canvas.grid.size)
             .duration(17500)
             .fadeIn(4000, { delay: 0 })
             .fadeOut(3500, { ease: "easeInSine" })
@@ -145,9 +142,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             .opacity(0.75)
             .belowTokens()
             .playIf(() => {
-                let targetIntValue = target.actor.system.abilities.int.value;
-                let languages = target.actor.system.traits.languages.value;
-                if (targetIntValue <= 3 || !languages.size || mba.findEffect(target.actor, "Nondetection")) return false;
+                if (targetIntValue <= 3 || !languages.size || nondetection) return false;
                 return true;
             })
 
@@ -173,8 +168,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
     let targetIntValue = target.actor.system.abilities.int.value;
     let languages = target.actor.system.traits.languages.value;
-    if (targetIntValue <= 3 || languages.size < 1 || mba.findEffect(target.actor, "Nondetection")) {
-        ui.notifications.info('Target is unaffected by Detect Thoughts!');
+    let nondetection = target.actor.flags['mba-premades']?.spell?.nondetection;
+    if (targetIntValue <= 3 || languages.size < 1 || nondetection) {
+        ui.notifications.info("Target is unaffected by Detect Thoughts!");
         return false;
     }
 }
@@ -189,30 +185,30 @@ async function fail({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .from(target)
-        .belowTokens()
         .attachTo(target, { locale: true })
         .scaleToObject(1, { considerTokenScale: true })
-        .spriteRotation(target.rotation * -1)
-        .filter("Glow", { color: 0xab00ad, distance: 15 })
         .duration(17500)
         .fadeIn(1000, { delay: 1000 })
         .fadeOut(3500, { ease: "easeInSine" })
+        .loopProperty("alphaFilter", "alpha", { values: [0.1, 0.8], duration: 1500, pingPong: true, delay: 500 })
+        .spriteRotation(target.rotation * -1)
         .opacity(0.75)
         .zIndex(0.1)
-        .loopProperty("alphaFilter", "alpha", { values: [0.75, 0.1], duration: 1500, pingPong: true, delay: 500 })
+        .filter("Glow", { color: 0xab00ad, distance: 20 })
+        .belowTokens()
 
         .effect()
         .file("jb2a.extras.tmfx.outflow.circle.01")
         .attachTo(target, { locale: true })
         .scaleToObject(1.5, { considerTokenScale: false })
-        .randomRotation()
         .duration(17500)
         .fadeIn(4000, { delay: 0 })
         .fadeOut(3500, { ease: "easeInSine" })
         .scaleIn(0, 3500, { ease: "easeInOutCubic" })
-        .tint(0xab00ad)
         .opacity(0.75)
         .belowTokens()
+        .randomRotation()
+        .tint(0xab00ad)
 
         .play()
 }

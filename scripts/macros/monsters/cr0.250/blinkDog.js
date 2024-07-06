@@ -25,26 +25,25 @@ async function blink({ speaker, actor, token, character, item, args, scope, work
         animation1 = "jb2a.misty_step.01." + selection;
         animation2 = "jb2a.misty_step.02." + selection;
     }
-    let icon = workflow.token.document.texture.src;
     let interval = workflow.token.document.width % 2 === 0 ? 1 : -1;
-    let position = await mba.aimCrosshair(workflow.token, 40, icon, interval, workflow.token.document.width);
+    let position = await mba.aimCrosshair(workflow.token, 40, workflow.item.img, interval, workflow.token.document.width);
     if (position.cancelled) return;
 
     new Sequence()
 
         .animation()
         .delay(800)
-        .on(token)
+        .on(workflow.token)
         .fadeOut(200)
 
         .effect()
         .file(animation1)
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(2)
         .waitUntilFinished(-2000)
 
         .animation()
-        .on(token)
+        .on(workflow.token)
         .teleportTo(position)
         .snapToGrid()
         .offset({ x: -1, y: -1 })
@@ -52,12 +51,12 @@ async function blink({ speaker, actor, token, character, item, args, scope, work
 
         .effect()
         .file(animation2)
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(2)
 
         .animation()
         .delay(1400)
-        .on(token)
+        .on(workflow.token)
         .fadeIn(200)
 
         .play();

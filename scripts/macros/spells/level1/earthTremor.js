@@ -2,6 +2,7 @@ import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) return;
 
     new Sequence()
 
@@ -9,8 +10,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.cast_generic.earth.01.browngreen.0")
-        .attachTo(token)
-        .scaleToObject(2 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(2 * workflow.token.document.texture.scaleX)
         .waitUntilFinished(-1000)
 
         .effect()
@@ -50,10 +51,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
-    let targets = Array.from(workflow.failedSaves);
-    for (let target of targets) {
-        if (mba.findEffect(target.actor, "Prone")) continue;
-        await mba.addCondition(target.actor, "Prone");
+    for (let target of Array.from(workflow.failedSaves)) {
+        if (!mba.findEffect(target.actor, "Prone")) await mba.addCondition(target.actor, "Prone")
     }
 }
 

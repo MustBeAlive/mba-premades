@@ -6,7 +6,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let radiantDice = 4;
     if (ammount > 4) {
         let choices = [['Fire', 'fire'],['Radiant', 'radiant']];
-        let selection = await mba.dialog('Choose which damage to scale:', choices);
+        let selection = await mba.dialog("Flame Strike", choices, "Choose which damage to scale:");
         if (!selection) {
             ui.notifications.warn("Failed to choose damage to scale, try again!");
             return;
@@ -14,30 +14,22 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         if (selection === "fire") fireDice = ammount;
         else if (selection === "radiant") radiantDice = ammount;
     }
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Flame Strike: Blast', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Flame Strike: Blast", false);
     if (!featureData) return;
     delete featureData._id;
-    let originItem = workflow.item;
-    if (!originItem) return;
-    featureData.system.save.dc = mba.getSpellDC(originItem);
+    featureData.system.save.dc = mba.getSpellDC(workflow.item);
     featureData.system.damage.parts[0][0] = fireDice + 'd6[fire]';
     featureData.system.damage.parts[1][0] = radiantDice + 'd6[radiant]';
-    setProperty(featureData, 'mba-premades.spell.castData.school', originItem.system.school);
+    setProperty(featureData, 'mba-premades.spell.castData.school', workflow.item.system.school);
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
     await game.messages.get(workflow.itemCardId).delete();
     await MidiQOL.completeItemUse(feature);
 }
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let template = fromUuidSync(workflow.templateUuid);
+    let template = canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) return;
     new Sequence()
-
-        .effect()
-        .file("jb2a.sacred_flame.source.yellow")
-        .atLocation(token)
-        .fadeIn(500)
-        .fadeOut(500)
-        .scaleToObject(3)
 
         .effect()
         .file("jb2a.magic_signs.circle.02.evocation.loop.yellow")

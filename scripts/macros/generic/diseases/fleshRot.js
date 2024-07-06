@@ -49,7 +49,7 @@ export async function fleshRot() {
     await mba.createEffect(target.actor, effectData);
     ChatMessage.create({
         whisper: ChatMessage.getWhisperRecipients("GM"),
-        content: `<p><b>${target.document.name}</b> is infected with <b>Flesh Rot</b></p>`,
+        content: `<p><u>${target.document.name}</u> is infected with <b>Flesh Rot</b></p>`,
         speaker: { actor: null, alias: "Disease Announcer" }
     });
 }

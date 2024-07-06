@@ -116,6 +116,7 @@ export async function cantripFormulas({ speaker, actor, token, character, item, 
 
         .thenDo(async () => {
             await workflow.actor.deleteEmbeddedDocuments("Item", [toDelete[0]._id]);
+            await warpgate.wait(100);
             await workflow.actor.createEmbeddedDocuments("Item", [toCreate[0]]);
             await ChatMessage.create({
                 flavor: `<h2>Cantrip Formulas</h2>Swapped <b><u>${toDelete[0].name}</u></b> for <b><u>${toCreate[0].name}</u></b>`,

@@ -24,11 +24,8 @@ export async function witchBolt({ speaker, actor, token, character, item, args, 
         let color = effect.flags['mba-premades']?.spell?.witchBolt?.color;
         let animation = "jb2a.impact.012." + color;
         if (color === "dark_green") animation = "jb2a.impact.012.green02";
-        let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Witch Bolt: Sustained Damage');
-        if (!featureData) {
-            ui.notifications.warn("Missing item in the compendium! (Witch Bolt: Sustained Damage)")
-            return;
-        }
+        let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Witch Bolt: Sustained Damage", false);
+        if (!featureData) return;
         delete featureData._id;
         let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
         let [config, options] = constants.syntheticItemWorkflowOptions([effect.flags['mba-premades']?.spell?.witchBolt?.targetUuid]);
@@ -48,7 +45,7 @@ export async function witchBolt({ speaker, actor, token, character, item, args, 
             .play()
     }
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Witch Bolt` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} WitBol` })
     }
     let color = [
         ['Blue', 'blue'],
@@ -104,32 +101,6 @@ export async function witchBolt({ speaker, actor, token, character, item, args, 
     await new Sequence()
 
         .effect()
-        .file(`jb2a.magic_signs.circle.02.evocation.loop.red`)
-        .atLocation(token)
-        .scaleToObject(1.5)
-        .rotateIn(180, 600, { ease: "easeOutCubic" })
-        .scaleIn(0, 600, { ease: "easeOutCubic" })
-        .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-        .belowTokens()
-        .fadeOut(1700)
-        .zIndex(0)
-
-        .effect()
-        .file(`jb2a.magic_signs.circle.02.evocation.loop.red`)
-        .atLocation(token)
-        .scaleToObject(1.5)
-        .rotateIn(180, 600, { ease: "easeOutCubic" })
-        .scaleIn(0, 600, { ease: "easeOutCubic" })
-        .loopProperty("sprite", "rotation", { from: 0, to: -360, duration: 10000 })
-        .belowTokens(true)
-        .filter("ColorMatrix", { saturate: -1, brightness: 2 })
-        .filter("Blur", { blurX: 5, blurY: 10 })
-        .zIndex(1)
-        .duration(1200)
-        .fadeIn(200, { ease: "easeOutCirc", delay: 500 })
-        .fadeOut(300, { ease: "linear" })
-
-        .effect()
         .file(canvas.scene.background.src)
         .filter("ColorMatrix", { brightness: 0.7 })
         .atLocation({ x: (canvas.dimensions.width) / 2, y: (canvas.dimensions.height) / 2 })
@@ -143,8 +114,8 @@ export async function witchBolt({ speaker, actor, token, character, item, args, 
 
         .effect()
         .file(animation1)
-        .atLocation(token)
-        .attachTo(token)
+        .atLocation(workflow.token)
+        .attachTo(workflow.token)
         .scaleToObject(1.8)
         .delay(750)
         .fadeIn(500)
@@ -152,14 +123,15 @@ export async function witchBolt({ speaker, actor, token, character, item, args, 
 
         .effect()
         .file(animation2)
-        .atLocation(token)
-        .attachTo(token)
+        .atLocation(workflow.token)
+        .attachTo(workflow.token)
         .stretchTo(target, { attachTo: true })
-        .opacity(0.8)
+        .scaleIn(0, 1500, { ease: "easeOutExpo" })
         .delay(2500)
         .fadeIn(1000)
+        .opacity(0.8)
         .persist()
-        .name(`${token.document.name} Witch Bolt`)
+        .name(`${workflow.token.document.name} WitBol`)
 
         .effect()
         .file(animation3)
@@ -168,7 +140,7 @@ export async function witchBolt({ speaker, actor, token, character, item, args, 
         .delay(3000)
         .fadeIn(750)
         .persist()
-        .name(`${token.document.name} Witch Bolt`)
+        .name(`${workflow.token.document.name} WitBol`)
 
         .thenDo(async () => {
             await mba.createEffect(workflow.actor, effectData);

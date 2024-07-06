@@ -344,6 +344,13 @@
 			"path": "packs/mba-summons",
 			"type": "Actor",
 			"system": "dnd5e"
+		},
+		{
+			"name": "MBA Wild Shape",
+			"label": "MBA Wild Shape",
+			"path": "packs/mba-wild-shape",
+			"type": "Actor",
+			"system": "dnd5e"
 		}
 	],
 	"packFolders": [
@@ -368,7 +375,8 @@
 				"MBA Spell Features",
 				"MBA SRD",
 				"MBA Summons",
-				"MBA Summon Features"
+				"MBA Summon Features",
+				"MBA Wild Shape"
 			]
 		}
 	],

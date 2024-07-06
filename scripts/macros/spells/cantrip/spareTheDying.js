@@ -16,7 +16,7 @@ export async function spareTheDying({ speaker, actor, token, character, item, ar
         return;
     }
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Spare the Dying` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} SpaThD` })
     };
     const effectData = {
         'name': workflow.item.name,
@@ -79,7 +79,7 @@ export async function spareTheDying({ speaker, actor, token, character, item, ar
         .fadeOut(1000)
         .loopProperty("alphaFilter", "alpha", { values: [0.05, 0.75], duration: 5000, pingPong: true })
         .persist()
-        .name(`${target.document.name} Spare the Dying`)
+        .name(`${target.document.name} SpaThD`)
 
         .effect()
         .file("jb2a.extras.tmfx.border.circle.outpulse.02.normal")
@@ -91,7 +91,7 @@ export async function spareTheDying({ speaker, actor, token, character, item, ar
         .playbackRate(0.66)
         .fadeOut(1000)
         .persist()
-        .name(`${target.document.name} Spare the Dying`)
+        .name(`${target.document.name} SpaThD`)
 
         .wait(800)
 

@@ -1,3 +1,5 @@
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
 import {queue} from "../../mechanics/queue.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -22,6 +24,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         let animRoll = await new Roll('1d12').roll({ 'async': true });
         animation = `jb2a.eldritch_blast.${colors[animRoll.total - 1]}`
     }
+    if (mba.getItem(workflow.actor, "Healing Light")) animation = "jb2a.eldritch_blast.yellow";
     if (!workflow.hitTargets.size) {
         let offsetX = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
         if (offsetX === 0) offsetX = 1;
@@ -31,20 +34,28 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
             .effect()
             .file(animation)
-            .attachTo(token)
+            .attachTo(workflow.token)
             .stretchTo(target, { offset: { x: offsetX, y: offsetY }, gridUnits: true })
 
             .play()
 
         return;
     };
+    let push = false;
+    let repellingBlast = workflow.actor.flags['mba-premades']?.feature?.repellingBlast;
+    if (repellingBlast) push = await mba.dialog("Repelling Blast", constants.yesNo, `<b>Push <u>${target.document.name}</u> 10 feet in a straight line?</b>`);
 
     new Sequence()
 
         .effect()
         .file(animation)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target)
+        .waitUntilFinished(-3100)
+
+        .thenDo(async () => {
+            if (push) await mba.pushToken(workflow.token, target, 10);
+        })
 
         .play()
 }

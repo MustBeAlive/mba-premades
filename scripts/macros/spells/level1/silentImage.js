@@ -20,7 +20,7 @@ export async function silentImage({ speaker, actor, token, character, item, args
             },
             'walledtemplates': {
                 'hideBorder': "alwaysHide",
-                'wallRestriction': 'move',
+                'wallRestriction': 'light',
                 'wallsBlock': 'recurse',
             }
         }

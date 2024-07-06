@@ -1,6 +1,8 @@
 import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
+// To do: target substitution
+
 async function redirectAttack({ speaker, actor, token, character, item, args, scope, workflow }) {
     let goblins = Array.from(mba.findNearby(workflow.token, 5, "ally", false, false).filter(i => i.document.name.includes("Goblin")));
     if (!goblins.length) {

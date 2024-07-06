@@ -35,7 +35,7 @@ export async function handOfHealing(workflow) {
     let wisMod = workflow.actor.system.abilities.wis.mod;
     let formula = `1d${monkDice} + ${wisMod}`;
     let healingRoll = await new Roll(formula).roll({ 'async': true });
-    await MidiQOL.displayDSNForRoll(healingRoll, 'damageRoll');
+    await MidiQOL.displayDSNForRoll(healingRoll);
     let physicianTouch = false
     let effectToRemove;
     if (monkLevel >= 6) physicianTouch = true;

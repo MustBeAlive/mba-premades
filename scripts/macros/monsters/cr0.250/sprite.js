@@ -1,13 +1,17 @@
+import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
 async function poi5({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.hitTargets.size) return;
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
-    if (mba.checkTrait(target.actor, "ci", "poisoned")) return;
     if (mba.findEffect(target.actor, "Sprite: Poison")) return;
+    if (mba.checkTrait(target.actor, "ci", "poisoned")) return;
     let saveResult = workflow.saveResults[0].total;
     let saveDC = workflow.item.system.save.dc;
+    async function effectMacroDel() {
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Sprite Poison` })
+    };
     const effectData = {
         'name': "Sprite: Poison",
         'icon': "modules/mba-premades/icons/generic/generic_poison.webp",
@@ -22,9 +26,40 @@ async function poi5({ speaker, actor, token, character, item, args, scope, workf
                 'value': "Poisoned",
                 'priority': 20
             }
-        ]
+        ],
+        'flags': {
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDel)
+                }
+            }
+        }
     };
-    await mba.createEffect(target.actor, effectData);
+    new Sequence()
+
+        .effect()
+        .file("jb2a.smoke.puff.centered.green.2")
+        .attachTo(target)
+        .scaleToObject(2 * target.document.texture.scaleX)
+
+        .effect()
+        .file("jb2a.template_circle.symbol.normal.poison.dark_green")
+        .attachTo(target)
+        .scaleToObject(1 * target.document.texture.scaleX)
+        .delay(500)
+        .fadeIn(500)
+        .fadeOut(500)
+        .randomRotation()
+        .mask(target)
+        .persist()
+        .name(`${target.document.name} Sprite Poison`)
+
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData)
+        })
+
+        .play()
+        
     if (saveResult + 5 <= saveDC) { // this whole block is just cringe
         if (mba.findEffect(target.actor, "Unconscious")) return;
         await mba.addCondition(target.actor, "Unconscious");
@@ -39,7 +74,7 @@ async function poi5({ speaker, actor, token, character, item, args, scope, workf
         };
         let updates2 = {
             'description': `
-                <p>You failed save againt Sprite Poison by 5 or more, and become unconscious for the duration.</p>
+                <p>You failed save againt Sprite Poison by 5 or more, and become @UUID[Compendium.mba-premades.MBA SRD.Item.kIUR1eRcTTtaMFao]{Unconscious} for the duration.</p>
                 <p>You will wake up from this slumber if you take damage or another creature uses an action to shake you awake.</p>
             `
         }
@@ -93,34 +128,7 @@ async function heartSight({ speaker, actor, token, character, item, args, scope,
         .play()
 
     let type = mba.raceOrType(target.actor);
-    if (type != "celestial" && type != "fiend" && type != "undead") return;
-    const effectData = {
-        'name': 'Save: Fail',
-        'icon': 'modules/mba-premades/icons/generic/generic_debuff.webp',
-        'description': "You automatically fail the next save you make.",
-        'duration': {
-            'turns': 1
-        },
-        'changes': [
-            {
-                'key': 'flags.midi-qol.fail.ability.save.all',
-                'mode': 0,
-                'value': 1,
-                'priority': 20
-            }
-        ],
-        'flags': {
-            'dae': {
-                'specialDuration': ["isSave"]
-            },
-            'mba-premades': {
-                'effect': {
-                    'noAnimation': true
-                }
-            }
-        }
-    };
-    await mba.createEffect(target.actor, effectData);
+    if (type === "celestial" || type === "fiend" || type === "undead") await mba.createEffect(target.actor, constants.failEffectData);
 }
 
 export let sprite = {

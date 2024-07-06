@@ -1,9 +1,9 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
 
 export async function mindSpike({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Mind Spike`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} MinSpi` })
     };
     const effectData = {
         'name': workflow.item.name,
@@ -12,7 +12,7 @@ export async function mindSpike({ speaker, actor, token, character, item, args, 
         'description': `
             <p>${workflow.token.document.name} reached into your mind.</p>
             <p>For the duration, caster of this spell knows your location, but only while the two of you are on the same plane of existence.</p>
-            <p>While caster of this spell has this knowledge, you can't become hidden from him and gain no benefit from Invisible condition against him.</p>
+            <p>While caster of this spell has this knowledge, you can't become hidden from him and gain no benefit from @UUID[Compendium.mba-premades.MBA SRD.Item.2dEv6KlLgFA4wOni]{Invisible} condition against him.</p>
         `,
         'duration': {
             'seconds': 3600
@@ -45,7 +45,7 @@ export async function mindSpike({ speaker, actor, token, character, item, args, 
 
         .effect()
         .file("jb2a.ranged.03.projectile.01.pinkpurple")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target)
         .waitUntilFinished(-1200)
 
@@ -76,7 +76,7 @@ export async function mindSpike({ speaker, actor, token, character, item, args, 
         .fadeOut(1000)
         .belowTokens()
         .persist()
-        .name(`${target.document.name} Mind Spike`)
+        .name(`${target.document.name} MinSpi`)
         .playIf(() => {
             return workflow.failedSaves.size
         })

@@ -3,7 +3,8 @@ import {mba} from "../../helperFunctions.js";
 export async function telekinetic({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let distance = 5;
-    if (workflow.failedSaves.size) distance = await mba.dialog("Telekinetic", [["Push target away", 5], ["Pull target closer", -5]], `<b>What would you like to do?</b>`);
+    let choices = [["Push target 5 feet away", 5], ["Pull target 5 feet closer", -5]]
+    if (workflow.failedSaves.size) distance = await mba.dialog("Telekinetic", choices, `<b>What would you like to do?</b>`);
 
     new Sequence()
 
@@ -18,7 +19,7 @@ export async function telekinetic({ speaker, actor, token, character, item, args
         .waitUntilFinished(-1300)
 
         .thenDo(async () => {
-            if (workflow.failedSaves.size) await mba.pushToken(workflow.token, target, distance)
+            if (workflow.failedSaves.size) await mba.pushToken(workflow.token, target, distance);
         })
 
         .play()

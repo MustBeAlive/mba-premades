@@ -2,9 +2,8 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function resistance({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    let effect = await mba.findEffect(target.actor, "Resistance");
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Resistance` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Resist` })
     };
     const effectData = {
         'name': workflow.item.name,
@@ -56,14 +55,15 @@ export async function resistance({ speaker, actor, token, character, item, args,
         .effect()
         .file("jb2a.portals.horizontal.ring_masked.yellow")
         .attachTo(target)
-        .scaleToObject(1.7 * token.document.texture.scaleX)
+        .scaleToObject(1.7 * target.document.texture.scaleX)
         .fadeIn(1000)
         .fadeOut(1000)
         .mask()
         .persist()
-        .name(`${target.document.name} Resistance`)
+        .name(`${target.document.name} Resist`)
 
         .thenDo(async () => {
+            let effect = await mba.findEffect(target.actor, "Resistance");
             if (effect) await mba.removeEffect(effect); //HB, target cannot benefit from more than 1 instance of "Resistance"
             await mba.createEffect(target.actor, effectData)
         })

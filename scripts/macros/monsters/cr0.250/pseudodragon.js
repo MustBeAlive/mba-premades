@@ -4,10 +4,13 @@ async function poi5({ speaker, actor, token, character, item, args, scope, workf
     if (!workflow.hitTargets.size) return;
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
-    if (mba.checkTrait(target.actor, "ci", "poisoned")) return;
     if (mba.findEffect(target.actor, "Pseudodragon: Poison")) return;
+    if (mba.checkTrait(target.actor, "ci", "poisoned")) return;
     let saveResult = workflow.saveResults[0].total;
     let saveDC = workflow.item.system.save.dc;
+    async function effectMacroDel() {
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} PseudoD Poison` })
+    };
     const effectData = {
         'name': "Pseudodragon: Poison",
         'icon': "modules/mba-premades/icons/generic/generic_poison.webp",
@@ -22,9 +25,40 @@ async function poi5({ speaker, actor, token, character, item, args, scope, workf
                 'value': "Poisoned",
                 'priority': 20
             }
-        ]
+        ],
+        'flags': {
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDel)
+                }
+            }
+        }
     };
-    await mba.createEffect(target.actor, effectData);
+    new Sequence()
+
+        .effect()
+        .file("jb2a.smoke.puff.centered.green.2")
+        .attachTo(target)
+        .scaleToObject(2 * target.document.texture.scaleX)
+
+        .effect()
+        .file("jb2a.template_circle.symbol.normal.poison.dark_green")
+        .attachTo(target)
+        .scaleToObject(1 * target.document.texture.scaleX)
+        .delay(500)
+        .fadeIn(500)
+        .fadeOut(500)
+        .randomRotation()
+        .mask(target)
+        .persist()
+        .name(`${target.document.name} PseudoD Poison`)
+
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData)
+        })
+
+        .play()
+        
     if (saveResult + 5 <= saveDC) { // this whole block is just cringe
         if (mba.findEffect(target.actor, "Unconscious")) return;
         await mba.addCondition(target.actor, "Unconscious");
@@ -39,7 +73,7 @@ async function poi5({ speaker, actor, token, character, item, args, scope, workf
         };
         let updates2 = {
             'description': `
-                <p>You failed save againt Pseudodragon Poison by 5 or more, and become unconscious for the duration.</p>
+                <p>You failed save againt Pseudodragon Poison by 5 or more, and become @UUID[Compendium.mba-premades.MBA SRD.Item.kIUR1eRcTTtaMFao]{Unconscious} for the duration.</p>
                 <p>You will wake up from this slumber if you take damage or another creature uses an action to shake you awake.</p>
             `
         }

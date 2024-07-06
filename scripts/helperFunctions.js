@@ -203,6 +203,10 @@ export let mba = {
         let lastMessage = game.messages.find(m => m.flags?.['mba-premades']?.gmDialogMessage && m.user.id === game.user.id);
         if (lastMessage) await lastMessage.delete();
     },
+    'clearThirdPartyReactionMessage': async function _clearThirdPartyReactionMessage(key = true) {
+        let lastMessage = game.messages.find(m => m.flags?.['mba-premades']?.thirdPartyReactionMessage === key && m.user.id === game.user.id);
+        if (lastMessage) await lastMessage.delete();
+    },
     'createEffect': async function _createEffect(actor, effectData) {
         if (effectData.label) {
             console.warn('The effect "' + effectData.label + '" has effect data with a label instead of a name!');
@@ -289,7 +293,7 @@ export let mba = {
     'findGrids': function _findGrids(previousCoords, coords, templateDoc) {
         return game.modules.get('templatemacro').api.findGrids(previousCoords, coords, templateDoc);
     },
-    'findNearby': function _findNearby(tokenDoc, range, disposition, includeIncapacitated = false, includeToken = false) {
+    'findNearby': function _findNearby(tokenDoc, range, disposition, includeIncapacitated = false, includeToken = false, canSee = false, isSeen = false) {
         let dispositionValue;
         switch (disposition) {
             case 'ally':
@@ -304,7 +308,7 @@ export let mba = {
             default:
                 dispositionValue = null;
         }
-        let options = { 'includeIncapacitated': includeIncapacitated, 'includeToken': includeToken };
+        let options = { 'includeIncapacitated': includeIncapacitated, 'includeToken': includeToken, 'canSee': canSee, "isSeen": isSeen };
         return MidiQOL.findNearby(dispositionValue, tokenDoc, range, options).filter(i => !i.document.hidden);
     },
     'firstOwner': function _firstOwner(document) {
@@ -456,7 +460,7 @@ export let mba = {
         if (match) {
             return (await gamePack.getDocument(match._id))?.toObject();
         } else {
-            if (!ignoreNotFound) ui.notifications.warn('Item not found in specified compendium! Check spelling?');
+            if (!ignoreNotFound) ui.notifications.warn(`Item not found in specified compendium! (${name})`);
             return undefined;
         }
     },
@@ -711,25 +715,17 @@ export let mba = {
         if (userId === game.user.id) return await mba.dialog(title, options, content);
         return await socket.executeAsUser('remoteDialog', userId, title, options, content)
     },
-    'remoteDocumentDialog': async function _remoteDocumentsDialog(userId, title, documents) {
-        if (userId === game.user.id) return await mba.selectDocument(title, documents);
-        let uuids = await socket.executeAsUser('remoteDocumentDialog', userId, title, documents.map(i => i.uuid));
+    'remoteDocumentDialog': async function _remoteDocumentDialog(userId, title, documents, displayTooltips = false, alphabetical = false, cr = false) {
+        if (userId === game.user.id) return await mba.selectDocument(title, documents, false, displayTooltips, alphabetical, cr);
+        let uuids = await socket.executeAsUser('remoteDocumentDialog', userId, title, documents.map(i => i.uuid), displayTooltips, alphabetical, cr);
         if (!uuids) return false;
-        let returns = [];
-        for (let i of uuids) {
-            returns.push(await fromUuid(i));
-        }
-        return returns;
+        return await Promise.all(uuids.map(async i => await fromUuid(i)));
     },
-    'remoteDocumentsDialog': async function _remoteDocumentsDialog(userId, title, documents) {
-        if (userId === game.user.id) return await mba.selectDocuments(title, documents);
-        let uuids = await socket.executeAsUser('remoteDocumentsDialog', userId, title, documents.map(i => i.uuid));
+    'remoteDocumentsDialog': async function _remoteDocumentsDialog(userId, title, documents, displayTooltips = false, alphabetical = false, cr = false) {
+        if (userId === game.user.id) return await mba.selectDocuments(title, documents, false, displayTooltips, alphabetical, cr);
+        let uuids = await socket.executeAsUser('remoteDocumentsDialog', userId, title, documents.map(i => i.uuid), displayTooltips, alphabetical, cr);
         if (!uuids) return false;
-        let returns = [];
-        for (let i of uuids) {
-            returns.push(await fromUuid(i));
-        }
-        return returns;
+        return await Promise.all(uuids.map(async i => await fromUuid(i)));
     },
     'remoteMenu': async function _remoteMenu(title, buttons, inputs, useSpecialRender, userId, info, header, extraOptions) {
         if (userId === game.user.id) return await mba.menu(title, buttons, inputs, useSpecialRender, info, header, extraOptions);
@@ -842,24 +838,34 @@ export let mba = {
         await warpgate.revert(tokenDoc, mutationName, options);
         return true;
     },
-    'selectDocument': async function _selectDocument(title, documents, useUuids) {
+    'selectDocument': async function selectDocument(title, documents, useUuids, displayTooltips = false, alphabetical = false, cr = false) {
+        if (alphabetical) {
+            documents = documents.sort((a, b) => {
+                return a.name.localeCompare(b.name, 'en', {'sensitivity': 'base'});
+            });
+        }
+        if (cr) {
+            documents = documents.sort((a, b) => {
+                return a.system?.details?.cr > b.system?.details?.cr ? -1 : 1;
+            });
+        }
         return await new Promise(async (resolve) => {
             let buttons = {},
                 dialog;
             for (let i of documents) {
                 buttons[i.name] = {
-                    label: `<img src='${i.img}' width='50' height='50' style='border: 0px; float: left'><p style='padding: 1%; font-size: 15px'> ${i.name} </p>`,
+                    label: `<img src='${i.img}' width='50' height='50' style='border: 0px; float: left'><p style='padding: 1%; font-size: 15px'` + (displayTooltips ? ` data-tooltip="${i.system.description.value.replace(/<[^>]*>?/gm, '')}"` : ``) + `> `+ i.name + (i.system?.details?.cr != undefined ? ` (CR ${mba.decimalToFraction(i.system?.details?.cr)})` : ``) + `</p>`,
                     callback: () => {
                         if (useUuids) {
                             resolve([i.uuid]);
                         } else {
-                            resolve([i])
+                            resolve([i]);
                         }
                     }
-                }
+                };
             }
-            let height = (Object.keys(buttons).length * 58 + 48);
-            if (Object.keys(buttons).length > 14) height = 850;
+            let height = (Object.keys(buttons).length * 56 + 46);
+            if (Object.keys(buttons).length > 14 ) height = 850;
             dialog = new Dialog(
                 {
                     title: title,
@@ -871,35 +877,45 @@ export let mba = {
                 }
             );
             await dialog._render(true);
-            dialog.element.find(".dialog-buttons").css({
-                "flex-direction": 'column',
-            })
+            dialog.element.find('.dialog-buttons').css({
+                'flex-direction': 'column',
+            });
         });
     },
-    'selectDocuments': async function _selectDocuments(title, documents, useUuids) {
+'selectDocuments': async function selectDocuments(title, documents, useUuids, displayTooltips = false, alphabetical = false, cr = false) {
+        if (alphabetical) {
+            documents = documents.sort((a, b) => {
+                return a.name.localeCompare(b.name, 'en', {'sensitivity': 'base'});
+            });
+        }
+        if (cr) {
+            documents = documents.sort((a, b) => {
+                return a.system?.details?.cr > b.system?.details?.cr ? -1 : 1;
+            });
+        }
         return await new Promise(async (resolve) => {
-            let buttons = { cancel: { 'label': `Cancel`, callback: () => resolve(false) }, 'confirm': { 'label': `Confirm`, callback: (html) => getDocuments(html, documents) } },
+            let buttons = {cancel: {'label': `Cancel`, callback: () => resolve(false)}, 'confirm': {'label': `Confirm`, callback: (html) => getDocuments(html, documents)}},
                 dialog;
             let content = `<form>`;
             content += `<datalist id = 'defaultNumbers'>`;
             for (let i = 0; i < 33; i++) {
-                content += `<option value = '${i}'></option>`
+                content += `<option value = '${i}'></option>`;
             }
             content += `</datalist>`;
             for (let i = 0; documents.length > i; i++) {
                 content +=
                     `<div class = 'form-group'>
                         <input type='number' id='${i}' name='${documents[i].name}' placeholder='0' list='defaultNumbers' style='max-width: 50px; margin-left: 10px'/>
-                        <label> 
+                        <label>
                             <img src='${documents[i].img}' width='50' height='50' style='border:1px solid gray; border-radius: 5px; float: left; margin-left: 20px; margin-right: 10px'>
-                            <p style='padding: 1%; text-align: center; font-size: 15px;'> ${documents[i].name}` + (documents[i].system?.details?.cr != undefined ? ` (CR ${mba.decimalToFraction(documents[i].system?.details?.cr)})` : ``) + `</p>
+                            <p style='padding: 1%; text-align: center; font-size: 15px;'` + (displayTooltips ? ` data-tooltip="${i.system.description.value.replace(/<[^>]*>?/gm, '')}"` : ``) + `>` + documents[i].name + (documents[i].system?.details?.cr != undefined ? ` (CR ${mba.decimalToFraction(documents[i].system?.details?.cr)})` : ``) + `</p>
                         </label>
                     </div>
                 `;
             }
             content += `</form>`;
             let height = (documents.length * 53 + 83);
-            if (documents.length > 14) height = 850;
+            if (documents.length > 14 ) height = 850;
             dialog = new Dialog(
                 {
                     title: title,
@@ -1225,6 +1241,27 @@ export let mba = {
     },
     'templateTokens': function _templateTokens(template) {
         return game.modules.get('templatemacro').api.findContained(template);
+    },
+    'thirdPartyReactionMessage': async function _thirdPartyReactionMessage(user, dialogMessage, key = true) {
+        let playerName = user.name;
+        let lastMessage = game.messages.find(m => m.flags?.['mba-premades']?.thirdPartyReactionMessage);
+        let subMessage = dialogMessage ? 'a dialog selection' : 'a 3rd party reaction';
+        let message = '<hr>Waiting for a ' + subMessage + ' from:<br><b>' + playerName + '</b>';
+        if (lastMessage) {
+            await lastMessage.update({'content': message});
+        } else {
+            await ChatMessage.create({
+                'speaker': {'alias': 'MBA Premades'},
+                'content': message,
+                'whisper': game.users.filter(u => u.isGM).map(u => u.id),
+                'blind': false,
+                'flags': {
+                    'mba-premades': {
+                        'thirdPartyReactionMessage': key
+                    }
+                }
+            });
+        }
     },
     'titleCase': function _titleCase(inputString) {
         return inputString.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());

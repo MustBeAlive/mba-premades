@@ -10,7 +10,7 @@ export async function iceKnife({ speaker, actor, token, character, item, args, s
 
         .effect()
         .file("jb2a.ranged.02.projectile.01.purple")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target)
         .filter("ColorMatrix", { hue: 350 })
         .waitUntilFinished(-1200)
@@ -37,19 +37,15 @@ export async function iceKnife({ speaker, actor, token, character, item, args, s
             .play()
     }
 
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Ice Knife: Explosion', false);
-    if (!featureData) {
-        ui.notifications.warn('Can\'t find item in compenidum! (Ice Knife: Explosion)');
-        return
-    }
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Ice Knife: Explosion", false);
+    if (!featureData) return;
     delete featureData._id;
     let damageDice = 1 + workflow.castData.castLevel;
-    featureData.system.damage.parts = [[damageDice + 'd6[cold]', 'cold']];
+    featureData.system.damage.parts = [[`${damageDice}d6[cold]`, "cold"]];
     featureData.system.save.dc = mba.getSpellDC(workflow.item);
     setProperty(featureData, 'mba-premades.spell.castData.school', workflow.item.system.school);
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
-    let targetUuids = [];
-    for (let i of targets) targetUuids.push(i.document.uuid);
+    let targetUuids = Array.from(targets).map(t => t.document.uuid);
     let [config, options] = constants.syntheticItemWorkflowOptions(targetUuids);
     await MidiQOL.completeItemUse(feature, config, options);
 }

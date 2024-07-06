@@ -1,5 +1,7 @@
 import {mba} from "../../../helperFunctions.js";
 
+// To do: the actual spell >.<
+
 export async function nystulMagicAura({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let choices = [["False Aura (hide magic)", "magic"], ["Mask (hide type)", "detection"]];

@@ -44,11 +44,8 @@ export async function melfAcidArrow({ speaker, actor, token, character, item, ar
             }
         }
     };
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', "Melf's Acid Arrow: Damage");
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Melf's Acid Arrow: Damage)");
-        return;
-    }
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', "Melf's Acid Arrow: Damage", false);
+    if (!featureData) return;
     delete featureData._id;
     featureData.system.damage.parts[0][0] = damageFormula;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });

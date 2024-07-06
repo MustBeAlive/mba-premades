@@ -1,5 +1,5 @@
-import { constants } from "../../generic/constants.js";
-import { mba } from "../../../helperFunctions.js";
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
@@ -9,19 +9,17 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             'mba-premades': {
                 'template': {
                     'castLevel': workflow.castData.castLevel,
+                    'itemUuid': workflow.item.uuid,
                     'saveDC': mba.getSpellDC(workflow.item),
                     'templateUuid': template.uuid,
                 }
             }
         }
     });
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Moonbeam: Move', false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium! (Moonbeam: Move)");
-        return;
-    }
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Moonbeam: Move", false);
+    if (!featureData) return;
     async function effectMacroDel() {
-        await warpgate.revert(token.document, 'Moonbeam');
+        await warpgate.revert(token.document, "Moonbeam");
     }
     const effectData = {
         'name': workflow.item.name,
@@ -78,19 +76,18 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .waitUntilFinished(-9000)
 
         .effect()
-        .file("jaamod.spells_effects.moonbeam.1")
-        .attachTo(token)
-        .scaleToObject(2)
+        .file("jb2a.celestial_bodies.planet.no_atmo.03.grey")
+        .attachTo(workflow.token)
+        .scaleToObject(1.4)
         .duration(6000)
         .fadeIn(1000)
         .fadeOut(1000)
         .opacity(1)
-        .filter("ColorMatrix", { brightness: 1 })
         .zIndex(50)
 
         .effect()
         .file("jb2a.energy_beam.normal.yellow.02")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(template)
         .delay(2000)
         .scaleIn(0, 3000, { ease: "easeInOutSine" })
@@ -145,15 +142,15 @@ async function trigger(token, trigger) {
     if (!originUuid) return;
     let originItem = await fromUuid(originUuid);
     if (!originItem) return;
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Moonbeam: Damage', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Moonbeam: Damage", false);
     if (!featureData) return;
     delete featureData._id;
     featureData.system.save.dc = trigger.saveDC;
     featureData.system.damage.parts = [[trigger.castLevel + 'd10[radiant]', 'radiant']];
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': originItem.actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([token.uuid]);
-    let changeShape = token.actor.items.getName('Change Shape');
-    let shapechanger = token.actor.items.getName('Shapechanger');
+    let changeShape = mba.getItem(token.actor, 'Change Shape');
+    let shapechanger = mba.getItem(token.actor, 'Shapechanger');
     if (changeShape || shapechanger) await mba.createEffect(token.actor, constants.disadvantageEffectData);
     await MidiQOL.completeItemUse(feature, config, options);
 }
@@ -198,14 +195,13 @@ async function move({ speaker, actor, token, character, item, args, scope, workf
     new Sequence()
 
         .effect()
-        .file("jaamod.spells_effects.moonbeam.1")
-        .attachTo(token)
-        .scaleToObject(2)
+        .file("jb2a.celestial_bodies.planet.no_atmo.03.grey")
+        .attachTo(workflow.token)
+        .scaleToObject(1.4)
         .duration(6000)
         .fadeIn(1000)
         .fadeOut(1000)
         .opacity(1)
-        .filter("ColorMatrix", { brightness: 1 })
         .zIndex(50)
 
         .thenDo(async () => {
@@ -214,7 +210,7 @@ async function move({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.energy_beam.normal.yellow.02")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(position)
         .scaleIn(0, 3000, { ease: "easeInOutSine" })
         .fadeOut(500)

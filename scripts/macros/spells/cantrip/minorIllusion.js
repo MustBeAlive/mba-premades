@@ -1,5 +1,6 @@
 export async function minorIllusion({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) return;
 
     new Sequence()
 
@@ -7,7 +8,7 @@ export async function minorIllusion({ speaker, actor, token, character, item, ar
 
         .effect()
         .file("jb2a.spell_projectile.sound.01.pinkteal")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(template)
         .waitUntilFinished(-900)
 

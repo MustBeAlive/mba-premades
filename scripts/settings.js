@@ -466,6 +466,23 @@ export function registerSettings() {
     });
     addMenuSetting('Strength of the Grave', 'Class Features');
 
+    game.settings.register(moduleName, 'Armor of Hexes', {
+        'name': 'Warlock (Hexblade): Armor of Hexes',
+        'hint': 'Включает автоматизацию способности Armor of Hexes через Midi-QoL hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.AttackRollComplete', macros.armorOfHexes.hook);
+            } else {
+                Hooks.off('midi-qol.AttackRollComplete', macros.armorOfHexes.hook);
+            }
+        }
+    });
+    addMenuSetting('Armor of Hexes', 'Class Features');
+
     game.settings.register(moduleName, 'Ranged Smite', {
         'name': 'Ranged Divine Smite',
         'hint': 'Включает срабатывание способности Divine Smite на RWAK (Ranged Weapon Attacks).',
@@ -669,8 +686,43 @@ export function registerSettings() {
     });
     addMenuSetting('Relentless Endurance', 'Race Features');
 
+    
+    game.settings.register(moduleName, 'Wildhunt', {
+        'name': 'Shifter: Wildhunt',
+        'hint': 'Включает автоматизацию спобности Wildhunt через Midi-QoL hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preAttackRoll', macros.shifting.wildhunt);
+            } else {
+                Hooks.off('midi-qol.preAttackRoll', macros.shifting.wildhunt);
+            }
+        }
+    });
+    addMenuSetting('Wildhunt', 'Race Features');
+
+    game.settings.register(moduleName, 'Beacon of Hope', {
+        'name': 'Beacon of Hope',
+        'hint': 'Включает автоматизацию заклинания Beacon of Hope через Midi-Qol hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preTargetDamageApplication', macros.beaconOfHope.hook);
+            } else {
+                Hooks.off('midi-qol.preTargetDamageApplication', macros.beaconOfHope.hook);
+            }
+        }
+    });
+    addMenuSetting('Beacon of Hope', 'Spells');
+
     game.settings.register(moduleName, 'Blur', {
-        'name': 'Blur Automation',
+        'name': 'Blur',
         'hint': 'Включает автоматизацию заклинания Blur через Midi-Qol hooks.',
         'scope': 'world',
         'config': false,
@@ -1000,6 +1052,32 @@ export function registerSettings() {
         }
     });
     addMenuSetting('Colorize Template Macro', 'User Interface');
+
+    game.settings.register(moduleName, 'Chat Unloader', {
+        'name': 'Разгрузка Чата',
+        'hint': "Включает автоматическую выгрузку сообщений из памяти пользователей (снижает нагрузку).",
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': () => debouncedReload()
+    });
+    addMenuSetting("Chat Unloader", "User Interface")
+
+    game.settings.register(moduleName, 'Chat Unloader Limit', {
+        'name': 'Разгрузка Чата: Лимит Сообщений',
+        'hint': 'Лимит количества сообщений, после которого они будут выгружаться из памяти клиента.',
+        'scope': 'world',
+        'config': false,
+        'type': Number,
+        'default': CONFIG.ChatMessage.batchSize,
+        'range': {
+            'min': CONFIG.ChatMessage.batchSize / 2,
+            'max': CONFIG.ChatMessage.batchSize * 5,
+            'step': CONFIG.ChatMessage.batchSize / 2
+        },
+    });
+    addMenuSetting('Chat Unloader Limit', 'User Interface');
 
     game.settings.register(moduleName, 'Rollmode Buttons', {
         'name': 'Селектор режимов броска',

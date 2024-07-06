@@ -1,11 +1,11 @@
-import {mba} from "../../../helperFunctions.js";
+import { mba } from "../../../helperFunctions.js";
 
 async function constrict({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.hitTargets.size) return;
-    let targets = Array.from(workflow.targets);
+    let target = workflow.targets.first();
     let saveDC = workflow.item.system.save.dc;
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Assassin Vine Constrict` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} AssViCon` })
     }
     let effectData = {
         'name': `${workflow.token.document.name}: Grapple`,
@@ -27,13 +27,13 @@ async function constrict({ speaker, actor, token, character, item, args, scope, 
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': `actionSave=true, rollType=skill, saveAbility=ath|acr, saveDC=${saveDC}, saveMagic=false, name=Grapple: Action Save (DC${saveDC}), killAnim=true`,
+                'value': 'turn=start, damageType=poison, damageRoll=6d6, damageBeforeSave=true, name=Poisonous Vines: Turn Start, killAnim=true, fastForwardDamage=true',
                 'priority': 20
             },
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': 'turn=start, damageType=poison, damageRoll=6d6, damageBeforeSave=true, name=Poisonous Vines: Turn Start, killAnim=true, fastForwardDamage=true',
+                'value': `actionSave=true, rollType=skill, saveAbility=ath|acr, saveDC=${saveDC}, saveMagic=false, name=Grapple: Action Save (DC${saveDC}), killAnim=true`,
                 'priority': 20
             },
         ],
@@ -48,49 +48,51 @@ async function constrict({ speaker, actor, token, character, item, args, scope, 
             }
         }
     };
-    for (let target of targets) {
-        if (mba.findEffect(target.actor, "Grappled")) continue;
-        await new Sequence()
+    await new Sequence()
 
-            .effect()
-            .file("jb2a.melee_generic.slashing.two_handed")
-            .atLocation(token)
-            .stretchTo(target)
-            .playbackRate(0.9)
-            .filter("ColorMatrix", { hue: 70 })
+        .effect()
+        .file("jb2a.melee_generic.slashing.two_handed")
+        .atLocation(token)
+        .stretchTo(target)
+        .playbackRate(0.9)
+        .filter("ColorMatrix", { hue: 70 })
 
-            .effect()
-            .file("jb2a.melee_generic.slashing.two_handed")
-            .mirrorY()
-            .atLocation(token)
-            .stretchTo(target)
-            .playbackRate(0.9)
-            .filter("ColorMatrix", { hue: 70 })
+        .effect()
+        .file("jb2a.melee_generic.slashing.two_handed")
+        .mirrorY()
+        .atLocation(token)
+        .stretchTo(target)
+        .playbackRate(0.9)
+        .filter("ColorMatrix", { hue: 70 })
 
-            .wait(150)
+        .wait(150)
 
-            .thenDo(async () => {
-                await mba.createEffect(target.actor, effectData);
-            })
+        .thenDo(async () => {
+            if (!mba.checkTrait(target.actor, "ci", "grappled") && !mba.findEffect(target.actor, `${workflow.token.document.name}: Grapple`)) await mba.createEffect(target.actor, effectData);
+        })
 
-            .effect()
-            .file("jb2a.entangle.green")
-            .attachTo(target)
-            .scaleToObject(1.5)
-            .fadeIn(1000)
-            .fadeOut(1000)
-            .mask()
-            .persist()
-            .name(`${target.document.name} Assassin Vine Constrict`)
+        .effect()
+        .file("jb2a.entangle.green")
+        .attachTo(target)
+        .scaleToObject(1.5)
+        .fadeIn(1000)
+        .fadeOut(1000)
+        .mask()
+        .persist()
+        .name(`${target.document.name} AssViCon`)
+        .playIf(() => {
+            return (!mba.checkTrait(target.actor, "ci", "grappled") && !mba.findEffect(target.actor, `${workflow.token.document.name}: Grapple`))
+        })
 
-            .play()
-    }
+        .play()
+
 }
 
 async function entanglingVinesCast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let effect = await mba.findEffect(workflow.actor, "Entangling Vines Template");
     if (effect) await mba.removeEffect(effect);
     let template = canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) return;
 
     new Sequence()
 
@@ -226,16 +228,15 @@ async function entanglingVinesCast({ speaker, actor, token, character, item, arg
 
 async function entanglingVinesItem({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
-    let targets = Array.from(workflow.failedSaves);
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Assassin Vine Entangle` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} AssViEn` })
     };
     const effectData = {
         'name': "Assassin Vine: Entangle",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are restrained by Assassin Vine's entangling roots.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.gfRbTxGiulUylAjE]{Restrained} by Assassin Vine's entangling roots.</p>
             <p>You can use your action to make a DC 13 Strength check, freeing yourself or another entangled creature within reach on a success.</p>
         `,
         'changes': [
@@ -263,7 +264,7 @@ async function entanglingVinesItem({ speaker, actor, token, character, item, arg
             }
         }
     };
-    for (let target of targets) {
+    for (let target of Array.from(workflow.failedSaves)) {
         new Sequence()
 
             .effect()
@@ -278,10 +279,13 @@ async function entanglingVinesItem({ speaker, actor, token, character, item, arg
             .mask(target)
             .fadeOut(500)
             .persist()
-            .name(`${target.document.name} Assassin Vine Entangle`)
+            .name(`${target.document.name} AssViEn`)
+            .playIf(() => {
+                return (!mba.checkTrait(target.actor, "ci", "restrained") && !mba.findEffect(target.actor, "Assassin Vine: Entangle"));
+            })
 
             .thenDo(async () => {
-                await mba.createEffect(target.actor, effectData);
+                if (!mba.checkTrait(target.actor, "ci", "restrained") && !mba.findEffect(target.actor, "Assassin Vine: Entangle")) await mba.createEffect(target.actor, effectData);
             })
 
             .play()

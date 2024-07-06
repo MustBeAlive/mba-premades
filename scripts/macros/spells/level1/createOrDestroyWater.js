@@ -22,14 +22,14 @@ export async function createOrDestroyWater({ speaker, actor, token, character, i
 
         .effect()
         .file("jb2a.cast_generic.water.02.blue.0")
-        .attachTo(token)
-        .scaleToObject(2 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(2 * workflow.token.document.texture.scaleX)
         .waitUntilFinished(-2000)
 
         .effect()
         .file("animated-spell-effects-cartoon.water.ball")
-        .attachTo(token)
-        .scaleToObject(1 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(1 * workflow.token.document.texture.scaleX)
         .playbackRate(0.85)
 
         .play()

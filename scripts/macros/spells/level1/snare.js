@@ -1,8 +1,22 @@
-import { constants } from "../../generic/constants.js";
-import { mba } from "../../../helperFunctions.js";
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) return;
+    await template.update({
+        'flags': {
+            'mba-premades': {
+                'template': {
+                    'castLevel': workflow.castData.castLevel,
+                    'itemUuid': workflow.item.uuid,
+                    'saveDC': mba.getSpellDC(workflow.item),
+                    'sourceUuid': workflow.token.document.uuid,
+                    'templateUuid': template.uuid,
+                }
+            }
+        }
+    });
     new Sequence()
 
         .wait(500)
@@ -35,22 +49,12 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .zIndex(1)
 
         .play()
+}
 
-    await template.update({
-        'flags': {
-            'mba-premades': {
-                'template': {
-                    'name': 'snare',
-                    'castLevel': workflow.castData.castLevel,
-                    'saveDC': mba.getSpellDC(workflow.item),
-                    'macroName': 'snare',
-                    'templateUuid': template.uuid,
-                    'sourceUuid': workflow.token.document.uuid,
-                    'itemUuid': workflow.item.uuid
-                }
-            }
-        }
-    });
+async function enter(template, token) {
+    let trigger = template.flags['mba-premades']?.template;
+    if (!trigger) return;
+    await snare.trigger(token.document, trigger);
 }
 
 async function trigger(token, trigger) {
@@ -63,7 +67,7 @@ async function trigger(token, trigger) {
     if (!originUuid) return;
     let originItem = await fromUuid(originUuid);
     if (!originItem) return;
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Snare: Trigger', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Snare: Trigger", false);
     if (!featureData) return;
     delete featureData._id;
     featureData.system.save.dc = trigger.saveDC;
@@ -88,7 +92,7 @@ async function trigger(token, trigger) {
 
             .play()
 
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Snare` });
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Snare` });
         await token.document.update({ elevation: 0 });
         await mbaPremades.helpers.addCondition(actor, "Prone");
     };
@@ -97,7 +101,7 @@ async function trigger(token, trigger) {
         'icon': "modules/mba-premades/icons/spells/level1/snare1.webp",
         'origin': template.flags['mba-premades']?.template?.itemUuid,
         'description': `
-            <p>You triggered a magical trap and are hoisted into the air, hanging upside down 3 feet above the ground. Until the spell ends, you are restrained.</p>
+            <p>You triggered a magical trap and are hoisted into the air, hanging upside down 3 feet above the ground. Until the spell ends, you are @UUID[Compendium.mba-premades.MBA SRD.Item.gfRbTxGiulUylAjE]{Restrained}.</p>
             <p>At the end of each of your turns, you can make a Dexterity saving throw, ending the effect on a success.</p>
             <p>Alternatively, you or someone else who can reach you can use an action to make an Intelligence (Arcana) check, ending the effect on a success.</p>
         `,
@@ -111,13 +115,13 @@ async function trigger(token, trigger) {
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': 'turn=end, saveAbility=dex, saveDC=' + template.flags['mba-premades']?.template?.saveDC + ', saveMagic=true, name=Restain: Turn End, killAnim=true',
+                'value': `turn=end, saveAbility=dex, saveDC=${trigger.saveDC}, saveMagic=true, name=Restain: Turn End (DC${trigger.saveDC}), killAnim=true`,
                 'priority': 20
             },
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': 'actionSave=true, rollType=skill, saveAbility=arc, saveDC=' + template.flags['mba-premades']?.template?.saveDC + ', saveMagic=false, name=Restain: Action Save, killAnim=true',
+                'value': `actionSave=true, rollType=skill, saveAbility=arc, saveDC=${trigger.saveDC}, saveMagic=false, name=Restain: Action Save (DC${trigger.saveDC}), killAnim=true`,
                 'priority': 20
             }
         ],
@@ -217,14 +221,8 @@ async function trigger(token, trigger) {
     if (templateEffect) await mba.removeEffect(templateEffect);
 }
 
-async function enter(template, token) {
-    let trigger = template.flags['mba-premades']?.template;
-    if (!trigger) return;
-    await snare.trigger(token.document, trigger);
-}
-
 export let snare = {
     'cast': cast,
+    'enter': enter,
     'trigger': trigger,
-    'enter': enter
 }

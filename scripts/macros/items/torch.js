@@ -6,7 +6,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         let choices = [["Yes, light the torch", "light"], ["No, cancel", false]];
         let selection = await mba.dialog("Torch", choices, `Would you like to light a <b>Torch</b>?`);
         if (!selection) return;
-        await mbaPremades.macros.torch.light({speaker, actor, token, character, item, args, scope, workflow})
+        await torch.light(workflow);
         return;
     }
     let choices = [["Light new Torch", "light"], ["Extinguish Torch", "extinguish"]];
@@ -16,7 +16,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         case "light": {
             await mba.removeEffect(effect);
             await warpgate.wait(100);
-            await mbaPremades.macros.torch.light({speaker, actor, token, character, item, args, scope, workflow})
+            await torch.light(workflow)
             break;
         }
         case "extinguish": {
@@ -25,7 +25,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     }
 }
 
-async function light({ speaker, actor, token, character, item, args, scope, workflow }) {
+async function light(workflow) {
     async function effectMacroDel() {
         await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Torch` })
     }
@@ -116,22 +116,22 @@ async function light({ speaker, actor, token, character, item, args, scope, work
         .effect()
         .file("jb2a.impact.002.orange")
         .delay(150)
-        .atLocation(token)
-        .attachTo(token, { followRotation: true, local: true })
+        .atLocation(workflow.token)
+        .attachTo(workflow.token, { followRotation: true, local: true })
         .scaleToObject(0.9, { considerTokenScale: true })
-        .spriteOffset({ x: 0.525 * token.document.width, y: -0.05 * token.document.width }, { gridUnits: true })
+        .spriteOffset({ x: 0.525 * workflow.token.document.width, y: -0.05 * workflow.token.document.width }, { gridUnits: true })
         .spriteRotation(45)
         .zIndex(0.1)
         .name(`${workflow.token.document.name} Torch`)
 
         .effect()
         .file("modules/mba-premades/icons/gear/torch.webp")
-        .atLocation(token)
-        .attachTo(token, { followRotation: true, local: true })
+        .atLocation(workflow.token)
+        .attachTo(workflow.token, { followRotation: true, local: true })
         .scaleToObject(1.2, { considerTokenScale: true })
         .scaleIn(0, 500, { ease: "easeOutElastic" })
         .scaleOut(0, 250, { ease: "easeOutCubic" })
-        .spriteOffset({ x: 0.35 * token.document.width, y: 0.1 * token.document.width }, { gridUnits: true })
+        .spriteOffset({ x: 0.35 * workflow.token.document.width, y: 0.1 * workflow.token.document.width }, { gridUnits: true })
         .animateProperty("sprite", "rotation", { from: 15, to: -15, duration: 300, ease: "easeInOutBack" })
         .animateProperty("sprite", "rotation", { from: 0, to: 30, duration: 250, delay: 200, ease: "easeOutBack" })
         .zeroSpriteRotation()
@@ -142,10 +142,10 @@ async function light({ speaker, actor, token, character, item, args, scope, work
         .effect()
         .file("jb2a.flames.01.orange")
         .delay(250)
-        .atLocation(token)
-        .attachTo(token, { followRotation: true, local: true })
+        .atLocation(workflow.token)
+        .attachTo(workflow.token, { followRotation: true, local: true })
         .scaleToObject(1, { considerTokenScale: true })
-        .spriteOffset({ x: 0.5 * token.document.width, y: -0.05 * token.document.width }, { gridUnits: true })
+        .spriteOffset({ x: 0.5 * workflow.token.document.width, y: -0.05 * workflow.token.document.width }, { gridUnits: true })
         .spriteRotation(45)
         .zIndex(0.1)
         .fadeOut(1000)

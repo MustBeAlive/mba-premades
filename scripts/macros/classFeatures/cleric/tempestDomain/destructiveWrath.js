@@ -13,7 +13,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         return;
     }
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Destructive Wrath`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} DesWra` })
     }
     const effectData = {
         'name': workflow.item.name,
@@ -47,45 +47,50 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("animated-spell-effects-cartoon.level 01.divine favour.purple")
-        .attachTo(token)
-        .scaleToObject(1.5 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(1.5 * workflow.token.document.texture.scaleX)
         .waitUntilFinished(-700)
 
         .effect()
         .file("animated-spell-effects-cartoon.energy.12")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .fadeIn(500)
         .fadeOut(750)
-        .scaleToObject(1.4 * token.document.texture.scaleX)
+        .scaleToObject(1.4 * workflow.token.document.texture.scaleX)
         .playbackRate(0.9)
         .waitUntilFinished(-400)
 
         .effect()
         .file("animated-spell-effects-cartoon.electricity.ball.06")
-        .attachTo(token)
-        .scaleToObject(2.2 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(2.2 * workflow.token.document.texture.scaleX)
         .fadeIn(500)
         .fadeOut(500)
         .duration(2800)
         .playbackRate(0.9)
 
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
+            await CDItem.update({ "system.uses.value": uses -= 1 });
+        })
+
         //Boom 1
         .effect()
         .file("jb2a.lightning_strike.blue.0")
-        .atLocation(token, { offset: { x: 0, y: -1.1 }, gridUnits: true })
-        .scaleToObject(5 * token.document.texture.scaleX)
+        .atLocation(workflow.token, { offset: { x: 0, y: -1.1 }, gridUnits: true })
+        .scaleToObject(5 * workflow.token.document.texture.scaleX)
 
         .effect()
         .file("animated-spell-effects-cartoon.electricity.23")
-        .atLocation(token, { offset: { x: 0, y: -1.1 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: 0, y: -1.1 }, gridUnits: true })
         .scaleToObject(2)
 
         //Line 1
         .effect()
         .file("animated-spell-effects-cartoon.electricity.24")
         .delay(250)
-        .from(token, { offset: { x: 0, y: -1.1 }, gridUnits: true })
-        .rotateTowards(token)
+        .from(workflow.token, { offset: { x: 0, y: -1.1 }, gridUnits: true })
+        .rotateTowards(workflow.token)
         .rotate(-17)
         .scaleToObject(3)
 
@@ -93,21 +98,21 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.lightning_strike.blue.0")
         .delay(500)
-        .atLocation(token, { offset: { x: -0.6, y: 0.9 }, gridUnits: true })
-        .scaleToObject(5 * token.document.texture.scaleX)
+        .atLocation(workflow.token, { offset: { x: -0.6, y: 0.9 }, gridUnits: true })
+        .scaleToObject(5 * workflow.token.document.texture.scaleX)
 
         .effect()
         .file("animated-spell-effects-cartoon.electricity.23")
         .delay(500)
-        .atLocation(token, { offset: { x: -0.6, y: 0.9 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: -0.6, y: 0.9 }, gridUnits: true })
         .scaleToObject(2)
 
         //Line 3
         .effect()
         .file("animated-spell-effects-cartoon.electricity.24")
         .delay(750)
-        .from(token, { offset: { x: -0.6, y: 0.9 }, gridUnits: true })
-        .rotateTowards(token)
+        .from(workflow.token, { offset: { x: -0.6, y: 0.9 }, gridUnits: true })
+        .rotateTowards(workflow.token)
         .rotate(-17)
         .scaleToObject(3)
 
@@ -115,21 +120,21 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.lightning_strike.blue.0")
         .delay(1000)
-        .atLocation(token, { offset: { x: 1, y: -0.3 }, gridUnits: true })
-        .scaleToObject(5 * token.document.texture.scaleX)
+        .atLocation(workflow.token, { offset: { x: 1, y: -0.3 }, gridUnits: true })
+        .scaleToObject(5 * workflow.token.document.texture.scaleX)
 
         .effect()
         .file("animated-spell-effects-cartoon.electricity.23")
         .delay(1000)
-        .atLocation(token, { offset: { x: 1, y: -0.3 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: 1, y: -0.3 }, gridUnits: true })
         .scaleToObject(2)
 
         //Line 5
         .effect()
         .file("animated-spell-effects-cartoon.electricity.24")
         .delay(1250)
-        .from(token, { offset: { x: 1, y: -0.3 }, gridUnits: true })
-        .rotateTowards(token)
+        .from(workflow.token, { offset: { x: 1, y: -0.3 }, gridUnits: true })
+        .rotateTowards(workflow.token)
         .rotate(-17)
         .scaleToObject(3)
 
@@ -137,21 +142,21 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.lightning_strike.blue.0")
         .delay(1500)
-        .atLocation(token, { offset: { x: -1, y: -0.3 }, gridUnits: true })
-        .scaleToObject(5 * token.document.texture.scaleX)
+        .atLocation(workflow.token, { offset: { x: -1, y: -0.3 }, gridUnits: true })
+        .scaleToObject(5 * workflow.token.document.texture.scaleX)
 
         .effect()
         .file("animated-spell-effects-cartoon.electricity.23")
         .delay(1500)
-        .atLocation(token, { offset: { x: -1, y: -0.3 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: -1, y: -0.3 }, gridUnits: true })
         .scaleToObject(2)
 
         //Line 2
         .effect()
         .file("animated-spell-effects-cartoon.electricity.24")
         .delay(1750)
-        .from(token, { offset: { x: -1, y: -0.3 }, gridUnits: true })
-        .rotateTowards(token)
+        .from(workflow.token, { offset: { x: -1, y: -0.3 }, gridUnits: true })
+        .rotateTowards(workflow.token)
         .rotate(-17)
         .scaleToObject(3)
 
@@ -159,44 +164,39 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.lightning_strike.blue.0")
         .delay(2000)
-        .atLocation(token, { offset: { x: 0.6, y: 0.9 }, gridUnits: true })
-        .scaleToObject(5 * token.document.texture.scaleX)
+        .atLocation(workflow.token, { offset: { x: 0.6, y: 0.9 }, gridUnits: true })
+        .scaleToObject(5 * workflow.token.document.texture.scaleX)
 
         .effect()
         .file("animated-spell-effects-cartoon.electricity.23")
         .delay(2000)
-        .atLocation(token, { offset: { x: 0.6, y: 0.9 }, gridUnits: true })
+        .atLocation(workflow.token, { offset: { x: 0.6, y: 0.9 }, gridUnits: true })
         .scaleToObject(2)
 
         //Line 4
         .effect()
         .file("animated-spell-effects-cartoon.electricity.24")
         .delay(2250)
-        .from(token, { offset: { x: 0.6, y: 0.9 }, gridUnits: true })
-        .rotateTowards(token)
+        .from(workflow.token, { offset: { x: 0.6, y: 0.9 }, gridUnits: true })
+        .rotateTowards(workflow.token)
         .scaleToObject(3)
 
         .effect()
         .file("animated-spell-effects-cartoon.electricity.discharge.08")
         .delay(2400)
-        .attachTo(token)
-        .scaleToObject(4 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(4 * workflow.token.document.texture.scaleX)
         .waitUntilFinished(-1700)
 
         .effect()
         .file("jb2a.static_electricity.01.blue")
-        .attachTo(token)
-        .scaleToObject(1.2 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(1.2 * workflow.token.document.texture.scaleX)
         .fadeIn(300)
         .fadeOut(500)
         .playbackRate(0.9)
         .persist()
-        .name(`${token.document.name} Destructive Wrath`)
-
-        .thenDo(async () => {
-            await mba.createEffect(workflow.actor, effectData);
-            await CDItem.update({ "system.uses.value": uses -= 1 });
-        })
+        .name(`${workflow.token.document.name} DesWra`)
 
         .play()
 }

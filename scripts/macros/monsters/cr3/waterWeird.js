@@ -6,21 +6,15 @@ async function autoGrapple({ speaker, actor, token, character, item, args, scope
     if (mba.findEffect(target.actor, "Grappled")) return;
     if (mba.getSize(target.actor) > 2) return;
     let distance = await mba.getDistance(workflow.token, target, true);
-    if (distance > 5) await mba.pushToken(workflow.token, target, -5);
+    await mba.pushToken(workflow.token, target, -distance);
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Water Weird` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} WatWe` })
     }
     let effectData = {
-        'name': workflow.item.name,
+        'name': "Water Weird: Constrict",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'changes': [
-            {
-                'key': 'flags.midi-qol.OverTime',
-                'mode': 0,
-                'value': 'actionSave=true, rollType=skill, saveAbility=ath|acr, saveDC=13, saveMagic=false, name=Constrict: Action Save (DC 13), killAnim=true',
-                'priority': 20
-            },
             {
                 'key': 'macro.CE',
                 'mode': 0,
@@ -32,7 +26,13 @@ async function autoGrapple({ speaker, actor, token, character, item, args, scope
                 'mode': 0,
                 'value': 'Restrained',
                 'priority': 20
-            }
+            },
+            {
+                'key': 'flags.midi-qol.OverTime',
+                'mode': 0,
+                'value': 'actionSave=true, rollType=skill, saveAbility=ath|acr, saveDC=13, saveMagic=false, name=Constrict: Action Save (DC 13), killAnim=true',
+                'priority': 20
+            },
         ],
         'flags': {
             'dae': {
@@ -77,7 +77,7 @@ async function autoGrapple({ speaker, actor, token, character, item, args, scope
         .fadeOut(1000)
         .opacity(0.6)
         .persist()
-        .name(`${target.document.name} Water Weird`)
+        .name(`${target.document.name} WatWe`)
 
         .play()
 }

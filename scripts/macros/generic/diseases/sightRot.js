@@ -201,7 +201,7 @@ export async function sightRot() {
     await mba.createEffect(target.actor, effectData);
     ChatMessage.create({
         whisper: ChatMessage.getWhisperRecipients("GM"),
-        content: `<p><b>${target.document.name}</b> is infected with <b>Sight Rot</b></p><p>Symptoms will manifest in <b>1 day</b></p>`,
+        content: `<p><u>${target.document.name}</u> is infected with <b>Sight Rot</b></p><p>Symptoms will manifest in <b>1 day</b></p>`,
         speaker: { actor: null, alias: "Disease Announcer" }
     });
 }
@@ -230,7 +230,7 @@ export async function sightRotOintment({ speaker, actor, token, character, item,
     };
     await mba.updateEffect(effect, updates);
     ChatMessage.create({
-        content: `<p><b>${target.document.name}</b> applied eyebright ointment</b></p><p>Consecutive uses: <b>${eyebrightCurrent}</b></p>`,
+        content: `<p><u>${target.document.name}</u> applied eyebright ointment</b></p><p>Consecutive uses: <b>${eyebrightCurrent}</b></p>`,
         speaker: { actor: null, alias: "Disease Announcer" }
     });
     let ointment = workflow.actor.items.filter(i => i.name === `Eyebright Ointment`)[0];

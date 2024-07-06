@@ -1,6 +1,6 @@
-import { constants } from "../../generic/constants.js";
-import { mba } from "../../../helperFunctions.js";
-import { queue } from "../../mechanics/queue.js";
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
@@ -76,8 +76,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.magic_signs.rune.02.complete.06.pink")
-        .attachTo(token)
-        .scaleToObject(1.5 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(1.5 * workflow.token.document.texture.scaleX)
         .fadeIn(1000)
 
         .effect()
@@ -253,11 +253,11 @@ async function turnEnd(effect, token, origin) {
     let distance = mba.getDistance(token, targetToken);
     if (distance <= 30) return;
     await mba.gmDialogMessage();
-    let selection = await mba.remoteDialog(origin.name, constants.yesNo, mba.lastGM(), 'Caster has ended their turn more than 30 feet away from their target. Remove effect?');
+    let selection = await mba.remoteDialog(origin.name, constants.yesNo, mba.lastGM(), "Caster of Compelled Duel has ended their turn more than 30 feet away from their target.<br>Remove effect?");
     await mba.clearGMDialogMessage();
     if (!selection) return;
     await mba.removeEffect(effect);
-    let targetEffect = mba.findEffect(targetToken.actor, 'Compelled Duel: Target');
+    let targetEffect = mba.findEffect(targetToken.actor, "Compelled Duel: Target");
     if (!targetEffect) return;
     await mba.removeEffect(targetEffect);
 }

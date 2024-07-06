@@ -6,7 +6,7 @@ export async function burningHands({ speaker, actor, token, character, item, arg
 
 		.effect()
 		.file('jb2a.energy_strands.in.yellow.01.0')
-		.atLocation(token)
+		.atLocation(workflow.token)
 		.rotateTowards(template, { 'cacheLocation': true })
 		.scaleToObject(1.1)
 		.anchor({ 'x': 0.15 })
@@ -14,7 +14,7 @@ export async function burningHands({ speaker, actor, token, character, item, arg
 
 		.effect()
 		.file('jb2a.magic_signs.circle.02.evocation.loop.yellow')
-		.atLocation(token)
+		.atLocation(workflow.token)
 		.rotateTowards(template, { 'cacheLocation': true })
 		.anchor({ x: 0.15 })
 		.scaleToObject(1.1)
@@ -27,7 +27,7 @@ export async function burningHands({ speaker, actor, token, character, item, arg
 
 		.effect()
 		.file('jb2a.particles.outward.orange.01.04')
-		.atLocation(token)
+		.atLocation(workflow.token)
 		.rotateTowards(template, { 'cacheLocation': true })
 		.scaleToObject(1.1)
 		.anchor({ x: 0.15 })
@@ -41,7 +41,7 @@ export async function burningHands({ speaker, actor, token, character, item, arg
 
 		.effect()
 		.file('jb2a.impact.010.orange')
-		.atLocation(token)
+		.atLocation(workflow.token)
 		.rotateTowards(template, { 'cacheLocation': true })
 		.anchor({ x: 0.15 })
 		.scaleToObject(1.1)

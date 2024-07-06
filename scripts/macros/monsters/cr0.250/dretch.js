@@ -3,6 +3,7 @@ import {mba} from "../../../helperFunctions.js";
 
 async function fetidCloudCast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) return;
 
     new Sequence()
 
@@ -59,6 +60,7 @@ async function fetidCloudEnter(template, token) {
 
 async function fetidCloudTrigger(token, trigger) {
     if (mba.checkTrait(token.actor, 'ci', 'poisoned')) return;
+    if (mba.findEffect(token.actor, "Dretch: Fetid Cloud")) return;
     let template = await fromUuid(trigger.templateUuid);
     if (!template) return;
     if (mba.inCombat()) {
@@ -99,8 +101,8 @@ async function fetidCloudTrigger(token, trigger) {
         'name': "Dretch: Fetid Cloud",
         'icon': "modules/mba-premades/icons/conditions/nauseated.webp",
         'description': `
-            <p>You are nauseated by Dretch's Fetid Cloud and are poisoned until the start of your next turn.</p>
-            <p>While poisoned in this way, you can take <b>either action or a bonus action, not both</b> and <b>can't take reactions.</b></p>
+            <p>You are nauseated by Dretch's Fetid Cloud and are @UUID[Compendium.mba-premades.MBA SRD.Item.pAjPUbk2oPUTfva2]{Poisoned} until the start of your next turn.</p>
+            <p>While @UUID[Compendium.mba-premades.MBA SRD.Item.pAjPUbk2oPUTfva2]{Poisoned} in this way, you can take <u>either action or a bonus action, not both</u> and <u>can't take reactions.</u></p>
         `,
         'changes': [
             {
@@ -151,7 +153,7 @@ async function fetidCloudTrigger(token, trigger) {
         .name(`${token.name} Fetid Cloud`)
 
         .thenDo(async () => {
-            await mba.createEffect(token.actor, effectData)
+            await mba.createEffect(token.actor, effectData);
         })
 
         .play()

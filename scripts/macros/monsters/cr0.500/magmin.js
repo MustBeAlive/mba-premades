@@ -21,7 +21,7 @@ async function touch({ speaker, actor, token, character, item, args, scope, work
     let target = workflow.targets.first();
     if (mba.findEffect(target.actor, "Magmin: Igniting Touch")) return;
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Magmin Igniting Touch` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} MagIT` })
     };
     async function effectMacroTurnStart() {
         let effect = await mbaPremades.helpers.findEffect(actor, "Magmin: Igniting Touch");
@@ -74,7 +74,7 @@ async function touch({ speaker, actor, token, character, item, args, scope, work
         .fadeOut(1000)
         .mask()
         .persist()
-        .name(`${target.document.name} Magmin Igniting Touch`)
+        .name(`${target.document.name} MagIT`)
 
         .thenDo(async () => {
             await mba.createEffect(target.actor, effectData);

@@ -12,7 +12,7 @@ async function assassinate({ speaker, actor, token, character, item, args, scope
     }
     const effectData = {
         'name': "Assassinate: Advantage",
-        'icon': "icons/skills/melee/strike-sword-blood-red.webp",
+        'icon': "modules/mba-premades/icons/generic/generic_death.webp",
         'duration': {
             'turns': 1
         },
@@ -37,7 +37,7 @@ async function surprise({ speaker, actor, token, character, item, args, scope, w
     if (!mba.findEffect(workflow.targets.first().actor, "Surprised")) return;
     const effectData = {
         'name': "Assassinate: Critical",
-        'icon': "icons/skills/melee/strike-sword-blood-red.webp",
+        'icon': "modules/mba-premades/icons/generic/generic_death.webp",
         'duration': {
             'turns': 1
         },

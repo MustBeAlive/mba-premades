@@ -5,7 +5,7 @@ async function rayRoll({ speaker, actor, token, character, item, args, scope, wo
     const target = workflow.targets.first();
     let rollFormula = "1d4";
     let rayRoll = await new Roll(rollFormula).roll({ 'async': true });
-    await MidiQOL.displayDSNForRoll(rayRoll, 'damageRoll');
+    await MidiQOL.displayDSNForRoll(rayRoll);
     rayRoll.toMessage({
         rollMode: 'roll',
         speaker: { 'alias': name },
@@ -16,45 +16,33 @@ async function rayRoll({ speaker, actor, token, character, item, args, scope, wo
     let ray = rayRoll.total;
     if (ray === 1) {
         featureData = await mba.getItemFromCompendium('mba-premades.MBA Monster Features', 'Beholder Zombie: Paralyzing Ray', false);
-        if (!featureData) {
-            ui.notifications.warn("Can't find item in compenidum!");
-            return
-        }
+        if (!featureData) return;
         animation = "jb2a.scorching_ray.01.pink";
     }
     else if (ray === 2) {
         featureData = await mba.getItemFromCompendium('mba-premades.MBA Monster Features', 'Beholder Zombie: Fear Ray', false);
-        if (!featureData) {
-            ui.notifications.warn("Can't find item in compenidum!");
-            return
-        }
+        if (!featureData) return;
         animation = "jb2a.scorching_ray.01.purple";
     }
     else if (ray === 3) { // test color
         featureData = await mba.getItemFromCompendium('mba-premades.MBA Monster Features', 'Beholder Zombie: Enervation Ray', false);
-        if (!featureData) {
-            ui.notifications.warn("Can't find item in compenidum!");
-            return
-        }
+        if (!featureData) return;
         animation = "jb2a.scorching_ray.01.green";
     }
     else if (ray === 4) {
         featureData = await mba.getItemFromCompendium('mba-premades.MBA Monster Features', 'Beholder Zombie: Disintegration Ray', false);
-        if (!featureData) {
-            ui.notifications.warn("Can't find item in compenidum!");
-            return
-        }
+        if (!featureData) return;
         animation = "jb2a.scorching_ray.01.red";
     }
     delete featureData._id;
-    let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
+    let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
     await MidiQOL.completeItemUse(feature, config, options);
     new Sequence()
 
         .effect()
         .file(animation)
-        .atLocation(token)
+        .atLocation(workflow.token)
         .stretchTo(target)
         .repeats(3, 600, 600)
 
@@ -64,12 +52,14 @@ async function rayRoll({ speaker, actor, token, character, item, args, scope, wo
 async function rayParalyzing({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
+    if (mba.checkTrait(target.actor, "ci", "paralyzed")) return;
+    if (mba.findEffect(target.actor, "Beholder Zombie: Paralyzing Ray")) return;
     const effectData = {
         'name': "Beholder Zombie: Paralyzing Ray",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are paralyzed by Beholder Zombie's Paralyzing Ray for the duration.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.jooSbuYlWEhaNpIi]{Paralyzed} by Beholder Zombie's Paralyzing Ray for the duration.</p>
             <p>You can repeat the saving throw at the end of each of your turns, ending the effect on a success.</p>
         `,
         'duration': {
@@ -96,12 +86,14 @@ async function rayParalyzing({ speaker, actor, token, character, item, args, sco
 async function rayFear({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
+    if (mba.checkTrait(target.actor, "ci", "paralyzed")) return;
+    if (mba.findEffect(target.actor, "Beholder Zombie: Fear Ray")) return;
     const effectData = {
         'name': "Beholder Zombie: Fear Ray",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are frightened by Beholder Zombie's Fear Ray for the duration.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.oR1wUvem3zVVUv5Q]{Frightened} by Beholder Zombie's Fear Ray for the duration.</p>
             <p>You can repeat the saving throw at the end of each of your turns, ending the effect on a success.</p>
         `,
         'duration': {

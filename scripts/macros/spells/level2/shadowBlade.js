@@ -1,12 +1,9 @@
-import { mba } from "../../../helperFunctions.js";
-import { queue } from "../../mechanics/queue.js";
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Shadow Blade: Sword', false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium (Shadow Blade: Sword");
-        return;
-    }
+    if (!featureData) return;
     let featureData2 = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Shadow Blade: Evoke', false);
     if (!featureData2) {
         ui.notifications.warn("Unable to find item in compendium! (Shadow Blade: Evoke)");
@@ -129,6 +126,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .scaleOut(0, 500, { ease: "easeOutCubic" })
         .spriteOffset({ x: 0.4 * token.document.width, y: -0.1 * token.document.width }, { gridUnits: true })
         .spriteRotation(90)
+        .mirrorX()
         .mirrorY()
         .filter("ColorMatrix", { hue: 250 })
         .persist()
@@ -214,6 +212,7 @@ async function evoke({ speaker, actor, token, character, item, args, scope, work
             .scaleOut(0, 500, { ease: "easeOutCubic" })
             .spriteOffset({ x: 0.4 * token.document.width, y: -0.1 * token.document.width }, { gridUnits: true })
             .spriteRotation(90)
+            .mirrorX()
             .mirrorY()
             .filter("ColorMatrix", { hue: 250 })
             .persist()
@@ -279,6 +278,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
             .scaleOut(0, 500, { ease: "easeOutCubic" })
             .spriteOffset({ x: 0.4 * token.document.width, y: -0.1 * token.document.width }, { gridUnits: true })
             .spriteRotation(90)
+            .mirrorX()
             .mirrorY()
             .filter("ColorMatrix", { hue: 250 })
             .persist()

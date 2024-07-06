@@ -11,7 +11,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .waitUntilFinished(-500)
 
             .thenDo(function () {
-                Sequencer.EffectManager.endEffects({ name: `${token.document.name} Shield`, object: token })
+                Sequencer.EffectManager.endEffects({ name: `${token.document.name} Shield` })
             })
 
             .play()
@@ -62,21 +62,21 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.shield.01.intro.blue")
-        .attachTo(token)
-        .scaleToObject(1.7 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(1.7 * workflow.token.document.texture.scaleX)
         .opacity(0.8)
         .playbackRate(0.8)
 
         .effect()
         .file("jb2a.shield.01.loop.blue")
+        .attachTo(workflow.token)
+        .scaleToObject(1.7 * workflow.token.document.texture.scaleX)
         .delay(600)
         .fadeIn(500)
-        .attachTo(token)
-        .scaleToObject(1.7 * token.document.texture.scaleX)
         .opacity(0.8)
         .playbackRate(0.8)
         .persist()
-        .name(`${token.document.name} Shield`)
+        .name(`${workflow.token.document.name} Shield`)
 
         .thenDo(async () => {
             await mba.createEffect(workflow.actor, effectData)

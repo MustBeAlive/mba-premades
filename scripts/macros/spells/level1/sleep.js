@@ -4,17 +4,18 @@ export async function sleep({ speaker, actor, token, character, item, args, scop
 	const sleepHp = await workflow.damageTotal;
 	console.log(`Sleep Spell => Available HP Pool [${sleepHp}] points`);
 	const targets = Array.from(workflow.targets)
-		.filter((i) => i.actor.system.attributes.hp.value != 0 && !mba.findEffect(i.actor, "Unconscious"))
+		.filter((i) => i.actor.system.attributes.hp.value != 0 && !mba.findEffect(i.actor, "Unconscious") && !mba.getItem(i.actor, "Fey Ancestry"))
 		.sort((a, b) => (canvas.tokens.get(a.id).actor.system.attributes.hp.value < canvas.tokens.get(b.id).actor.system.attributes.hp.value ? -1 : 1));
 	let remainingSleepHp = sleepHp;
 	let sleepTarget = [];
 	let template = canvas.scene.collections.templates.get(workflow.templateId);
+	if (!template) return;
 
 	new Sequence()
 
 		.effect()
 		.file("jb2a.energy_strands.range.multiple.purple.01")
-		.attachTo(token)
+		.attachTo(workflow.token)
 		.stretchTo(template)
 
 		.effect()
@@ -68,14 +69,14 @@ export async function sleep({ speaker, actor, token, character, item, args, scop
 			console.log(`Sleep Results => Target: ${target.name} |  HP: ${targetHpValue} | HP Pool: ${remainingSleepHp} | Status: Fell asleep`);
 			sleepTarget.push(`<div class="midi-qol-flex-container"><div>Fell asleep: </div><div class="midi-qol-target-npc midi-qol-target-name" id="${target.id}"> ${target.document.name}</div><div><img src="${targetImg}" width="30" height="30" style="border:0px"></div></div>`);
 			async function effectMacroDel() {
-				await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Sleep` })
+				Sequencer.EffectManager.endEffects({ name: `${token.document.name} Sleep` })
 			}
 			const effectData = {
 				'name': workflow.item.name,
 				'icon': workflow.item.img,
 				'origin': workflow.item.uuid,
 				'description': `
-					<p>You are unconscious until the spell ends, you take damage, or someone uses and action to shake or slap you awake.</p>
+					<p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.kIUR1eRcTTtaMFao]{Unconscious} until the spell ends, you take damage, or someone uses and action to shake or slap you awake.</p>
 				`,
 				'duration': {
 					'seconds': 60
@@ -106,7 +107,6 @@ export async function sleep({ speaker, actor, token, character, item, args, scop
 					}
 				}
 			};
-
 			await new Sequence()
 
 				.effect()
@@ -127,8 +127,8 @@ export async function sleep({ speaker, actor, token, character, item, args, scop
 
 			await warpgate.wait(200);
 			continue;
-
-		} else {
+		} 
+		else {
 			console.log(`Sleep Results => Target: ${target.name} | HP: ${targetHpValue} | HP Pool: ${remainingSleepHp - targetHpValue} | Status: Resisted`);
 			sleepTarget.push(`<div class="midi-qol-flex-container"><div>Resisted: </div><div class="midi-qol-target-npc midi-qol-target-name" id="${target.id}"> ${target.document.name}</div><div><img src="${targetImg}" width="30" height="30" style="border:0px"></div></div>`);
 		}

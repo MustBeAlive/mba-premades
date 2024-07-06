@@ -11,8 +11,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                     'castLevel': workflow.castData.castLevel,
                     'icon': workflow.item.img,
                     'itemUuid': workflow.item.uuid,
-                    'macroName': 'cloudOfDaggers',
-                    'name': 'cloudOfDaggers',
                     'saveDC': mba.getSpellDC(workflow.item),
                     'templateUuid': template.uuid
                 }
@@ -139,12 +137,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file(animation1)
-        .attachTo(token, { offset: offset[2], gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: offset[2], gridUnits: true, followRotation: false })
         .stretchTo(template, { offset: offset[2], gridUnits: true, followRotation: false })
         .scale(0.4)
         .fadeIn(200)
         .filter("ColorMatrix", { hue: throwHue })
-        .name(`${token.document.name} Dagger 3`)
+        .name(`${workflow.token.document.name} Dagger 3`)
 
         .effect()
         .file(animation2)
@@ -155,12 +153,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file(animation1)
         .delay(100)
-        .attachTo(token, { offset: offset[0], gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: offset[0], gridUnits: true, followRotation: false })
         .stretchTo(template, { offset: offset[0], gridUnits: true, followRotation: false })
         .scale(0.4)
         .fadeIn(200)
         .filter("ColorMatrix", { hue: throwHue })
-        .name(`${token.document.name} Dagger 1`)
+        .name(`${workflow.token.document.name} Dagger 1`)
 
         .effect()
         .file(animation2)
@@ -171,12 +169,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file(animation1)
         .delay(200)
-        .attachTo(token, { offset: offset[3], gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: offset[3], gridUnits: true, followRotation: false })
         .stretchTo(template, { offset: offset[3], gridUnits: true, followRotation: false })
         .scale(0.4)
         .fadeIn(200)
         .filter("ColorMatrix", { hue: throwHue })
-        .name(`${token.document.name} Dagger 4`)
+        .name(`${workflow.token.document.name} Dagger 4`)
 
         .effect()
         .file(animation2)
@@ -187,12 +185,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file(animation1)
         .delay(300)
-        .attachTo(token, { offset: offset[1], gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: offset[1], gridUnits: true, followRotation: false })
         .stretchTo(template, { offset: offset[1], gridUnits: true, followRotation: false })
         .scale(0.4)
         .fadeIn(200)
         .filter("ColorMatrix", { hue: throwHue })
-        .name(`${token.document.name} Dagger 2`)
+        .name(`${workflow.token.document.name} Dagger 2`)
 
         .effect()
         .file(animation2)
@@ -203,12 +201,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file(animation1)
         .delay(400)
-        .attachTo(token, { offset: offset[4], gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: offset[4], gridUnits: true, followRotation: false })
         .stretchTo(template, { offset: offset[4], gridUnits: true, followRotation: false })
         .scale(0.4)
         .fadeIn(200)
         .filter("ColorMatrix", { hue: throwHue })
-        .name(`${token.document.name} Dagger 5`)
+        .name(`${workflow.token.document.name} Dagger 5`)
 
         .effect()
         .file(animation2)
@@ -256,7 +254,7 @@ async function trigger(token, trigger) {
     if (!originUuid) return;
     let originItem = await fromUuid(originUuid);
     if (!originItem) return;
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Cloud of Daggers: Damage', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Cloud of Daggers: Damage", false);
     if (!featureData) return;
     delete featureData._id;
     let damageDice = trigger.castLevel * 2;
@@ -268,12 +266,12 @@ async function trigger(token, trigger) {
 
         .effect()
         .file("jaamod.sequencer_fx_master.blood_splat.red.2")
-        .delay(100)
         .attachTo(token)
-        .scaleIn(0, 500, { 'ease': 'easeOutCubic' })
         .scaleToObject(1.8)
+        .delay(100)
         .duration(2500)
         .fadeOut(1000)
+        .scaleIn(0, 500, { 'ease': 'easeOutCubic' })
         .belowTokens()
 
         .play()

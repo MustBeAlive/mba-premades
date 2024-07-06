@@ -2361,7 +2361,7 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
             .opacity(1)
             .play();
 
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Disguise Self`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} DisSel` })
         await warpgate.revert(token.document, "Disguise Self");
     };
     let effectData = {
@@ -2418,43 +2418,43 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
 
         .effect()
         .file("jb2a.markers.circle_of_stars.blue")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .delay(200)
         .duration(7500)
         .fadeOut(7500)
         .scaleToObject(1.3)
-        .attachTo(token, { bindAlpha: false })
+        .attachTo(workflow.token, { bindAlpha: false })
         .loopProperty("sprite", "rotation", { from: 0, to: 360, duration: 60000 })
         .zIndex(1)
 
         .effect()
         .file("jb2a.sneak_attack.blue")
-        .atLocation(token)
+        .atLocation(workflow.token, { followRotation: false })
         .delay(200)
         .startTime(450)
         .scaleToObject(2)
-        .attachTo(token, { bindAlpha: false })
+        .attachTo(workflow.token, { bindAlpha: false })
         .playbackRate(1)
         .zIndex(2)
         .waitUntilFinished(-1000)
 
         .animation()
-        .on(token)
+        .on(workflow.token)
         .opacity(0)
 
         .effect()
         .file(tokenPath)
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(1)
-        .attachTo(token, { bindAlpha: false })
+        .attachTo(workflow.token, { bindAlpha: false })
         .fadeOut(2000, { ease: "easeOutCubic" })
         .scaleOut(0.5, 3000, { ease: "easeOutCubic" })
         .persist()
-        .name(`${token.document.name} Disguise Self`)
+        .name(`${workflow.token.document.name} Disguise Self`)
 
         .effect()
         .file("jb2a.sleep.cloud.01.blue")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .delay(200)
         .opacity(0.5)
         .scaleOut(0.5, 1000, { ease: "easeOutCubic" })
@@ -2469,15 +2469,15 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
 
         .effect()
         .file("jb2a.particles.outward.blue.02.03")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .delay(200)
         .scaleToObject(1.5)
         .zIndex(2)
         .scaleIn(0, 200, { ease: "easeOutCubic" })
-        .attachTo(token, { bindAlpha: false })
+        .attachTo(workflow.token, { bindAlpha: false })
         .fadeIn(760)
         .fadeOut(2500)
-        .name(`${token.document.name} Disguise Self`)
+        .name(`${workflow.token.document.name} DisSel`)
 
         .play();
 

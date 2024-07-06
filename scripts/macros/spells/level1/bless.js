@@ -4,7 +4,7 @@ import {mba} from "../../../helperFunctions.js";
 export async function bless({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel + 2;
     if (workflow.targets.size > ammount) {
-        let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected.<br>Choose which targets to keep (Max: ' + ammount + ')');
+        let selection = await mba.selectTarget("Bless", constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected.<br>Choose which targets to keep (Max: ' + ammount + ')');
         if (!selection.buttons) {
             ui.notifications.warn("Failed to select targets!");
             await mba.removeCondition(workflow.actor, "Concentrating");
@@ -19,7 +19,6 @@ export async function bless({ speaker, actor, token, character, item, args, scop
         let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
         mba.updateTargets(newTargets);
     }
-    let targets = Array.from(game.user.targets);
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} Bless` })
     }
@@ -62,7 +61,7 @@ export async function bless({ speaker, actor, token, character, item, args, scop
             }
         }
     };
-    for (let target of targets) {
+    for (let target of Array.from(game.user.targets)) {
         let delay1 = 100 + Math.floor(Math.random() * (Math.floor(1000) - Math.ceil(100)) + Math.ceil(100));
         let delay2 = 1500 + delay1;
         let delay3 = 500 + delay2;
@@ -87,6 +86,7 @@ export async function bless({ speaker, actor, token, character, item, args, scop
             .fadeOut(1000)
             .opacity(0.8)
             .playbackRate(0.8)
+            .randomRotation()
             .belowTokens()
             .persist()
             .name(`${target.document.name} Bless`)

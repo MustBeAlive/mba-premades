@@ -3,6 +3,7 @@ import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) return;
     new Sequence()
 
         .wait(500)
@@ -18,8 +19,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .belowTokens()
 
         .effect()
-        .attachTo(token)
         .file("jb2a.particles.outward.white.01.02")
+        .attachTo(workflow.token)
         .size(1.75, { gridUnits: true })
         .delay(500)
         .duration(1000)
@@ -32,12 +33,12 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.markers.light_orb.loop.white")
         .attachTo(template)
+        .size(2, { gridUnits: true })
         .duration(2500)
         .fadeIn(500)
         .scaleIn(0, 1500, { ease: "easeOutCubic" })
         .belowTokens()
         .zIndex(2)
-        .size(2, { gridUnits: true })
 
         .effect()
         .file("jb2a.shield_themed.above.eldritch_web.01.dark_green")
@@ -59,10 +60,10 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .fadeIn(500)
         .scaleIn(0, 1500, { ease: "easeOutCubic" })
         .scaleOut(0, 1500, { ease: "linear" })
-        .belowTokens()
         .zIndex(1.9)
-        .filter("ColorMatrix", { brightness: 0 })
         .opacity(0.5)
+        .belowTokens()
+        .filter("ColorMatrix", { brightness: 0 })
         .waitUntilFinished(-200)
 
         .effect()
@@ -151,7 +152,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    for (let i of Array.from(workflow.failedSaves)) await mba.createEffect(i.actor, effectData);
+    for (let target of Array.from(workflow.failedSaves)) await mba.createEffect(target.actor, effectData);
 }
 
 async function enter(template, token) {

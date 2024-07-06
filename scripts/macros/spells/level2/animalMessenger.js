@@ -39,7 +39,7 @@ export async function animalMessenger({ speaker, actor, token, character, item, 
           'icon': workflow.item.img,
           'origin': workflow.item.uuid,
           'description': `
-               <p>Animal Messenger of <b>${workflow.token.document.name}</b></p>
+               <p>Animal Messenger of <u>${workflow.token.document.name}</u></p>
           `,
           'duration': {
                'seconds': duration
@@ -63,9 +63,9 @@ export async function animalMessenger({ speaker, actor, token, character, item, 
           .file('jb2a.swirling_leaves.complete.01.green.0')
           .atLocation(target)
           .scaleToObject(2.25)
+          .fadeOut(750, { 'ease': 'easeOutQuint' })
           .scaleIn(0, 4000, { 'ease': 'easeOutBack' })
           .endTime(4500)
-          .fadeOut(750, { 'ease': 'easeOutQuint' })
           .zIndex(6)
 
           .wait(1000)
@@ -74,19 +74,19 @@ export async function animalMessenger({ speaker, actor, token, character, item, 
           .file('jb2a.sacred_flame.target.green')
           .atLocation(target)
           .scaleToObject(2)
+          .fadeOut(500)
           .scaleIn(0, 4000, { 'ease': 'easeOutBack' })
           .endTime(2500)
-          .fadeOut(500)
           .zIndex(5)
           .waitUntilFinished(-1000)
 
           .effect()
           .file('jb2a.plant_growth.04.ring.4x4.complete.greenwhite')
           .atLocation(target)
+          .scaleToObject(1.5)
           .opacity(1)
           .belowTokens()
           .randomRotation()
-          .scaleToObject(1.5)
           .zIndex(1.1)
 
           .wait(200)
@@ -94,30 +94,30 @@ export async function animalMessenger({ speaker, actor, token, character, item, 
           .effect()
           .file('jb2a.magic_signs.circle.02.conjuration.loop.green')
           .atLocation(target)
-          .scaleIn(0, 500, { 'ease': 'easeOutCubic' })
-          .belowTokens()
           .scaleToObject(1.25)
           .duration(1200)
           .fadeIn(200, { 'ease': 'easeOutCirc', 'delay': 200 })
           .fadeOut(300, { 'ease': 'linear' })
+          .scaleIn(0, 500, { 'ease': 'easeOutCubic' })
+          .zIndex(0.1)
+          .belowTokens()
           .filter('ColorMatrix', { 'saturate': -1, 'brightness': 2 })
           .filter('Blur', { 'blurX': 5, 'blurY': 10 })
-          .zIndex(0.1)
 
           .effect()
           .file('jb2a.magic_signs.circle.02.conjuration.loop.green')
           .atLocation(target)
+          .scaleToObject(1.25)
+          .duration(10000)
+          .fadeOut(5000, { 'ease': 'easeOutQuint' })
           .scaleIn(0, 500, { 'ease': 'easeOutCubic' })
           .belowTokens()
-          .scaleToObject(1.25)
-          .fadeOut(5000, { 'ease': 'easeOutQuint' })
-          .duration(10000)
 
           .effect()
           .file('jb2a.swirling_leaves.outburst.01.greenorange')
           .atLocation(target)
-          .opacity(1)
           .scaleToObject(2)
+          .opacity(1)
           .zIndex(1)
 
           .play();

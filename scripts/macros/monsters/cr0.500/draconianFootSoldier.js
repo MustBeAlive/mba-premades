@@ -19,7 +19,7 @@ async function petrificationCast(token, origin) {
         .name(`${token.document.name} Petrification`)
 
         .effect()
-        .file("https://i.imgur.com/4P2tITB.png")
+        .file("modules/mba-premades/icons/conditions/overlay/pertrification.webp")
         .atLocation(token)
         .mask(token)
         .opacity(1)
@@ -82,7 +82,7 @@ async function petrificationItem({ speaker, actor, token, character, item, args,
                 return;
             }
             async function effectMacroDel() {
-                Sequencer.EffectManager.endEffects({ name: `${token.document.name} DFS Petrification`, object: token })
+                Sequencer.EffectManager.endEffects({ name: `${token.document.name} DFS Petr`, object: token })
             }
             const effectData = {
                 'name': "Draconian Foot Soldier: Petrification",
@@ -122,10 +122,10 @@ async function petrificationItem({ speaker, actor, token, character, item, args,
                 .duration(5000)
                 .zIndex(1)
                 .persist()
-                .name(`${token.document.name} DFS Petrification`)
+                .name(`${token.document.name} DFS Petr`)
 
                 .effect()
-                .file("https://i.imgur.com/4P2tITB.png")
+                .file("modules/mba-premades/icons/conditions/overlay/pertrification.webp")
                 .atLocation(token)
                 .mask(token)
                 .opacity(1)
@@ -136,7 +136,7 @@ async function petrificationItem({ speaker, actor, token, character, item, args,
                 .duration(5000)
                 .attachTo(token)
                 .persist()
-                .name(`${token.document.name} DFS Petrification`)
+                .name(`${token.document.name} DFS Petr`)
 
                 .thenDo(async () => {
                     await mbaPremades.helpers.removeEffect(effect);
@@ -149,10 +149,10 @@ async function petrificationItem({ speaker, actor, token, character, item, args,
             'name': "Draconian Foot Soldier: Death Throes",
             'icon': "assets/library/icons/sorted/conditions/muddy.png",
             'description': `
-            <p>You are restrained as you begin to magically turn into stone.</p>
-            <p>At the end of your next turn you must repeat the saving throw.</p>
-            <p>On a success, the effect ends. On a failure, you are petrified.</p>
-        `,
+                <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.gfRbTxGiulUylAjE]{Restrained} as you begin to magically turn into stone.</p>
+                <p>At the end of your next turn you must repeat the saving throw.</p>
+                <p>On a success, the effect ends. On a failure, you are @UUID[Compendium.mba-premades.MBA SRD.Item.rrTzCb9szWTmyXwH]{Petrified}.</p>
+            `,
             'changes': [
                 {
                     'key': 'macro.CE',

@@ -17,17 +17,11 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let featureData;
     if (selection === "splash") {
         featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Acid Vial: Splash Acid', false);
-        if (!featureData) {
-            ui.notifications.warn("Unable to find item in compenidum! (Acid Vial: Splash Acid)");
-            return
-        }
+        if (!featureData) return;
     }
     else if (selection === "shatter") {
         featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Acid Vial: Throw Vial', false);
-        if (!featureData) {
-            ui.notifications.warn("Unable to find item in compenidum! (Acid Vial: Throw Vial)");
-            return
-        }
+        if (!featureData) return;
     }
     delete featureData._id;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
@@ -48,7 +42,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         if (!emptyVialItem) {
             const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Vial', false);
             if (!itemData) {
-                ui.notifications.warn("Unable to find item in compenidum! (Empty Vial)");
+                ui.notifications.warn("Unable to find item in compendium! (Empty Vial)");
                 return
             }
             await workflow.actor.createEmbeddedDocuments("Item", [itemData]);

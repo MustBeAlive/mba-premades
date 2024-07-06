@@ -1,4 +1,4 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function swallow({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.hitTargets.size) return;
@@ -10,10 +10,10 @@ async function swallow({ speaker, actor, token, character, item, args, scope, wo
     let effect = await mba.findEffect(target.actor, "Giant Frog: Grapple");
     if (!effect) return;
     async function effectMacroDelTarget() {
-        await mbaPremades.helpers.addCondition(actor, "Prone");
+        if (!mba.findEffect(token.actor, "Prone")) await mbaPremades.helpers.addCondition(token.actor, "Prone");
     }
     async function effectMacroDelSource() {
-        let targets = Array.from(canvas.scene.tokens).filter(i => i.actor.effects.some(i => i.name === "Giant Frog: Swallow"));
+        let targets = Array.from(canvas.scene.tokens).filter(t => t.actor.effects.some(e => e.name === "Giant Frog: Swallow"));
         if (!targets.length) return;
         for (let target of targets) {
             let effect = await mbaPremades.helpers.findEffect(target.actor, "Giant Frog: Swallow");
@@ -23,11 +23,11 @@ async function swallow({ speaker, actor, token, character, item, args, scope, wo
         }
     }
     async function effectMacroTurnStartSource() {
-        let sourceEffect = await mbaPremades.helpers.findEffect(actor, "Acid Stomach");
+        let sourceEffect = await mbaPremades.helpers.findEffect(token.actor, "Acid Stomach");
         if (!sourceEffect) return;
         let target = await fromUuid(sourceEffect.flags['mba-premades']?.feature?.giantFrog?.targetUuid);
         let damageRoll = await new Roll('2d4[acid]').roll({ 'async': true });
-        await MidiQOL.displayDSNForRoll(damageRoll, 'damageRoll');
+        await MidiQOL.displayDSNForRoll(damageRoll);
         damageRoll.toMessage({
             rollMode: 'roll',
             speaker: { 'alias': name },

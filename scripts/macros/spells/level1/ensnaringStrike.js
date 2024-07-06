@@ -4,7 +4,7 @@ import {mba} from "../../../helperFunctions.js";
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         await (warpgate.wait(200));
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} ES` });
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} EnsStr` });
         let targetEffect = await fromUuid(effect.flags['mba-premades']?.spell?.ensnaringStrike?.targetEffectUuid);
         if (!targetEffect) return;
         await mbaPremades.helpers.removeEffect(targetEffect);
@@ -55,12 +55,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.token_border.circle.static.green.001")
-        .attachTo(token)
-        .scaleToObject(1.8 * token.document.texture.scaleX)
+        .attachTo(workflow.token)
+        .scaleToObject(1.8 * workflow.token.document.texture.scaleX)
         .fadeIn(500)
         .fadeOut(1500)
         .persist()
-        .name(`${token.document.name} ES`)
+        .name(`${workflow.token.document.name} EnsStr`)
 
         .play()
 
@@ -78,22 +78,21 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     if (!effect) return;
     if (effect.flags['mba-premades'].spell.ensnaringStrike.used) return;
     let target = workflow.targets.first();
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Ensnaring Strike: Vines');
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in the compendium (Ensnaring Strike: Vines)");
-        return;
-    }
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Ensnaring Strike: Save", false);
+    if (!featureData) return;
     delete featureData._id;
-    featureData.system.save.dc = effect.flags['mba-premades'].spell.ensnaringStrike.dc;
+    let saveDC = effect.flags['mba-premades'].spell.ensnaringStrike.dc;
+    featureData.system.save.dc = saveDC;
+    let icon = "modules/mba-premades/icons/spells/level1/ensnaring_strike_melee.webp"
+    if (workflow.item.system.actionType === "rwak") icon = "modules/mba-premades/icons/spells/level1/ensnaring_strike_ranged.webp";
+    featureData.img = icon;
     if (mba.getSize(target.actor) > 2) await mba.createEffect(target.actor, constants.advantageEffectData);
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
-    if (!featureWorkflow.failedSaves.size) {
-        return;
-    }
+    if (!featureWorkflow.failedSaves.size) return;
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} ES` });
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} EnsStr` });
         let originEffect = await fromUuid(effect.origin);
         if (!originEffect) return;
         await mbaPremades.helpers.removeEffect(originEffect);
@@ -103,7 +102,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         'icon': effect.icon,
         'origin': effect.uuid,
         'description': `
-            <p>You are restrained by thorny vines and take piercing damage at the start of each of your turns.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.gfRbTxGiulUylAjE]{Restrained} by thorny vines and take piercing damage at the start of each of your turns.</p>
             <p>You, or any creature that can touch you can use its action to make a Strength ability check. On a success, the effect ends.</p>
         `,
         'duration': {
@@ -111,23 +110,23 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         },
         'changes': [
             {
-                'key': 'flags.midi-qol.OverTime',
-                'mode': 0,
-                'value': 'actionSave=true, rollType=check, saveAbility=str, saveDC=' + effect.flags['mba-premades'].spell.ensnaringStrike.dc + ', saveMagic=true, name=Vines: Action Save',
-                'priority': 20
-            },
-            {
-                'key': 'flags.midi-qol.OverTime',
-                'mode': 0,
-                'value': 'turn=start, damageBeforeSave=true, damageRoll=' + effect.flags['mba-premades'].spell.ensnaringStrike.level + 'd6[piercing], damageType=piercing, name=Vines: Turn Start, killAnim=true, fastForwardDamage=true',
-                'priority': 20
-            },
-            {
                 'key': 'macro.CE',
                 'mode': 0,
                 'value': 'Restrained',
                 'priority': 20
-            }
+            },
+            {
+                'key': 'flags.midi-qol.OverTime',
+                'mode': 0,
+                'value': `actionSave=true, rollType=check, saveAbility=str, saveDC=${saveDC}, saveMagic=true, name=Vines: Action Save (DC${saveDC}), killAnim=true`,
+                'priority': 20
+            },
+            {
+                'key': 'flags.midi-qol.OverTime',
+                'mode': 0,
+                'value': `turn=start, damageBeforeSave=true, damageType=piercing, damageRoll=${effect.flags['mba-premades'].spell.ensnaringStrike.level}d6[piercing], name=Vines: Turn Start, killAnim=true, fastForwardDamage=true`,
+                'priority': 20
+            },
         ],
         'flags': {
             'effectmacro': {
@@ -166,7 +165,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .zIndex(1)
         .mask()
         .persist()
-        .name(`${target.document.name} ES`)
+        .name(`${target.document.name} EnsStr`)
 
         .play()
 

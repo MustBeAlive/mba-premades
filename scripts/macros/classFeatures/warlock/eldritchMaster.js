@@ -1,4 +1,4 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
 
 export async function eldritchMaster({ speaker, actor, token, character, item, args, scope, workflow }) {
     let feature = await mba.getItem(workflow.actor, "Eldritch Master");

@@ -33,7 +33,7 @@ async function combatStart(token, origin) {
             },
             'walledtemplates': {
                 'hideBorder': "alwaysHide",
-                'wallRestriction': 'move',
+                'wallRestriction': 'light',
                 'wallsBlock': 'recurse'
             }
         }

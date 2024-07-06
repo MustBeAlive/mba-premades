@@ -1,8 +1,11 @@
+import { constants } from "../../generic/constants.js";
+import { mba } from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
     if (!template) return;
     let choices = [["Radiant", "radiant"], ["Necrotic", "necrotic"]];
-    let selection = await mbaPremades.helpers.dialog("Choose damage type:", choices);
+    let selection = await mba.dialog("Choose damage type:", choices);
     if (!selection) return;
     let animation1 = "jb2a.divine_smite.caster.blueyellow";
     let animation2 = "jb2a.markers.light.complete.yellow02"
@@ -52,16 +55,16 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'mba-premades': {
                 'template': {
-                    'name': 'hungerOfHadar',
                     'castLevel': workflow.castData.castLevel,
                     'damageType': selection,
                     'disposition': workflow.token.document.disposition,
-                    'saveDC': mbaPremades.helpers.getSpellDC(workflow.item),
+                    'saveDC': mba.getSpellDC(workflow.item),
                     'templateUuid': template.uuid
                 }
             },
             'walledtemplates': {
-                'wallRestriction': 'move',
+                'hideBorder': "alwaysHide",
+                'wallRestriction': 'light',
                 'wallsBlock': 'walled'
             },
             'x': workflow.token.center.x,
@@ -87,14 +90,14 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    await mbaPremades.helpers.createEffect(workflow.actor, effectData);
+    await mba.createEffect(workflow.actor, effectData);
 }
 
 async function trigger(template, token) {
     let trigger = template.flags['mba-premades']?.template;
     if (!trigger) return;
     if (token.document.disposition === trigger.disposition) return;
-    if (mbaPremades.helpers.inCombat()) {
+    if (mba.inCombat()) {
         let turn = game.combat.round + '-' + game.combat.turn;
         let lastTurn = template.flags['mba-premades']?.spell?.spiritGuardians?.[token.id]?.turn;
         if (turn === lastTurn) return;
@@ -104,18 +107,13 @@ async function trigger(template, token) {
     if (!originUuid) return;
     let originItem = await fromUuid(originUuid);
     if (!originItem) return;
-    let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Spirit Guardians: Damage', false);
+    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Spirit Guardians: Damage', false);
     if (!featureData) return;
     featureData.system.save.dc = trigger.saveDC;
-    featureData.system.damage.parts = [
-        [
-            trigger.castLevel + 'd6[' + trigger.damageType + ']',
-            trigger.damageType
-        ]
-    ];
+    featureData.system.damage.parts = [[`${trigger.castLevel}d8[${trigger.damageType}]`, trigger.damageType]];
     delete featureData._id;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': originItem.actor });
-    let [config, options] = mbaPremades.constants.syntheticItemWorkflowOptions([token.document.uuid]);
+    let [config, options] = constants.syntheticItemWorkflowOptions([token.document.uuid]);
     await MidiQOL.completeItemUse(feature, config, options);
 }
 

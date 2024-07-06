@@ -20,7 +20,7 @@ export async function cast(workflow) {
         .effect()
         .file(animation)
         .atLocation(workflow.token)
-		.scaleToObject(1.5)
+		.scaleToObject(1.6)
         .fadeOut(2000)
 		.rotateIn(180, 600, { ease: "easeOutCubic" })
 		.scaleIn(0, 600, { ease: "easeOutCubic" })
@@ -31,7 +31,7 @@ export async function cast(workflow) {
         .effect()
         .file(animation)
         .atLocation(workflow.token)
-        .scaleToObject(1.5)
+        .scaleToObject(1.6)
         .duration(1200)
         .fadeIn(200, { ease: "easeOutCirc", delay: 500 })
 		.fadeOut(300, { ease: "linear" })
@@ -44,6 +44,4 @@ export async function cast(workflow) {
 		.filter("Blur", { blurX: 5, blurY: 10 })
 
         .play();
-
-    await warpgate.wait(100);
 }

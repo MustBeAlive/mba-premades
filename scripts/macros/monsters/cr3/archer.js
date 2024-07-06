@@ -36,7 +36,7 @@ async function archerEyeAttack({ speaker, actor, token, character, item, args, s
         .play()
 
     let roll = await new Roll('1d10').roll({ 'async': true });
-    await MidiQOL.displayDSNForRoll(roll, 'damageRoll');
+    await MidiQOL.displayDSNForRoll(roll);
     roll.toMessage({
         rollMode: 'roll',
         speaker: { 'alias': name },

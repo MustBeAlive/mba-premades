@@ -27,7 +27,7 @@ async function swallow({ speaker, actor, token, character, item, args, scope, wo
         if (!sourceEffect) return;
         let target = await fromUuid(sourceEffect.flags['mba-premades']?.feature?.giantToad?.targetUuid);
         let damageRoll = await new Roll('3d6[acid]').roll({ 'async': true });
-        await MidiQOL.displayDSNForRoll(damageRoll, 'damageRoll');
+        await MidiQOL.displayDSNForRoll(damageRoll);
         damageRoll.toMessage({
             rollMode: 'roll',
             speaker: { 'alias': name },

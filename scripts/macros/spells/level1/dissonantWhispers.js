@@ -3,9 +3,9 @@ import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    if (!mba.findEffect(target.actor, 'Deafened')) return;
+    if (!mba.findEffect(target.actor, "Deafened")) return;
     ChatMessage.create({
-        flavor: `<b>${target.document.name}</b> is <b>deafened</b> and automatically succeeds on the save.`,
+        flavor: `<u>${target.document.name}</u> is @UUID[Compendium.mba-premades.MBA SRD.Item.GmOl4GcI3fguwIJc]{Deafened} and automatically succeeds on the save.`,
         speaker: ChatMessage.getSpeaker({ actor: workflow.actor })
     });
     await mba.createEffect(target.actor, constants.immunityEffectData);
@@ -45,7 +45,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         `);
     };
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Dissonant Whispers`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} DisWhi` })
     };
     const effectData = {
         'name': workflow.item.name,
@@ -103,7 +103,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .playbackRate(1)
         .filter("ColorMatrix", { hue: 290 })
         .persist()
-        .name(`${target.document.name} Dissonant Whispers`)
+        .name(`${target.document.name} DisWhi`)
 
         .thenDo(async () => {
             await mba.createEffect(target.actor, effectData);

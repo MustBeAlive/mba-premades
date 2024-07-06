@@ -1,10 +1,9 @@
 import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let target = workflow.targets.first();
-    let type = mba.raceOrType(target.actor);
-    if (type === 'undead' || type === 'construct') {
-        ui.notifications.warn('Cure Wounds fails!');
+    let type = mba.raceOrType(workflow.targets.first().actor);
+    if (type === "undead" || type === "construct") {
+        ui.notifications.warn("Cure Wounds fails!");
         return false;
     }
 }

@@ -10,7 +10,21 @@ export async function protectionFromEnergy({ speaker, actor, token, character, i
         ['Thunder', 'Thunder', "modules/mba-premades/icons/spells/level3/protection_from_energy_thunder.webp"]
     ];
     let selection = await mba.selectImage("Protection from Energy", choices, "Choose element:", "both");
-    if (!selection) return;
+    if (!selection.length) {
+        await mba.removeCondition(workflow.actor, "Concentrating");
+        return;
+    }
+    let hue = 0;
+    switch (selection[0]) {
+        case "Acid": hue = 200; break;
+        case "Cold": hue = 280; break;
+        case "Fire": hue = 95; break;
+        case "Lightning": hue = 310; break;
+        case "Thunder": hue = 0; break;
+    }
+    async function effectMacroDel() {
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} PfE`, object: token })
+    };
     const effectData = {
         'name': `Protection from Energy: ${selection[0]}`,
         'icon': selection[1],
@@ -28,6 +42,11 @@ export async function protectionFromEnergy({ speaker, actor, token, character, i
             }
         ],
         'flags': {
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDel)
+                }
+            },
             'midi-qol': {
                 'castData': {
                     baseLevel: 3,
@@ -36,6 +55,37 @@ export async function protectionFromEnergy({ speaker, actor, token, character, i
                 }
             }
         }
-    }
-    await mba.createEffect(target.actor, effectData);
+    };
+    new Sequence()
+
+        .effect()
+        .file("jb2a.energy_field.02.below.purple")
+        .attachTo(target)
+        .scaleToObject(1.5)
+        .fadeIn(1000, {ease: "easeOutCubic"})
+        .fadeOut(1000)
+        .filter("ColorMatrix", { hue: hue})
+        .opacity(0.6)
+        .playbackRate(0.85)
+        .belowTokens()
+        .persist()
+        .name(`${target.document.name} PfE`)
+
+        .effect()
+        .file("jb2a.energy_field.02.above.purple")
+        .attachTo(target)
+        .scaleToObject(1.5)
+        .fadeIn(1000, {ease: "easeOutCubic"})
+        .fadeOut(1000)
+        .filter("ColorMatrix", { hue: hue})
+        .opacity(0.6)
+        .playbackRate(0.85)
+        .persist()
+        .name(`${target.document.name} PfE`)
+
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectData);
+        })
+
+        .play()
 }

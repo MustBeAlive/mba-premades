@@ -29,9 +29,8 @@ export async function mistyStep({ speaker, actor, token, character, item, args, 
             animation2 = "jb2a.misty_step.02.blue";
         }
     }
-    let icon = workflow.token.document.texture.src;
     let interval = workflow.token.document.width % 2 === 0 ? 1 : -1;
-    let position = await mba.aimCrosshair(workflow.token, 30, icon, interval, workflow.token.document.width);
+    let position = await mba.aimCrosshair(workflow.token, 30, workflow.item.img, interval, workflow.token.document.width);
     if (position.cancelled) return;
 
     new Sequence()

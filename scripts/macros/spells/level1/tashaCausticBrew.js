@@ -1,95 +1,94 @@
 import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let targets = Array.from(workflow.targets);
     let template = await canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) return;
 
     new Sequence()
 
         .effect()
         .file("jb2a.markers.bubble.02.complete.green.0")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .rotateTowards(template)
         .scale(0.1)
         .rotate(90)
         .playbackRate(1)
         .duration(5100)
         .fadeOut(1000)
-        .spriteOffset({ x: -0.2, y: 0.1 + (token.document.width - 1) / 2 }, { gridUnits: true })
+        .spriteOffset({ x: -0.2, y: 0.1 + (workflow.token.document.width - 1) / 2 }, { gridUnits: true })
         .filter("ColorMatrix", { saturate: 1, hue: 0 })
         .zIndex(3)
 
         .effect()
         .file("jb2a.markers.light_orb.complete.green")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .rotateTowards(template)
         .scale(0.25)
         .playbackRate(1.5)
         .duration(5100)
         .scaleOut(0, 2000, { ease: "easeOutCubic" })
-        .spriteOffset({ x: -0.1 + (token.document.width - 1) / 2 }, { gridUnits: true })
+        .spriteOffset({ x: -0.1 + (workflow.token.document.width - 1) / 2 }, { gridUnits: true })
         .filter("ColorMatrix", { saturate: 0.5, hue: -30 })
         .zIndex(2)
 
         .effect()
         .file("animated-spell-effects-cartoon.smoke.47")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .rotateTowards(template)
         .delay(1700)
         .scale(0.1)
         .rotate(90)
         .playbackRate(0.5)
-        .spriteOffset({ x: -0.4, y: 0 + (token.document.width - 1) / 2 }, { gridUnits: true })
+        .spriteOffset({ x: -0.4, y: 0 + (workflow.token.document.width - 1) / 2 }, { gridUnits: true })
         .opacity(0.75)
         .tint("#BEE43E")
         .zIndex(2)
 
         .effect()
         .file("jb2a.breath_weapons.acid.line.green")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .rotateTowards(template)
         .scale(0.5)
         .playbackRate(1.5)
-        .spriteOffset({ x: 0.35 + (token.document.width - 1) / 2 }, { gridUnits: true })
+        .spriteOffset({ x: 0.35 + (workflow.token.document.width - 1) / 2 }, { gridUnits: true })
         .zIndex(1)
 
         .play()
 
-    targets.forEach(target => {
-
+    for (let target of Array.from(workflow.targets)) {
         new Sequence()
 
             .wait(2200)
 
             .effect()
-            .delay(200)
             .from(target)
             .attachTo(target)
+            .scaleToObject(target.document.texture.scaleX)
+            .delay(200)
+            .duration(2800)
             .fadeIn(200)
             .fadeOut(500)
             .loopProperty("sprite", "position.x", { from: -0.05, to: 0.05, duration: 50, pingPong: true, gridUnits: true })
-            .scaleToObject(target.document.texture.scaleX)
-            .duration(2800)
             .opacity(0.25)
             .tint("#BEE43E")
             .filter("ColorMatrix", { saturate: 1 })
 
             .play()
-    })
+    }
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
-    let targets = Array.from(workflow.failedSaves);
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Caustic Brew` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} TaCaBr` })
     };
     const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p></p>
+            <p>You are covered in acid.</p>
+            <p>You can use your action to scrape or wash the acid off yourself or another creature.</p>
         `,
         'duration': {
             'seconds': 60
@@ -103,6 +102,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         ],
         'flags': {
+            'dae': {
+                'specialDuration': ["zeroHP"]
+            },
             'effectmacro': {
                 'onDelete': {
                     'script': mba.functionToString(effectMacroDel)
@@ -117,9 +119,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    for (let target of targets) {
-        await mba.createEffect(target.actor, effectData);
+    for (let target of Array.from(workflow.failedSaves)) {
         new Sequence()
+
+            .thenDo(async () => {
+                await mba.createEffect(target.actor, effectData);
+            })
 
             .effect()
             .file("jb2a.grease.dark_grey.loop")
@@ -136,7 +141,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .mask(target)
             .zIndex(0.1)
             .persist()
-            .name(`${target.document.name} Caustic Brew`)
+            .name(`${target.document.name} TaCaBr`)
 
             .effect()
             .delay(100, 1000)
@@ -150,7 +155,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .fadeOut(500)
             .zIndex(0.2)
             .persist()
-            .name(`${target.document.name} Caustic Brew`)
+            .name(`${target.document.name} TaCaBr`)
 
             .effect()
             .file("jb2a.grease.dark_grey.loop")
@@ -167,7 +172,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .mask(target)
             .zIndex(0.1)
             .persist()
-            .name(`${target.document.name} Caustic Brew`)
+            .name(`${target.document.name} TaCaBr`)
 
             .effect()
             .delay(100, 1000)
@@ -181,7 +186,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .fadeOut(500)
             .zIndex(0.2)
             .persist()
-            .name(`${target.document.name} Caustic Brew`)
+            .name(`${target.document.name} TaCaBr`)
 
             .effect()
             .file("jb2a.grease.dark_grey.loop")
@@ -198,7 +203,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .mask(target)
             .zIndex(0.1)
             .persist()
-            .name(`${target.document.name} Caustic Brew`)
+            .name(`${target.document.name} TaCaBr`)
 
             .effect()
             .delay(100, 1000)
@@ -212,7 +217,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .fadeOut(500)
             .zIndex(0.2)
             .persist()
-            .name(`${target.document.name} Caustic Brew`)
+            .name(`${target.document.name} TaCaBr`)
 
             .play()
     }

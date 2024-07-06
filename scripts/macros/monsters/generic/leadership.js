@@ -20,7 +20,7 @@ export async function leadership({ speaker, actor, token, character, item, args,
         'description': `
             <p>${workflow.token.document.name} has inspired you.</p>
             <p>For the duration, you have 1d4 bonus to all attack rolls and saving throws.</p>
-            <p>This effect ends early if ${workflow.token.document.name} is incapacitated or dead.</p>
+            <p>This effect ends early if ${workflow.token.document.name} is @UUID[Compendium.mba-premades.MBA SRD.Item.LCcuJNMKrGouZbFJ]{Incapacitated} or dead.</p>
         `,
         'duration': {
             'seconds': 60
@@ -40,6 +40,9 @@ export async function leadership({ speaker, actor, token, character, item, args,
             }
         ],
         'flags': {
+            'dae': {
+                'specialDuration': ['zeroHP']
+            },
             'effectmacro': {
                 'onEachTurn': {
                     'script': mba.functionToString(effectMacroEachTurn)

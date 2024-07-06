@@ -2,10 +2,7 @@ import {mba} from "../../../helperFunctions.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Race Feature Items', 'Shell Defense: Emerge from Shell', false);
-    if (!featureData) {
-        ui.notifications.warn("Unable to find item in compendium (Shell Defense: Emerge from Shell)");
-        return;
-    };
+    if (!featureData) return;
     async function effectMacroDel() {
         new Sequence()
 
@@ -28,7 +25,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'origin': workflow.item.uuid,
         'description': `
             <p>You are hiding in the shell and have +4 bonus to AC, as well as advantage on Strength and Constitution saving throws.</p>
-            <p>While in the shell, you are prone, your speed is 0 and can't increase, you have disadvantage on Dexterity saving throws, can't take reactions, and the only action you can take is a bonus action to emerge.</p>
+            <p>While in the shell, you are @UUID[Compendium.mba-premades.MBA SRD.Item.LbGCc4TiQnxaUoGn]{Prone}, your speed is 0 and can't increase, you have disadvantage on Dexterity saving throws, can't take reactions, and the only action you can take is a bonus action to emerge.</p>
         `,
         'changes': [
             {

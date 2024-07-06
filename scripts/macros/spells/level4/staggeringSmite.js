@@ -4,7 +4,7 @@ import {queue} from "../../mechanics/queue.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Staggering Smite` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} StaSmi` })
     }
     let effectData = {
         'name': workflow.item.name,
@@ -49,7 +49,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .delay(500)
         .file(`jb2a.particles.outward.purple.02.03`)
-        .attachTo(token, { offset: { y: -0.25 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { y: -0.25 }, gridUnits: true, followRotation: false })
         .scaleToObject(1.2)
         .playbackRate(2)
         .duration(2000)
@@ -63,31 +63,32 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .delay(1050)
         .file("jb2a.divine_smite.caster.reversed.pink")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(2.2)
         .startTime(900)
         .fadeIn(200)
 
         .effect()
         .file("jb2a.divine_smite.caster.pink")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(1.85)
         .belowTokens()
         .waitUntilFinished(-1200)
 
         .effect()
         .file("jb2a.token_border.circle.static.purple.007")
-        .atLocation(token)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(2)
         .filter("ColorMatrix", { hue: 30 })
         .fadeOut(500)
         .persist()
-        .name(`${token.document.name} Staggering Smite`)
+        .name(`${workflow.token.document.name} StaSmi`)
+
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
+        })
 
         .play();
-
-    await mba.createEffect(workflow.actor, effectData);
 }
 
 async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -99,12 +100,12 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     let queueSetup = await queue.setup(workflow.item.uuid, 'staggeringSmite', 250);
     if (!queueSetup) return;
     let oldFormula = workflow.damageRoll._formula;
-    let bonusDamageFormula = '4d6[psychic]';
+    let bonusDamageFormula = "4d6[psychic]";
     if (workflow.isCritical) bonusDamageFormula = mba.getCriticalFormula(bonusDamageFormula);
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRoll = await new Roll(damageFormula).roll({ async: true });
     await workflow.setDamageRoll(damageRoll);
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Staggering Smite: Stagger');
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Staggering Smite: Save", false);
     if (!featureData) {
         queue.remove(workflow.item.uuid);
         return;
@@ -113,7 +114,6 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     featureData.system.save.dc = effect.flags['mba-premades'].spell.staggeringSmite.saveDC;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
-    await warpgate.wait(100);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
 
     await new Sequence()
@@ -145,7 +145,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .wait(600)
 
         .thenDo(function () {
-            Sequencer.EffectManager.endEffects({ name: `${token.document.name} Staggering Smite`, object: token })
+            Sequencer.EffectManager.endEffects({ name: `${token.document.name} StaSmi` })
         })
 
         .play()
@@ -162,21 +162,21 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
             .fadeOut(500)
             .filter("ColorMatrix", { hue: 30 })
             .persist()
-            .name(`${target.document.name} Staggering Smite`)
+            .name(`${target.document.name} StaSmi`)
 
             .play();
 
         async function effectMacroDel() {
-            Sequencer.EffectManager.endEffects({ name: `${token.document.name} Staggering Smite`, object: token })
+            Sequencer.EffectManager.endEffects({ name: `${token.document.name} StaSmi` })
         }
         let effectData = {
             'name': 'Staggering Smite: Stagger',
             'icon': effect.icon,
             'origin': effect.uuid,
-            'description': "You are staggered by Staggering Smite. You have disadvantage on ability checks, attack rolls and can't take reactions until the end of your next turn.",
-            'duration': {
-                'seconds': 12
-            },
+            'description': `
+                <p>You are staggered by Staggering Smite.</p>
+                <p>You have disadvantage on ability checks, attack rolls and can't take reactions until the end of your next turn.</p>
+            `,
             'changes': [
                 {
                     'key': 'flags.midi-qol.disadvantage.attack.all',
@@ -199,6 +199,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
             ],
             'flags': {
                 'dae': {
+                    'showIcon': true,
                     'specialDuration': ['turnEnd']
                 },
                 'effectmacro': {

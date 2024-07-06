@@ -63,7 +63,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.plant_growth.01.ring.4x4.complete.bluepurple")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(2.25)
         .playbackRate(2)
         .filter("ColorMatrix", { hue: -60 })
@@ -72,7 +72,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("animated-spell-effects-cartoon.smoke.07")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(2.5)
         .playbackRate(1)
         .belowTokens()
@@ -82,7 +82,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.particles.outward.greenyellow.01.03")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .size(2, { gridUnits: true })
         .scaleIn(0.15, 750, { ease: "easeOutQuint" })
         .duration(1500)
@@ -93,7 +93,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.shield_themed.above.eldritch_web.01.dark_green")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(2.5)
         .duration(3875)
         .fadeIn(1500)
@@ -107,7 +107,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.fireflies.few.01.green")
-        .atLocation(token, { offset: { x: 0.5 * token.document.width, y: -0.5 * token.document.width }, gridUnits: true, randomOffset: 0.5, followRotation: false })
+        .atLocation(workflow.token, { offset: { x: 0.5 * workflow.token.document.width, y: -0.5 * workflow.token.document.width }, gridUnits: true, randomOffset: 0.5, followRotation: false })
         .scaleToObject(1.5)
         .duration(4000)
         .fadeIn(250)
@@ -119,7 +119,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.fireflies.few.02.green")
-        .atLocation(token, { offset: { x: -0.5 * token.document.width, y: 0.5 * token.document.width }, gridUnits: true, randomOffset: 0.5, followRotation: false })
+        .atLocation(workflow.token, { offset: { x: -0.5 * workflow.token.document.width, y: 0.5 * workflow.token.document.width }, gridUnits: true, randomOffset: 0.5, followRotation: false })
         .scaleToObject(1.5)
         .duration(4000)
         .fadeIn(250)
@@ -131,7 +131,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.fireflies.few.01.green")
-        .atLocation(token, { offset: { x: -0.5 * token.document.width, y: -0.5 * token.document.width }, gridUnits: true, randomOffset: 0.5, followRotation: false })
+        .atLocation(workflow.token, { offset: { x: -0.5 * workflow.token.document.width, y: -0.5 * workflow.token.document.width }, gridUnits: true, randomOffset: 0.5, followRotation: false })
         .scaleToObject(1.5)
         .duration(4000)
         .fadeIn(250)
@@ -143,7 +143,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.fireflies.few.02.green")
-        .atLocation(token, { offset: { x: 0.5 * token.document.width, y: 0.5 * token.document.width }, gridUnits: true, randomOffset: 0.5, followRotation: false })
+        .atLocation(workflow.token, { offset: { x: 0.5 * workflow.token.document.width, y: 0.5 * workflow.token.document.width }, gridUnits: true, randomOffset: 0.5, followRotation: false })
         .scaleToObject(1.5)
         .fadeIn(250)
         .fadeOut(500)
@@ -155,7 +155,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.arms_of_hadar.dark_green")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(1.4)
         .scaleIn(0, 500, { ease: "easeOutBack" })
         .fadeOut(500)
@@ -163,11 +163,11 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .belowTokens()
         .zIndex(1)
         .persist()
-        .name(`${token.document.name} Symbiotic Entity`)
+        .name(`${workflow.token.document.name} Symbiotic Entity`)
 
         .effect()
         .file("jb2a.fireflies.many.02.green")
-        .attachTo(token, { randomOffset: 0 })
+        .attachTo(workflow.token, { randomOffset: 0 })
         .scaleToObject(1.5)
         .duration(3000)
         .fadeIn(250)
@@ -176,7 +176,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .opacity(0.8)
         .filter("ColorMatrix", { hue: 60 })
         .persist()
-        .name(`${token.document.name} Symbiotic Entity`)
+        .name(`${workflow.token.document.name} Symbiotic Entity`)
 
         .wait(200)
 

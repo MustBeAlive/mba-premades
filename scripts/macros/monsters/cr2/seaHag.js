@@ -20,11 +20,16 @@ async function deathGlare({ speaker, actor, token, character, item, args, scope,
         .scaleToObject(1)
         .mask()
 
-        .play()
+        .wait(700)
 
-    await warpgate.wait(700);
-    await mba.applyDamage([target], target.actor.system.attributes.hp.value, 'force');
+        .thenDo(async () => {
+            await mba.applyDamage([target], target.actor.system.attributes.hp.value, 'force');
+        })
+
+        .play()
 }
+
+// To do: overlapping issue
 
 async function horrificAppearance(actor, token) {
     if (!mba.inCombat()) return;
@@ -64,17 +69,14 @@ async function horrificAppearance(actor, token) {
         return;
     }
     let featureData = await mba.getItemFromCompendium('mba-premades.MBA Monster Features', 'Sea Hag: Horrific Appearance', false);
-    if (!featureData) {
-        ui.notifications.warn("Can't find item in compenidum! (Sea Hag: Horrific Appearance)");
-        return
-    }
+    if (!featureData) return;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': token.actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow.failedSaves.size) {
         const immuneData = {
             'name': "Sea Hag: Horrific Appearance Immune",
-            'icon': "icons/magic/control/fear-fright-monster-grin-green.webp",
+            'icon': "modules/mba-premades/icons/generic/horrific_appearance_immune.webp",
             'description': `
                 <p>You are immune to Sea Hag's Horrific Appearance</p>
             `,
@@ -88,7 +90,7 @@ async function horrificAppearance(actor, token) {
     async function effectMacroDel() {
         const immuneData = {
             'name': "Sea Hag: Horrific Appearance Immune",
-            'icon': "icons/magic/control/fear-fright-monster-grin-green.webp",
+            'icon': "modules/mba-premades/icons/generic/horrific_appearance_immune.webp",
             'description': `
                 <p>You are immune to Sea Hag's Horrific Appearance</p>
             `,
@@ -106,7 +108,7 @@ async function horrificAppearance(actor, token) {
             let disadvantageData = {
                 'name': 'Save Disdadvantage: Hag is in Sight',
                 'icon': 'modules/mba-premades/icons/generic/generic_debuff.webp',
-                'description': "You have advantage on the next save you make",
+                'description': "You have disadvantage on the next save you make.",
                 'duration': {
                     'turns': 1
                 },
