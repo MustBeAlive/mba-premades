@@ -1,7 +1,9 @@
 import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
-//TO do: tether lair action, better "ghosts" animation?
+// To do:
+// Tether-link lair action
+// Ghosts animation
 
 async function paralyzingTouch({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
@@ -64,7 +66,175 @@ async function paralyzingTouch({ speaker, actor, token, character, item, args, s
         .play()
 }
 
-async function disruptLife({ speaker, actor, token, character, item, args, scope, workflow }) {
+async function legendaryCantrip({ speaker, actor, token, character, item, args, scope, workflow }) {
+    let feature = await mba.getItem(workflow.actor, "Ray of Frost");
+    if (!feature) {
+        ui.notifications.warn("Unable to find item! (Ray of Frost)");
+        return;
+    }
+    if (!workflow.targets.size) {
+        ui.notifications.warn("No target selected!");
+        return;
+    }
+    let [config, options2] = constants.syntheticItemWorkflowOptions([workflow.targets.first().document.uuid]);
+    await MidiQOL.completeItemUse(feature, config, options2);
+}
+
+async function legendaryGazeCast({ speaker, actor, token, character, item, args, scope, workflow }) {
+    let target = workflow.targets.first();
+    new Sequence()
+
+        .effect()
+        .file("animated-spell-effects-cartoon.misc.fiery eyes.02")
+        .atLocation(workflow.token)
+        .size(0.9, { gridUnits: true })
+        .anchor({ x: 0.5, y: 0.5 })
+        .duration(6000)
+        .fadeIn(200)
+        .fadeOut(500)
+
+        .effect()
+        .file("animated-spell-effects-cartoon.misc.fiery eyes.02")
+        .atLocation(workflow.token)
+        .size(0.9, { gridUnits: true })
+        .anchor({ x: 0.5, y: 0.5 })
+        .filter("Blur", { blurX: 5, blurY: 10 })
+        .opacity(1)
+        .filter("ColorMatrix", { saturate: -1, brightness: 2 })
+        .duration(6000)
+        .fadeIn(200)
+        .fadeOut(500)
+
+        .effect()
+        .file("jb2a.extras.tmfx.outflow.circle.02")
+        .atLocation(workflow.token)
+        .belowTokens()
+        .opacity(0.25)
+        .size(3, { gridUnits: true })
+        .duration(5000)
+        .fadeIn(1000)
+        .fadeOut(500)
+
+        .effect()
+        .file("animated-spell-effects-cartoon.misc.fiery eyes.02")
+        .atLocation(workflow.token)
+        .scale({ x: 0.1, y: 1.25 })
+        .anchor({ x: 0.5, y: 0.35 })
+        .opacity(0.5)
+        .rotate(90)
+        .rotateTowards(target)
+        .belowTokens()
+        .duration(5000)
+        .fadeIn(500)
+        .fadeOut(500)
+
+        .effect()
+        .file("animated-spell-effects-cartoon.misc.fiery eyes.02")
+        .atLocation(workflow.token)
+        .scale({ x: 0.1, y: 1.25 })
+        .anchor({ x: 0.5, y: 0.35 })
+        .opacity(0.2)
+        .filter("ColorMatrix", { saturate: -1, brightness: 2 })
+        .rotate(90)
+        .rotateTowards(target)
+        .duration(5000)
+        .fadeIn(500)
+        .fadeOut(500)
+
+        .effect()
+        .file("jb2a.wind_stream.white")
+        .atLocation(workflow.token)
+        .stretchTo(target, { onlyX: false })
+        .filter("Blur", { blurX: 10, blurY: 20 })
+        .loopProperty("sprite", "position.y", { from: -5, to: 5, duration: 100, pingPong: true })
+        .opacity(0.3)
+
+        .effect()
+        .from(target)
+        .attachTo(target)
+        .fadeIn(100)
+        .fadeOut(1000)
+        .playbackRate(4)
+        .loopProperty("sprite", "position.x", { from: -0.05, to: 0.05, duration: 55, pingPong: true, gridUnits: true })
+        .scaleToObject(1, { considerTokenScale: true })
+        .duration(5000)
+        .opacity(0.15)
+        .zIndex(0.1)
+
+        .play()
+    if (mba.checkTrait(target.actor, "ci", "frightened")) {
+        ui.notifications.info("Target is immune to being Frightened!");
+        return false;
+    }
+    if (mba.findEffect(target.actor, "Lich: Frightening Gaze Immunity")) {
+        ui.notifications.info("Target is immune to being Lich's Frightening Gaze!");
+        return false;
+    }
+}
+
+async function legendaryGazeItem({ speaker, actor, token, character, item, args, scope, workflow }) {
+    let target = workflow.targets.first();
+    let effectDataImmune = {
+        'name': "Lich: Frightening Gaze Immunity",
+        'icon': "modules/mba-premades/icons/generic/gaze_frightening_immunity.webp",
+        'description': `
+            <p>You are immune to Lich's Frightening Gaze for the next 24 hours.</p>
+        `,
+        'duration': {
+            'seconds': 86400
+        }
+    };
+    async function effectMacroDel() {
+        let effectDataImmune = {
+            'name': "Lich: Frightening Gaze Immunity",
+            'icon': "modules/mba-premades/icons/generic/gaze_frightening_immunity.webp",
+            'description': `
+                <p>You are immune to Lich's Frightening Gaze for the next 24 hours.</p>
+            `,
+            'duration': {
+                'seconds': 86400
+            }
+        };
+        await mbaPremades.helpers.createEffect(token.actor, effectDataImmune);
+    };
+    let effectData = {
+        'name': "Lich: Frightening Gaze",
+        'icon': "modules/mba-premades/icons/generic/gaze_frightening.webp",
+        'origin': workflow.item.uuid,
+        'description': `
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.oR1wUvem3zVVUv5Q]{Frightened} by Lich's Frightening Gaze for the duration.</p>
+            <p>You can repeat the saving throw at the end of each of your turns, ending the effect on a success.</p>
+        `,
+        'duration': {
+            'seconds': 60
+        },
+        'changes': [
+            {
+                'key': 'macro.CE',
+                'mode': 0,
+                'value': "Frightened",
+                'priority': 20
+            },
+            {
+                'key': 'flags.midi-qol.OverTime',
+                'mode': 0,
+                'value': 'turn=end, saveAbility=wis, saveDC=18, saveMagic=false, name=Fear: Turn End (DC18), killAnim=true',
+                'priority': 20
+            },
+        ],
+        'flags': {
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDel)
+                }
+            }
+        }
+    };
+    if (!workflow.failedSaves.size) await mba.createEffect(target.actor, effectDataImmune);
+    else await mba.createEffect(target.actor, effectData);
+}
+
+async function legendaryDisruptLife({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.targets.size) return;
     let targets = [];
     for (let target of workflow.targets) if (mba.raceOrType(target.actor) != "undead") targets.push(target.id);
@@ -221,158 +391,18 @@ async function disruptLife({ speaker, actor, token, character, item, args, scope
         .play()
 }
 
-async function frighteningGazeCast({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let target = workflow.targets.first();
-    new Sequence()
-
-        .effect()
-        .file("animated-spell-effects-cartoon.misc.fiery eyes.02")
-        .atLocation(workflow.token)
-        .size(0.9, { gridUnits: true })
-        .anchor({ x: 0.5, y: 0.5 })
-        .duration(6000)
-        .fadeIn(200)
-        .fadeOut(500)
-
-        .effect()
-        .file("animated-spell-effects-cartoon.misc.fiery eyes.02")
-        .atLocation(workflow.token)
-        .size(0.9, { gridUnits: true })
-        .anchor({ x: 0.5, y: 0.5 })
-        .filter("Blur", { blurX: 5, blurY: 10 })
-        .opacity(1)
-        .filter("ColorMatrix", { saturate: -1, brightness: 2 })
-        .duration(6000)
-        .fadeIn(200)
-        .fadeOut(500)
-
-        .effect()
-        .file("jb2a.extras.tmfx.outflow.circle.02")
-        .atLocation(workflow.token)
-        .belowTokens()
-        .opacity(0.25)
-        .size(3, { gridUnits: true })
-        .duration(5000)
-        .fadeIn(1000)
-        .fadeOut(500)
-
-        .effect()
-        .file("animated-spell-effects-cartoon.misc.fiery eyes.02")
-        .atLocation(workflow.token)
-        .scale({ x: 0.1, y: 1.25 })
-        .anchor({ x: 0.5, y: 0.35 })
-        .opacity(0.5)
-        .rotate(90)
-        .rotateTowards(target)
-        .belowTokens()
-        .duration(5000)
-        .fadeIn(500)
-        .fadeOut(500)
-
-        .effect()
-        .file("animated-spell-effects-cartoon.misc.fiery eyes.02")
-        .atLocation(workflow.token)
-        .scale({ x: 0.1, y: 1.25 })
-        .anchor({ x: 0.5, y: 0.35 })
-        .opacity(0.2)
-        .filter("ColorMatrix", { saturate: -1, brightness: 2 })
-        .rotate(90)
-        .rotateTowards(target)
-        .duration(5000)
-        .fadeIn(500)
-        .fadeOut(500)
-
-        .effect()
-        .file("jb2a.wind_stream.white")
-        .atLocation(workflow.token)
-        .stretchTo(target, { onlyX: false })
-        .filter("Blur", { blurX: 10, blurY: 20 })
-        .loopProperty("sprite", "position.y", { from: -5, to: 5, duration: 100, pingPong: true })
-        .opacity(0.3)
-
-        .effect()
-        .from(target)
-        .attachTo(target)
-        .fadeIn(100)
-        .fadeOut(1000)
-        .playbackRate(4)
-        .loopProperty("sprite", "position.x", { from: -0.05, to: 0.05, duration: 55, pingPong: true, gridUnits: true })
-        .scaleToObject(1, { considerTokenScale: true })
-        .duration(5000)
-        .opacity(0.15)
-        .zIndex(0.1)
-
-        .play()
-    if (mba.checkTrait(target.actor, "ci", "frightened")) {
-        ui.notifications.info("Target is immune to being Frightened!");
-        return false;
+async function legendaryTouch({ speaker, actor, token, character, item, args, scope, workflow }) {
+    let feature = await mba.getItem(workflow.actor, "Paralyzing Touch");
+    if (!feature) {
+        ui.notifications.warn("Unable to find item! (Paralyzing Touch)");
+        return;
     }
-    if (mba.findEffect(target.actor, "Lich: Frightening Gaze Immunity")) {
-        ui.notifications.info("Target is immune to being Lich's Frightening Gaze!");
-        return false;
+    if (!workflow.targets.size) {
+        ui.notifications.warn("No target selected!");
+        return;
     }
-}
-
-async function frighteningGazeItem({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let target = workflow.targets.first();
-    let effectDataImmune = {
-        'name': "Lich: Frightening Gaze Immunity",
-        'icon': "modules/mba-premades/icons/generic/gaze_immunity.webp",
-        'description': `
-            <p>You are immune to Lich's Frightening Gaze for the next 24 hours.</p>
-        `,
-        'duration': {
-            'seconds': 86400
-        }
-    };
-    async function effectMacroDel() {
-        let effectDataImmune = {
-            'name': "Lich: Frightening Gaze Immunity",
-            'icon': "modules/mba-premades/icons/generic/gaze_immunity.webp",
-            'description': `
-                <p>You are immune to Lich's Frightening Gaze for the next 24 hours.</p>
-            `,
-            'duration': {
-                'seconds': 86400
-            }
-        };
-        await mbaPremades.helpers.createEffect(token.actor, effectDataImmune);
-    };
-    let effectData = {
-        'name': "Lich: Frightening Gaze",
-        'icon': workflow.item.img,
-        'origin': workflow.item.uuid,
-        'description': `
-            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.oR1wUvem3zVVUv5Q]{Frightened} by Lich's Frightening Gaze for the duration.</p>
-            <p>You can repeat the saving throw at the end of each of your turns, ending the effect on a success.</p>
-        `,
-        'duration': {
-            'seconds': 60
-        },
-        'changes': [
-            {
-                'key': 'macro.CE',
-                'mode': 0,
-                'value': "Frightened",
-                'priority': 20
-            },
-            {
-                'key': 'flags.midi-qol.OverTime',
-                'mode': 0,
-                'value': 'turn=end, saveAbility=wis, saveDC=18, saveMagic=false, name=Fear: Turn End (DC18), killAnim=true',
-                'priority': 20
-            },
-        ],
-        'flags': {
-            'effectmacro': {
-                'onDelete': {
-                    'script': mba.functionToString(effectMacroDel)
-                }
-            }
-        }
-    };
-    if (!workflow.failedSaves.size) await mba.createEffect(target.actor, effectDataImmune);
-    else await mba.createEffect(target.actor, effectData);
+    let [config, options2] = constants.syntheticItemWorkflowOptions([workflow.targets.first().document.uuid]);
+    await MidiQOL.completeItemUse(feature, config, options2);
 }
 
 async function lairSlot({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -610,9 +640,11 @@ async function lairGhosts({ speaker, actor, token, character, item, args, scope,
 
 export let lich = {
     'paralyzingTouch': paralyzingTouch,
-    'disruptLife': disruptLife,
-    'frighteningGazeCast': frighteningGazeCast,
-    'frighteningGazeItem': frighteningGazeItem,
+    'legendaryCantrip': legendaryCantrip,
+    'legendaryGazeCast': legendaryGazeCast,
+    'legendaryGazeItemfrighteningGazeItem': legendaryGazeItem,
+    'legendaryTouch': legendaryTouch,
+    'legendaryDisruptLife': legendaryDisruptLife,
     'lairSlot': lairSlot,
     'lairTetherCast': lairTetherCast,
     'lairTetherItem': lairTetherItem,

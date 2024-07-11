@@ -12,7 +12,9 @@ async function hook(workflow) {
     if (mba.findEffect(target.actor, "Reaction")) return;
     let queueSetup = await queue.setup(workflow.item.uuid, 'armorOfHexes', 49);
     if (!queueSetup) return;
+    await mba.playerDialogMessage();
     let selection = await mba.remoteDialog("Armor of Hexes", constants.yesNo, mba.firstOwner(target).id, "<b>Use Armor of Hexes?</b>");
+    await mba.clearPlayerDialogMessage();
     if (!selection) {
         queue.remove(workflow.item.uuid);
         return;

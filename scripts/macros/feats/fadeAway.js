@@ -16,11 +16,11 @@ export async function fadeAway({ speaker, actor, token, character, item, args, s
             .wait(500)
 
             .thenDo(async () => {
-                Sequencer.EffectManager.endEffects({ name: `${token.document.name} Fade Away`, object: token })
+                Sequencer.EffectManager.endEffects({ name: `${token.document.name} FadAwa` })
             })
 
             .play();
-    }
+    };
     const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
@@ -53,12 +53,23 @@ export async function fadeAway({ speaker, actor, token, character, item, args, s
 
         .effect()
         .file("jb2a.smoke.puff.centered.dark_black")
-        .atLocation(token)
-        .scaleToObject(2.5 * token.document.texture.scaleX)
-        .belowTokens()
-        .opacity(0.5)
+        .atLocation(workflow.token)
+        .scaleToObject(2.5 * workflow.token.document.texture.scaleX)
         .scaleIn(0, 500, { ease: "easeOutCubic" })
+        .opacity(0.5)
         .randomRotation()
+        .belowTokens()
+
+        .effect()
+        .from(workflow.token)
+        .atLocation(workflow.token)
+        .attachTo(workflow.token)
+        .fadeIn(1000)
+        .fadeOut(1000)
+        .animateProperty("alphaFilter", "alpha", { from: 0, to: -0.2, duration: 2000, delay: 1000 })
+        .tint("#6b6b6b")
+        .persist()
+        .name(`${workflow.token.document.name} FadAwa`)
 
         .wait(500)
 

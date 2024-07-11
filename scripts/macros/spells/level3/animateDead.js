@@ -15,7 +15,9 @@ export async function animateDead({ speaker, actor, token, character, item, args
     let totalSummons = 1 + (spellLevel - 3) * 2;
     if (workflow.actor.flags['mba-premades']?.feature?.undeadThralls) totalSummons += 1;
     if (!totalSummons || totalSummons < 1) return;
+    await mba.playerDialogMessage();
     let sourceActors = await mba.selectDocuments('Select Summons (Max ' + totalSummons + ')', [zombieActor, skeletonActor]);
+    await mba.clearPlayerDialogMessage();
     if (!sourceActors) return;
     if (sourceActors.length > totalSummons) {
         ui.notifications.info('Too many selected, try again!');

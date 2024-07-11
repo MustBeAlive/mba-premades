@@ -13,7 +13,9 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         ["Pearl (White)", "#ffffff"],
         ["Sapphire (Blue)", "#00d5ff"],
     ];
+    await mba.playerDialogMessage();
     let selectionColor = await mba.dialog("Continual Flame", choicesColor, "<b>What type of gemstone are you using?</b>");
+    await mba.clearPlayerDialogMessage();
     if (!selectionColor) return;
     let animation1;
     let hue;

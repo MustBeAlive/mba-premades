@@ -8,7 +8,9 @@ export async function unarmedStrike({ speaker, actor, token, character, item, ar
         ["Grapple", "grapple", "modules/mba-premades/icons/conditions/grappled.webp"],
         ["Shove", "shove", "modules/mba-premades/icons/actions/shove.webp"],
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.selectImage("Unarmed Strike", choices, "<b>What would you like to do?</b>", "value");
+    await mba.clearPlayerDialogMessage();
     if (!selection) return false;
     if (selection === "damage") return;
     else if (selection === "grapple") { //old

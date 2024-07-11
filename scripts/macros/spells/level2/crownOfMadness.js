@@ -67,7 +67,9 @@ export async function crownOfMadness({ speaker, actor, token, character, item, a
 	async function effectMacroCaster() {
 		await warpgate.wait(100);
 		let choices = [['Yes!', 'yes'], ['No, stop concentrating!', 'no']];
+		await mbaPremades.helpers.playerDialogMessage();
 		let selection = await mbaPremades.helpers.dialog("Crown of Madness", choices, `<b>Use action to maintain Crown of Madness?</b>`);
+		await mbaPremades.helpers.clearPlayerDialogMessage();
 		if (!selection || selection === "yes") return;
 		await mbaPremades.helpers.removeCondition(actor, 'Concentrating');
 	}
@@ -79,8 +81,8 @@ export async function crownOfMadness({ speaker, actor, token, character, item, a
 				}
 			}
 		}
-	}
-	await mba.updateEffect(effect, updates)
+	};
+	await mba.updateEffect(effect, updates);
 	async function effectMacroStart() {
 		let originItem = await fromUuid(effect.origin);
 		let originName = originItem.actor.prototypeToken.name;
@@ -91,7 +93,7 @@ export async function crownOfMadness({ speaker, actor, token, character, item, a
 		`);
 	}
 	async function effectMacroDel() {
-		await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Crown of Madness`, object: token })
+		Sequencer.EffectManager.endEffects({ name: `${token.document.name} CrOfMa` })
 	}
 	let effectData = {
 		'name': workflow.item.name,
@@ -150,7 +152,7 @@ export async function crownOfMadness({ speaker, actor, token, character, item, a
 		.scaleIn(0, 1500, { ease: "easeOutCubic" })
 		.filter("ColorMatrix", { hue: 40 })
 		.persist()
-		.name(`${target.document.name} Crown of Madness`)
+		.name(`${target.document.name} CrOfMa`)
 
 		.thenDo(async () => {
 			await mba.createEffect(target.actor, effectData);

@@ -2,6 +2,7 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function acidSplash({ speaker, actor, token, character, item, args, scope, workflow }) {
     let targets = Array.from(workflow.targets);
+    if (!targets.length) return;
     if (targets.length === 2) {
         let distance = mba.getDistance(targets[0], targets[1]);
         if (distance > 5) {

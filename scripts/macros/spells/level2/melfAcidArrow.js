@@ -8,7 +8,7 @@ export async function melfAcidArrow({ speaker, actor, token, character, item, ar
     let overtimeFormula = `${level}d4[acid]`;
     if (!workflow.hitTargets.size) damageFormula = `min(${damageFormula} / 2)`;
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Acid Arrow` });
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Acid Arrow` });
     }
     let effectData = {
         'name': workflow.item.name,

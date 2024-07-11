@@ -15,7 +15,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     };
     featureData.flags['mba-premades'].spell.castData.school = workflow.item.system.school;
     async function effectMacroDel() {
-        await warpgate.revert(token.document, 'Vampiric Touch');
+        await warpgate.revert(token.document, "Vampiric Touch");
     }
     let effectData = {
         'name': "Vampiric Touch",

@@ -77,7 +77,9 @@ async function carefulSpellTrigger({ speaker, actor, token, character, item, arg
         if (target.document.disposition === workflow.token.document.disposition) chosenTargets.push(target);
     }
     if (chosenTargets.length > max) {
+        await mba.playerDialogMessage();
         let selection = await mba.selectTarget('Careful spell targets: (Max ' + max + ')', constants.okCancel, chosenTargets, true, 'multiple');
+        await mba.clearPlayerDialogMessage();
         if (!selection.buttons) {
             ui.notifications.warn("Failed to select targets!");
             return;

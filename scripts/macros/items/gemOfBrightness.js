@@ -19,7 +19,9 @@ export async function gemOfBrightness({ speaker, actor, token, character, item, 
         ["Cone of Blinding Light (5 charges)", "cone"],
         ["Cancel", false]
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Gem of Brightness", choices, `<b>Choose one of the effects:</b>`);
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     const effectData = {
         'name': "Gem of Brightness: Blindness",

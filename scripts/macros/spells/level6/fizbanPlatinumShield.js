@@ -3,10 +3,10 @@
 //To do: update, check for bugs, animations
 
 async function cast({speaker, actor, token, character, item, args, scope, workflow}) {
-    let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Spell Features', 'Fizban\'s Platinum Shield: Apply Shield', false);
+    let featureData = await mbaPremades.helpers.getItemFromCompendium("mba-premades.MBA Spell Features", "Fizban's Platinum Shield: Apply Shield", false);
     if (!featureData) return;
     async function effectMacroDel() {
-        await warpgate.revert(token.document, 'Fizban\'s Platinum Shield: Apply Shield');
+        await warpgate.revert(token.document, "Fizban's Platinum Shield");
     }
     let effectData = {
         'name': workflow.item.name,
@@ -42,8 +42,8 @@ async function cast({speaker, actor, token, character, item, args, scope, workfl
     };
     let options = {
         'permanent': false,
-        'name': featureData.name,
-        'description': featureData.name
+        'name': "Fizban's Platinum Shield",
+        'description': "Fizban's Platinum Shield"
     };
     await warpgate.mutate(workflow.token.document, updates, {}, options);
 }
@@ -53,7 +53,12 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
     let effectData = {
         'name': "Platinum Shield",
         'icon': workflow.item.img,
-        'description': "<p>You are surrounded by a field of silvery light. For the duration, you gain the following benefits:</p><p>You have half cover</p><p>You have resistance to acid, cold, fire, lightning and poison damage</p><p>If you are subjected to an effect that allows you to make a Dexterity saving throw to take only half damage, you instead take no damage if you succeed on the saving throw and only half damage if you fail.</p>",
+        'description': `
+            <p>You are surrounded by a field of silvery light. For the duration, you gain the following benefits:</p>
+            <p>You have half cover</p>
+            <p>You have resistance to acid, cold, fire, lightning and poison damage</p>
+            <p>If you are subjected to an effect that allows you to make a Dexterity saving throw to take only half damage, you instead take no damage if you succeed on the saving throw and only half damage if you fail.</p>
+        `,
         'origin': effect.flags['midi-qol']?.castData?.itemUuid,
         'duration': {
             'seconds': effect.duration.seconds

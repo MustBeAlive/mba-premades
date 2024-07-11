@@ -1,10 +1,19 @@
-import {mba} from "../../../helperFunctions.js";
+import { mba } from "../../../helperFunctions.js";
 
 async function pincer({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
+    if (mba.findEffect(workflow.actor, `${workflow.token.document.name}: Grapple (${target.document.name})`)) return;
+    if (mba.checkTrait(target.actor, "ci", "grappled")) return;
+    if (mba.findEffect(target.actor, "Grappled")) return;
+    if (mba.findEffect(target.actor, `${workflow.token.document.name}: Grapple`)) return; //overly cautious
     if (mba.getSize(target.actor) > 3) return;
     let saveDC = workflow.item.system.save.dc;
+    async function effectMacroDel() {
+        let originDoc = await fromUuid(effect.changes[0].value);
+        let originEffect = await mbaPremades.helpers.findEffect(originDoc.actor, `${originDoc.name}: Grapple (${token.document.name})`);
+        if (originEffect) await mbaPremades.helpers.removeEffect(originEffect);
+    };
     let effectDataTarget = {
         'name': `${workflow.token.document.name}: Grapple`,
         'icon': workflow.item.img,
@@ -31,7 +40,42 @@ async function pincer({ speaker, actor, token, character, item, args, scope, wor
         ],
         'flags': {
             'dae': {
-                'showIcon': false
+                'showIcon': false,
+                'specialDuration': ['combatEnd']
+            },
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDel)
+                }
+            }
+        }
+    };
+    async function effectMacroDelSource() {
+        let targetDoc = await fromUuid(effect.flags['mba-premades']?.feature?.chuul?.pincer?.targetUuid);
+        let targetEffect = await mbaPremades.helpers.findEffect(targetDoc.actor, `${token.document.name}: Grapple`);
+        if (targetEffect) await mbaPremades.helpers.removeEffect(targetEffect);
+    };
+    let effectDataSource = {
+        'name': `${workflow.token.document.name}: Grapple (${target.document.name})`,
+        'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
+        'flags': {
+            'dae': {
+                'specialDuration': ['zeroHP', 'combatEnd']
+            },
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDelSource)
+                }
+            },
+            'mba-premades': {
+                'feature': {
+                    'chuul': {
+                        'pincer': {
+                            'targetUuid': target.document.uuid
+                        }
+                    }
+                }
             }
         }
     };
@@ -55,11 +99,10 @@ async function pincer({ speaker, actor, token, character, item, args, scope, wor
         .wait(150)
 
         .thenDo(async () => {
-            if (!mba.findEffect(target.actor, "Grappled")) {
-                await mba.createEffect(target.actor, effectDataTarget);
-                let distance = await mba.getDistance(workflow.token, target, true);
-                if (distance > 5) await mba.pushToken(workflow.token, target, -5);
-            }
+            await mba.createEffect(target.actor, effectDataTarget);
+            await mba.createEffect(workflow.actor, effectDataSource);
+            let distance = await mba.getDistance(workflow.token, target, true);
+            if (distance > 5) await mba.pushToken(workflow.token, target, -5);
         })
 
         .effect()

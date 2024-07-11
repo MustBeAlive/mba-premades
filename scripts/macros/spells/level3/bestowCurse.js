@@ -61,7 +61,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 		["Extra Damage", "Damage", "modules/mba-premades/icons/spells/level3/bestow_curse_additional_damage.webp"],
 		["Other (Custom, ask GM)", "Other", "modules/mba-premades/icons/spells/level3/bestow_curse.webp"]
 	];
+	await mba.playerDialogMessage();
 	let selection = await mba.selectImage("Bestow Curse", choices, "<b>Which curse would you like to bestow?</b>", "both");
+	await mba.clearPlayerDialogMessage();
 	if (!selection.length) return;
 	let duration;
 	let concentration = true;

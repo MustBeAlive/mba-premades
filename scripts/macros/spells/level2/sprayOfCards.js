@@ -2,13 +2,14 @@ import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) return;
     new Sequence()
 
         .wait(1000)
 
         .effect()
         .file("jb2a.ranged.card.01.projectile.01.blue")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(template, { cacheLocation: true })
         .scale(1.5)
         .rotate(-25)
@@ -18,7 +19,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.ranged.card.01.projectile.01.purple")
         .delay(100)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(template, { cacheLocation: true })
         .scale(1.5)
         .rotate(12.5)
@@ -28,7 +29,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.ranged.card.01.projectile.01.orange")
         .delay(200)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(template, { cacheLocation: true })
         .scale(1.5)
         .rotate(-12.5)
@@ -38,7 +39,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.ranged.card.01.projectile.01.green")
         .delay(300)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(template, { cacheLocation: true })
         .scale(1.5)
         .playbackRate(0.8)
@@ -47,7 +48,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.ranged.card.01.projectile.01.yellow")
         .delay(400)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(template, { cacheLocation: true })
         .scale(1.5)
         .rotate(25)
@@ -57,7 +58,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.ranged.card.01.projectile.01.blue")
         .delay(500)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(template, { cacheLocation: true })
         .scale(1.5)
         .rotate(-25)
@@ -67,7 +68,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.ranged.card.01.projectile.01.green")
         .delay(600)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(template, { cacheLocation: true })
         .scale(1.5)
         .playbackRate(0.8)
@@ -76,7 +77,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.ranged.card.01.projectile.01.orange")
         .delay(700)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(template, { cacheLocation: true })
         .scale(1.5)
         .rotate(-12.5)
@@ -86,7 +87,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.ranged.card.01.projectile.01.yellow")
         .delay(800)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(template, { cacheLocation: true })
         .scale(1.5)
         .rotate(25)
@@ -96,7 +97,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.ranged.card.01.projectile.01.blue")
         .delay(900)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(template, { cacheLocation: true })
         .scale(1.5)
         .rotate(-25)
@@ -106,7 +107,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.ranged.card.01.projectile.01.purple")
         .delay(1000)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(template, { cacheLocation: true })
         .scale(1.5)
         .rotate(12.5)
@@ -116,7 +117,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.ranged.card.01.projectile.01.orange")
         .delay(1100)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(template, { cacheLocation: true })
         .scale(1.5)
         .rotate(-12.5)
@@ -126,7 +127,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.ranged.card.01.projectile.01.yellow")
         .delay(1200)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(template, { cacheLocation: true })
         .scale(1.5)
         .rotate(25)
@@ -136,7 +137,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.ranged.card.01.projectile.01.green")
         .delay(1300)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(template, { cacheLocation: true })
         .scale(1.5)
         .playbackRate(0.8)
@@ -145,7 +146,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .file("jb2a.ranged.card.01.projectile.01.blue")
         .delay(1400)
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(template, { cacheLocation: true })
         .scale(1.5)
         .rotate(-25)
@@ -157,7 +158,6 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
-    let targets = Array.from(workflow.failedSaves);
     const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
@@ -176,11 +176,11 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'dae': {
                 'showIcon': true,
-                'specialDuration': ['turnEnd']
+                'specialDuration': ['turnEnd', 'combatEnd']
             }
         }
     };
-    for (let target of targets) await mba.createEffect(target.actor, effectData);
+    for (let target of Array.from(workflow.failedSaves)) await mba.createEffect(target.actor, effectData);
 }
 
 export let sprayOfCards = {

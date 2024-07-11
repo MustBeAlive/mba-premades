@@ -4,13 +4,17 @@ import {mba} from "../../../helperFunctions.js";
 export async function prayerOfHealing({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.targets.size) return;
     let targets = [];
-    for (let i of workflow.targets) if (i.actor.system.details.type.value != 'undead' && i.actor.system.details.type.value != 'construct') targets.push(i);
+    for (let i of workflow.targets) {
+        if (i.actor.system.details.type.value != 'undead' && i.actor.system.details.type.value != 'construct') targets.push(i);
+    }
     if (!targets.length) return;
     let diceNumber = workflow.castData.castLevel;
     let damageFormula = `${diceNumber}d8[healing] + ${mba.getSpellMod(workflow.item)}`;
     let damageRoll = await new Roll(damageFormula).roll({ 'async': true });
     await MidiQOL.displayDSNForRoll(damageRoll);
-    let selection = await mba.selectTarget('Prayer of Healing', constants.okCancel, targets, true, 'multiple', undefined, false, `Choose targets you'd like to heal: (Max: 6)`);
+    await mba.playerDialogMessage();
+    let selection = await mba.selectTarget("Prayer of Healing", constants.okCancel, targets, true, 'multiple', undefined, false, `Choose targets you'd like to heal: (Max: 6)`);
+    await mba.clearPlayerDialogMessage();
     if (!selection.buttons) return;
     let selectedTokens = [];
     for (let i of selection.inputs) if (i) selectedTokens.push(await fromUuid(i));

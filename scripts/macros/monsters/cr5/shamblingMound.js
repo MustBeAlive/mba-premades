@@ -94,7 +94,7 @@ async function engulf({ speaker, actor, token, character, item, args, scope, wor
         'flags': {
             'dae': {
                 'showIcon': true,
-                'specialDuration': ['zeroHP']
+                'specialDuration': ['zeroHP', 'combatEnd']
             },
             'effectmacro': {
                 'onTurnStart': {

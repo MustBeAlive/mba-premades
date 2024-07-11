@@ -10,7 +10,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         return;
     }
     let choices = [["Light new Torch", "light"], ["Extinguish Torch", "extinguish"]];
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Torch", choices, `<b>What would you like to do?</b>`);
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     switch (selection) {
         case "light": {

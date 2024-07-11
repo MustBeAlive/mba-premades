@@ -10,9 +10,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     }
     let selection;
     if (weapons.length === 1) selection = weapons[0];
-    if (!selection) [selection] = await mba.selectDocument('Attack with what weapon?', weapons);
+    if (!selection) {
+        await mba.playerDialogMessage();
+        [selection] = await mba.selectDocument('Attack with what weapon?', weapons);
+        await mba.clearPlayerDialogMessage();
+    }
     if (!selection) return;
     let target = workflow.targets.first();
+    if (!target) return;
     let level = mba.levelOrCR(workflow.actor);
     let diceNumber = Math.floor((level + 1) / 6);
     let weaponData = duplicate(selection.toObject());

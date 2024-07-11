@@ -1,6 +1,8 @@
 import {constants} from '../../generic/constants.js';
 import {mba} from '../../../helperFunctions.js';
 
+// To do: rework after PHB2024 release
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let circleForms = mba.getItem(workflow.actor, 'Circle Forms');
     let druidLevel = workflow.actor.classes.druid?.system?.levels;
@@ -27,7 +29,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'Water Elemental'
     ];
     if (elementalWildShape && workflow.item.system.uses.value >= 2) documents = documents.concat(index.filter(i => elementals.includes(i.name)));
+    await mba.playerDialogMessage();
     let selectedCreatures = await mba.selectDocument(workflow.item.name, documents, false, false, true, true);
+    await mba.clearPlayerDialogMessage();
     if (!selectedCreatures) return;
     let selectedActor = await fromUuid(selectedCreatures[0].uuid);
     if (elementals.includes(selectedActor.name)) await workflow.item.update({ 'system.uses.value': workflow.item.system.uses.value - 1 });

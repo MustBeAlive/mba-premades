@@ -42,23 +42,25 @@ export async function guidance({ speaker, actor, token, character, item, args, s
             }
         }
     };
-    
+
     new Sequence()
 
-        .wait(500)
+        .wait(250)
 
         .effect()
-        .file("jb2a.swirling_sparkles.01.blue")
+        .file("jb2a.swirling_leaves.outburst.01.bluepurple")
         .attachTo(target)
-        .scaleToObject(2 * target.document.texture.scaleX)
-        .waitUntilFinished(-1000)
+        .scaleToObject(1.5)
+        .fadeOut(1000)
+
+        .wait(250)
 
         .effect()
         .file("jb2a.portals.horizontal.ring_masked.blue")
         .attachTo(target)
-        .scaleToObject(1.7 * target.document.texture.scaleX)
-        .fadeIn(1000)
-        .fadeOut(1000)
+        .scaleToObject(1.75 * target.document.texture.scaleX)
+        .fadeIn(1500)
+        .fadeOut(1500)
         .mask()
         .persist()
         .name(`${target.document.name} Guidance`)

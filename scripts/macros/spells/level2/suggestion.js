@@ -3,13 +3,13 @@ import {mba} from "../../../helperFunctions.js";
 export async function suggestion({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
-    if (mba.checkTrait(target.actor, 'ci', 'charmed')) {
-        ui.notifications.info('Target is unaffected by Suggestion! (immune to condition: Charmed)');
+    if (mba.checkTrait(target.actor, "ci", "charmed")) {
+        ui.notifications.info("Target is unaffected by Suggestion!");
         await mba.removeCondition(workflow.actor, 'Concentrating');
         return;
     }
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Suggestion` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Suggestion` })
     };
     let effectData = {
         'name': workflow.item.name,
@@ -52,7 +52,7 @@ export async function suggestion({ speaker, actor, token, character, item, args,
     
         .effect()
         .file(`jb2a.magic_signs.circle.02.enchantment.loop.pink`)
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(1.5)
         .scaleIn(0, 600, { ease: "easeOutCubic" })
         .rotateIn(180, 600, { ease: "easeOutCubic" })
@@ -63,7 +63,7 @@ export async function suggestion({ speaker, actor, token, character, item, args,
     
         .effect()
         .file(`jb2a.magic_signs.circle.02.enchantment.loop.pink`)
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(1.5)
         .duration(1200)
         .fadeIn(200, { ease: "easeOutCirc", delay: 500 })

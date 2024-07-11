@@ -2,6 +2,8 @@ import {constants} from '../../generic/constants.js';
 import {mba} from '../../../helperFunctions.js';
 import {enlargeReduce} from '../../spells/level2/enlargeReduce.js';
 
+// To do: rework after PHB2024 release
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.actor || !workflow.token) return;
     let effect = mba.findEffect(workflow.actor, 'Concentrating');

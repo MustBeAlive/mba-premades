@@ -2,7 +2,7 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function actionSurge({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ 'name': `${token.document.name} Action Surge`, 'object': token });
+        Sequencer.EffectManager.endEffects({ 'name': `${token.document.name} ActSur` });
     };
     const effectData = {
         'name': workflow.item.name,
@@ -15,6 +15,9 @@ export async function actionSurge({ speaker, actor, token, character, item, args
             'turns': 1
         },
         'flags': {
+            'dae': {
+                'specialDuation': ['combatEnd', 'zeroHP']
+            },
             'effectmacro': {
                 'onDelete': {
                     'script': mba.functionToString(effectMacroDel)
@@ -26,13 +29,13 @@ export async function actionSurge({ speaker, actor, token, character, item, args
 
         .effect()
         .file('jb2a.extras.tmfx.outpulse.circle.02.normal')
-        .atLocation(token)
+        .atLocation(workflow.token)
         .size(4, { 'gridUnits': true })
         .opacity(0.25)
 
         .effect()
         .file('jb2a.impact.ground_crack.orange.02')
-        .atLocation(token)
+        .atLocation(workflow.token)
         .size(3.5, { 'gridUnits': true })
         .belowTokens()
         .filter('ColorMatrix', { 'hue': 340, 'saturate': 1 })
@@ -40,7 +43,7 @@ export async function actionSurge({ speaker, actor, token, character, item, args
 
         .effect()
         .file('jb2a.impact.ground_crack.still_frame.02')
-        .atLocation(token)
+        .atLocation(workflow.token)
         .size(3.5, { 'gridUnits': true })
         .duration(8000)
         .fadeOut(3000)
@@ -51,7 +54,7 @@ export async function actionSurge({ speaker, actor, token, character, item, args
 
         .effect()
         .file('jb2a.wind_stream.white')
-        .atLocation(token, { 'offset': { 'y': 75 } })
+        .atLocation(workflow.token, { 'offset': { 'y': 75 } })
         .size(1.75, { 'gridUnits': true })
         .duration(6000)
         .fadeOut(3000)
@@ -63,7 +66,7 @@ export async function actionSurge({ speaker, actor, token, character, item, args
 
         .effect()
         .file('jb2a.particles.outward.red.01.03')
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(2.5)
         .duration(6000)
         .fadeIn(200)
@@ -75,7 +78,7 @@ export async function actionSurge({ speaker, actor, token, character, item, args
 
         .effect()
         .file('jb2a.wind_stream.white')
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject()
         .rotate(90)
         .opacity(1)
@@ -83,7 +86,7 @@ export async function actionSurge({ speaker, actor, token, character, item, args
         .tint('#ff0000')
         .fadeOut(500)
         .persist()
-        .name(`${token.document.name} Action Surge`)
+        .name(`${workflow.token.document.name} ActSur`)
 
         .effect()
         .file('jb2a.token_border.circle.static.orange.012')
@@ -94,10 +97,10 @@ export async function actionSurge({ speaker, actor, token, character, item, args
         .fadeOut(500)
         .mask()
         .persist()
-        .name(`${token.document.name} Action Surge`)
+        .name(`${workflow.token.document.name} ActSur`)
 
         .thenDo(async () => {
-            await mba.createEffect(workflow.actor, effectData)
+            await mba.createEffect(workflow.actor, effectData);
         })
 
         .play();

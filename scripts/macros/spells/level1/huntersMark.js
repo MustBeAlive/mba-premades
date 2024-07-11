@@ -4,7 +4,7 @@ import {queue} from "../../mechanics/queue.js";
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.targets.size != 1) return;
     let target = workflow.targets.first();
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', "Hunter's Mark: Move", false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Hunter's Mark: Move", false);
     if (!featureData) return;
     delete featureData._id;
     let seconds;

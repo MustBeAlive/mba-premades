@@ -3,6 +3,7 @@ import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
+    if (!target) return;
     if (!mba.findEffect(target.actor, "Deafened")) return;
     ChatMessage.create({
         flavor: `<u>${target.document.name}</u> is @UUID[Compendium.mba-premades.MBA SRD.Item.GmOl4GcI3fguwIJc]{Deafened} and automatically succeeds on the save.`,
@@ -13,6 +14,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
+    if (!target) return;
     if (!workflow.failedSaves.size || mba.findEffect(target.actor, 'Reaction')) {
         new Sequence()
 

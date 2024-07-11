@@ -6,7 +6,9 @@ export async function rabbitHop({ speaker, actor, token, character, item, args, 
         return;
     }
     let distance = workflow.actor.system.attributes.prof * 5;
+    await mba.playerDialogMessage();
     let position = await mba.aimCrosshair(workflow.token, distance, workflow.item.img, 2, workflow.token.document.width);
+    await mba.clearPlayerDialogMessage();
     if (position.cancelled) return;
 
     new Sequence()

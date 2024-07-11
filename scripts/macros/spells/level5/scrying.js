@@ -4,7 +4,9 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
     let conc = await mba.findEffect(workflow.actor, "Concentrating");
     let saveDC = await mba.getSpellDC(workflow.item);
     let choicesType = [["Creature", "creature"], ["Location", "location"]];
+    await mba.playerDialogMessage();
     let selectionType = await mba.dialog("Scrying", choicesType, "<b>What are you scrying?</b>");
+    await mba.clearPlayerDialogMessage();
     if (!selectionType) {
         if (conc) await mba.removeEffect(conc);
         return;
@@ -15,7 +17,9 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
             ["Firsthand (you have met the target)", "firsthand"],
             ["Familiar (you know the target well)", "familiar"]
         ];
+        await mba.playerDialogMessage();
         let selectionKnowledge = await mba.dialog("Scrying: Creature", choicesKnowledge, "<b>How well do you know the target?</b>");
+        await mba.clearPlayerDialogMessage();
         if (!selectionKnowledge) {
             if (conc) await mba.removeEffect(conc);
             return;
@@ -28,7 +32,9 @@ export async function scrying({ speaker, actor, token, character, item, args, sc
             ["Possession or garment", "garment"],
             ["Body part, lock of hair, bit of nail, or the like", "part"]
         ];
+        await mba.playerDialogMessage();
         let selectionConnection = await mba.dialog("Scrying: Creature", choicesConnection, "<b>Do you possess any physical connection to the target?</b>");
+        await mba.clearPlayerDialogMessage();
         if (!selectionConnection) {
             if (conc) await mba.removeEffect(conc);
             return;

@@ -1,15 +1,16 @@
 export async function infestation({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
+    if (!target) return;
 
     new Sequence()
 
         .effect()
         .file("jaamod.spells_effects.insect_plague0")
         .attachTo(target)
-        .scaleToObject(1.4 * target.document.texture.scaleX)
+        .scaleToObject(1.4)
+        .duration(5000)
         .fadeIn(1000)
         .fadeOut(1000)
-        .duration(5000)
         .mask()
 
         .play()

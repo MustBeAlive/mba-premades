@@ -21,7 +21,9 @@ export async function mistyStep({ speaker, actor, token, character, item, args, 
     let animation1 = "jb2a.misty_step.01." + colors[(animRoll1.total - 1)][1];
     let animation2 = "jb2a.misty_step.02." + colors[(animRoll2.total - 1)][1];
     if (randomColor === false) {
+        await mba.playerDialogMessage();
         let selection = await mba.selectImage("Misty Step", colors, `<b>Choose Color:</b>`, "value");
+        await mba.clearPlayerDialogMessage();
         animation1 = "jb2a.misty_step.01." + selection;
         animation2 = "jb2a.misty_step.02." + selection;
         if (!selection) {
@@ -30,7 +32,9 @@ export async function mistyStep({ speaker, actor, token, character, item, args, 
         }
     }
     let interval = workflow.token.document.width % 2 === 0 ? 1 : -1;
+    await mba.playerDialogMessage();
     let position = await mba.aimCrosshair(workflow.token, 30, workflow.item.img, interval, workflow.token.document.width);
+    await mba.clearPlayerDialogMessage();
     if (position.cancelled) return;
 
     new Sequence()

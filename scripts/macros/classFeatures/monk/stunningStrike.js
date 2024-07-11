@@ -15,7 +15,9 @@ async function trigger({ speaker, actor, token, character, item, args, scope, wo
     if (kiPoints < 1) return;
     let queueSetup = await queue.setup(workflow.item.uuid, 'stunningStrike', 450);
     if (!queueSetup) return;
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Stunning Strike", constants.yesNo, `<b>Use Stunning Strike? (Ki Points left: ${kiPoints})</b>`);
+    await mba.clearPlayerDialogMessage();
     if (!selection) {
         queue.remove(workflow.item.uuid);
         return;

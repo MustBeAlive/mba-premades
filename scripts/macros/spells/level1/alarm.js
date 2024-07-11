@@ -3,14 +3,24 @@ import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let nearbyAllies = Array.from(mba.findNearby(workflow.token.document, 100, 'ally', false, true));
+    await mba.playerDialogMessage();
     let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, nearbyAllies, true, 'multiple', undefined, false, "Choose creatures that won't trigger the alarm:");
+    await mba.clearPlayerDialogMessage();
     if (!selection.buttons) return;
     let ignoreUuids = selection.inputs.filter(i => i).slice(0);
     let template = canvas.scene.collections.templates.get(workflow.templateId);
-    if (!template) {
-        ui.notifications.warn("Unable to find template!");
-        return;
-    }
+    if (!template) return;
+    await template.update({
+        'flags': {
+            'mba-premades': {
+                'template': {
+                    'ignoreUuids': ignoreUuids,
+                    'sourceUuid': workflow.token.document.uuid,
+                    'templateUuid': template.uuid,
+                }
+            }
+        }
+    });
     new Sequence()
 
         .wait(500)
@@ -31,18 +41,6 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .name("Alarm")
 
         .play()
-
-    await template.update({
-        'flags': {
-            'mba-premades': {
-                'template': {
-                    'ignoreUuids': ignoreUuids,
-                    'sourceUuid': workflow.token.document.uuid,
-                    'templateUuid': template.uuid,
-                }
-            }
-        }
-    });
 }
 
 async function enter(template, token) {

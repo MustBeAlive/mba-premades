@@ -53,12 +53,13 @@ async function rayRoll({ speaker, actor, token, character, item, args, scope, wo
 async function rayDazing({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
+    if (mba.checkTrait(target.actor, "ci", "charmed")) return;
     const effectData = {
         'name': "Gazer: Dazing Ray",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are charmed by Gazer's Dazing Ray until the start of it's next turn.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.SVd8xu3mTZMqz8fL]{Charmed} by Gazer's Dazing Ray until the start of it's next turn.</p>
             <p>While charmed in this way, your speed is halved and you have disadvantage on attack rolls.</p>
         `,
         'changes': [
@@ -84,7 +85,7 @@ async function rayDazing({ speaker, actor, token, character, item, args, scope, 
         'flags': {
             'dae': {
                 'showIcon': true,
-                'specialDuration': ['turnStartSource']
+                'specialDuration': ['turnStartSource', 'combatEnd']
             }
         }
     };
@@ -94,12 +95,13 @@ async function rayDazing({ speaker, actor, token, character, item, args, scope, 
 async function rayFear({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
+    if (mba.checkTrait(target.actor, "ci", "frightened")) return;
     const effectData = {
         'name': "Gazer: Fear Ray",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are frightened by Gazer's Fear Ray until the start of it's next turn.</p>
+            <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.oR1wUvem3zVVUv5Q]{Frightened} by Gazer's Fear Ray until the start of it's next turn.</p>
         `,
         'changes': [
             {
@@ -112,7 +114,7 @@ async function rayFear({ speaker, actor, token, character, item, args, scope, wo
         'flags': {
             'dae': {
                 'showIcon': true,
-                'specialDuration': ['turnStartSource']
+                'specialDuration': ['turnStartSource', 'combatEnd']
             }
         }
     };

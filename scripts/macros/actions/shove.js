@@ -5,25 +5,29 @@ export async function shove({ speaker, actor, token, character, item, args, scop
     let target = workflow.targets.first();
     if (workflow.actor.uuid === target.actor.uuid) return;
     if ((mba.getSize(target.actor)) > (mba.getSize(actor) + 1)) {
-        ui.notifications.info('Target is too big to shove!');
+        ui.notifications.info("Target is too big to attempt shove!");
         return;
     }
     let skipCheck = false;
-    if (mba.findEffect(target.actor, 'Incapacitated')) skipCheck = true;
+    if (mba.findEffect(target.actor, "Incapacitated")) skipCheck = true;
     if (!skipCheck) {
         let options = [
             [`Acrobatics (${target.actor.system.skills.acr.total})`, 'acr'],
             [`Athletics (${target.actor.system.skills.ath.total})`, 'ath'],
             ['Uncontested', false]
         ];
-        let selection = await mba.remoteDialog(workflow.item.name, options, mba.firstOwner(target).id, 'How would you like to contest the shove?');
+        await mba.playerDialogMessage();
+        let selection = await mba.remoteDialog(workflow.item.name, options, mba.firstOwner(target).id, "<b>How would you like to contest the shove?</b>");
+        await mba.clearPlayerDialogMessage();
         if (selection) {
             let sourceRoll = await workflow.actor.rollSkill('ath');
             let targetRoll = await mba.rollRequest(target, 'skill', selection);
             if (targetRoll.total >= sourceRoll.total) return;
         }
     }
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Shove", [['Push 5 ft.', 'move'], ['Knock Prone', 'prone']], `<b>What would you like to do?</b>`);
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     if (selection === 'prone') {
         await new Sequence()
@@ -76,7 +80,7 @@ export async function shove({ speaker, actor, token, character, item, args, scop
             .delay(850)
 
             .thenDo(async () => {
-                await mba.addCondition(target.actor, 'Prone', false, null);
+                if (!mba.findEffect(target.actor, "Prone")) await mba.addCondition(target.actor, "Prone", false, workflow.token.document.uuid);
             })
 
             .play();
@@ -132,7 +136,8 @@ export async function shove({ speaker, actor, token, character, item, args, scop
         position.y = targetCenter.y;
         middleposition.y = 0;
         backposition.y = 0;
-    } else if (distanceX < distanceY) {
+    }
+    else if (distanceX < distanceY) {
         position.x = targetCenter.x;
         middleposition.x = 0;
         backposition.x = 0;

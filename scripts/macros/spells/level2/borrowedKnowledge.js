@@ -4,7 +4,9 @@ export async function borrowedKnowledge({ speaker, actor, token, character, item
     let options = Object.entries(CONFIG.DND5E.skills).filter(([key, value]) => workflow.actor.system.skills[key].value < 1).map(([i, j]) => ({ 'value': i, 'html': j.label }));
     let choices = [];
     for (let i = 0; i < options.length; i++) choices.push([options[i].html, options[i].value]);
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Borrowed Knowledge", choices, "Choose one of the skills:");
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} BorKno` })

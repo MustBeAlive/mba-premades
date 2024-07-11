@@ -8,7 +8,11 @@ export async function hexWarrior({ speaker, actor, token, character, item, args,
     }
     let selection;
     if (weapons.length === 1) selection = weapons[0];
-    else[selection] = await mba.selectDocument('Hex Warrior: Select Weapon:', weapons);
+    else {
+        await mba.playerDialogMessage();
+        [selection] = await mba.selectDocument('Hex Warrior: Select Weapon:', weapons);
+        await mba.clearPlayerDialogMessage();
+    }
     if (!selection) return;
     let weaponData = duplicate(selection.toObject());
     let dex = workflow.actor.system.abilities.dex.mod;

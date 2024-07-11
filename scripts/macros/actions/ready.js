@@ -7,7 +7,9 @@ export async function ready({ speaker, actor, token, character, item, args, scop
         return;
     }
     let choices = [["Yes (begin concentrating)", "yes"], ["No", "no"]];
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Ready Action", choices, `Are you readying a <b>spell?</b>`);
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} Ready` })
@@ -66,7 +68,9 @@ export async function ready({ speaker, actor, token, character, item, args, scop
     if (isConcentrating) {
         let oldConc = await fromUuid(isConcentrating.flags['midi-qol']?.isConcentration);
         let concChoices = [[`Stop concentrating on <b>${oldConc.name}</b>`, "yes"],["Cancel readying action", false]];
+        await mba.playerDialogMessage();
         let concSelection = await mba.dialog("Ready Action", concChoices, `<b>You are already concentrating. What would you like to do?</b>`);
+        await mba.clearPlayerDialogMessage();
         if (!concSelection) return;
         await mba.removeCondition(workflow.actor, "Concentrating");
         await warpgate.wait(100);

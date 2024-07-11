@@ -2,8 +2,12 @@ import {mba} from '../../../../helperFunctions.js';
 import {queue} from '../../../mechanics/queue.js';
 import {tashaSummon} from '../../../generic/tashaSummon.js';
 
+// To do: rework after PHB2024?
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
+    await mba.playerDialogMessage();
     let selection = await mba.dialog(workflow.item.name, [['Land', 'Land'], ['Sea', 'Sea'], ['Sky', 'Sky']], "<b>Choose companion type:</b>");
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     let sourceActor = game.actors.getName('MBA: Primal Companion');
     if (!sourceActor) return;

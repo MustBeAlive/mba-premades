@@ -16,11 +16,11 @@ async function attach({ speaker, actor, token, character, item, args, scope, wor
     async function effectMacroStart() {
         let effect = await mbaPremades.helpers.findEffect(token.actor, "Wretched Sorrowsworn: Attach");
         if (!effect) return;
-        let target = await fromUuid(effect.flags['mba-premades']?.feature?.wretchedSorrowsworn?.targetUuid);
-        let featureData = await mbaPremades.helpers.getItemFromCompendium('mba-premades.MBA Monster Features', 'Wretched Sorrowsworn: Turn Start', false);
+        let targetDoc = await fromUuid(effect.flags['mba-premades']?.feature?.wretchedSorrowsworn?.targetUuid);
+        let featureData = await mbaPremades.helpers.getItemFromCompendium("mba-premades.MBA Monster Features", "Wretched Sorrowsworn: Turn Start", false);
         if (!featureData) return;
         let feature = new CONFIG.Item.documentClass(featureData, { 'parent': token.actor });
-        let [config, options] = mbaPremades.constants.syntheticItemWorkflowOptions([target.uuid]);
+        let [config, options] = mbaPremades.constants.syntheticItemWorkflowOptions([targetDoc.uuid]);
         await MidiQOL.completeItemUse(feature, config, options);
     }
     let effectData = {
@@ -55,7 +55,8 @@ async function detach({ speaker, actor, token, character, item, args, scope, wor
 
 async function wretchedPackTactics({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.targets.size != 1) return;
-    let nearbyTargets = mba.findNearby(workflow.targets.first(), 5, 'enemy', false).filter(i => i.document.uuid != workflow.token.document.uuid && !mba.findEffect(i.actor, "Incapacitated"));
+    let target = workflow.targets.first();
+    let nearbyTargets = mba.findNearby(target, 5, 'enemy', false).filter(t => t.document.uuid != workflow.token.document.uuid && !mba.findEffect(t.actor, "Incapacitated")); // probably excessive, but haven't had time to test
     if (!nearbyTargets.length) {
         let queueSetup = await queue.setup(workflow.item.uuid, 'wretchedPackTactics', 150);
         if (!queueSetup) return;

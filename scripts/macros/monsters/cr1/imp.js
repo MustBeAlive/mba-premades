@@ -67,7 +67,7 @@ async function shapechanger({ speaker, actor, token, character, item, args, scop
 
             .play();
 
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Shapechanger`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} ImpShC`, object: token })
         await warpgate.revert(token.document, "Shapechanger");
     };
     let effectData = {
@@ -77,7 +77,7 @@ async function shapechanger({ speaker, actor, token, character, item, args, scop
         'changes': changes,
         'flags': {
             'dae': {
-                'showIcon': true
+                'showIcon': false
             },
             'effectmacro': {
                 'onDelete': {
@@ -145,7 +145,7 @@ async function shapechanger({ speaker, actor, token, character, item, args, scop
         .fadeOut(2000, { ease: "easeOutCubic" })
         .scaleOut(0.5, 3000, { ease: "easeOutCubic" })
         .persist()
-        .name(`${workflow.token.document.name} Shapechanger`)
+        .name(`${workflow.token.document.name} ImpShC`)
 
         .effect()
         .file("jb2a.sleep.cloud.01.blue")
@@ -173,7 +173,7 @@ async function shapechanger({ speaker, actor, token, character, item, args, scop
         .fadeOut(2500)
         .scaleIn(0, 200, { ease: "easeOutCubic" })
         .zIndex(2)
-        .name(`${workflow.token.document.name} Shapechanger`)
+        .name(`${workflow.token.document.name} ImpShC`)
 
         .play();
 }

@@ -51,7 +51,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
         await mbaPremades.helpers.removeEffect(restEffect);
     };
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} MEG`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} MEG` })
     };
     const effectDataTarget = {
         'name': "MEG: Restrained",

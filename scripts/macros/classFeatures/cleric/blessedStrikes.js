@@ -14,7 +14,9 @@ async function onUse({speaker, actor, token, character, item, args, scope, workf
     }
     let queueSetup = await queue.setup(workflow.item.uuid, 'blessedStrikes', 150);
     if (!queueSetup) return;
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Blessed Strikes", constants.yesNo, `<b>Apply extra damage? (1d8[radiant])</b>`);
+    await mba.clearPlayerDialogMessage();
     if (!selection) {
         queue.remove(workflow.item.uuid);
         return;

@@ -18,8 +18,10 @@ export async function dancingLights({ speaker, actor, token, character, item, ar
         ["Red", "red", "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_Red_Thumb.webp"],
         ["Yellow", "yellow", "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_Yellow_Thumb.webp"]
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.selectImage("Dancing Lights", images, "<b>Select color:</b>", "both");
     if (!selection) selection = ["blueteal", "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_BlueTeal_Thumb.webp"];
+    await mba.clearPlayerDialogMessage();
     let avatarImg = selection[1];
     let path = `jb2a.dancing_light.${selection[0]}`;
     let selectedImg = await Sequencer.Database.getEntry(path).file;

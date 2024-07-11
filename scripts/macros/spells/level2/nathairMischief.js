@@ -53,7 +53,9 @@ async function item(token, actor) {
     let template = await fromUuid(effect.flags['mba-premades']?.spell?.nathairMischief?.templateUuid);
     if (firstRound === false) {
         let choices = [["Move template up to 10 feet before the roll", "move"], ["Roll on Mishievous Surge Table", "roll"]];
+        await mba.playerDialogMessage();
         let movePromt = await mba.dialog("Nathair's Mischief", choices, "<b>What would you like to do?</b>");
+        await mba.clearPlayerDialogMessage();
         if (movePromt === "move") {
             let templateCenter = {
                 'x': template.x + (canvas.grid.size * 2),
@@ -150,7 +152,9 @@ async function item(token, actor) {
         speaker: { actor: actor }
     });
     async function effectMacroOnCreate() {
-        await mbaPremades.helpers.dialog("Nathair's Mischief", [["Ok!", "ok"]], `You are incapacitated from giggling and must use <b>all of your movement</b> to <b>move in a random direction</b>.`);
+        await mbaPremades.helpers.dialog("Nathair's Mischief", [["Ok!", "ok"]], `
+            You are incapacitated from giggling and must use <b>all of your movement</b> to <b>move in a random direction</b>.
+        `);
     };
     let effectData;
     if (type != "terrain") {

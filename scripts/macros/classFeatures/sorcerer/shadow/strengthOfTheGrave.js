@@ -11,8 +11,10 @@ export async function strengthOfTheGrave(token, { item, workflow, ditem }) {
     if (!originItem) return;
     if (!originItem.system.uses.value) return;
     if (workflow.isCritical || mba.checkTrait(tokenActor, 'di', 'healing') || mba.totalDamageType(tokenActor, ditem.damageDetail[0], 'radiant') > 0 || mba.totalDamageType(tokenActor, ditem.damageDetail[0], 'none')) return;
+    await mba.playerDialogMessage();
     let selection = await mba.dialog(originItem.name, constants.yesNo, `Use <b>${originItem.name}</b>?`);
-    if (!selection || selection === false) return;
+    await mba.clearPlayerDialogMessage();
+    if (!selection) return;
     let queueSetup = await queue.setup(workflow.uuid, 'strengthOfTheGrave', 389);
     if (!queueSetup) return;
     let featureData = duplicate(originItem.toObject());
@@ -23,9 +25,7 @@ export async function strengthOfTheGrave(token, { item, workflow, ditem }) {
     let [config, options] = constants.syntheticItemWorkflowOptions([token.document.uuid]);
     await warpgate.wait(100);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
-    await originItem.update({
-        'system.uses.value': originItem.system.uses.value - 1
-    });
+    await originItem.update({ 'system.uses.value': originItem.system.uses.value - 1 });
     if (featureWorkflow.failedSaves.size === 1) {
         queue.remove(workflow.uuid);
         return;

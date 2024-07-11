@@ -1,3 +1,5 @@
+// To do: update spell lists after PHB2024 release
+
 const advantageEffectData = {
     'name': 'Save: Advantage',
     'icon': 'modules/mba-premades/icons/generic/generic_buff.webp',
@@ -53,8 +55,8 @@ const immunityEffectData = {
 };
 
 const disadvantageEffectData = {
-    'name': 'Save: Disadvantage',
-    'icon': 'modules/mba-premades/icons/generic/generic_debuff.webp',
+    'name': "Save: Disadvantage",
+    'icon': "modules/mba-premades/icons/generic/generic_debuff.webp",
     'description': "You have disadvantage on the next save you make",
     'duration': {
         'turns': 1

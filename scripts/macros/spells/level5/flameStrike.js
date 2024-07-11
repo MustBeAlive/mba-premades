@@ -6,7 +6,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let radiantDice = 4;
     if (ammount > 4) {
         let choices = [['Fire', 'fire'],['Radiant', 'radiant']];
+        await mba.playerDialogMessage();
         let selection = await mba.dialog("Flame Strike", choices, "Choose which damage to scale:");
+        await mba.clearPlayerDialogMessage();
         if (!selection) {
             ui.notifications.warn("Failed to choose damage to scale, try again!");
             return;

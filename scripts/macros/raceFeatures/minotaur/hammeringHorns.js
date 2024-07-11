@@ -11,7 +11,9 @@ async function check({ speaker, actor, token, character, item, args, scope, work
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     let choices = [["5 feet", 5], ["10 feet", 10]];
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Hammering Horns", choices, "<b>How far would you like to push the target?</b>");
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     let target = workflow.targets.first();
     new Sequence()

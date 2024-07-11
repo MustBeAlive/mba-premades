@@ -10,7 +10,9 @@ export async function enhanceAbility({ speaker, actor, token, character, item, a
         ["Owl's Wisdom (WIS)", "WIS", "modules/mba-premades/icons/spells/level2/enhance_ability5.webp"],
         ["Eagle's Splendor (CHA)", "CHA", "modules/mba-premades/icons/spells/level2/enhance_ability6.webp"]
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.selectImage("Enhance Ability", choices, `<b>Choose ability to enhance:</b>`, "both");
+    await mba.clearPlayerDialogMessage();
     if (!selection.length) {
         await mba.removeCondition(workflow.actor, "Concentrating");
         return;

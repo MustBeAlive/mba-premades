@@ -5,7 +5,7 @@ async function heatedBody({ speaker, actor, token, character, item, args, scope,
     if (!workflow.hitTargets.size) return;
     if (!(workflow.item.system.actionType === 'mwak' || workflow.item.system.actionType === 'msak')) return;
     if (mba.getDistance(workflow.token, token) > 5) return;
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Monster Features', 'Fire Snake: Heated Body', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Monster Features", "Fire Snake: Heated Body", false);
     if (!featureData) return;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': token.actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([workflow.token.document.uuid]);

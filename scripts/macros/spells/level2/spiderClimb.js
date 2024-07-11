@@ -3,7 +3,7 @@ import {mba} from "../../../helperFunctions.js";
 export async function spiderClimb({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: "SpiderLeg", object: token })
+        Sequencer.EffectManager.endEffects({ name: "SpiderLeg" })
     }
     const effectData = {
         'name': workflow.item.name,

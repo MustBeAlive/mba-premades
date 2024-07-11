@@ -24,7 +24,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 'key': `system.attributes.movement.all`,
                 'mode': 0,
                 'value': "*2",
-                'priority': 20
+                'priority': 40
             }
         ]
     };
@@ -32,10 +32,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 }
 
 async function turnEnd(origin, token) {
-    console.log(origin);
     if (!game.modules.get("drag-ruler")?.active) return;
     let distance = await dragRuler.getMovedDistanceFromToken(token);
-    console.log(distance);
     await origin.setFlag('mba-premades', 'feature.felineAgility.distance', distance);
 }
 

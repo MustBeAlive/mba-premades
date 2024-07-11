@@ -7,7 +7,9 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     let ammount = workflow.castData.castLevel - 3;
     let concEffect = await mba.findEffect(workflow.actor, 'Concentrating');
     if (workflow.targets.size > ammount) {
+        await mba.playerDialogMessage();
         let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+        await mba.clearPlayerDialogMessage();
         if (!selection.buttons) {
             ui.notifications.warn('Failed to select right ammount of targets, try again!')
             await mba.removeEffect(concEffect);
@@ -38,10 +40,8 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     await mba.updateEffect(concEffect, updates);
     let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Elemental Bane: Save", false);
     if (!featureData) return;
-    let originItem = workflow.item;
-    if (!originItem) return;
-    featureData.system.save.dc = mba.getSpellDC(originItem);
-    setProperty(featureData, 'mba-premades.spell.castData.school', originItem.system.school);
+    featureData.system.save.dc = mba.getSpellDC(workflow.item);
+    setProperty(featureData, 'mba-premades.spell.castData.school', workflow.item.system.school);
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
     let targetUuids = Array.from(targets).map(t => t.document.uuid);
     let [config, options] = constants.syntheticItemWorkflowOptions(targetUuids);
@@ -50,8 +50,11 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-    if (!workflow.failedSaves.size) return;
     let concEffect = mba.findEffect(workflow.actor, 'Concentrating');
+    if (!workflow.failedSaves.size) {
+        await mba.removeEffect(concEffect);
+        return;
+    }
     let targets = Array.from(workflow.failedSaves);
     for (let target of targets) {
         let choices = [
@@ -61,10 +64,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             ['Lightning ⚡', 'lightning'],
             ['Thunder ☁️', 'thunder']
         ];
+        await mba.playerDialogMessage();
         let selection = await mba.dialog("Elemental Bane", choices, `Choose damage type for <u>${target.document.name}</u>:`);
+        await mba.clearPlayerDialogMessage();
         if (!selection) return;
         async function effectMacroEachTurn() {
-            let effect = mbaPremades.helpers.findEffect(actor, 'Elemental Bane');
+            let effect = mbaPremades.helpers.findEffect(token.actor, 'Elemental Bane');
             let updates = {
                 'flags': {
                     'mba-premades': {
@@ -122,7 +127,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 }
             }
         };
-        await mba.createEffect(target.actor, effectData);
+        let newEffect = await mba.createEffect(target.actor, effectData);
+        let concData = workflow.actor.getFlag("midi-qol", "concentration-data.removeUuids");
+        concData.push(newEffect.uuid);
+        await workflow.actor.setFlag("midi-qol", "concentration-data.removeUuids", concData);
     }
 }
 

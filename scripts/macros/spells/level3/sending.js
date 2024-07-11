@@ -1,6 +1,10 @@
-//Janky on the code side, but for now looks good enough.
+import {mba} from "../../../helperFunctions.js";
+
+// To do: better animation?
+
 export async function sending({ speaker, actor, token, character, item, args, scope, workflow }) {
     let word = [];
+    await mba.playerDialogMessage();
     let wordInput = await warpgate.menu({
         inputs: [{
             label: `Input text (Max: 25 words)`,
@@ -15,7 +19,7 @@ export async function sending({ speaker, actor, token, character, item, args, sc
         { title: 'Sending' }
     );
     word.push(wordInput.inputs);
-
+    await mba.clearPlayerDialogMessage();
     let words = word.toString();
     function countWords(str) {
         return str.trim().split(/\s+/).length;

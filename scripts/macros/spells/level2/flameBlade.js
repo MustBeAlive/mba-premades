@@ -1,9 +1,9 @@
 import {mba} from "../../../helperFunctions.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Flame Blade: Scimitar', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Flame Blade: Scimitar", false);
     if (!featureData) return;
-    let featureData2 = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Flame Blade: Evoke', false);
+    let featureData2 = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Flame Blade: Evoke", false);
     if (!featureData2) return;
     let damageDice = 3;
     switch (workflow.castData.castLevel) {
@@ -20,10 +20,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             damageDice = 6;
             break;
     }
-    featureData.system.damage.parts[0][0] = damageDice + 'd6[fire]';
+    featureData.system.damage.parts[0][0] = `${damageDice}d6[fire]`;
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Flame Blade` })
-        await warpgate.revert(token.document, 'Flame Blade');
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} FlaBla` })
+        await warpgate.revert(token.document, "Flame Blade");
     };
     const effectData = {
         'name': workflow.item.name,
@@ -108,7 +108,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'name': 'Flame Blade',
         'description': 'Flame Blade'
     };
-
+    let rotation = -90;
+    let mirror = false;
+    if (workflow.token.document.texture.scaleX === -1) {
+        rotation = -270;
+        mirror = true;
+    }
     await new Sequence()
 
         .wait(500)
@@ -147,16 +152,17 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.spiritual_weapon.scimitar.01.spectral.02.orange")
-        .attachTo(workflow.token, { followRotation: true, local: true })
+        .attachTo(workflow.token, { followRotation: true })
         .scaleToObject(1.3, { considerTokenScale: true })
         .fadeIn(500)
         .fadeOut(1000)
         .scaleIn(0, 2000, { ease: "easeOutElastic" })
         .scaleOut(0, 500, { ease: "easeOutCubic" })
         .spriteOffset({ x: 0.35 * workflow.token.document.width, y: -0.1 * workflow.token.document.width }, { gridUnits: true })
-        .spriteRotation(-90)
+        .spriteRotation(rotation)
+        .mirrorY(mirror)
         .persist()
-        .name(`${workflow.token.document.name} Flame Blade`)
+        .name(`${workflow.token.document.name} FlaBla`)
 
         .thenDo(async () => {
             await warpgate.mutate(workflow.token.document, updates, {}, options);
@@ -174,6 +180,12 @@ async function evoke({ speaker, actor, token, character, item, args, scope, work
     }
     let evoke = effect.flags['mba-premades']?.spell?.flameBlade?.evoke;
     let updates;
+    let rotation = -90;
+    let mirror = false;
+    if (workflow.token.document.texture.scaleX === -1) {
+        rotation = -270;
+        mirror = true;
+    }
     if (evoke === true) {
         updates = {
             'changes': [
@@ -189,7 +201,7 @@ async function evoke({ speaker, actor, token, character, item, args, scope, work
             }
         };
         await mba.updateEffect(effect, updates);
-        await Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} Flame Blade`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} FlaBla` });
     }
     else if (evoke === false) {
         updates = {
@@ -239,7 +251,7 @@ async function evoke({ speaker, actor, token, character, item, args, scope, work
 
             .effect()
             .file("jb2a.impact.fire.01.orange")
-            .attachTo(token)
+            .attachTo(workflow.token)
             .scaleToObject(2.5)
             .fadeOut(1000, { ease: "easeInExpo" })
 
@@ -247,7 +259,7 @@ async function evoke({ speaker, actor, token, character, item, args, scope, work
 
             .effect()
             .file("jb2a.ground_cracks.orange.02")
-            .atLocation(token)
+            .atLocation(workflow.token)
             .fadeIn(500, { ease: "easeOutCirc" })
             .fadeOut(1000, { ease: "easeOutQuint" })
             .duration(6000)
@@ -259,7 +271,7 @@ async function evoke({ speaker, actor, token, character, item, args, scope, work
 
             .effect()
             .file("jb2a.particles.outward.orange.01.03")
-            .attachTo(token)
+            .attachTo(workflow.token)
             .scaleToObject(2)
             .duration(6000)
             .fadeIn(250, { ease: "easeOutQuint" })
@@ -271,16 +283,17 @@ async function evoke({ speaker, actor, token, character, item, args, scope, work
 
             .effect()
             .file("jb2a.spiritual_weapon.scimitar.01.spectral.02.orange")
-            .attachTo(token, { followRotation: true, local: true })
+            .attachTo(workflow.token, { followRotation: true })
             .scaleToObject(1.3, { considerTokenScale: true })
             .fadeIn(500)
             .fadeOut(1000)
             .scaleIn(0, 2000, { ease: "easeOutElastic" })
             .scaleOut(0, 500, { ease: "easeOutCubic" })
-            .spriteOffset({ x: 0.35 * token.document.width, y: -0.1 * token.document.width }, { gridUnits: true })
-            .spriteRotation(-90)
+            .spriteOffset({ x: 0.35 * workflow.token.document.width, y: -0.1 * workflow.token.document.width }, { gridUnits: true })
+            .spriteRotation(rotation)
+            .mirrorY(mirror)
             .persist()
-            .name(`${token.document.name} Flame Blade`)
+            .name(`${workflow.token.document.name} FlaBla`)
 
             .thenDo(async () => {
                 await mba.updateEffect(effect, updates)
@@ -304,12 +317,18 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
 
 async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} Flame Blade`, object: token })
+    let rotation = -90;
+    let mirror = false;
+    if (workflow.token.document.texture.scaleX === -1) {
+        rotation = -270;
+        mirror = true;
+    }
+    Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} FlaBla` })
     await new Sequence()
 
         .effect()
         .file("jb2a.greatsword.melee.fire.orange")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .stretchTo(target)
         .mirrorY()
         .size(1.2)
@@ -328,17 +347,18 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
 
         .effect()
         .file("jb2a.spiritual_weapon.scimitar.01.spectral.02.orange")
-        .attachTo(token, { followRotation: true, local: true })
+        .attachTo(workflow.token, { followRotation: true })
         .scaleToObject(1.3, { considerTokenScale: true })
         .delay(600)
         .fadeIn(500)
         .fadeOut(1000)
         .scaleIn(0, 2000, { ease: "easeOutElastic" })
         .scaleOut(0, 500, { ease: "easeOutCubic" })
-        .spriteOffset({ x: 0.35 * token.document.width, y: -0.1 * token.document.width }, { gridUnits: true })
-        .spriteRotation(-90)
+        .spriteOffset({ x: 0.35 * workflow.token.document.width, y: -0.1 * workflow.token.document.width }, { gridUnits: true })
+        .spriteRotation(rotation)
+        .mirrorY(mirror)
         .persist()
-        .name(`${token.document.name} Flame Blade`)
+        .name(`${workflow.token.document.name} FlaBla`)
 
         .play()
 }

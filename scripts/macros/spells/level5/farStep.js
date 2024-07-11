@@ -73,7 +73,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 async function teleport({ speaker, actor, token, character, item, args, scope, workflow }) {
     let icon = workflow.item.img;
     let interval = workflow.token.document.width % 2 === 0 ? 1 : -1;
+    await mba.playerDialogMessage();
     let position = await mba.aimCrosshair(workflow.token, 60, icon, interval, workflow.token.document.width);
+    await mba.clearPlayerDialogMessage();
     if (position.cancelled) return;
     new Sequence()
 

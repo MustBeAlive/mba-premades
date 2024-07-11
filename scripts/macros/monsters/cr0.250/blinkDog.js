@@ -20,7 +20,7 @@ async function blink({ speaker, actor, token, character, item, args, scope, work
     let animation1 = "jb2a.misty_step.01." + colors[(animRoll1.total - 1)][1];
     let animation2 = "jb2a.misty_step.02." + colors[(animRoll2.total - 1)][1];
     if (randomColor === false) {
-        let selection = await mba.dialog("Blink Dog: Blink", colors, "<b>Select color:</b>");
+        let selection = await mba.dialog("Blink", colors, "<b>Select color:</b>");
         if (!selection) return;
         animation1 = "jb2a.misty_step.01." + selection;
         animation2 = "jb2a.misty_step.02." + selection;

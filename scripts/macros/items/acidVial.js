@@ -12,17 +12,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Throw vial at someone (20 ft.)", "shatter"],
         ["Cancel", false]
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Acid Vial", choices, `<b>What would you like to do?</b>`);
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     let featureData;
-    if (selection === "splash") {
-        featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Acid Vial: Splash Acid', false);
-        if (!featureData) return;
-    }
-    else if (selection === "shatter") {
-        featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Acid Vial: Throw Vial', false);
-        if (!featureData) return;
-    }
+    if (selection === "splash") featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Acid Vial: Splash Acid', false);
+    else if (selection === "shatter") featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Acid Vial: Throw Vial', false);
+    if (!featureData) return;
     delete featureData._id;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);

@@ -15,7 +15,7 @@ export async function snillocSnowballSwarm({ speaker, actor, token, character, i
 
         .effect()
         .file("jb2a.cast_generic.ice.01.blue.0")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(1.8)
         .playbackRate(2)
         .waitUntilFinished(-600)
@@ -40,7 +40,7 @@ export async function snillocSnowballSwarm({ speaker, actor, token, character, i
 
             .effect()
             .file("jb2a.snowball_toss.white.01")
-            .attachTo(token)
+            .attachTo(workflow.token)
             .stretchTo(template, { offset: offset[i], gridUnits: true, followRotation: false })
             .delay(delay)
 

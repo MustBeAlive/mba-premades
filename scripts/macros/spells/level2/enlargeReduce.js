@@ -2,7 +2,9 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function enlargeReduce({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.failedSaves.size != 1) return;
+    await mba.playerDialogMessage();
     let selection = await mba.dialog(workflow.item.name, [["Enlarge", "enlarge"], ["Reduce", "reduce"]], `<b>Enlarge or Reduce?</b>`);
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     let target = workflow.targets.first();
     if (selection === "enlarge") {

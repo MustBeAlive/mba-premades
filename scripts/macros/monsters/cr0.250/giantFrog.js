@@ -1,5 +1,7 @@
 import {mba} from "../../../helperFunctions.js";
 
+//To do: remake with synth item
+
 async function swallow({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.hitTargets.size) return;
     let target = workflow.targets.first();
@@ -10,7 +12,7 @@ async function swallow({ speaker, actor, token, character, item, args, scope, wo
     let effect = await mba.findEffect(target.actor, "Giant Frog: Grapple");
     if (!effect) return;
     async function effectMacroDelTarget() {
-        if (!mba.findEffect(token.actor, "Prone")) await mbaPremades.helpers.addCondition(token.actor, "Prone");
+        if (!mbaPremades.helpers.findEffect(token.actor, "Prone")) await mbaPremades.helpers.addCondition(token.actor, "Prone");
     }
     async function effectMacroDelSource() {
         let targets = Array.from(canvas.scene.tokens).filter(t => t.actor.effects.some(e => e.name === "Giant Frog: Swallow"));
@@ -55,7 +57,8 @@ async function swallow({ speaker, actor, token, character, item, args, scope, wo
         ],
         'flags': {
             'dae': {
-                'showIcon': false
+                'showIcon': false,
+                'specialDuration': ['combatEnd']
             },
             'effectmacro': {
                 'onDelete': {

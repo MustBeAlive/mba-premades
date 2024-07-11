@@ -37,14 +37,20 @@ async function trigger({ speaker, actor, token, character, item, args, scope, wo
     if (!choices.length) return;
     let selection;
     if (choices.length === 1) selection = choices[0][1];
-    if (!selection) selection = await mba.dialog("Weapon Mastery", choices, "<b>Choose weapon mastery to use:</b>");
+    if (!selection) {
+        await mba.playerDialogMessage();
+        selection = await mba.dialog("Weapon Mastery", choices, "<b>Choose weapon mastery to use:</b>");
+        await mba.clearPlayerDialogMessage();
+    }
     if (!selection) return;
     if (selection === "cleave") {
         if (choices.length < 2) {
             let promt = await mba.dialog("Cleave", constants.yesNo, "<b>Would you like to use Cleave?</b>")
             if (!promt) return;
         }
+        await mba.playerDialogMessage();
         let selection = await mba.selectTarget("Cleave", constants.okCancel, cleaveValidTargets, true, "one", undefined, false, "<b>Select target to cleave:</b>")
+        await mba.clearPlayerDialogMessage();
         if (!selection.buttons) return;
         let [targetUuid] = selection.inputs.filter(i => i).slice(0);
         let featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', "Cleave", false);
@@ -75,14 +81,18 @@ async function trigger({ speaker, actor, token, character, item, args, scope, wo
     else if (selection === "push") {
         if (mba.getSize(target.actor) > (mba.getSize(workflow.actor) + 1)) return;
         if (choices.length < 2) {
+            await mba.playerDialogMessage();
             let promt = await mba.dialog("Push", constants.yesNo, `Would you like to Push <u>${target.document.name}</u> 10 feet away?`);
+            await mba.clearPlayerDialogMessage();
             if (!promt) return;
         }
         await mba.pushToken(workflow.token, target, 10);
     }
     else if (selection === "sap") {
         if (choices.length < 2) {
+            await mba.playerDialogMessage();
             let promt = await mba.dialog("Sap", constants.yesNo, `Would you like to Sap <u>${target.document.name}</u>?`);
+            await mba.clearPlayerDialogMessage();
             if (!promt) return;
         }
         let effectData = {
@@ -111,7 +121,9 @@ async function trigger({ speaker, actor, token, character, item, args, scope, wo
     }
     else if (selection === "slow") {
         if (choices.length < 2) {
+            await mba.playerDialogMessage();
             let promt = await mba.dialog("Slow", constants.yesNo, `Would you like to Slow <u>${target.document.name}</u>?`);
+            await mba.clearPlayerDialogMessage();
             if (!promt) return;
         }
         let effectData = {
@@ -140,7 +152,9 @@ async function trigger({ speaker, actor, token, character, item, args, scope, wo
     }
     else if (selection === "topple") {
         if (choices.length < 2) {
+            await mba.playerDialogMessage();
             let promt = await mba.dialog("Topple", constants.yesNo, `Would you like to Topple <u>${target.document.name}</u>?`);
+            await mba.clearPlayerDialogMessage();
             if (!promt) return;
         }
         let featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', "Topple", false);

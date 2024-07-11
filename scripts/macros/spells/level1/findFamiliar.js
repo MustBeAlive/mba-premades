@@ -10,7 +10,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     }
     let sourceActor = await mba.selectDocument('Choose Familiar', actors);
     if (!sourceActor) return;
+    await mba.playerDialogMessage();
     let creatureType = await mba.dialog(workflow.item.name, [['Celestial', 'celestial'], ['Fey', 'fey'], ['Fiend', 'fiend']], `<b>Choose creature type:</b>`);
+    await mba.clearPlayerDialogMessage();
     if (!creatureType) return;
     let name = `${workflow.token.document.name} ${sourceActor[0].prototypeToken.name}`;
     let updates = {

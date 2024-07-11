@@ -9,7 +9,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Warm Shield", "fire", "modules/mba-premades/icons/spells/level4/fire_shield_warm.webp"],
         ["Cold Shield", "cold", "modules/mba-premades/icons/spells/level4/fire_shield_chill.webp"]
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.selectImage ("Fire Shield", choices, "<b>Choose shield type:</b>", "both");
+    await mba.clearPlayerDialogMessage();
     if (!selection.length) {
         queue.remove(workflow.item.uuid);
         return;
@@ -206,7 +208,7 @@ async function onHit(workflow, targetToken) {
         'cold': 'Fire Shield: Chill Shield',
         'fire': 'Fire Shield: Warm Shield'
     };
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', featureNames[type], false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", featureNames[type], false);
     if (!featureData) return;
     delete featureData._id;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': targetToken.actor });

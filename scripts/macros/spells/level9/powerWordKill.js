@@ -5,6 +5,7 @@ export async function powerWordKill({ speaker, actor, token, character, item, ar
     let currentHP = target.actor.system.attributes.hp.value;
     let formula = currentHP.toString();
     let damageRoll = await new Roll(formula).roll({ 'async': true });
+    let deathWard = await mba.findEffect(target.actor, "Death Ward");
 
     new Sequence()
 
@@ -105,10 +106,9 @@ export async function powerWordKill({ speaker, actor, token, character, item, ar
         .repeats(15, 250, 250)
 
         .thenDo(async () => {
-            if (currentHP < 100) {
+            if (currentHP < 100 && !deathWard) {
                 if (target.actor.type === "npc") {
                     await mba.applyWorkflowDamage(workflow.token, damageRoll, "none", [target], undefined, workflow.itemCardId);
-                    return;
                 }
                 else {
                     await mba.applyWorkflowDamage(workflow.token, damageRoll, "none", [target], undefined, workflow.itemCardId);
@@ -117,7 +117,8 @@ export async function powerWordKill({ speaker, actor, token, character, item, ar
                     await mba.addCondition(target.actor, 'Dead', true);
                 }
             }
-            else ui.notifications.info("Target has more than 100 HP!");
+            else if (currentHP < 100 && deathWard) await mba.removeEffect(deathWard);
+            else if (currentHP >= 100) ui.notifications.info("Target has more than 100 HP!");
         })
 
         .effect()
@@ -131,7 +132,7 @@ export async function powerWordKill({ speaker, actor, token, character, item, ar
         .randomRotation()
         .belowTokens()
         .playIf(() => {
-            return currentHP < 100;
+            return (currentHP < 100 && !deathWard);
         })
 
         .play()

@@ -17,7 +17,9 @@ async function hexItem({ speaker, actor, token, character, item, args, scope, wo
         ['Wisdom', 'wis', "modules/mba-premades/icons/spells/level1/hex_wisdom.webp"],
         ['Charisma', 'cha', "modules/mba-premades/icons/spells/level1/hex_charisma.webp"]
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.selectImage("Hex", choices, '<b>Which ability should have disadvantage?</b>', "both");
+    await mba.clearPlayerDialogMessage();
     if (!selection.length) {
         queue.remove(workflow.item.uuid);
         return;
@@ -170,7 +172,6 @@ async function hexItem({ speaker, actor, token, character, item, args, scope, wo
         .fadeOut(3500)
         .scaleIn(0, 250, { ease: "easeOutCubic" })
         .opacity(1)
-        .belowTokens()
 
         .effect()
         .file("jb2a.extras.tmfx.outflow.circle.04")
@@ -369,7 +370,7 @@ async function hexMoveItem({ speaker, actor, token, character, item, args, scope
 
     if (effect) {
         let changes = effect.changes;
-        changes[0].value = targetToken.id;
+        changes[0].value = target.id;
         let updates = { changes };
         await mba.updateEffect(effect, updates);
     }

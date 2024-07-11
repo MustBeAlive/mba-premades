@@ -5,12 +5,12 @@ import {queue} from "../../mechanics/queue.js";
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         await (warpgate.wait(200));
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Searing Smite` });
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} SeaSmi` });
         let targetEffect = await fromUuid(effect.flags['mba-premades']?.spell?.searingSmite?.targetEffectUuid);
         if (!targetEffect) return;
         let target = await fromUuid(effect.flags['mba-premades']?.spell?.searingSmite?.targetUuid);
         if (!target) return;
-        await Sequencer.EffectManager.endEffects({ name: `${target.name} Searing Smite` })
+        Sequencer.EffectManager.endEffects({ name: `${target.name} SeaSmi` })
         await mbaPremades.helpers.removeEffect(targetEffect);
     }
     let effectData = {
@@ -57,7 +57,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file(`jb2a.particles.outward.orange.02.03`)
-        .attachTo(token, { offset: { y: -0.25 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { y: -0.25 }, gridUnits: true, followRotation: false })
         .scaleToObject(1.2)
         .delay(500)
         .duration(2000)
@@ -71,7 +71,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.divine_smite.caster.reversed.orange")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(2.2)
         .delay(1050)
         .startTime(900)
@@ -79,18 +79,18 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.divine_smite.caster.orange")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(1.85)
         .belowTokens()
         .waitUntilFinished(-1200)
 
         .effect()
         .file("jb2a.token_border.circle.static.orange.007")
-        .attachTo(token)
+        .attachTo(workflow.token)
         .scaleToObject(2)
         .fadeOut(500)
         .persist()
-        .name(`${token.document.name} Searing Smite`)
+        .name(`${workflow.token.document.name} SeaSmi`)
 
         .play();
 
@@ -113,10 +113,11 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRoll = await new Roll(damageFormula).roll({ async: true });
     await workflow.setDamageRoll(damageRoll);
+    let saveDC = effect.flags['mba-premades'].spell.searingSmite.saveDC;
     async function effectMacroDel() {
         let originEffect = await fromUuid(effect.origin);
         if (!originEffect) return;
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Searing Smite`, object: token });
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} SeaSmi` });
         await mbaPremades.helpers.removeEffect(originEffect);
     }
     let effectData = {
@@ -135,7 +136,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': 'turn=start, saveAbility=con, saveDC=' + effect.flags['mba-premades'].spell.searingSmite.saveDC + ', saveMagic=true, damageRoll=1d6[fire], damageType=fire, name=Searing Smite: Burn, killAnim=true, fastForwardDamage=true',
+                'value': `turn=start, damageBeforeSave=false, saveAbility=con, saveDC=${saveDC}, saveMagic=true, damageType=fire, damageRoll=1d6, name=Searing Smite: Burn (DC${saveDC}), killAnim=true, fastForwardDamage=true`,
                 'priority': 20
             }
         ],
@@ -183,7 +184,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .wait(600)
 
         .thenDo(function () {
-            Sequencer.EffectManager.endEffects({ name: `${token.document.name} Searing Smite`, object: token })
+            Sequencer.EffectManager.endEffects({ name: `${token.document.name} SeaSmi` })
         })
 
         .effect()
@@ -196,26 +197,28 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .fadeOut(1000)
         .mask()
         .persist()
-        .name(`${target.document.name} Searing Smite`)
+        .name(`${target.document.name} SeaSmi`)
 
-        .play();
-
-    let targetEffect = await mba.createEffect(target.actor, effectData);
-    let updates = {
-        'flags': {
-            'mba-premades': {
-                'spell': {
-                    'searingSmite': {
-                        'used': true,
-                        'targetUuid': target.document.uuid,
-                        'targetEffectUuid': targetEffect.uuid
+        .thenDo(async () => {
+            let targetEffect = await mba.createEffect(target.actor, effectData);
+            let updates = {
+                'flags': {
+                    'mba-premades': {
+                        'spell': {
+                            'searingSmite': {
+                                'used': true,
+                                'targetUuid': target.document.uuid,
+                                'targetEffectUuid': targetEffect.uuid
+                            }
+                        }
                     }
                 }
-            }
-        }
-    };
-    await mba.updateEffect(effect, updates);
-    queue.remove(workflow.item.uuid);
+            };
+            await mba.updateEffect(effect, updates);
+            queue.remove(workflow.item.uuid);
+        })
+
+        .play();
 }
 
 export let searingSmite = {

@@ -30,7 +30,9 @@ export async function chromaticOrb({ speaker, actor, token, character, item, arg
         ['Poison', 'poison', "modules/mba-premades/icons/spells/level1/chromatic_orb_poison.webp"],
         ['Thunder', 'thunder', "modules/mba-premades/icons/spells/level1/chromatic_orb_thunder.webp"]
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.selectImage('Chromatic Orb', choices, `<b>Choose damage type:</b>`, "both");
+    await mba.clearPlayerDialogMessage();
     if (!selection) {
         queue.remove(workflow.item.uuid);
         return;

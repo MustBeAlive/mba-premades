@@ -64,7 +64,9 @@ export async function flexibleCasting({ speaker, actor, token, character, item, 
     // Dialog promt if both options available
     if (!selection) {
         choicesType.push(["Cancel", false]);
+        await mba.playerDialogMessage();
         selection = await mba.dialog("Flexible Casting: Type", choicesType, `<b>Choose type of magic transformation:</b>`);
+        await mba.clearPlayerDialogMessage();
         if (!selection) {
             Sequencer.EffectManager.endEffects({ 'name': `${workflow.token.document.name} Flexible Casting`, 'object': workflow.token });
             return;
@@ -79,7 +81,9 @@ export async function flexibleCasting({ speaker, actor, token, character, item, 
         if (points >= 6 && workflow.actor.system.spells.spell4.max != 0) pointsToSlotsOptions.push(["<b>Level 4</b> (6 points)", 4, "modules/mba-premades/icons/class/sorcerer/create_sorcery_points_4.webp"]);
         if (points >= 7 && workflow.actor.system.spells.spell5.max != 0) pointsToSlotsOptions.push(["<b>Level 5</b> (7 points)", 5, "modules/mba-premades/icons/class/sorcerer/create_sorcery_points_5.webp"]);
         pointsToSlotsOptions.push(["Cancel", false, "modules/mba-premades/icons/conditions/incapacitated.webp"]);
+        await mba.playerDialogMessage();
         let slotLevel = await mba.selectImage("Flexible Casting: Points to Slots", pointsToSlotsOptions, `<b>Choose spell slot level to recover:</b>`, "value");
+        await mba.clearPlayerDialogMessage();
         if (!slotLevel) {
             Sequencer.EffectManager.endEffects({ 'name': `${workflow.token.document.name} Flexible Casting`, 'object': workflow.token });
             return;
@@ -130,7 +134,9 @@ export async function flexibleCasting({ speaker, actor, token, character, item, 
             i += 1;
         }
         slotsToPointsOptions.push(["Cancel", false, "modules/mba-premades/icons/conditions/incapacitated.webp"]);
+        await mba.playerDialogMessage();
         let pointsAmmount = await mba.selectImage("Flexible Casting: Slots to Poins", slotsToPointsOptions, `<b>Choose spell slot level:</b>`, "value");
+        await mba.clearPlayerDialogMessage();
         if (!pointsAmmount) {
             Sequencer.EffectManager.endEffects({ 'name': `${workflow.token.document.name} Flexible Casting`, 'object': workflow.token });
             return;

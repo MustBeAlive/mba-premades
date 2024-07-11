@@ -8,7 +8,7 @@ export async function disguiseSelf({ speaker, actor, token, character, item, arg
     let subraceSelection;
     let selection
 
-    // modules/mba-premades/icons/spells/level1/disguiseSelf/race/subrace/age/sex/1
+    // modules/mba-premades/icons/spells/level1/disguiseSelf/race/subrace/age/sex/number
     // Race/Subrace list: 
     //                    Dragonborn: Chromatic/Metallic/Gem; 
     //                    Dwarf: Duergar/Hill/Mountain,

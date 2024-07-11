@@ -20,8 +20,10 @@ export async function mageHand({ speaker, actor, token, character, item, args, s
         ["Red", "red", "modules/jb2a_patreon/Library/5th_Level/Arcane_Hand/ArcaneHand_Human_01_Idle_Red_Thumb.webp"],
         ["Rainbow", "rainbow", "modules/jb2a_patreon/Library/5th_Level/Arcane_Hand/ArcaneHand_Human_01_Idle_Rainbow_Thumb.webp"],
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.selectImage("Mage Hand", images, "<b>Select color:</b>", "both");
     if (!selection) selection = ["blue", "modules/jb2a_patreon/Library/5th_Level/Arcane_Hand/ArcaneHand_Human_01_Idle_Blue_Thumb.webp"];
+    await mba.clearPlayerDialogMessage();
     let avatarImg = selection[1];
     let selectedName = `jb2a.arcane_hand.${selection[0]}`;
     let selectedImg = await Sequencer.Database.getEntry(selectedName).file;

@@ -10,7 +10,9 @@ export async function dimensionDoor({ speaker, actor, token, character, item, ar
     let selection;
     let selectedTargets = [workflow.token];
     if (nearbyTargets.length > 0) {
+        await mba.playerDialogMessage();
         selection = await mba.selectTarget("Dimension Door: Teleport Creature?", constants.okCancel, nearbyTargets, true, 'one');
+        await mba.clearPlayerDialogMessage();
         if (selection.buttons) {
             let selectedTarget = selection.inputs.find(id => id != false);
             if (selectedTarget) {
@@ -19,7 +21,9 @@ export async function dimensionDoor({ speaker, actor, token, character, item, ar
             }
         }
     }
+    await mba.playerDialogMessage();
     let position = await mba.aimCrosshair(workflow.token, 500, workflow.item.img, -1, workflow.token.document.width);
+    await mba.clearPlayerDialogMessage();
     queue.remove(workflow.item.uuid);
     if (position.cancelled) return;
     let difference = { x: workflow.token.x, y: workflow.token.y };

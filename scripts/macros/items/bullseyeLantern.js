@@ -9,13 +9,17 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             return;
         }
         let choices = [["Yes, light the lantern", "light"], ["No, cancel", false]];
+        await mba.playerDialogMessage();
         let selection = await mba.dialog("Bullseye Lantern", choices, `Would you like to light the <b>Bullseye Lantern</b>?`);
+        await mba.clearPlayerDialogMessage();
         if (!selection) return;
         await bullseyeLantern.light(workflow)
         return;
     }
     let choices = [["Pour more Oil (restart duration)", "renew"], ["Extinguish Lantern", "extinguish"]];
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Bullseye Lantern", choices, `<b>What would you like to do?</b>`);
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     if (selection === "renew") {
         await mba.removeEffect(effect);

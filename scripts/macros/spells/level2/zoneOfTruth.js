@@ -61,7 +61,7 @@ async function trigger(token, trigger) {
     }
     let originItem = await fromUuid(trigger.itemUuid);
     if (!originItem) return;
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Zone of Truth: Save', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Zone of Truth: Save", false);
     if (!featureData) return;
     delete featureData._id;
     featureData.system.save.dc = trigger.saveDC;

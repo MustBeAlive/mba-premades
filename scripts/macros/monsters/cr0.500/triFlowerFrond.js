@@ -3,19 +3,32 @@ import {mba} from "../../../helperFunctions.js";
 async function redBlossom({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.hitTargets.size) return;
     let target = workflow.targets.first();
+    if (mba.findEffect(workflow.actor, `${workflow.token.document.name}: Grapple (${target.document.name})`)) return;
+    if (mba.checkTrait(target.actor, "ci", "grappled")) return;
+    if (mba.findEffect(target.actor, "Grappled")) return;
+    if (mba.findEffect(target.actor, `${workflow.token.document.name}: Grapple`)) return; //overly cautious
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} RedB` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} RedB` });
+        let originDoc = await fromUuid(effect.changes[0].value);
+        let originEffect = await mbaPremades.helpers.findEffect(originDoc.actor, `${originDoc.name}: Grapple (${token.document.name})`);
+        if (originEffect) await mbaPremades.helpers.removeEffect(originEffect);
     }
-    const effectData = {
+    const effectDataTarget = {
         'name': `Tri-flower Frond: Grapple`,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
             <p>You are @UUID[Compendium.mba-premades.MBA SRD.Item.EthsAglVRC2bOxun]{Grappled} by Tri-flower Frond's Reb Blossom vines.</p>
-            <p>Until this @UUID[Compendium.mba-premades.MBA SRD.Item.EthsAglVRC2bOxun]{Grappled} ends, you take 2d4poison damage at the start of each of your turns.</p>
+            <p>Until this @UUID[Compendium.mba-premades.MBA SRD.Item.EthsAglVRC2bOxun]{Grappled} ends, you take 2d4 poison damage at the start of each of your turns.</p>
             <p>Another creature within reach of the Tri-flower Frond can use its Action to end the @UUID[Compendium.mba-premades.MBA SRD.Item.EthsAglVRC2bOxun]{Grappled} on you.</p>
         `,
         'changes': [
+            {
+                'key': 'flags.mba-premades.feature.grapple.origin',
+                'mode': 5,
+                'value': workflow.token.document.uuid,
+                'priority': 20
+            },
             {
                 'key': 'macro.CE',
                 'mode': 0,
@@ -37,7 +50,8 @@ async function redBlossom({ speaker, actor, token, character, item, args, scope,
         ],
         'flags': {
             'dae': {
-                'showIcon': true
+                'showIcon': true,
+                'specialDuration': ['combatEnd']
             },
             'effectmacro': {
                 'onDelete': {
@@ -46,26 +60,56 @@ async function redBlossom({ speaker, actor, token, character, item, args, scope,
             }
         }
     };
-    if (!mba.findEffect(target.actor, "Tri-flower Frond: Grapple") && !mba.checkTrait(target.actor, "ci", "grappled")) {
-        new Sequence()
+    async function effectMacroDelSource() {
+        let targetDoc = await fromUuid(effect.flags['mba-premades']?.feature?.triFlowerFrond?.redBlossom?.targetUuid);
+        let targetEffect = await mbaPremades.helpers.findEffect(targetDoc.actor, `${token.document.name}: Grapple`);
+        if (targetEffect) await mbaPremades.helpers.removeEffect(targetEffect);
+    };
+    let effectDataSource = {
+        'name': `${workflow.token.document.name}: Grapple (${target.document.name})`,
+        'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
+        'flags': {
+            'dae': {
+                'specialDuration': ['zeroHP', 'combatEnd']
+            },
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDelSource)
+                }
+            },
+            'mba-premades': {
+                'feature': {
+                    'triFlowerFrond': {
+                        'redBlossom': {
+                            'targetUuid': target.document.uuid
+                        }
+                    }
+                }
+            }
+        }
+    };
 
-            .effect()
-            .file("jb2a.entangle.brown")
-            .attachTo(target)
-            .scaleToObject(1.5)
-            .fadeIn(1000)
-            .fadeOut(1000)
-            .filter("ColorMatrix", { hue: 335 })
-            .mask()
-            .persist()
-            .name(`${target.document.name} RedB`)
+    new Sequence()
 
-            .thenDo(async () => {
-                await mba.createEffect(target.actor, effectData);
-            })
+        .effect()
+        .file("jb2a.entangle.brown")
+        .attachTo(target)
+        .scaleToObject(1.5)
+        .fadeIn(1000)
+        .fadeOut(1000)
+        .filter("ColorMatrix", { hue: 335 })
+        .mask()
+        .persist()
+        .name(`${target.document.name} RedB`)
 
-            .play()
-    }
+        .thenDo(async () => {
+            await mba.createEffect(target.actor, effectDataTarget);
+            await mba.createEffect(workflow.actor, effectDataSource);
+        })
+
+        .play()
+
 }
 
 async function orangeBlossom({ speaker, actor, token, character, item, args, scope, workflow }) {

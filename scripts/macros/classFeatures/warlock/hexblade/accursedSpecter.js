@@ -10,7 +10,9 @@ export async function accursedSpecter({ speaker, actor, token, character, item, 
     if (mba.raceOrType(target.actor) != "humanoid") return;
     let originItem = await mba.getItem(workflow.actor, "Accursed Specter");
     if (originItem.system.uses.value < 1) return;
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Accursed Specter", [["Yes, summon Specter", true], ["No", false]], `Do you want to cause ${target.document.name} spirit to rise as a <b><u>Specter?</u></b>`);
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     let sourceActor = game.actors.getName("MBA: Accursed Specter");
     if (!sourceActor) {

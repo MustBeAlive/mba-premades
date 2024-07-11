@@ -8,7 +8,11 @@ export async function shillelagh({ speaker, actor, token, character, item, args,
     }
     let selection;
     if (weapons.length === 1) selection = weapons[0];
-    if (!selection) [selection] = await mba.selectDocument("Which weapon would you like to empower?", weapons);
+    if (!selection) {
+        await mba.playerDialogMessage();
+        [selection] = await mba.selectDocument("Which weapon would you like to empower?", weapons);
+        await mba.clearPlayerDialogMessage();
+    }
     if (!selection) {
         ui.notifications.warn("Failed to select weapon");
         return

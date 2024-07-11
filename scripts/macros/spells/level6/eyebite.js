@@ -213,7 +213,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Panicked", "panic", "modules/mba-premades/icons/spells/level6/eyebite_panicked.webp"],
         ["Sickened", "sick", "modules/mba-premades/icons/spells/level6/eyebite_sickened.webp"]
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.selectImage("Eyebite", choices, "<b>Choose effect:</b>", "value");
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     if (selection === "sleep") {
         let effectData = {

@@ -4,7 +4,9 @@ import {mba} from "../../../helperFunctions.js";
 export async function invisibility({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel - 1;
     if (workflow.targets.size > ammount) {
+        await mba.playerDialogMessage();
         let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+        await mba.clearPlayerDialogMessage();
         if (!selection.buttons) {
 			ui.notifications.warn('Failed to select targets, try again!')
             await mba.removeCondition(workflow.actor, "Concentrating");

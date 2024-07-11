@@ -1,5 +1,7 @@
 import {mba} from "../../../helperFunctions.js";
 
+//To do: remake with synth item
+
 async function swallow({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.hitTargets.size) return;
     let target = workflow.targets.first();
@@ -55,7 +57,8 @@ async function swallow({ speaker, actor, token, character, item, args, scope, wo
         ],
         'flags': {
             'dae': {
-                'showIcon': false
+                'showIcon': false,
+                'specialDuration': ['combatEnd']
             },
             'effectmacro': {
                 'onDelete': {

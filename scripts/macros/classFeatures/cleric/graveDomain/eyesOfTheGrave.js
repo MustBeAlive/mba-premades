@@ -1,5 +1,7 @@
 import {mba} from "../../../../helperFunctions.js";
 
+// To do: update like detect spells (and paladin's divine sense)
+
 export async function eyesOfTheGrave({ speaker, actor, token, character, item, args, scope, workflow }) {
     const aoeDistance = 60;
     const captureArea = {

@@ -1,5 +1,6 @@
 export async function primalSavagery({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
+    if (!target) return;
     new Sequence()
 
         .effect()

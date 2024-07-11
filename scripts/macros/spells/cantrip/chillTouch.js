@@ -3,6 +3,7 @@ import {queue} from "../../mechanics/queue.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
+    if (!target) return;
     if (!workflow.hitTargets.size) {
         let offsetX = Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1) + Math.ceil(0));
         if (offsetX === 0) offsetX = 1;

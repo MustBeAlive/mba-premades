@@ -2,6 +2,7 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function sacredFlame({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
+    if (!target) return;
     let animation = "selection"; // "default"; "selection"; "random";
     if (!workflow.failedSaves.size) animation = "default";
     let animation1 = "jb2a.sacred_flame.source.";
@@ -18,7 +19,9 @@ export async function sacredFlame({ speaker, actor, token, character, item, args
     ];
     if (animation === "default") color = "white";
     else if (animation === "selection") {
+        await mba.playerDialogMessage();
         color = await mba.dialog("Sacred Flame", choices, `<b>Choose color:</b>`);
+        await mba.clearPlayerDialogMessage();
         if (!color) color = "white";
     }
     else if (animation === "random") {

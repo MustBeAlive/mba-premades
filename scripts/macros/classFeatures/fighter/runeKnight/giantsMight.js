@@ -277,7 +277,9 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     let dieSize = 6;
     if (fighterLevel >= 10 && fighterLevel < 18) dieSize = 8;
     else if (fighterLevel >= 18) dieSize = 10;
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Giant's Might", constants.yesNo, `Deal extra 1d${dieSize} damage?`);
+    await mba.clearPlayerDialogMessage();
     if (!selection) {
         queue.remove(workflow.item.uuid);
         return;

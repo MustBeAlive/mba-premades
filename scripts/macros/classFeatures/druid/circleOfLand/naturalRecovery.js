@@ -28,7 +28,7 @@ export async function naturalRecovery({ speaker, actor, token, character, item, 
             .belowTokens()
             .zIndex(0)
             .persist()
-            .name(`${workflow.token.document.name} Natural Recovery`)
+            .name(`${workflow.token.document.name} NatRec`)
     
             .effect()
             .file("jb2a.icosahedron.rune.below.blueyellow")
@@ -44,11 +44,12 @@ export async function naturalRecovery({ speaker, actor, token, character, item, 
             .filter('ColorMatrix', { 'hue': 65 })
             .zIndex(1)
             .persist()
-            .name(`${workflow.token.document.name} Natural Recovery`)
+            .name(`${workflow.token.document.name} NatRec`)
     
             .play();
     
         //repeat dialog promt until no points
+        await mba.playerDialogMessage();
         while (ammount > 0) {
             await warpgate.wait(50);
     
@@ -72,7 +73,7 @@ export async function naturalRecovery({ speaker, actor, token, character, item, 
             let newValue = foundry.utils.getProperty(workflow.actor, path) + 1;
             if (isNaN(newValue)) {
                 ui.notifications.warn("Unable to find spell level path!");
-                Sequencer.EffectManager.endEffects({ 'name': `${workflow.token.document.name} Natural Recovery`, 'object': workflow.token });
+                Sequencer.EffectManager.endEffects({ 'name': `${workflow.token.document.name} NatRec` });
                 return;
             }
             await workflow.actor.update({ [path]: newValue });
@@ -92,7 +93,8 @@ export async function naturalRecovery({ speaker, actor, token, character, item, 
             .wait(750)
     
             .thenDo(async () => {
-                await Sequencer.EffectManager.endEffects({ 'name': `${workflow.token.document.name} Natural Recovery`, 'object': workflow.token });
+                await mba.clearPlayerDialogMessage();
+                await Sequencer.EffectManager.endEffects({ 'name': `${workflow.token.document.name} NatRec` });
             })
     
             .play()

@@ -1,10 +1,9 @@
-import {constants} from "../../generic/constants.js";
-import {mba} from "../../../helperFunctions.js";
+import { constants } from "../../generic/constants.js";
+import { mba } from "../../../helperFunctions.js";
 
 async function rayRoll({ speaker, actor, token, character, item, args, scope, workflow }) {
     const target = workflow.targets.first();
-    let rollFormula = "1d4";
-    let rayRoll = await new Roll(rollFormula).roll({ 'async': true });
+    let rayRoll = await new Roll("1d4").roll({ 'async': true });
     await MidiQOL.displayDSNForRoll(rayRoll);
     rayRoll.toMessage({
         rollMode: 'roll',
@@ -78,7 +77,7 @@ async function rayParalyzing({ speaker, actor, token, character, item, args, sco
                 'value': `turn=end, saveAbility=con, saveDC=14, saveMagic=false, name=Paralyzing Ray: Turn End (DC14), killAnim=true`,
                 'priority': 20
             }
-        ]
+        ],
     };
     await mba.createEffect(target.actor, effectData);
 }
@@ -112,7 +111,7 @@ async function rayFear({ speaker, actor, token, character, item, args, scope, wo
                 'value': `turn=end, saveAbility=wis, saveDC=14, saveMagic=false, name=Fear Ray: Turn End (DC14), killAnim=true`,
                 'priority': 20
             }
-        ]
+        ],
     };
     await mba.createEffect(target.actor, effectData);
 }
@@ -120,26 +119,16 @@ async function rayFear({ speaker, actor, token, character, item, args, scope, wo
 async function rayDisintegrating({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     if (target.actor.system.attributes.hp.value > 0) return;
+    if (mba.findEffect(target.actor, "Unconscious")) await mba.removeCondition(target.actor, 'Unconscious');
+    await mba.addCondition(target.actor, 'Dead', true);
     let centerX = target.x + canvas.grid.size / 2
     let centerY = target.y + canvas.grid.size / 2
-    let updates = {
-        'token': {
-            'hidden': true
-        }
-    };
-    let options = {
-        'permanent': false,
-        'name': 'Disintegration',
-        'description': 'Disintegration'
-    };
 
     new Sequence()
 
-        .wait(2000)
-
         .animation()
         .on(target)
-        .delay(400)
+        .delay(1)
         .opacity(0)
 
         .effect()
@@ -205,16 +194,6 @@ async function rayDisintegrating({ speaker, actor, token, character, item, args,
         .fadeOut(2000)
         .name(`3`)
         .waitUntilFinished()
-
-        .thenDo(async () => {
-            await warpgate.mutate(target.document, updates, {}, options);
-        })
-
-        .wait(500)
-
-        .animation()
-        .on(target)
-        .opacity(1)
 
         .play()
 }

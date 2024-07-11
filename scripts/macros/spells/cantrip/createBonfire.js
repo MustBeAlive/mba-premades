@@ -8,8 +8,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ['Orange', 'orange'],
         ['Purple', 'purple']
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.dialog(workflow.item.name, choices, `<b>Choose color:</b>`);
     if (!selection) selection = "orange";
+    await mba.clearPlayerDialogMessage();
     let animation1 = "jb2a.impact.005." + selection;
     let animation2 = "jb2a.ground_cracks." + selection + ".02";
     let animation3 = "jb2a.particles.outward." + selection + ".01.03";
@@ -18,6 +20,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     if (selection === "orange") animation4 = "jb2a.magic_signs.circle.02.conjuration.loop.yellow";
     let animation5 = "jb2a.bonfire.02." + selection;
     let template = canvas.scene.collections.templates.get(workflow.templateId);
+    if (!template) return;
 
     new Sequence()
 

@@ -1,5 +1,5 @@
-import { constants } from "../../generic/constants.js";
-import { mba } from "../../../helperFunctions.js";
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
@@ -53,7 +53,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         healTargets.push(targetToken.object);
     }
     if (healTargets.length === 0) return;
+    await mba.playerDialogMessage();
     let selection = await mba.selectTarget('Wither and Bloom', constants.yesNoButton, healTargets, true, 'one', undefined, false, "Heal a target?");
+    await mba.clearPlayerDialogMessage();
     if (!selection.buttons) return;
     let targetTokenUuid = selection.inputs.find(id => id != false);
     if (!targetTokenUuid) return;
@@ -89,7 +91,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             );
         }
         let maxHitDice = effect.flags['mba-premades'].spell.witherAndBloom.castLevel;
+        await mbaPremades.helpers.playerDialogMessage();
         let selection = await mbaPremades.helpers.numberDialog(`Heal using hit dice? Max: ${maxHitDice}`, mbaPremades.constants.yesNoButton, inputs);
+        await mbaPremades.helpers.clearPlayerDialogMessage();
         if (!selection.buttons) {
             effect.delete();
             return;

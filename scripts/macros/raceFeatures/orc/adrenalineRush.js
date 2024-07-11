@@ -8,7 +8,7 @@ export async function adrenalineRush({ speaker, actor, token, character, item, a
         await action.use();
         return;
     }
-    let actionData = await mba.getItemFromCompendium('mba-premades.MBA Actions', actionName, false);
+    let actionData = await mba.getItemFromCompendium("mba-premades.MBA Actions", actionName, false);
     if (!actionData) {
         ui.notifications.warn(`Unable to find item in compendium! (${actionName})`);
         return;

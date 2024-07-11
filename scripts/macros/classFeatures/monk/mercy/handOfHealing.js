@@ -25,7 +25,9 @@ export async function handOfHealing(workflow) {
         ui.notifications.warn("Unable to find allies nearby!");
         return;
     }
+    await mba.playerDialogMessage();
     let selection = await mba.selectTarget("Hand of Healing", constants.okCancel, targets, true, "one", null, false, "Choose ally to heal:");
+    await mba.clearPlayerDialogMessage();
     if (!selection.buttons) return;
     let target = fromUuidSync(selection.inputs[0]).object;
     let monkDice = 4;
@@ -41,7 +43,11 @@ export async function handOfHealing(workflow) {
     if (monkLevel >= 6) physicianTouch = true;
     if (physicianTouch) {
         let effects = target.actor.effects.filter(e => e.name === "Blinded" || e.name === "Deafened" || e.name === "Paralyzed" || e.name === "Poisoned" || e.name === "Stunned");
-        if (effects.length) effectToRemove = await mba.selectEffect("Hand of Healing: Remove Condiion", effects, "Choose condition to remove:");
+        if (effects.length) {
+            await mba.playerDialogMessage();
+            effectToRemove = await mba.selectEffect("Hand of Healing: Remove Condiion", effects, "Choose condition to remove:");
+            await mba.clearPlayerDialogMessage();
+        }
     }
 
     new Sequence()

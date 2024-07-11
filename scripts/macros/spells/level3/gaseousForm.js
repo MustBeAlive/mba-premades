@@ -1,11 +1,13 @@
 import {mba} from "../../../helperFunctions.js";
 
-//To do: upgrade code, animations
+//To do:
 
 export async function gaseousForm({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let choicesColor = [["Teal", "teal"], ["Green", "green"], ["Blue", "blue"], ["Red", "red"]];
+    await mba.playerDialogMessage();
     let selectionColor = await mba.dialog("Gaseous Form", choicesColor, "Choose color:");
+    await mba.clearPlayerDialogMessage();
     if (!selectionColor) selectionColor = "teal";
     let tintColor;
     switch (selectionColor) {

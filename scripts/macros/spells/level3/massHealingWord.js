@@ -1,18 +1,24 @@
+import {mba} from "../../../helperFunctions.js";
+
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let targetIds = [];
-    for (let i of workflow.targets) {
-        let type = mbaPremades.helpers.raceOrType(i.actor);
+    for (let target of workflow.targets) {
+        let type = mba.raceOrType(target.actor);
         if (type === 'undead' || type === 'construct') {
-            ChatMessage.create({ flavor: 'Mass Healing Word fails on ' + i.name + '!', speaker: ChatMessage.getSpeaker({ actor: workflow.actor }) });
+            ChatMessage.create({
+                flavor: `Mass Healing Word fails on ${target.document.name}!`,
+                speaker: ChatMessage.getSpeaker({ actor: workflow.actor })
+            });
             continue;
         }
-        targetIds.push(i.document.id);
+        targetIds.push(target.id);
     }
-    await game.user.updateTokenTargets(targetIds);
+    mba.updateTargets(targetIds);
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let word = [];
+    await mba.playerDialogMessage(); 
     let wordInput = await warpgate.menu({
         inputs: [{
             label: `What do you say?`,
@@ -26,7 +32,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     },
         { title: 'Mass Healing Word' }
     );
-
+    await mba.clearPlayerDialogMessage();
     word.push(wordInput.inputs);
 
     const style = {
@@ -38,7 +44,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
     }
 
-    game.user.targets.forEach(target => {
+    for (let target of Array.from(game.user.targets)) {
 
         new Sequence()
 
@@ -74,8 +80,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .zIndex(1.1)
 
             .effect()
-            .atLocation(target, { offset: { x: 0, y: -0.6 * target.data.width }, gridUnits: true })
             .text(`${word}`, style)
+            .atLocation(target, { followRotation: false, offset: { x: 0, y: -0.6 * target.data.width }, gridUnits: true })
             .duration(2000)
             .fadeOut(1000)
             .zIndex(1)
@@ -108,7 +114,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .tint(0x006102)
 
             .play();
-    });
+    }
 }
 
 export let massHealingWord = {

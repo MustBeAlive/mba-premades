@@ -4,7 +4,9 @@ import { mba } from "../../../helperFunctions.js";
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel - 3;
     if (workflow.targets.size <= ammount) return;
+    await mba.playerDialogMessage();
     let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+    await mba.clearPlayerDialogMessage();
     if (!selection.buttons) return;
     let newTargets = selection.inputs.filter(i => i).slice(0, ammount);
     mba.updateTargets(newTargets);
@@ -17,7 +19,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     };
     async function effectMacroEnd() {
         let choices = [["Home Plane (Stay there)", false], ["Demiplane (Return)", true]];
+        await mbaPremades.helpers.playerDialogMessage();
         let selection = await mbaPremades.helpers.dialog("Banishment", choices, "<b></b>");
+        await mbaPremades.helpers.clearPlayerDialogMessage();
         if (!selection) return;
         new Sequence()
 

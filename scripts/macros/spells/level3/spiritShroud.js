@@ -10,7 +10,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Necrotic", "necrotic", "modules/mba-premades/icons/generic/generic_necrotic.webp"],
         ["Radiant", "radiant", "modules/mba-premades/icons/generic/generic_radiant.webp"]
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.selectImage("Spirit Shroud", choices, "<b><Choose damage type:/b>", "value");
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     async function effectMacroEveryTurn() {
         await mbaPremades.macros.spiritShroud.slow(token, origin);
@@ -106,7 +108,7 @@ async function slow(token, origin) {
     let effect = mba.findEffect(target.actor, "Spirit Shroud: Slow");
     if (effect) await mba.removeEffect(effect);
     let effectData = {
-        'name': 'Spirit Shroud: Slow',
+        'name': "Spirit Shroud: Slow",
         'icon': "modules/mba-premades/icons/generic/generic_debuff.webp",
         'origin': origin.actor.uuid,
         'description': `
@@ -125,10 +127,7 @@ async function slow(token, origin) {
         ],
         'flags': {
             'dae': {
-                'macroRepeat': 'none',
                 'specialDuration': ['turnStartSource', 'combatEnd'],
-                'stackable': 'multi',
-                'transfer': false,
             }
         }
     }

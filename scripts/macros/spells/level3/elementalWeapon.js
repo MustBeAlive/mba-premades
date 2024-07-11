@@ -11,7 +11,11 @@ export async function elementalWeapon({ speaker, actor, token, character, item, 
     }
     let weaponItem;
     if (weapons.length === 1) weaponItem = [weapons[0]];
-    else weaponItem = await mba.selectDocument(workflow.item.name, weapons);
+    else {
+        await mba.playerDialogMessage();
+        weaponItem = await mba.selectDocument(workflow.item.name, weapons);
+        await mba.clearPlayerDialogMessage();
+    }
     if (!weaponItem) {
         await mba.removeCondition(workflow.actor, "Concentrating");
         return;
@@ -23,7 +27,9 @@ export async function elementalWeapon({ speaker, actor, token, character, item, 
         ["Lightning", "lightning", "modules/mba-premades/icons/spells/level3/elemental_weapon_lightning.webp"],
         ["Thunder", "thunder", "modules/mba-premades/icons/spells/level3/elemental_weapon_thunder.webp"],
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.selectImage("Elemental Weapon", choices, `<b>Choose damage type:</b>`, "both");
+    await mba.clearPlayerDialogMessage();
     if (!selection.length) {
         await mba.removeCondition(workflow.actor, "Concentrating");
         return;

@@ -2,6 +2,7 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function thornWhip({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
+    if (!target) return;
     if (workflow.hitTargets.size != 1) {
         new Sequence()
 

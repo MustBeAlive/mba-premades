@@ -25,7 +25,9 @@ async function trigger({ speaker, actor, token, character, item, args, scope, wo
     let uses = originItem.system.uses.value;
     let max = originItem.system.uses.max;
     if (!uses) return;
+    await mba.playerDialogMessage();
     let selection = await mba.dialog(originItem.name, constants.yesNo, `Use Favored Foe? (Uses left: ${uses}/${max})`);
+    await mba.clearPlayerDialogMessage();
     if (!selection) {
         queue.remove(workflow.item.uuid);
         return;

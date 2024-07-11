@@ -13,7 +13,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Orange", "orange", "modules/jb2a_patreon/Library/2nd_Level/Flaming_Sphere/FlamingSphere_02_Orange_Thumb.webp"], 
         ["Purple", "purple", "modules/jb2a_patreon/Library/2nd_Level/Flaming_Sphere/FlamingSphere_02_Purple_Thumb.webp"]
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.selectImage("Flaming Sphere", images, `<b>Choose color:</b>`, "both");
+    await mba.clearPlayerDialogMessage();
     if (!selection) selection = ["orange", "modules/jb2a_patreon/Library/2nd_Level/Flaming_Sphere/FlamingSphere_02_Orange_Thumb.webp"];
     let avatarImg = selection[1];
     let path = `jb2a.flaming_sphere.400px.${selection[0]}.02`;

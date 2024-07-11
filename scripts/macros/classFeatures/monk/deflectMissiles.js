@@ -2,6 +2,7 @@ import { constants } from "../../generic/constants.js";
 import { mba } from "../../../helperFunctions.js";
 import { queue } from "../../mechanics/queue.js";
 
+// To do: rework
 
 export async function deflectMissiles({ speaker, actor, token, character, item, args, scope, workflow }) {
     let monk = workflow.targets.first();

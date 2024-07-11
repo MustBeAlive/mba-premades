@@ -1,18 +1,23 @@
-import {mba} from "../../../helperFunctions.js";
+import { mba } from "../../../helperFunctions.js";
 
 export async function magicWeapon({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
+    let concEffect = await mba.findEffect(workflow.actor, "Concentrating");
     let weapons = target.actor.items.filter(i => i.type === 'weapon' && i.system.properties.mgc != true && i.system.equipped && i.name != "Unarmed Strike");
     if (!weapons.length) {
         ui.notifications.warn('Target has no valid non-magical weapons equipped!');
-        await mba.removeCondition(workflow.actor, "Concentrating");
+        await mba.removeEffect(concEffect);
         return;
     }
     let selection;
     if (weapons.length === 1) selection = [weapons[0]];
-    else selection = await mba.selectDocument(workflow.item.name, weapons);
+    else {
+        await mba.playerDialogMessage();
+        selection = await mba.selectDocument(workflow.item.name, weapons);
+        await mba.clearPlayerDialogMessage();
+    }
     if (!selection) {
-        await mba.removeCondition(workflow.actor, "Concentrating");
+        await mba.removeEffect(concEffect);
         return;
     }
     let castLevel = workflow.castData.castLevel;

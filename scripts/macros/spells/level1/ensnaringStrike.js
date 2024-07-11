@@ -167,22 +167,24 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .persist()
         .name(`${target.document.name} EnsStr`)
 
-        .play()
-
-    let targetEffect = await mba.createEffect(target.actor, effectData);
-    let updates = {
-        'flags': {
-            'mba-premades': {
-                'spell': {
-                    'ensnaringStrike': {
-                        'used': true,
-                        'targetEffectUuid': targetEffect.uuid
+        .thenDo(async () => {
+            let targetEffect = await mba.createEffect(target.actor, effectData);
+            let updates = {
+                'flags': {
+                    'mba-premades': {
+                        'spell': {
+                            'ensnaringStrike': {
+                                'used': true,
+                                'targetEffectUuid': targetEffect.uuid
+                            }
+                        }
                     }
                 }
-            }
-        }
-    };
-    await mba.updateEffect(effect, updates);
+            };
+            await mba.updateEffect(effect, updates);
+        })
+
+        .play()
 }
 
 export let ensnaringStrike = {

@@ -1,11 +1,13 @@
-import { constants } from "../../generic/constants.js";
-import { mba } from "../../../helperFunctions.js";
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
     if (!template) return;
     let choices = [["Radiant", "radiant"], ["Necrotic", "necrotic"]];
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Choose damage type:", choices);
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     let animation1 = "jb2a.divine_smite.caster.blueyellow";
     let animation2 = "jb2a.markers.light.complete.yellow02"
@@ -107,7 +109,7 @@ async function trigger(template, token) {
     if (!originUuid) return;
     let originItem = await fromUuid(originUuid);
     if (!originItem) return;
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Spirit Guardians: Damage', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Spirit Guardians: Damage", false);
     if (!featureData) return;
     featureData.system.save.dc = trigger.saveDC;
     featureData.system.damage.parts = [[`${trigger.castLevel}d8[${trigger.damageType}]`, trigger.damageType]];

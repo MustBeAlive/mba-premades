@@ -40,6 +40,14 @@
 				}
 			},
 			{
+				"id": "ActiveAuras",
+				"type": "module",
+				"manifest": "https://github.com/kandashi/Active-Auras/releases/latest/download/module.json",
+				"compatibility": {
+					"verified": "0.9.12"
+				}
+			},
+			{
 				"id": "ATL",
 				"type": "module",
 				"manifest": "https://github.com/kandashi/Active-Token-Lighting",
@@ -148,7 +156,7 @@
 				"type": "module",
 				"manifest": "https://www.patreon.com/JB2A",
 				"compatibility": {
-					"verified": "0.6.8"
+					"verified": "0.6.9"
 				}
 			},
 			{

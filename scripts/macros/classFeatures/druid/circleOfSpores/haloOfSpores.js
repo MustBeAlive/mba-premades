@@ -1,6 +1,8 @@
 import {constants} from "../../../generic/constants.js";
 import {mba} from "../../../../helperFunctions.js";
 
+// To do: rework
+
 async function combatStart(token, origin) {
     await origin.use()
     let effect = await mba.findEffect(token.actor, "Halo of Spores");

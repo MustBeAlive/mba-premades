@@ -21,7 +21,9 @@ export async function balmOfTheSummerCourt({ speaker, actor, token, character, i
             'type': 'number'
         }
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.menu("Balm of the Summer Court", constants.okCancel, inputs, true);
+    await mba.clearPlayerDialogMessage();
     if (!selection.buttons) return;
     let ammount = selection.inputs[0];
     if (ammount > max || isNaN(ammount)) {

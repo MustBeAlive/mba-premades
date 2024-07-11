@@ -1,3 +1,4 @@
+import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
 async function poison({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -7,7 +8,7 @@ async function poison({ speaker, actor, token, character, item, args, scope, wor
     if (mba.findEffect(target.actor, "Quasit: Poison")) return;
     let saveDC = workflow.item.system.save.dc;
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Quasit Poison` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} QuaPoi` })
     };
     const effectData = {
         'name': `Quasit: Poison`,
@@ -58,7 +59,7 @@ async function poison({ speaker, actor, token, character, item, args, scope, wor
         .randomRotation()
         .mask(target)
         .persist()
-        .name(`${target.document.name} Quasit Poison`)
+        .name(`${target.document.name} QuaPoi`)
 
         .thenDo(async () => {
             await mba.createEffect(target.actor, effectData)
@@ -67,11 +68,14 @@ async function poison({ speaker, actor, token, character, item, args, scope, wor
         .play()
 }
 
-async function scare({ speaker, actor, token, character, item, args, scope, workflow }) { // FIX: does not make the save at disadvantage if quasit is within line of sight
-    if (!workflow.failedSaves.size) return;
+async function scareItem({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    if (mba.checkTrait(target.actor, "ci", "frightened")) return;
-    if (mba.findEffect(target.actor, "Quasit: Scare")) return;
+    async function effectMacroTurnEnd() {
+        await mbaPremades.macros.monsters.quasit.scareEndTurn(token);
+    };
+    async function effectMacroDel() {
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} QuaFea` })
+    };
     let effectData = {
         'name': "Quasit: Scare",
         'icon': workflow.item.img,
@@ -91,15 +95,94 @@ async function scare({ speaker, actor, token, character, item, args, scope, work
                 'value': "Frightened",
                 'priority': 20
             },
-            {
-                'key': 'flags.midi-qol.OverTime',
-                'mode': 0,
-                'value': `turn=end, saveAbility=wis, saveDC=10, saveMagic=false, name=Fear: Turn End (DC 10), killAnim=true`,
-                'priority': 20
-            }
         ],
+        'flags': {
+            'effectmacro': {
+                'onTurnEnd': {
+                    'script': mba.functionToString(effectMacroTurnEnd)
+                },
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDel)
+                }
+            },
+            'mba-premades': {
+                'feature': {
+                    'quasit': {
+                        'scare': {
+                            'originUuid': workflow.token.document.uuid
+                        }
+                    }
+                }
+            }
+        }
     };
-    await mba.createEffect(target.actor, effectData);
+    new Sequence()
+
+        .effect()
+        .file("jb2a.icon.fear.dark_orange")
+        .attachTo(target)
+        .scaleIn(0, 500, { ease: "easeOutQuint" })
+        .fadeOut(1000)
+        .scaleToObject(1)
+        .duration(2000)
+        .filter("ColorMatrix", { hue: 120 })
+        .playbackRate(1)
+
+        .effect()
+        .file("jb2a.icon.fear.dark_orange")
+        .attachTo(target)
+        .scaleToObject(3)
+        .anchor({ y: 0.45 })
+        .scaleIn(0, 500, { ease: "easeOutQuint" })
+        .fadeOut(1000)
+        .duration(1000)
+        .playbackRate(1)
+        .filter("ColorMatrix", { hue: 130 })
+        .opacity(0.5)
+
+        .effect()
+        .file("jb2a.extras.tmfx.border.circle.outpulse.01.fast")
+        .attachTo(target)
+        .scaleToObject(2)
+
+        .thenDo(async () => {
+            if (workflow.failedSaves.size && !mba.findEffect(target.actor, "Quasit: Scare") && !mba.checkTrait(target.actor, "ci", "frightened")) await mba.createEffect(target.actor, effectData);
+        })
+
+        .effect()
+        .file("jb2a.markers.fear.dark_orange.03")
+        .attachTo(target)
+        .scaleToObject(2)
+        .delay(500)
+        .center()
+        .fadeIn(1000)
+        .fadeOut(1000)
+        .playbackRate(1)
+        .filter("ColorMatrix", { hue: 130 })
+        .persist()
+        .name(`${target.document.name} QuaFea`)
+        .playIf(() => {
+            return (workflow.failedSaves.size && !mba.checkTrait(target.actor, "ci", "frightened"));
+        })
+
+        .play()
+}
+
+async function scareEndTurn(token) {
+    let effect = await mba.findEffect(token.actor, "Quasit: Scare");
+    if (!effect) return;
+    let originUuid = effect.flags['mba-premades']?.feature?.quasit?.scare?.originUuid;
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Monster Features", "Quasit Scare: Save", false);
+    if (!featureData) return;
+    delete featureData._id;
+    featureData.name = "Quasit Scare: Save (DC10)";
+    let feature = new CONFIG.Item.documentClass(featureData, { 'parent': token.actor });
+    let [config, options] = constants.syntheticItemWorkflowOptions([token.document.uuid]);
+    let [quasitNearby] = await mba.findNearby(token, 200, "any", false, false, false, true).filter(t => t.document.uuid === originUuid);
+    if (quasitNearby) await mba.createEffect(token.actor, constants.disadvantageEffectData);
+    let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
+    if (featureWorkflow.failedSaves.size) return;
+    await mba.removeEffect(effect);
 }
 
 
@@ -173,7 +256,7 @@ async function shapechanger({ speaker, actor, token, character, item, args, scop
 
             .play();
 
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Shapechanger`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} QuaShC`, object: token })
         await warpgate.revert(token.document, "Shapechanger");
     };
     let effectData = {
@@ -183,7 +266,7 @@ async function shapechanger({ speaker, actor, token, character, item, args, scop
         'changes': changes,
         'flags': {
             'dae': {
-                'showIcon': true
+                'showIcon': false
             },
             'effectmacro': {
                 'onDelete': {
@@ -251,7 +334,7 @@ async function shapechanger({ speaker, actor, token, character, item, args, scop
         .fadeOut(2000, { ease: "easeOutCubic" })
         .scaleOut(0.5, 3000, { ease: "easeOutCubic" })
         .persist()
-        .name(`${workflow.token.document.name} Shapechanger`)
+        .name(`${workflow.token.document.name} QuaShC`)
 
         .effect()
         .file("jb2a.sleep.cloud.01.blue")
@@ -279,13 +362,14 @@ async function shapechanger({ speaker, actor, token, character, item, args, scop
         .fadeOut(2500)
         .scaleIn(0, 200, { ease: "easeOutCubic" })
         .zIndex(2)
-        .name(`${workflow.token.document.name} Shapechanger`)
+        .name(`${workflow.token.document.name} QuaShC`)
 
         .play();
 }
 
 export let quasit = {
     'poison': poison,
-    'scare': scare,
+    'scareItem': scareItem,
+    'scareEndTurn': scareEndTurn,
     'shapechanger': shapechanger
 }

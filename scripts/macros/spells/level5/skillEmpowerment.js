@@ -5,10 +5,12 @@ export async function skillEmpowerment({ speaker, actor, token, character, item,
     let options = Object.entries(CONFIG.DND5E.skills).filter(([key, value]) => target.actor.system.skills[key].value === 1).map(([i, j]) => ({ 'value': i, 'html': j.label }));
     let choices = [];
     for (let i = 0; i < options.length; i++) choices.push([options[i].html, options[i].value]);
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Skill Empowerment", choices, "Choose skill to gain expertise in:");
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Skill Empowerment` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} SkiEmp` })
     }
     let effectData = {
         'name': workflow.item.name,
@@ -119,7 +121,7 @@ export async function skillEmpowerment({ speaker, actor, token, character, item,
         .spriteOffset({ x: 0.5 }, { gridUnits: true })
         .rotate((360 / 6) * 1)
         .persist()
-        .name(`${target.document.name} Skill Empowerment 1`)
+        .name(`${target.document.name} SkiEmp`)
 
         .effect()
         .file("jb2a.icon.runes02.yellow")
@@ -134,7 +136,7 @@ export async function skillEmpowerment({ speaker, actor, token, character, item,
         .spriteOffset({ x: 0.5 }, { gridUnits: true })
         .rotate((360 / 6) * 2)
         .persist()
-        .name(`${target.document.name} Skill Empowerment 2`)
+        .name(`${target.document.name} SkiEmp`)
 
         .effect()
         .file("jb2a.icon.runes03.yellow")
@@ -149,7 +151,7 @@ export async function skillEmpowerment({ speaker, actor, token, character, item,
         .spriteOffset({ x: 0.5 }, { gridUnits: true })
         .rotate((360 / 6) * 3)
         .persist()
-        .name(`${target.document.name} Skill Empowerment 3`)
+        .name(`${target.document.name} SkiEmp`)
 
         .effect()
         .file("jb2a.icon.runes.yellow")
@@ -164,7 +166,7 @@ export async function skillEmpowerment({ speaker, actor, token, character, item,
         .spriteOffset({ x: 0.5 }, { gridUnits: true })
         .rotate((360 / 6) * 4)
         .persist()
-        .name(`${target.document.name} Skill Empowerment 4`)
+        .name(`${target.document.name} SkiEmp`)
 
         .effect()
         .file("jb2a.icon.runes02.yellow")
@@ -179,7 +181,7 @@ export async function skillEmpowerment({ speaker, actor, token, character, item,
         .spriteOffset({ x: 0.5 }, { gridUnits: true })
         .rotate((360 / 6) * 5)
         .persist()
-        .name(`${target.document.name} Skill Empowerment 5`)
+        .name(`${target.document.name} SkiEmp`)
 
         .effect()
         .file("jb2a.icon.runes03.yellow")
@@ -194,7 +196,7 @@ export async function skillEmpowerment({ speaker, actor, token, character, item,
         .spriteOffset({ x: 0.5 }, { gridUnits: true })
         .rotate((360 / 6) * 6)
         .persist()
-        .name(`${target.document.name} Skill Empowerment 6`)
+        .name(`${target.document.name} SkiEmp`)
 
         .play()
 }

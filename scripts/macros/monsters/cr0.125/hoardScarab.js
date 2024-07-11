@@ -1,12 +1,41 @@
 import {mba} from "../../../helperFunctions.js";
 
-export async function scaleDust({ speaker, actor, token, character, item, args, scope, workflow }) {
+async function bite({ speaker, actor, token, character, item, args, scope, workflow }) {
+    if (!workflow.hitTargets.size) return;
+    let target = workflow.targets.first();
+    if (mba.findEffect(target.actor, "Hoard Scarab: Distracting Bite")) return;
+    let effectData = {
+        'name': "Hoard Scarab: Distracting Bite",
+        'icon': "modules/mba-premades/icons/generic/generic_debuff.webp",
+        'origin': workflow.item.uuid,
+        'description': `
+            <p>You have disadvantage on all attack rolls until the start of your next turn.</p>
+        `,
+        'changes': [
+            {
+                'key': 'flags.midi-qol.disadvantage.attack.all',
+                'mode': 2,
+                'value': 1,
+                'priority': 20
+            },
+        ],
+        'flags': {
+            'dae': {
+                'showIcon': true,
+                'specialDuration': ['turnStart', 'combatEnd']
+            }
+        }
+    };
+    await mba.createEffect(target.actor, effectData);
+}
+
+async function scaleDust({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ 'name': `${token.document.name} ScaD`});
     }
     let effectData = {
-        'name': `${workflow.token.document.name}: Scale Dust`,
+        'name': "Hoard Scarab: Scale Dust",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
@@ -58,22 +87,22 @@ export async function scaleDust({ speaker, actor, token, character, item, args, 
             .file('jb2a.fireflies.many.01.blue')
             .attachTo(target)
             .scaleToObject(1.4)
-            .randomRotation()
             .fadeIn(500, { 'delay': 500 })
             .fadeOut(1500, { 'ease': 'easeInSine' })
+            .randomRotation()
             .persist()
             .name(`${target.document.name} ScaD`)
 
             .effect()
             .from(target)
-            .belowTokens()
             .attachTo(target)
-            .scaleToObject(target.document.texture.scaleX)
-            .spriteRotation(target.document.texture.rotation * -1)
-            .filter('Glow', { 'color': 0x91c5d2, 'distance': 20 })
             .fadeIn(1500, { 'delay': 500 })
             .fadeOut(1500, { 'ease': 'easeInSine' })
+            .scaleToObject(target.document.texture.scaleX)
+            .spriteRotation(target.document.texture.rotation * -1)
             .zIndex(0.1)
+            .belowTokens()
+            .filter('Glow', { 'color': 0x91c5d2, 'distance': 20 })
             .persist()
             .name(`${target.document.name} ScaD`)
 
@@ -86,5 +115,6 @@ export async function scaleDust({ speaker, actor, token, character, item, args, 
 }
 
 export let hoardScarab = {
+    'bite': bite,
     'scaleDust': scaleDust
 }

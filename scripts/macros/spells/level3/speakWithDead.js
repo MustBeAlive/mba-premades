@@ -12,7 +12,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
     }
     let options = [["Yes, proceed", "yes"], ["No, deny Speak with Dead", false]];
     await mba.gmDialogMessage();
-    let selection = await mba.remoteDialog(workflow.item.name, options, game.users.activeGM.id, `Is <u>${target.document.name}</u> eligible to use Speak with Dead on?`);
+    let selection = await mba.remoteDialog(workflow.item.name, options, game.users.activeGM.id, `Is <u>${target.document.name}</u> eligible to cast Speak with Dead on?`);
     await mba.clearGMDialogMessage();
     if (!selection) {
         ui.notifications.info("GM has denied your request. Sorry!");
@@ -25,7 +25,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         for (let i = 0; i != count;) {
             await new Promise((resolve) => {
                 new Dialog({
-                    title: `Questions Count`,
+                    title: `Speak with Dead: Counter`,
                     content: `<p>This is a QoL counter for GM to track questions.</p><p>Questions left: <b>${count}</b></p>`,
                     buttons: {
                         plus: {
@@ -43,7 +43,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         await mbaPremades.helpers.removeEffect(effect);
     }
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Speak with Dead` });
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} SpWiDe` });
 
         new Sequence()
 
@@ -104,7 +104,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .fadeOut(2000)
         .zIndex(0)
         .persist()
-        .name(`${target.document.name} Speak with Dead`)
+        .name(`${target.document.name} SpWiDe`)
 
         .effect()
         .atLocation(target)
@@ -140,7 +140,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .randomizeMirrorX()
         .fadeOut(500)
         .persist()
-        .name(`${target.document.name} Speak with Dead`)
+        .name(`${target.document.name} SpWiDe`)
 
         .effect()
         .delay(250)
@@ -155,7 +155,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .randomizeMirrorX()
         .persist()
-        .name(`${target.document.name} Speak with Dead`)
+        .name(`${target.document.name} SpWiDe`)
 
         //Bottom Left Flame
         .effect()
@@ -175,7 +175,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .randomizeMirrorX()
         .fadeOut(500)
         .persist()
-        .name(`${target.document.name} Speak with Dead`)
+        .name(`${target.document.name} SpWiDe`)
 
         .effect()
         .delay(250)
@@ -190,7 +190,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .randomizeMirrorX()
         .persist()
-        .name(`${target.document.name} Speak with Dead`)
+        .name(`${target.document.name} SpWiDe`)
 
         //Top Left Flame
         .effect()
@@ -210,7 +210,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .randomizeMirrorX()
         .fadeOut(500)
         .persist()
-        .name(`${target.document.name} Speak with Dead`)
+        .name(`${target.document.name} SpWiDe`)
 
         .effect()
         .delay(250)
@@ -225,7 +225,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .randomizeMirrorX()
         .persist()
-        .name(`${target.document.name} Speak with Dead`)
+        .name(`${target.document.name} SpWiDe`)
 
         //Top Right Flame
         .effect()
@@ -245,7 +245,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .randomizeMirrorX()
         .fadeOut(500)
         .persist()
-        .name(`${target.document.name} Speak with Dead`)
+        .name(`${target.document.name} SpWiDe`)
 
         .effect()
         .delay(250)
@@ -260,7 +260,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .scaleIn(0, 500, { ease: "easeOutCubic" })
         .randomizeMirrorX()
         .persist()
-        .name(`${target.document.name} Speak with Dead`)
+        .name(`${target.document.name} SpWiDe`)
 
         .play()
 
@@ -318,7 +318,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .animateProperty("spriteContainer", "position.y", { from: 0, to: -0.2, duration: 2000, delay: 2000, gridUnits: true, ease: "easeInSine" })
         .loopProperty("spriteContainer", "position.y", { from: 0, to: 0.05, duration: 2500, delay: 4000, gridUnits: true, ease: "easeInOutQuad", pingPong: true })
         .persist()
-        .name(`${target.document.name} Speak with Dead`)
+        .name(`${target.document.name} SpWiDe`)
 
         .effect()
         .delay(100)
@@ -332,7 +332,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .zIndex(1.1)
         .fadeOut(500)
         .persist()
-        .name(`${target.document.name} Speak with Dead`)
+        .name(`${target.document.name} SpWiDe`)
 
         .effect()
         .delay(2000)
@@ -345,7 +345,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .fadeOut(500)
         .zIndex(0.1)
         .persist()
-        .name(`${target.document.name} Speak with Dead`)
+        .name(`${target.document.name} SpWiDe`)
 
         .effect()
         .delay(3000)
@@ -358,7 +358,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .zIndex(2)
         .fadeOut(500)
         .persist()
-        .name(`${target.document.name} Speak with Dead`)
+        .name(`${target.document.name} SpWiDe`)
 
         .effect()
         .delay(3000)
@@ -372,7 +372,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .zIndex(2)
         .fadeOut(500)
         .persist()
-        .name(`${target.document.name} Speak with Dead`)
+        .name(`${target.document.name} SpWiDe`)
 
         .effect()
         .delay(100)
@@ -386,7 +386,7 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         .zIndex(0.2)
         .fadeOut(500)
         .persist()
-        .name(`${target.document.name} Speak with Dead`)
+        .name(`${target.document.name} SpWiDe`)
 
         .wait(4000)
 

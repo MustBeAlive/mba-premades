@@ -126,7 +126,9 @@ async function emerge({ speaker, actor, token, character, item, args, scope, wor
         return;
     };
     let choices = [["Yes, emerge", "yes"], ["No, stay in the shell", false]];
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Shell Defense", choices, `<b>Do you want to emerge from the shell?</b>`);
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     await mba.removeEffect(effect);
 }

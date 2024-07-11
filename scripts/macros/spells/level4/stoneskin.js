@@ -3,14 +3,14 @@ import {mba} from "../../../helperFunctions.js";
 export async function stoneskin({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Stoneskin` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} StoSki` })
     };
     const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are invisible until the spell ends.</p>
+            <p>Until the spell ends, you have resistance to nonmagical bludgeoning, piercing and slashing damage.</p>
         `,
         'duration': {
             'seconds': 3600
@@ -51,7 +51,7 @@ export async function stoneskin({ speaker, actor, token, character, item, args, 
         .fadeOut(1000)
         .opacity(0.85)
         .persist()
-        .name(`${target.document.name} Stoneskin`)
+        .name(`${target.document.name} StoSki`)
 
         .effect()
         .file("jb2a.shield_themed.below.molten_earth.01.dark_orange")
@@ -61,7 +61,7 @@ export async function stoneskin({ speaker, actor, token, character, item, args, 
         .fadeOut(1000)
         .belowTokens()
         .persist()
-        .name(`${target.document.name} Stoneskin`)
+        .name(`${target.document.name} StoSki`)
 
         .thenDo(async () => {
             await mba.createEffect(target.actor, effectData);

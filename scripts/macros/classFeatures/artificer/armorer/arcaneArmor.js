@@ -12,7 +12,9 @@ async function selector({ speaker, actor, token, character, item, args, scope, w
         ui.notifications.warn("Something went terribly wrong, damn");
         return;
     }
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Arcane Armor", choices, `<b>Choose armor model:</b>`);
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     if (selection === "guardian") {
         new Sequence()
@@ -110,11 +112,11 @@ async function selector({ speaker, actor, token, character, item, args, scope, w
 async function guardianArmor({ speaker, actor, token, character, item, args, scope, workflow }) {
     let effect = await mba.findEffect(workflow.actor, "Arcane Armor: Guardian Model");
     if (effect) return;
-    let oldFeature = mba.getItem(workflow.actor, 'Lightning Launcher');
+    let oldFeature = mba.getItem(workflow.actor, "Lightning Launcher");
     if (oldFeature) await oldFeature.delete();
     let fieldUses = workflow.actor.system.attributes.prof;
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Class Feature Items', 'Guardian Armor: Defensive Field', false);
-    let featureData2 = await mba.getItemFromCompendium('mba-premades.MBA Class Feature Items', 'Guardian Armor: Thunder Gauntlets', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Class Feature Items", "Guardian Armor: Defensive Field", false);
+    let featureData2 = await mba.getItemFromCompendium("mba-premades.MBA Class Feature Items", "Guardian Armor: Thunder Gauntlets", false);
     if (!featureData || !featureData2) return;
     featureData.system.uses.value = fieldUses;
     featureData.system.uses.max = workflow.actor.system.attributes.prof;
@@ -122,12 +124,12 @@ async function guardianArmor({ speaker, actor, token, character, item, args, sco
     featureData2.name = "Thunder Gauntlets";
     await workflow.actor.createEmbeddedDocuments('Item', [featureData, featureData2]);
     let effectData = {
-        'name': 'Arcane Armor: Guardian Model',
+        'name': "Arcane Armor: Guardian Model",
         'icon': "modules/mba-premades/icons/class/artificer/guardian_model.webp",
         'origin': workflow.item.uuid
     };
     await mba.createEffect(workflow.actor, effectData);
-    let oldEffect = mba.findEffect(workflow.actor, 'Arcane Armor: Infiltrator Model');
+    let oldEffect = mba.findEffect(workflow.actor, "Arcane Armor: Infiltrator Model");
     if (oldEffect) await oldEffect.delete();
 }
 
@@ -181,15 +183,15 @@ async function thunderGauntletsOrigin({ speaker, actor, token, character, item, 
 
 async function thunderGauntletsTarget({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.targets.size != 1 || workflow.disadvantage) return;
-    let effect = mba.findEffect(workflow.actor, 'Thunder Gauntlets: Disadvantage');
+    let effect = mba.findEffect(workflow.actor, "Thunder Gauntlets: Disadvantage");
     if (!effect) return;
     let origin = await fromUuid(effect.origin);
     if (!origin) return;
     if (origin.actor.uuid === workflow.targets.first().actor.uuid) return;
-    let queueSetup = await queue.setup(workflow.item.uuid, 'thunderGauntlets', 50);
+    let queueSetup = await queue.setup(workflow.item.uuid, "thunderGauntlets", 50);
     if (!queueSetup) return;
     workflow.disadvantage = true;
-    workflow.advReminderAttackAdvAttribution.add('DIS: Thunder Gauntlets');
+    workflow.advReminderAttackAdvAttribution.add("DIS: Thunder Gauntlets");
     queue.remove(workflow.item.uuid);
 }
 
@@ -217,13 +219,13 @@ async function defensiveField({ speaker, actor, token, character, item, args, sc
 }
 
 async function infiltratorArmor({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let effect = mba.findEffect(workflow.actor, 'Arcane Armor: Infiltrator Model');
+    let effect = mba.findEffect(workflow.actor, "Arcane Armor: Infiltrator Model");
     if (effect) return;
-    let oldFeature = mba.getItem(workflow.actor, 'Defensive Field');
+    let oldFeature = mba.getItem(workflow.actor, "Defensive Field");
     if (oldFeature) await oldFeature.delete();
-    let oldFeature2 = workflow.actor.items.getName('Thunder Gauntlets');
+    let oldFeature2 = workflow.actor.items.getName("Thunder Gauntlets");
     if (oldFeature2) await oldFeature2.delete();
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Class Feature Items', 'Infiltrator Armor: Lightning Launcher', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Class Feature Items", "Infiltrator Armor: Lightning Launcher", false);
     if (!featureData) return;
     featureData.name = "Lightning Launcher";
     await workflow.actor.createEmbeddedDocuments('Item', [featureData]);
@@ -247,7 +249,7 @@ async function infiltratorArmor({ speaker, actor, token, character, item, args, 
         ]
     };
     await mba.createEffect(workflow.actor, effectData);
-    let oldEffect = mba.findEffect(workflow.actor, 'Arcane Armor: Guardian Model');
+    let oldEffect = mba.findEffect(workflow.actor, "Arcane Armor: Guardian Model");
     if (oldEffect) await oldEffect.delete();
 }
 
@@ -263,14 +265,14 @@ async function lightningLauncher({ speaker, actor, token, character, item, args,
         .play()
 
     if (workflow.hitTargets.size != 1 || workflow.isFumble) return;
-    let queueSetup = await queue.setup(workflow.item.uuid, 'lightningLauncher', 50);
+    let queueSetup = await queue.setup(workflow.item.uuid, "lightningLauncher", 50);
     if (!queueSetup) return;
     let doExtraDamage = mba.perTurnCheck(workflow.item, 'feature', 'lightningLauncher', true, workflow.token.id);
     if (!doExtraDamage) {
         queue.remove(workflow.item.uuid);
         return;
     }
-    let selection = await mba.dialog("Lightning Launcher", [['Yes', true], ['No', false]], "<b>Would you like to apply extra lightning damage? (1d6 lightning)</b>");
+    let selection = await mba.dialog("Lightning Launcher", [["Yes", true], ["No", false]], "<b>Would you like to apply extra lightning damage? (1d6 lightning)</b>");
     if (!selection) {
         queue.remove(workflow.item.uuid);
         return;

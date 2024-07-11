@@ -11,7 +11,9 @@ export async function nimbleEscape({ speaker, actor, token, character, item, arg
         .play()
 
     let choices = [["Disengage", "Disengage"], ["Hide", "Hide"]];
+    await mba.playerDialogMessage();
     let actionName = await mba.dialog("Nimble Escape", choices, "Choose action type:");
+    await mba.clearPlayerDialogMessage();
     if (!actionName) return;
     let action = mba.getItem(workflow.actor, actionName);
     if (action) {

@@ -1,7 +1,6 @@
 import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
-// To do: icon, animations
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let newTargets = [];
@@ -15,29 +14,33 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         }
     }
     mba.updateTargets(newTargets);
-    /*let template = canvas.scene.collections.templates.get(workflow.templateId);
+    let template = canvas.scene.collections.templates.get(workflow.templateId);
     if (!template) return;
-    let targets = Array.from(game.user.targets);
+    new Sequence()
 
+        .effect()
+        .file("animated-spell-effects-cartoon.mix.electric ball.03")
+        .attachTo(template)
+        .size(3, { gridUnits: true })
+        .fadeIn(2500)
+        .fadeOut(200)
+        .persist()
+        .name(`SynST1`)
 
-    for (let target of targets) {
-        new Sequence()
+        .effect()
+        .file("jb2a.lightning_ball.purple")
+        .attachTo(template)
+        .size(3, { gridUnits: true })
+        .fadeIn(2500)
+        .fadeOut(200)
+        .persist()
+        .name(`SynST1`)
 
-            .effect()
-            .file("jb2a.lightning_ball.yellow")
-            .attachTo(target)
-            .scaleToObject(2.5)
-            .fadeIn(2000)
-            .belowTokens()
-            .mask()
-            .persist()
-            .name(`${workflow.token.document.name} SynST1`)
-
-            .play()
-    }*/
+        .play()
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
+    let template = canvas.scene.collections.templates.get(workflow.templateId);
     let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Synaptic Static: Save", false);
     if (!featureData) return;
     delete featureData._id;
@@ -49,7 +52,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let [config, options] = constants.syntheticItemWorkflowOptions(targetUuids);
     await game.messages.get(workflow.itemCardId).delete();
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
-    if (!featureWorkflow.failedSaves.size) return;
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} SynSta` })
     };
@@ -106,14 +108,36 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
+    let bonus = 200;
+    new Sequence()
+
+        .thenDo(async () => {
+            Sequencer.EffectManager.endEffects({ name: `SynST1` })
+        })
+
+        .effect()
+        .file("jb2a.explosion.blue.1")
+        .attachTo(template)
+        .scaleToObject(1.5)
+        .filter("ColorMatrix", { hue: 60 })
+
+        .effect()
+        .file("animated-spell-effects-cartoon.electricity.18")
+        .attachTo(template)
+        .scaleToObject(1.5)
+        .filter("ColorMatrix", { hue: 60 })
+
+        .play()
+
+    if (!featureWorkflow.failedSaves.size) return;
     for (let target of featureWorkflow.failedSaves) {
-        let delayRoll = await new Roll("1d4").roll({ 'async': true });
-        let delay = delayRoll.total * 100;
+        let delayRoll = await new Roll("1d6").roll({ 'async': true });
+        let delay = (delayRoll.total * 200) + bonus;
 
         new Sequence()
 
             .effect()
-            .file("jb2a.static_electricity.03.yellow")
+            .file("jb2a.static_electricity.03.purple")
             .attachTo(target)
             .scaleToObject(1.25)
             .delay(delay)
@@ -125,6 +149,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
             .thenDo(async () => {
                 await mba.createEffect(target.actor, effectData);
+                bonus += 100;
             })
             .play()
     }

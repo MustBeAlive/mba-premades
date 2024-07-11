@@ -13,7 +13,7 @@ export async function circletOfBlasting({ speaker, actor, token, character, item
         ui.notifications.warn("Circler of Blasting is out of charges!");
         return;
     }
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Scorching Ray: Bolt', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Scorching Ray: Bolt", false);
     if (!featureData) return;
     delete featureData._id;
     featureData.system.formula = `1d20 + 5`;

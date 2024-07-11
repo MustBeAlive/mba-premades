@@ -2,6 +2,8 @@ import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 import {queue} from "../../mechanics/queue.js";
 
+// To do: when PHB2024 make it an effect (track Unarmed Attacks via flags), easier to track "mechanics inside the FoB" 
+
 export async function flurryOfBlows({ speaker, actor, token, character, item, args, scope, workflow }) {
     let kiItem = await mba.getItem(workflow.actor, "Ki Points");
     if (!kiItem) {

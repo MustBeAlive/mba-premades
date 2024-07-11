@@ -28,6 +28,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Daggers", "daggers", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_01_Light_Yellow_Thumb.webp"],
         ["Kunai", "kunai", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_Kunai_01_Light_Yellow_Thumb.webp"]
     ]
+    await mba.playerDialogMessage();
     let selectionType = await mbaPremades.helpers.selectImage("Cloud of Daggers: Type", choicesType, "Choose animation type:", "value");
     if (!selectionType) selectionType === "daggers";
     if (selectionType === "daggers") {
@@ -122,6 +123,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         throwHue = 50;
         hue2 = 20;
     }
+    await mba.clearPlayerDialogMessage();
 
     let offset = [
         { x: 0, y: -0.55 },

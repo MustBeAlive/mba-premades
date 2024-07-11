@@ -601,24 +601,7 @@ export function registerSettings() {
     });
     addMenuSetting('Corpse Hider', 'Mechanics');
 
-    game.settings.register(moduleName, 'Kuo-toa', {
-        'name': 'Kuo-toa Sticky Shield',
-        'hint': 'Включает автоматизацию способности Kuo-toa Sticky Shield.',
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false,
-        'onChange': value => {
-            if (value) {
-                Hooks.on('midi-qol.AttackRollComplete', macros.monsters.kuotoa.stickyShield);
-            } else {
-                Hooks.off('midi-qol.AttackRollComplete', macros.monsters.kuotoa.stickyShield);
-            }
-        }
-    });
-    addMenuSetting('Kuo-toa', 'Monster Features');
-
-    game.settings.register(moduleName, 'Nine Lives', {
+    game.settings.register(moduleName, 'Chwinga', {
         'name': "Chwinga's Magical Secret: Nine Lives",
         'hint': 'Включает автоматизацию Charm of Nine Lives.',
         'scope': 'world',
@@ -633,11 +616,79 @@ export function registerSettings() {
             }
         }
     });
-    addMenuSetting('Nine Lives', 'Monster Features');
+    addMenuSetting('Chwinga', 'Monster Features');
+
+    game.settings.register(moduleName, 'Goblin Boss', {
+        'name': 'Goblin Boss: Redirect Attack',
+        'hint': 'Включает автоматизацию способности Goblin Boss Redirect Attack.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preAttackRoll', macros.monsters.goblinBoss.redirectAttack);
+            } else {
+                Hooks.off('midi-qol.preAttackRoll', macros.monsters.goblinBoss.redirectAttack);
+            }
+        }
+    });
+    addMenuSetting('Goblin Boss', 'Monster Features');
+
+    game.settings.register(moduleName, 'Kuo-toa', {
+        'name': 'Kuo-toa: Sticky Shield',
+        'hint': 'Включает автоматизацию способности Kuo-toa "Sticky Shield".',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.AttackRollComplete', macros.monsters.kuotoa.stickyShield);
+            } else {
+                Hooks.off('midi-qol.AttackRollComplete', macros.monsters.kuotoa.stickyShield);
+            }
+        }
+    });
+    addMenuSetting('Kuo-toa', 'Monster Features');
+
+    game.settings.register(moduleName, 'Merregon', {
+        'name': 'Merregon: Loyal Bodyguard',
+        'hint': 'Включает автоматизацию способности Merregon "Redirect Attack".',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preAttackRoll', macros.monsters.merregon.loyalBodyguard);
+            } else {
+                Hooks.off('midi-qol.preAttackRoll', macros.monsters.merregon.loyalBodyguard);
+            }
+        }
+    });
+    addMenuSetting('Merregon', 'Monster Features');
+
+    game.settings.register(moduleName, 'Mimic', {
+        'name': 'Mimic: Adhesive',
+        'hint': 'Включает автоматизацию способности Mimic "Adhesive".',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.AttackRollComplete', macros.monsters.mimic.adhesivePassive);
+            } else {
+                Hooks.off('midi-qol.AttackRollComplete', macros.monsters.mimic.adhesivePassive);
+            }
+        }
+    });
+    addMenuSetting('Mimic', 'Monster Features');
 
     game.settings.register(moduleName, 'Relentless', {
         'name': 'Relentless',
-        'hint': 'Включает автоматизацию способности Relentless у монстров Boar, Giant Boar.',
+        'hint': 'Включает автоматизацию способности "Relentless" у Boar, Giant Boar и Wereboar.',
         'scope': 'world',
         'config': false,
         'type': Boolean,
@@ -651,6 +702,23 @@ export function registerSettings() {
         }
     });
     addMenuSetting('Relentless', 'Monster Features');
+
+    game.settings.register(moduleName, 'Quickling', {
+        'name': 'Quickling: Blurred Movement',
+        'hint': 'Включает автоматизацию способности Quickling "Blurred Movement".',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preAttackRoll', macros.monsters.quickling.blurredMovement);
+            } else {
+                Hooks.off('midi-qol.preAttackRoll', macros.monsters.quickling.blurredMovement);
+            }
+        }
+    });
+    addMenuSetting('Quickling', 'Monster Features');
 
     game.settings.register(moduleName, 'Undead Fortitude', {
         'name': 'Undead Fortitude',

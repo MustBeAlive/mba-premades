@@ -4,7 +4,9 @@ import {mba} from "../../../helperFunctions.js";
 //To do: check fo bugs, animations
 
 async function cast({speaker, actor, token, character, item, args, scope, workflow}) {
+    await mba.playerDialogMessage();
     let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Choose which targets to keep');
+    await mba.clearPlayerDialogMessage();
     let newTargets = selection.inputs.filter(i => i).slice(0);
     mba.updateTargets(newTargets);
 }
@@ -56,7 +58,9 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                 'name': workflow.item.name,
                 'icon': workflow.item.img,
                 'origin': workflow.item.uuid,
-                'description': "You heard a divine word imbued with the power that shaped the world at the dawn of creation and are deafened for the next minute.",
+                'description': `
+                    <p>You heard a divine word imbued with the power that shaped the world at the dawn of creation and are @UUID[Compendium.mba-premades.MBA SRD.Item.GmOl4GcI3fguwIJc]{Deafened} for the next minute.</p>
+                `,
                 'duration': {
                     'seconds': 60
                 },
@@ -85,7 +89,9 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                 'name': workflow.item.name,
                 'icon': workflow.item.img,
                 'origin': workflow.item.uuid,
-                'description': "You heard a divine word imbued with the power that shaped the world at the dawn of creation and are blinded and deafened for the next 10 minutes.",
+                'description': `
+                    <p>You heard a divine word imbued with the power that shaped the world at the dawn of creation and are @UUID[Compendium.mba-premades.MBA SRD.Item.3NxmNhGQQqUDnu73]{Blinded} and @UUID[Compendium.mba-premades.MBA SRD.Item.GmOl4GcI3fguwIJc]{Deafened} for the next 10 minutes.</p>
+                `,
                 'duration': {
                     'seconds': 600
                 },
@@ -120,7 +126,9 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                 'name': workflow.item.name,
                 'icon': workflow.item.img,
                 'origin': workflow.item.uuid,
-                'description': "You heard a divine word, imbued with the power that shaped the world at the dawn of creation and are blinded, deafened and stunned for the next hour.",
+                'description': `
+                    <p>You heard a divine word, imbued with the power that shaped the world at the dawn of creation and are @UUID[Compendium.mba-premades.MBA SRD.Item.3NxmNhGQQqUDnu73]{Blinded}, @UUID[Compendium.mba-premades.MBA SRD.Item.GmOl4GcI3fguwIJc]{Deafened} and @UUID[Compendium.mba-premades.MBA SRD.Item.O1gS8bqw9PJTuCAh]{Stunned} for the next hour.</p>
+                `,
                 'duration': {
                     'seconds': 3600
                 },

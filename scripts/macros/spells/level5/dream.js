@@ -283,7 +283,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     }
     else if (selectionGM1 === "awake") {
         let choicesAwake = [["Yes, wait for the target to fall asleep", "yes"], ["No, cancel casting Dream", "no"]];
+        await mba.playerDialogMessage();
         let selectionAwake = await mba.dialog("Target is awake. Would you like to wait?", choicesAwake);
+        await mba.clearPlayerDialogMessage();
         if (!selectionAwake || selectionAwake === "no") return;
         if (selectionAwake === "yes") {
             let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Dream: Retry", false);
@@ -336,13 +338,17 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     }
     else if (selectionGM1 === "asleep") {
         let choicesAsleep = [["Friendly (dialog)", "dream"], ["Nightmare (save)", "nightmare"]];
+        await mba.playerDialogMessage();
         let selectionAsleep = await mba.dialog("Choose dream type:", choicesAsleep);
+        await mba.clearPlayerDialogMessage();
         if (!selectionAsleep) return;
         if (selectionAsleep === "dream") await mba.createEffect(workflow.actor, effectData);
         else if (selectionAsleep === "nightmare") {
             let disadvantage = false;
             let choicesNightmare = [["Body part, lock of hair, clipping from a nail or similar", "yes"], ["Nothing", "no"]];
+            await mba.playerDialogMessage();
             let selectionNightmare = await mba.dialog("Do you have anything of the above?", choicesNightmare);
+            await mba.clearPlayerDialogMessage();
             if (!selectionNightmare) return;
             if (selectionNightmare === "yes") disadvantage = true;
             let choicesGM2 = [
@@ -416,7 +422,9 @@ async function wait({ speaker, actor, token, character, item, args, scope, workf
     }
     else if (selectionGM1 === "asleep") {
         let choicesAsleep = [["Friendly (dialog)", "dream"], ["Nightmare (save)", "nightmare"]];
+        await mba.playerDialogMessage();
         let selectionAsleep = await mba.dialog("Choose dream type:", choicesAsleep);
+        await mba.clearPlayerDialogMessage();
         if (!selectionAsleep) return;
         if (selectionAsleep === "dream") {
             await mba.removeEffect(effect);
@@ -426,7 +434,9 @@ async function wait({ speaker, actor, token, character, item, args, scope, workf
         else if (selectionAsleep === "nightmare") {
             let disadvantage = false;
             let choicesNightmare = [["Body part, lock of hair, clipping from a nail or similar", "yes"], ["Nothing", "no"]];
+            await mba.playerDialogMessage();
             let selectionNightmare = await mba.dialog("Do you have anything of the above?", choicesNightmare);
+            await mba.clearPlayerDialogMessage();
             if (!selectionNightmare) return;
             if (selectionNightmare === "yes") disadvantage = true;
             let saveDC = await mba.getSpellDC(workflow.item);

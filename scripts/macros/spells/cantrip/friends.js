@@ -2,6 +2,7 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function friends({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
+    if (!target) return;
     const effectDataSource = {
         'name': workflow.item.name,
         'icon': workflow.item.img,

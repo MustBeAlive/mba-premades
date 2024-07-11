@@ -338,7 +338,9 @@ export async function ropeTrick({ speaker, actor, token, character, item, args, 
         ui.notifications.warn("Unable to find scene! (Rope Trick");
         return;
     }
+    await mba.playerDialogMessage();
     let position = await mba.aimCrosshair(workflow.token, 5, workflow.item.img, 2, 1);
+    await mba.clearPlayerDialogMessage();
     if (position.canceled) {
         ui.notifications.warn("Failed to choose position, returning!");
         let ropeTrickSceneID = game.scenes.filter(s => s.name === "Rope Trick").map(i => i.id);

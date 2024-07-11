@@ -71,7 +71,9 @@ export async function scorchingRay({ speaker, actor, token, character, item, arg
             ui.notifications.warn("No targets selected, try again!");
             return;
         }
+        await mba.playerDialogMessage();
         let selection = await mba.selectTarget("Scorching Ray", constants.okCancel, targets, true, 'number', null, false, `Select your targets: (Total Rays: ${maxRays})`);
+        await mba.clearPlayerDialogMessage();
         if (!selection.buttons) {
             queue.remove(workflow.item.uuid);
             await Sequencer.EffectManager.endEffects({ 'name': 'Scorching Ray', 'object': workflow.token });

@@ -12,7 +12,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Land", "Land", "modules/mba-premades/icons/spells/level2/summon_beast/spirit_land.webp"],
         ["Water", "Water", "modules/mba-premades/icons/spells/level2/summon_beast/spirit_water.webp"]
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.selectImage('Summon Beast', choices, "<b>Choose type:</b>", "both");
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     let avatarImg = selection[1];
     let multiAttackFeatureData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Bestial Spirit: Multiattack', false);

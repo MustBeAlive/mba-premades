@@ -2,9 +2,9 @@ import {mba} from "../../../helperFunctions.js";
 import {queue} from "../../mechanics/queue.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Shadow Blade: Sword', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Shadow Blade: Sword", false);
     if (!featureData) return;
-    let featureData2 = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Shadow Blade: Evoke', false);
+    let featureData2 = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Shadow Blade: Evoke", false);
     if (!featureData2) {
         ui.notifications.warn("Unable to find item in compendium! (Shadow Blade: Evoke)");
         return
@@ -26,10 +26,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             diceNum = 5;
             break;
     }
-    featureData.system.damage.parts = [[diceNum + 'd8[psychic ] + @mod', 'psychic']];
+    featureData.system.damage.parts = [[`${diceNum}d8[psychic]`, "psychic"]];
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Shadow Blade` })
-        await warpgate.revert(token.document, 'Shadow Blade');
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} ShaBla` })
+        await warpgate.revert(token.document, "Shadow Blade");
     }
     const effectData = {
         'name': workflow.item.name,
@@ -79,9 +79,15 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     };
     let options = {
         'permanent': false,
-        'name': 'Shadow Blade',
-        'description': 'Shadow Blade'
+        'name': "Shadow Blade",
+        'description': "Shadow Blade"
     };
+    let rotation = 90;
+    let mirrorY = true;
+        if (workflow.token.document.texture.scaleX === -1) {
+            rotation = (270);
+            mirrorY = false;
+    }
 
     await new Sequence()
 
@@ -90,7 +96,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .delay(500)
         .file(`jb2a.particles.outward.red.02.03`)
-        .attachTo(token, { offset: { y: -0.25 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { y: -0.25 }, gridUnits: true, followRotation: false })
         .scaleToObject(1.2)
         .playbackRate(2)
         .duration(2000)
@@ -104,33 +110,33 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .delay(1050)
         .file("jb2a.divine_smite.caster.reversed.dark_purple")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(2.2)
         .startTime(900)
         .fadeIn(200)
 
         .effect()
         .file("jb2a.divine_smite.caster.dark_purple")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .scaleToObject(1.85)
         .belowTokens()
         .waitUntilFinished(-1200)
 
         .effect()
         .file("jb2a.spiritual_weapon.longsword.01.spectral.02.orange")
-        .attachTo(token, { followRotation: true, local: true })
+        .attachTo(workflow.token, { followRotation: true })
         .scaleToObject(1.3, { considerTokenScale: true })
         .fadeIn(500)
         .fadeOut(1000)
         .scaleIn(0, 2000, { ease: "easeOutElastic" })
         .scaleOut(0, 500, { ease: "easeOutCubic" })
-        .spriteOffset({ x: 0.4 * token.document.width, y: -0.1 * token.document.width }, { gridUnits: true })
-        .spriteRotation(90)
+        .spriteOffset({ x: 0.4 * workflow.token.document.width, y: -0.1 * workflow.token.document.width }, { gridUnits: true })
+        .spriteRotation(rotation)
         .mirrorX()
-        .mirrorY()
+        .mirrorY(mirrorY)
         .filter("ColorMatrix", { hue: 250 })
         .persist()
-        .name(`${token.document.name} Shadow Blade`)
+        .name(`${workflow.token.document.name} ShaBla`)
 
         .thenDo(async () => {
             await warpgate.mutate(workflow.token.document, updates, {}, options);
@@ -144,6 +150,12 @@ async function evoke({ speaker, actor, token, character, item, args, scope, work
     if (!effect) return;
     let evoke = effect.flags['mba-premades']?.spell?.shadowBlade?.evoke;
     let updates;
+    let rotation = 90;
+    let mirrorY = true;
+        if (workflow.token.document.texture.scaleX === -1) {
+            rotation = (270);
+            mirrorY = false;
+    }
     if (evoke === true) {
         updates = {
             'flags': {
@@ -157,7 +169,7 @@ async function evoke({ speaker, actor, token, character, item, args, scope, work
             }
         };
         await mba.updateEffect(effect, updates);
-        await Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} Shadow Blade`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} ShaBla` })
     }
     else if (evoke === false) {
         updates = {
@@ -175,7 +187,7 @@ async function evoke({ speaker, actor, token, character, item, args, scope, work
 
             .effect()
             .file(`jb2a.particles.outward.red.02.03`)
-            .attachTo(token, { offset: { y: -0.25 }, gridUnits: true, followRotation: false })
+            .attachTo(workflow.token, { offset: { y: -0.25 }, gridUnits: true, followRotation: false })
             .scaleToObject(1.2)
             .delay(500)
             .duration(2000)
@@ -189,7 +201,7 @@ async function evoke({ speaker, actor, token, character, item, args, scope, work
 
             .effect()
             .file("jb2a.divine_smite.caster.reversed.dark_purple")
-            .attachTo(token)
+            .attachTo(workflow.token)
             .scaleToObject(2.2)
             .delay(1050)
             .startTime(900)
@@ -197,26 +209,26 @@ async function evoke({ speaker, actor, token, character, item, args, scope, work
 
             .effect()
             .file("jb2a.divine_smite.caster.dark_purple")
-            .attachTo(token)
+            .attachTo(workflow.token)
             .scaleToObject(1.85)
             .belowTokens()
             .waitUntilFinished(-1200)
 
             .effect()
             .file("jb2a.spiritual_weapon.longsword.01.spectral.02.orange")
-            .attachTo(token, { followRotation: true, local: true })
+            .attachTo(workflow.token, { followRotation: true })
             .scaleToObject(1.3, { considerTokenScale: true })
             .fadeIn(500)
             .fadeOut(1000)
             .scaleIn(0, 2000, { ease: "easeOutElastic" })
             .scaleOut(0, 500, { ease: "easeOutCubic" })
-            .spriteOffset({ x: 0.4 * token.document.width, y: -0.1 * token.document.width }, { gridUnits: true })
-            .spriteRotation(90)
+            .spriteOffset({ x: 0.4 * workflow.token.document.width, y: -0.1 * workflow.token.document.width }, { gridUnits: true })
+            .spriteRotation(rotation)
             .mirrorX()
-            .mirrorY()
+            .mirrorY(mirrorY)
             .filter("ColorMatrix", { hue: 250 })
             .persist()
-            .name(`${token.document.name} Shadow Blade`)
+            .name(`${workflow.token.document.name} ShaBla`)
 
             .thenDo(async () => {
                 await mba.updateEffect(effect, updates)
@@ -249,14 +261,20 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
 async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let type = "melee";
+    let rotation = 90;
+    let mirrorY = true;
+        if (workflow.token.document.texture.scaleX === -1) {
+            rotation = (270);
+            mirrorY = false;
+    }
     if (mba.getDistance(workflow.token, target) > 5) type = "ranged";
     if (type === "melee") {
-        Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} Shadow Blade`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} ShaBla` })
         await new Sequence()
 
             .effect()
             .file("jb2a.greatsword.melee.fire.dark_purple")
-            .attachTo(token)
+            .attachTo(workflow.token)
             .stretchTo(target)
             .mirrorY()
             .size(1.2)
@@ -270,19 +288,19 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
 
             .effect()
             .file("jb2a.spiritual_weapon.longsword.01.spectral.02.orange")
-            .attachTo(token, { followRotation: true, local: true })
+            .attachTo(workflow.token, { followRotation: true })
             .scaleToObject(1.3, { considerTokenScale: true })
             .fadeIn(500)
             .fadeOut(1000)
             .scaleIn(0, 2000, { ease: "easeOutElastic" })
             .scaleOut(0, 500, { ease: "easeOutCubic" })
-            .spriteOffset({ x: 0.4 * token.document.width, y: -0.1 * token.document.width }, { gridUnits: true })
-            .spriteRotation(90)
+            .spriteOffset({ x: 0.4 * workflow.token.document.width, y: -0.1 * workflow.token.document.width }, { gridUnits: true })
+            .spriteRotation(rotation)
             .mirrorX()
-            .mirrorY()
+            .mirrorY(mirrorY)
             .filter("ColorMatrix", { hue: 250 })
             .persist()
-            .name(`${token.document.name} Shadow Blade`)
+            .name(`${workflow.token.document.name} ShaBla`)
 
             .play()
     }
@@ -302,12 +320,11 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
                 }
             }
         };
-
         new Sequence()
 
             .effect()
             .file("jb2a.sword.throw.blue")
-            .attachTo(token)
+            .attachTo(workflow.token)
             .stretchTo(target)
             .filter("ColorMatrix", { hue: 90 })
             .missed(!workflow.hitTargets.size)
@@ -315,7 +332,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
             .play()
 
         await mba.updateEffect(effect, updates);
-        await Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} Shadow Blade`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} ShaBla` })
     }
 }
 

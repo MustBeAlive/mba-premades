@@ -203,6 +203,10 @@ export let mba = {
         let lastMessage = game.messages.find(m => m.flags?.['mba-premades']?.gmDialogMessage && m.user.id === game.user.id);
         if (lastMessage) await lastMessage.delete();
     },
+    'clearPlayerDialogMessage': async function _clearPlayerDialogMessage() {
+        let lastMessage = game.messages.find(m => m.flags?.['mba-premades']?.playerDialogMessage && m.user.id === game.user.id);
+        if (lastMessage) await lastMessage.delete();
+    },
     'clearThirdPartyReactionMessage': async function _clearThirdPartyReactionMessage(key = true) {
         let lastMessage = game.messages.find(m => m.flags?.['mba-premades']?.thirdPartyReactionMessage === key && m.user.id === game.user.id);
         if (lastMessage) await lastMessage.delete();
@@ -540,7 +544,8 @@ export let mba = {
         let message = '<hr>Waiting for GM dialogue selection...';
         if (lastMessage) {
             await lastMessage.update({ 'content': message });
-        } else {
+        }
+        else {
             ChatMessage.create({
                 'speaker': { 'alias': name },
                 'content': message,
@@ -841,7 +846,7 @@ export let mba = {
     'selectDocument': async function selectDocument(title, documents, useUuids, displayTooltips = false, alphabetical = false, cr = false) {
         if (alphabetical) {
             documents = documents.sort((a, b) => {
-                return a.name.localeCompare(b.name, 'en', {'sensitivity': 'base'});
+                return a.name.localeCompare(b.name, 'en', { 'sensitivity': 'base' });
             });
         }
         if (cr) {
@@ -854,7 +859,7 @@ export let mba = {
                 dialog;
             for (let i of documents) {
                 buttons[i.name] = {
-                    label: `<img src='${i.img}' width='50' height='50' style='border: 0px; float: left'><p style='padding: 1%; font-size: 15px'` + (displayTooltips ? ` data-tooltip="${i.system.description.value.replace(/<[^>]*>?/gm, '')}"` : ``) + `> `+ i.name + (i.system?.details?.cr != undefined ? ` (CR ${mba.decimalToFraction(i.system?.details?.cr)})` : ``) + `</p>`,
+                    label: `<img src='${i.img}' width='50' height='50' style='border: 0px; float: left'><p style='padding: 1%; font-size: 15px'` + (displayTooltips ? ` data-tooltip="${i.system.description.value.replace(/<[^>]*>?/gm, '')}"` : ``) + `> ` + i.name + (i.system?.details?.cr != undefined ? ` (CR ${mba.decimalToFraction(i.system?.details?.cr)})` : ``) + `</p>`,
                     callback: () => {
                         if (useUuids) {
                             resolve([i.uuid]);
@@ -865,7 +870,7 @@ export let mba = {
                 };
             }
             let height = (Object.keys(buttons).length * 56 + 46);
-            if (Object.keys(buttons).length > 14 ) height = 850;
+            if (Object.keys(buttons).length > 14) height = 850;
             dialog = new Dialog(
                 {
                     title: title,
@@ -882,10 +887,10 @@ export let mba = {
             });
         });
     },
-'selectDocuments': async function selectDocuments(title, documents, useUuids, displayTooltips = false, alphabetical = false, cr = false) {
+    'selectDocuments': async function selectDocuments(title, documents, useUuids, displayTooltips = false, alphabetical = false, cr = false) {
         if (alphabetical) {
             documents = documents.sort((a, b) => {
-                return a.name.localeCompare(b.name, 'en', {'sensitivity': 'base'});
+                return a.name.localeCompare(b.name, 'en', { 'sensitivity': 'base' });
             });
         }
         if (cr) {
@@ -894,7 +899,7 @@ export let mba = {
             });
         }
         return await new Promise(async (resolve) => {
-            let buttons = {cancel: {'label': `Cancel`, callback: () => resolve(false)}, 'confirm': {'label': `Confirm`, callback: (html) => getDocuments(html, documents)}},
+            let buttons = { cancel: { 'label': `Cancel`, callback: () => resolve(false) }, 'confirm': { 'label': `Confirm`, callback: (html) => getDocuments(html, documents) } },
                 dialog;
             let content = `<form>`;
             content += `<datalist id = 'defaultNumbers'>`;
@@ -915,7 +920,7 @@ export let mba = {
             }
             content += `</form>`;
             let height = (documents.length * 53 + 83);
-            if (documents.length > 14 ) height = 850;
+            if (documents.length > 14) height = 850;
             dialog = new Dialog(
                 {
                     title: title,
@@ -1029,7 +1034,8 @@ export let mba = {
             let name;
             if (game.settings.get('mba-premades', 'Show Names')) {
                 name = i.document.name;
-            } else {
+            }
+            else {
                 if (i.document.disposition <= 0) {
                     name = 'Unknown Target (' + number + ')';
                     number++;
@@ -1039,7 +1045,8 @@ export let mba = {
             }
             if (coverToken && !reverseCover) {
                 name += ' [' + mba.checkCover(coverToken, i, undefined, true) + ']';
-            } else if (coverToken) {
+            }
+            else if (coverToken) {
                 name += ' [' + mba.checkCover(i, coverToken, undefined, true) + ']';
             }
             if (displayDistance && coverToken) {
@@ -1057,7 +1064,8 @@ export let mba = {
                     'options': false,
                     'value': value
                 });
-            } else if (type === 'one') {
+            }
+            else if (type === 'one') {
                 generatedInputs.push({
                     'label': html,
                     'type': 'radio',
@@ -1065,19 +1073,22 @@ export let mba = {
                     'value': value
                 });
                 isFirst = false;
-            } else if (type === 'number') {
+            }
+            else if (type === 'number') {
                 generatedInputs.push({
                     'label': html,
                     'type': 'number'
                 });
-            } else if (type === 'select') {
+            }
+            else if (type === 'select') {
                 generatedInputs.push({
                     'label': html,
                     'type': 'select',
                     'options': selectOptions,
                     'value': value
                 });
-            } else return { 'buttons': false };
+            }
+            else return { 'buttons': false };
         }
         if (fixTargets) {
             generatedInputs.push({
@@ -1099,7 +1110,7 @@ export let mba = {
                     t.style.flexFlow = 'row-reverse';
                     t.style.alignItems = 'center';
                     t.style.justifyContent = 'flex-end';
-                    if (type === 'one') t.addEventListener('click', function () {t.getElementsByTagName('input')[0].checked = true;});
+                    if (type === 'one') t.addEventListener('click', function () { t.getElementsByTagName('input')[0].checked = true; });
                 }
             }
             let ths = html[0].getElementsByTagName('th');
@@ -1149,6 +1160,25 @@ export let mba = {
             }
         }
         return selection;
+    },
+    'playerDialogMessage': async function _playerDialogMessage() {
+        let lastMessage = game.messages.find(m => m.flags?.['mba-premades']?.playerDialogMessage);
+        let message = '<hr>Waiting for player dialogue selection...';
+        if (lastMessage) {
+            await lastMessage.update({ 'content': message });
+        }
+        else {
+            ChatMessage.create({
+                'speaker': { 'alias': name },
+                'content': message,
+                'blind': false,
+                'flags': {
+                    'mba-premades': {
+                        'playerDialogMessage': true
+                    }
+                }
+            });
+        }
     },
     'setConfiguration': async function _setConfiguration(item, key, value) {
         return await item.setFlag('mba-premades', 'configuration.' + key.toLowerCase().split(' ').join('-').toLowerCase(), value);
@@ -1248,10 +1278,10 @@ export let mba = {
         let subMessage = dialogMessage ? 'a dialog selection' : 'a 3rd party reaction';
         let message = '<hr>Waiting for a ' + subMessage + ' from:<br><b>' + playerName + '</b>';
         if (lastMessage) {
-            await lastMessage.update({'content': message});
+            await lastMessage.update({ 'content': message });
         } else {
             await ChatMessage.create({
-                'speaker': {'alias': 'MBA Premades'},
+                'speaker': { 'alias': 'MBA Premades' },
                 'content': message,
                 'whisper': game.users.filter(u => u.isGM).map(u => u.id),
                 'blind': false,

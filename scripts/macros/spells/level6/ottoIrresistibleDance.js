@@ -3,7 +3,7 @@ import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    if (!mba.checkTrait(target.actor, 'ci', 'charmed')) return;
+    if (!mba.checkTrait(target.actor, "ci", "charmed")) return;
     await mba.createEffect(target.actor, constants.immunityEffectData);
 }
 
@@ -61,7 +61,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': 'actionSave=true, saveAbility=wis, saveDC=' + mbaPremades.helpers.getSpellDC(workflow.item) + ' , saveMagic=true, name=Irresistable Dance',
+                'value': `actionSave=true, saveAbility=wis, saveDC=${mbaPremades.helpers.getSpellDC(workflow.item)}, saveMagic=true, name=Irresistable Dance, killAnim=true`,
                 'priority': 20
             },
         ],

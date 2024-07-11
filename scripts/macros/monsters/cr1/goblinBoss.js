@@ -1,37 +1,53 @@
 import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
 
-// To do: target substitution
-
-async function redirectAttack({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let goblins = Array.from(mba.findNearby(workflow.token, 5, "ally", false, false).filter(i => i.document.name.includes("Goblin")));
-    if (!goblins.length) {
-        ui.notifications.warn("No goblins around, unable to redirect attack!");
+async function redirectAttack(workflow) {
+    let goblin = workflow.targets.first();
+    if (goblin.document.name != "Goblin Boss") return;
+    if (mba.findEffect(goblin.actor, "Reaction")) {
         return;
     }
-    let target;
-    if (goblins.length === 1) target = goblins[0].document;
-    if (!target) {
-        let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, goblins, true, 'one', undefined, false, 'Choose goblin to swap with:');
-        let [newTarget] = selection.inputs.filter(i => i).slice(0);
-        target = await fromUuid(newTarget);
-    }
-    if (!target) {
-        ui.notifications.warn("Unable to select target!");
+    let nearbyGoblins = Array.from(mba.findNearby(goblin, 5, "ally", false, false).filter(t => t.document.name.includes("Goblin")));
+    if (!nearbyGoblins.length) return;
+    let queueSetup = await queue.setup(workflow.item.uuid, 'redirectAttack', 101);
+    if (!queueSetup) return;
+    await mba.gmDialogMessage();
+    let reaction = await mba.remoteDialog("Goblin Boss: Redirect Attack", constants.yesNo, mba.firstOwner(goblin).id, `<b>Use Redirect Attack?</b>`);
+    if (!reaction) {
+        await mba.clearGMDialogMessage();
+        queue.remove(workflow.item.uuid);
         return;
     }
-
+    let selection = await mba.remoteSelectTarget(mba.firstOwner(goblin).id, "Redirect Attack", constants.okCancel, nearbyGoblins, false, "one", undefined, false, "Select target to reflect the spell at:");
+    await mba.clearGMDialogMessage();
+    if (!selection.buttons) {
+        queue.remove(workflow.item.uuid);
+        return;
+    }
+    let [newTargetId] = selection.inputs.filter(i => i).slice(0);
+    let newTargetDoc = canvas.scene.tokens.get(newTargetId);
+    let newTarget = newTargetDoc.object;
     new Sequence()
 
         .animation()
-        .on(workflow.token)
-        .moveTowards(target.object)
+        .on(goblin)
+        .moveTowards(newTarget)
         .snapToGrid()
-        
+
         .animation()
-        .on(target.object)
-        .moveTowards(workflow.token)
-        .snapToGrid()     
+        .on(newTarget)
+        .moveTowards(goblin)
+        .snapToGrid()
+
+        .thenDo(async () => {
+            let feature = await mba.getItem(goblin.actor, "Redirect Attack");
+            if (feature) await feature.displayCard();
+            workflow.targets.delete(goblin);
+            workflow.targets.add(newTarget);
+            await mba.addCondition(goblin.actor, "Reaction");
+            queue.remove(workflow.item.uuid);
+        })
 
         .play()
 }

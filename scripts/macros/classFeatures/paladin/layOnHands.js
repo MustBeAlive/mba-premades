@@ -20,8 +20,12 @@ export async function layOnHands({ speaker, actor, token, character, item, args,
     let choicesType = [["Restore Hitpoints", "heal", "modules/mba-premades/icons/class/paladin/lay_on_hands_heal.webp"]];
     if (uses >= 5) choicesType.push(["Remove Poison/Disease", "poisonDisease", "modules/mba-premades/icons/class/paladin/lay_on_hands_cure.webp"]);
     choicesType.push(["Cancel", false, "modules/mba-premades/icons/conditions/incapacitated.webp"]);
+    await mba.playerDialogMessage();
     let selectionType = await mba.selectImage("Lay on Hands", choicesType, `What would you like to do to <u>${target.document.name}</u>?<br>Lay on Hands Pool: ${uses}`, "value");
-    if (!selectionType) return;
+    if (!selectionType) {
+        await mba.clearPlayerDialogMessage();
+        return;
+    }
     if (selectionType === "heal") {
         let inputs = [
             {
@@ -30,10 +34,14 @@ export async function layOnHands({ speaker, actor, token, character, item, args,
             }
         ];
         let selectionHeal = await mba.menu("Lay on Hands: Restore Hitpoints", constants.okCancel, inputs, true);
-        if (!selectionHeal.buttons) return;
+        if (!selectionHeal.buttons) {
+            await mba.clearPlayerDialogMessage();
+            return;
+        }
         let healAmmount = selectionHeal.inputs[0];
         if (healAmmount > uses) {
             ui.notifications.warn("Input is higher than remaining Healing Pool!");
+            await mba.clearPlayerDialogMessage();
             return;
         }
         let healingRoll = await mba.damageRoll(workflow, `${healAmmount}[healing]`);
@@ -59,6 +67,7 @@ export async function layOnHands({ speaker, actor, token, character, item, args,
             .playbackRate(0.9)
 
             .thenDo(async () => {
+                await mba.clearPlayerDialogMessage();
                 await mba.applyWorkflowDamage(workflow.token, healingRoll, "healing", [target], undefined, workflow.itemCardId);
                 await feature.update({ "system.uses.value": uses -= healAmmount });
             })
@@ -68,11 +77,15 @@ export async function layOnHands({ speaker, actor, token, character, item, args,
     else if (selectionType === "poisonDisease") {
         let choicesType2 = [["Cure Disease", "disease"], ["Neutralize Poison", "poison"], ["Cancel", false]];
         let selectionType2 = await mba.dialog("Lay on Hands", choicesType2, "<b>What would you like to do?</b>");
-        if (!selectionType2) return;
+        if (!selectionType2) {
+            await mba.clearPlayerDialogMessage();
+            return;
+        }
         if (selectionType2 === "disease") {
             let diseases = target.actor.effects.filter(e => e.flags['mba-premades']?.isDisease === true).filter(e => e.flags['mba-premades']?.lesserRestoration === true);
             if (!diseases.length) {
                 ui.notifications.info("Target is not diseased!");
+                await mba.clearPlayerDialogMessage();
                 return;
             }
             let choicesDiseases = [];
@@ -83,7 +96,10 @@ export async function layOnHands({ speaker, actor, token, character, item, args,
             }
             choicesDiseases.push(["Cancel", false, "modules/mba-premades/icons/conditions/incapacitated.webp"]);
             let selectionDisease = await mba.selectImage("Lay on Hands: Disease", choicesDiseases, "<b>Choose disease to cure:</b>", "value");
-            if (!selectionDisease) return;
+            if (!selectionDisease) {
+                await mba.clearPlayerDialogMessage();
+                return;
+            }
             let effectToRemove = await mba.findEffect(target.actor, selectionDisease);
             if (effectToRemove) {
                 new Sequence()
@@ -108,6 +124,7 @@ export async function layOnHands({ speaker, actor, token, character, item, args,
                     .playbackRate(0.9)
 
                     .thenDo(async () => {
+                        await mba.clearPlayerDialogMessage();
                         await feature.update({ "system.uses.value": uses -= 5 });
                         await mba.removeEffect(effectToRemove);
                     })
@@ -119,6 +136,7 @@ export async function layOnHands({ speaker, actor, token, character, item, args,
             let effectsFirst = target.actor.effects.filter(i => i.name.includes("Poison"));
             if (!effectsFirst.length) {
                 ui.notifications.info("Target is not poisoned!");
+                await mba.clearPlayerDialogMessage();
                 return;
             }
             let effectToRemove;
@@ -126,6 +144,7 @@ export async function layOnHands({ speaker, actor, token, character, item, args,
                 effectToRemove = await mba.findEffect(target.actor, effectsFirst[0].name);
                 if (!effectToRemove) {
                     ui.notifications.warn(`Unable to find Poison: ${effectsFirst[0].name}`);
+                    await mba.clearPlayerDialogMessage();
                     return;
                 }
             } else {
@@ -134,11 +153,15 @@ export async function layOnHands({ speaker, actor, token, character, item, args,
                     effectToRemove = await mba.findEffect(target.actor, effects[0].name);
                     if (!effectToRemove) {
                         ui.notifications.warn(`Unable to find Poison: ${effects[0].name}`);
+                        await mba.clearPlayerDialogMessage();
                         return;
                     }
                 } else {
                     effectToRemove = await mba.selectEffect("Lay on Hands: Poison", effects, "<b>Choose one effect:</b>", false);
-                    if (!effectToRemove) return;
+                    if (!effectToRemove) {
+                        await mba.clearPlayerDialogMessage();
+                        return;
+                    }
                 }
             }
             if (effectToRemove) {
@@ -164,6 +187,7 @@ export async function layOnHands({ speaker, actor, token, character, item, args,
                     .playbackRate(0.9)
 
                     .thenDo(async () => {
+                        await mba.clearPlayerDialogMessage();
                         await feature.update({ "system.uses.value": uses -= 5 });
                         await mba.removeEffect(effectToRemove);
                     })

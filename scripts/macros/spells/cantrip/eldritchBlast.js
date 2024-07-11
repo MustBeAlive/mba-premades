@@ -4,6 +4,7 @@ import {queue} from "../../mechanics/queue.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
+    if (!target) return;
     let random = false;
     let animation = "jb2a.eldritch_blast.pink";
     if (random === true) {

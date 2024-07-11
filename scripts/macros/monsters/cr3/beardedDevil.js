@@ -78,7 +78,7 @@ async function beard({ speaker, actor, token, character, item, args, scope, work
 async function glaive({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.hitTargets.size) return;
     let target = workflow.targets.first();
-    let effect = await mba.findEffect(target.actor, "Infernal Wound");
+    let effect = await mba.findEffect(target.actor, "Bearded Devil: Infernal Wound");
     if (effect) {
         let newStacks = effect.flags['mba-premades']?.feature?.infernalWound?.stacks;
         if (!newStacks) {
@@ -120,12 +120,12 @@ async function glaive({ speaker, actor, token, character, item, args, scope, wor
 
             .effect()
             .file("jaamod.sequencer_fx_master.blood_splat.red.2")
-            .delay(100)
             .attachTo(target)
-            .scaleIn(0, 500, { 'ease': 'easeOutCubic' })
             .scaleToObject(1.65 * target.document.texture.scaleX)
+            .delay(100)
             .duration(2500)
             .fadeOut(1000)
+            .scaleIn(0, 500, { 'ease': 'easeOutCubic' })
             .randomRotation()
             .belowTokens()
 
@@ -147,7 +147,7 @@ async function glaive({ speaker, actor, token, character, item, args, scope, wor
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow.failedSaves.size) return;
     let effectData = {
-        'name': "Infernal Wound",
+        'name': "Bearded Devil: Infernal Wound",
         'icon': "modules/mba-premades/icons/generic/infernal_wound.webp",
         'origin': workflow.item.uuid,
         'description': `
@@ -183,17 +183,16 @@ async function glaive({ speaker, actor, token, character, item, args, scope, wor
             }
         }
     };
-
     new Sequence()
 
         .effect()
         .file("jaamod.sequencer_fx_master.blood_splat.red.2")
-        .delay(100)
         .attachTo(target)
-        .scaleIn(0, 500, { 'ease': 'easeOutCubic' })
         .scaleToObject(1.65 * target.document.texture.scaleX)
+        .delay(100)
         .duration(2500)
         .fadeOut(1000)
+        .scaleIn(0, 500, { 'ease': 'easeOutCubic' })
         .randomRotation()
         .belowTokens()
 
@@ -202,10 +201,6 @@ async function glaive({ speaker, actor, token, character, item, args, scope, wor
         })
 
         .play()
-
-    return;
-
-
 }
 
 async function steadfast(token) {
@@ -215,7 +210,6 @@ async function steadfast(token) {
         return;
     }
     let allyNearby = await mba.findNearby(token, 30, "ally", false, false, false, true);
-    console.log(allyNearby);
     let changes = [];
     if (allyNearby.length) changes = [
         {

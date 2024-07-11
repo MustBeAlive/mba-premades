@@ -2,7 +2,9 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function dispelMagic({ speaker, actor, token, character, item, args, scope, workflow }) {
     let choicesType = [["Effect on a Creature", "creature"], ["Object or other Magical Effect (such as AoE)", "object"]];
+    await mba.playerDialogMessage();
     let type = await mba.dialog("Dispel Magic", choicesType, "<b>What would you like to dispel?</b>");
+    await mba.clearPlayerDialogMessage();
     if (!type) return;
     if (type === "object") {
         let choicesGM = [
@@ -41,13 +43,16 @@ export async function dispelMagic({ speaker, actor, token, character, item, args
             ui.notifications.warn("No target selected!");
             return;
         }
+        
         let dispelLevel = workflow.castData.castLevel;
         let effects = target.actor.effects.filter(e => e.active === true && e.flags['midi-qol']?.castData?.castLevel >= 0);
         if (!effects.length) {
             ui.notifications.warn('No effects to dispel!');
             return;
         }
+        await mba.playerDialogMessage();
         const effectToDispel = await mba.selectEffect("Dispel Magic: Target", effects, "<b>Choose one effect:</b>");
+        await mba.clearPlayerDialogMessage();
         if (!effectToDispel) return;
         let effectLevel = effectToDispel.flags['midi-qol']?.castData?.castLevel;
         if (dispelLevel >= effectLevel) {

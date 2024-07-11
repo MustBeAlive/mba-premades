@@ -99,12 +99,16 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             ['Vertically', 'ver'],
             ['Stop Moving', 'stop']
         ];
+        await mba.playerDialogMessage();
         let selection = await mba.dialog("Telekinesis", choices, `<p>Which way would you like to move the <u>${target.document.name}</u>?</p><p>Distance left: ${distance} feet</p>`);
+        await mba.clearPlayerDialogMessage();
         if (!selection) return;
         if (selection === "hor") {
             let oldCenter = target.center;
             let interval = target.document.width % 2 === 0 ? 1 : -1;
+            await mba.playerDialogMessage();
             let position = await mba.aimCrosshair(target, distance, workflow.item.img, interval, target.document.width);
+            await mba.clearPlayerDialogMessage();
             if (position.cancelled) return;
             let newCenter = canvas.grid.getSnappedPosition(position.x - target.w / 2, position.y - target.h / 2, 1);
             let targetUpdate = {
@@ -127,6 +131,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             if (distance < 5) distance = 0;
         }
         else if (selection === "ver") {
+            await mba.playerDialogMessage();
             await new Promise((resolve) => {
                 new Dialog({
                     title: `Set elevation (Max: ${distance})`,
@@ -147,6 +152,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                                 //distance -= change; debugging
                                 if (distance < 5) distance = 0;
                                 await warpgate.mutate(target.document, elevationUpdate, {}, { permanent: true });
+                                await mba.clearPlayerDialogMessage();
                                 resolve(distance);
                             },
                         },
@@ -166,12 +172,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                                 //distance -= change; debugging
                                 if (distance < 5) distance = 0;
                                 await warpgate.mutate(target.document, elevationUpdate, {}, { permanent: true });
+                                await mba.clearPlayerDialogMessage();
                                 resolve(distance);
                             },
                         },
                         cancel: {
                             label: "Cancel",
-                            callback: async (html) => {
+                            callback: async () => {
+                                await mba.clearPlayerDialogMessage();
                                 resolve(distance);
                             },
                         },

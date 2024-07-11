@@ -16,7 +16,9 @@ export async function draconicStrike({ speaker, actor, token, character, item, a
         ["Poison ☠️", "poison"],
         ["Unchanged (Bludgeoning)", "bludgeoning"],
     ];
+    await mba.playerDialogMessage();
     let damageType = await mba.dialog("Draconic Strike", choices, "<b>Choose damage type:</b>");
+    await mba.clearPlayerDialogMessage();
     if (!damageType) {
         queue.remove(workflow.item.uuid);
         return;

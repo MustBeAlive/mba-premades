@@ -7,7 +7,7 @@ export async function vanish({ speaker, actor, token, character, item, args, sco
         await action.use();
         return;
     }
-    let actionData = await mba.getItemFromCompendium('mba-premades.MBA Actions', actionName, false);
+    let actionData = await mba.getItemFromCompendium("mba-premades.MBA Actions", actionName, false);
     if (!actionData) {
         ui.notifications.warn(`Unable to find item in the compendium! (${actionName})`);
         return;

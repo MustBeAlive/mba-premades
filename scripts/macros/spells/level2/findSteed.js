@@ -10,17 +10,23 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ui.notifications.warn('No actors found in steeds folder! (Default named "Find Steed")');
         return;
     }
+    await mba.clearPlayerDialogMessage();
     let sourceActor = await mba.selectDocument('Choose Steed:', actors);
+    await mba.clearPlayerDialogMessage();
     if (!sourceActor) return;
     let choicesType = [['Celestial', 'celestial'], ['Fey', 'fey'], ['Fiend', 'fiend']];
+    await mba.playerDialogMessage();
     let creatureType = await mba.dialog(`Find Steed: Type`, choicesType, "Choose steed type:");
+    await mba.clearPlayerDialogMessage();
     if (!creatureType) return;
     let languageOptions = (Array.from(workflow.actor.system.traits.languages.value).map(i => [i.charAt(0).toUpperCase() + i.slice(1), i]));
     if (!languageOptions) {
         ui.notifications.warn("Caster doesn't know any languages!");
         return;
     }
+    await mba.playerDialogMessage();
     let languageSelected = new Set(await mba.dialog(`Find Steed: Language`, languageOptions, "Choose language:"));
+    await mba.clearPlayerDialogMessage();
     if (!languageSelected) return;
     let sourceActorIntelligence = sourceActor[0].system.abilities.int.value;
     if (sourceActorIntelligence < 6) sourceActorIntelligence = 6;

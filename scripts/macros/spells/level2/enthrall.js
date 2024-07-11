@@ -2,7 +2,9 @@ import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
+    await mba.playerDialogMessage();
     let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, `<b>Choose which targets to keep:</b>`);
+    await mba.clearPlayerDialogMessage();
     if (!selection.buttons) return;
     let newTargets = selection.inputs.filter(i => i).slice(0);
     mba.updateTargets(newTargets);

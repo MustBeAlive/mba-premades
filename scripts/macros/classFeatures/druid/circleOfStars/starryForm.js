@@ -19,7 +19,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Dragon", "dragon", "modules/mba-premades/icons/class/druid/starry_form_dragon.webp"],
         ["Cancel", false, "modules/mba-premades/icons/conditions/incapacitated.webp"],
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.selectImage("Starry Form", choices, "<b>Choose constellation:</b>", "both");
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     let oldEffect = await mba.findEffect(workflow.actor, "Starry Form");
     let diceNumber = 1;

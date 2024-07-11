@@ -2,6 +2,7 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function rayOfFrost({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
+    if (!target) return;
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} RaOfF`})
     };
@@ -39,6 +40,7 @@ export async function rayOfFrost({ speaker, actor, token, character, item, args,
             }
         }
     };
+    console.log(target);
 
     new Sequence()
 

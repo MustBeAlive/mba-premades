@@ -89,13 +89,17 @@ export async function cantripFormulas({ speaker, actor, token, character, item, 
         newCantrips.push(cantrip);
     }
 
+    await mba.playerDialogMessage()
     let toDelete = await mba.selectDocument("Choose cantrip to delete:", actorCantrips);
+    await mba.clearPlayerDialogMessage();
     if (!toDelete.length) {
         Sequencer.EffectManager.endEffects({ 'name': `${workflow.token.document.name} Cantrip Formulas`, 'object': workflow.token });
         if (uses < 1) await feature.update({ "system.uses.value": 1 })
         return;
     }
+    await mba.playerDialogMessage();
     let toCreate = await mba.selectDocument("Choose cantrip to create:", newCantrips);
+    await mba.clearPlayerDialogMessage();
     if (!toCreate.length) {
         Sequencer.EffectManager.endEffects({ 'name': `${workflow.token.document.name} Cantrip Formulas`, 'object': workflow.token });
         if (uses < 1) await feature.update({ "system.uses.value": 1 })

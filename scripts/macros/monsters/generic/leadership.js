@@ -114,12 +114,10 @@ export async function leadership({ speaker, actor, token, character, item, args,
         .filter("ColorMatrix", { brightness: 0, hue: 165 })
         .filter("Blur", { blurX: 5, blurY: 10 })
 
-        .wait(1000)
-
         .effect()
         .file("jb2a.bless.200px.intro.yellow")
         .attachTo(target)
-        .scaleToObject(1.35, { considerTokenScale: true })
+        .scaleToObject(1.5, { considerTokenScale: true })
         .belowTokens()
         .filter("ColorMatrix", { saturate: 1, hue: -10 })
         

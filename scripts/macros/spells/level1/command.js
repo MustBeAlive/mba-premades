@@ -11,7 +11,9 @@ export async function command({ speaker, actor, token, character, item, args, sc
         ["Halt", "Halt", "modules/mba-premades/icons/spells/level1/command_halt.webp"],
         ["Other", "Other", "modules/mba-premades/icons/spells/level1/command_halt.webp"]
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.selectImage("Command", choices, `<b>Choose command word:</b>`, "both");
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     let name;
     let description;
@@ -35,7 +37,7 @@ export async function command({ speaker, actor, token, character, item, args, sc
     }
     else if (selection[0] === "Flee") {
         name = "Command: Flee";
-        description = "You spend your turn moving away from caster by the fastest available means.";
+        description = "You must spend your turn moving away from caster by the fastest available means.";
         word.push("Flee!");
     }
     else if (selection[0] === "Grovel") {
@@ -134,7 +136,7 @@ export async function command({ speaker, actor, token, character, item, args, sc
 
         .thenDo(async () => {
             await mba.createEffect(target.actor, effectData);
-            if (selection[0] === "Grovel") await mba.addCondition(target.actor, "Prone");
+            if (selection[0] === "Grovel" && !mba.findEffect(target.actor, "Prone")) await mba.addCondition(target.actor, "Prone");
         })
 
         .play()

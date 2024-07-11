@@ -196,6 +196,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 	let currentElevation = target.elevation;
 	let maxElevation = 20 - currentElevation;
 	let minElevation = +("-" + (20 - maxElevation));
+	await mba.playerDialogMessage();
 	const changeValue = await warpgate.menu(
 		{
 			inputs: [{
@@ -212,6 +213,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 			title: `Levitate: Change Elevation`
 		}
 	);
+	await mba.clearPlayerDialogMessage();
 	let input = +changeValue.inputs[0];
 	if (input > maxElevation || input < minElevation) {
 		ui.notifications.warn("Wrong input, try again");

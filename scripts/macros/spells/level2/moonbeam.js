@@ -183,7 +183,9 @@ async function move({ speaker, actor, token, character, item, args, scope, workf
     if (game.modules.get('walledtemplates')?.active) {
         if (game.settings.get('walledtemplates', 'snapGrid')) interval = 1;
     }
+    await mba.playerDialogMessage();
     let position = await mba.aimCrosshair(workflow.token, 60, workflow.item.img, interval, 2);
+    await mba.clearPlayerDialogMessage();
     if (position.canceled) {
         ui.notifications.warn("Failed to choose position, returning!");
         return;

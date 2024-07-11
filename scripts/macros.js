@@ -1,3 +1,4 @@
+import {abishaiWhite} from './macros/monsters/cr6/abishaiWhite.js';
 import {abjureEnemy} from './macros/classFeatures/paladin/oathOfVengeance/abjureEnemy.js';
 import {absorbElements} from './macros/spells/level1/absorbElements.js';
 import {accursedSpecter} from './macros/classFeatures/warlock/hexblade/accursedSpecter.js';
@@ -27,6 +28,7 @@ import {armsOfHadar} from './macros/spells/level1/armsOfHadar.js';
 import {assassin} from './macros/monsters/cr8/assassin.js';
 import {assassinVine} from './macros/monsters/cr3/assassinVine.js';
 import {astralKnowledge} from './macros/raceFeatures/githyanki/astralKnowledge.js';
+import {atropal} from './macros/monsters/cr13/atropal.js';
 import {augury} from './macros/spells/level2/augury.js';
 import {auraOfCourage} from './macros/classFeatures/paladin/auraOfCourage.js';
 import {auraOfProtection} from './macros/classFeatures/paladin/auraOfProtection.js';
@@ -39,6 +41,7 @@ import {balmOfTheSummerCourt} from './macros/classFeatures/druid/circleOfDreams/
 import {bane} from './macros/spells/level1/bane.js';
 import {banishingSmite} from './macros/spells/level5/banishingSmite.js';
 import {banishment} from './macros/spells/level4/banishment.js';
+import {barbedDevil} from './macros/monsters/cr5/barbedDevil.js';
 import {bardicInspiration} from './macros/classFeatures/bard/bardicInspiration.js';
 import {barkskin} from './macros/spells/level2/barkskin.js';
 import {basicPoison} from './macros/items/basicPoison.js';
@@ -101,6 +104,7 @@ import {conditionVulnerabilityEarly, conditionVulnerabilityLate} from './macros/
 import {coneOfCold} from './macros/spells/level5/coneOfCold.js';
 import {confusion} from './macros/spells/level4/confusion.js';
 import {constrictorSnake} from './macros/monsters/cr0.250/constrictorSnake.js';
+import {contactOtherPlane} from './macros/spells/level5/contactOtherPlane.js';
 import {continualFlame} from './macros/spells/level2/continualFlame.js';
 import {controlFlames} from './macros/spells/cantrip/controlFlames.js';
 import {cordonOfArrows} from './macros/spells/level2/cordonOfArrows.js';
@@ -121,9 +125,11 @@ import {dancingMonkeyFruit} from './macros/items/dancingMonkeyFruit.js';
 import {dangerSense} from './macros/classFeatures/barbarian/dangerSense.js';
 import {darkDevotion} from './macros/monsters/generic/darkDevotion.js';
 import {darkling} from './macros/monsters/cr0.500/darkling.js';
+import {darklingElder} from './macros/monsters/cr2/darklingElder.js';
 import {darkmantle} from './macros/monsters/cr0.500/darkmantle.js';
 import {darkness} from './macros/spells/level2/darkness.js';
 import {darkvision} from './macros/spells/level2/darkvision.js';
+import {daylight} from './macros/spells/level3/daylight.js';
 import {deathDog} from './macros/monsters/cr1/deathDog.js';
 import {deathWard} from './macros/spells/level4/deathWard.js';
 import {decanterOfEndlessWater} from './macros/items/decanterOfEndlessWater.js';
@@ -208,12 +214,14 @@ import {findSteed} from './macros/spells/level2/findSteed.js';
 import {findTraps} from './macros/spells/level2/findTraps.js';
 import {fingerOfDeath} from './macros/spells/level7/fingerOfDeath.js';
 import {fireball} from './macros/spells/level3/fireball.js';
+import {firenewtWarlockOfImix} from './macros/monsters/cr1/firenewtWarlockOfImix.js';
 import {fireBolt} from './macros/spells/cantrip/firebolt.js';
 import {fireElemental} from './macros/monsters/cr5/fireElemental.js';
 import {fireShield} from './macros/spells/level4/fireShield.js';
 import {fireSnake} from './macros/monsters/cr1/fireSnake.js';
 import {fizbanPlatinumShield} from './macros/spells/level6/fizbanPlatinumShield.js';
 import {flameBlade} from './macros/spells/level2/flameBlade.js';
+import {flameskull} from './macros/monsters/cr4/flameskull.js';
 import {flameStrike} from './macros/spells/level5/flameStrike.js';
 import {flamingSphere} from './macros/spells/level2/flamingSphere.js';
 import {fleshGolem} from './macros/monsters/cr5/fleshGolem.js';
@@ -223,13 +231,16 @@ import {flurryOfBlows} from './macros/classFeatures/monk/flurryOfBlows.js';
 import {fly} from './macros/spells/level3/fly.js';
 import {focusedAim} from './macros/classFeatures/monk/focusedAim.js';
 import {fogCloud} from './macros/spells/level1/fogCloud.js';
+import {foresight} from './macros/spells/level9/foresight.js';
 import {freedomOfMovement} from './macros/spells/level4/freedomOfMovement.js';
 import {friends} from './macros/spells/cantrip/friends.js';
+import {froghemoth} from './macros/monsters/cr10/froghemoth.js';
 import {frostbite} from './macros/spells/cantrip/frostbite.js';
 import {frostFingers} from './macros/spells/level1/frostFingers.js';
 import {frostGiant} from './macros/monsters/cr8/frostGiant.js';
 import {gameMasterHelper} from './macros/generic/gameMasterHelper.js';
 import {gaseousForm} from './macros/spells/level3/gaseousForm.js';
+import {gate} from './macros/spells/level9/gate.js';
 import {gazer} from './macros/monsters/cr0.500/gazer.js';
 import {gelatinousCube} from './macros/monsters/cr2/gelatinousCube.js';
 import {gemOfBrightness} from './macros/items/gemOfBrightness.js';
@@ -252,6 +263,7 @@ import {grease} from './macros/spells/level1/grease.js';
 import {greaterInvisibility} from './macros/spells/level4/greaterInvisibility.js';
 import {greaterRestoration} from './macros/spells/level5/greaterRestoration.js';
 import {greenFlameBlade} from './macros/spells/cantrip/greenFlameBlade.js';
+import {greenHag} from './macros/monsters/cr3/greenHag.js';
 import {grell} from './macros/monsters/cr3/grell.js';
 import {guardianOfFaith} from './macros/spells/level4/guardianOfFaith.js';
 import {guidance} from './macros/spells/cantrip/guidance.js';
@@ -283,14 +295,17 @@ import {hiddenStep} from './macros/raceFeatures/firbolg/hiddenStep.js';
 import {hillGiant} from './macros/monsters/cr5/hillGiant.js';
 import {hoardScarab} from './macros/monsters/cr0.125/hoardScarab.js';
 import {hobgoblin} from './macros/monsters/cr0.500/hobgoblin.js';
+import {hobgoblinWarlord} from './macros/monsters/cr6/hobgoblinWarlord.js';
 import {holdMonster} from './macros/spells/level5/holdMonster.js';
 import {holdPerson} from './macros/spells/level2/holdPerson.js';
 import {holyWater} from './macros/items/holyWater.js';
 import {homunculus} from './macros/monsters/cr0/homunculus.js';
 import {hoodedLantern} from './macros/items/hoodedLantern.js';
+import {hornedDevil} from './macros/monsters/cr11/hornedDevil.js';
 import {hungerOfHadar} from './macros/spells/level3/hungerOfHadar.js';
 import {hungryJaws} from './macros/raceFeatures/lizardfolk/hungryJaws.js';
 import {huntersMark} from './macros/spells/level1/huntersMark.js';
+import {hydra} from './macros/monsters/cr8/hydra.js';
 import {hypnoticPattern} from './macros/spells/level3/hypnoticPattern.js';
 import {iceKnife} from './macros/spells/level1/iceKnife.js';
 import {iceMephit} from './macros/monsters/cr0.500/iceMephit.js';
@@ -321,7 +336,9 @@ import {kenku} from './macros/monsters/cr0.250/kenku.js';
 import {kenkuRecall} from './macros/raceFeatures/kenku/kenkuRecall.js';
 import {kineticJaunt} from './macros/spells/level2/kineticJaunt.js';
 import {knock} from './macros/spells/level2/knock.js';
+import {koboldScaleSorcerer} from './macros/monsters/cr1/koboldScaleSorcerer.js';
 import {kuotoa} from './macros/monsters/cr0.250/kuotoa.js';
+import {kuotoaWhip} from './macros/monsters/cr1/kuotoaWhip.js';
 import {labyrinthineRecall} from './macros/raceFeatures/minotaur/labyrinthineRecall.js';
 import {layOnHands} from './macros/classFeatures/paladin/layOnHands.js';
 import {leadership} from './macros/monsters/generic/leadership.js';
@@ -357,12 +374,14 @@ import {melfAcidArrow} from './macros/spells/level2/melfAcidArrow.js';
 import {melfMinuteMeteors} from './macros/spells/level3/melfMinuteMeteors.js';
 import {mending} from './macros/spells/cantrip/mending.js';
 import {mentalFortitude} from './macros/monsters/generic/mentalFortitude.js';
+import {merregon} from './macros/monsters/cr4/merregon.js';
 import {message} from './macros/spells/cantrip/message.js';
 import {metallicWarbler} from './macros/monsters/cr0.250/metallicWarbler.js';
 import {metamagic} from './macros/classFeatures/sorcerer/metamagic.js';
 import {mezzoloth} from './macros/monsters/cr5/mezzoloth.js';
 import {mimic} from './macros/monsters/cr2/mimic.js';
 import {mindBlank} from './macros/spells/level8/mindBlank.js';
+import {mindFlayer} from './macros/monsters/cr7/mindFlayer.js';
 import {mindSliver} from './macros/spells/cantrip/mindSliver.js';
 import {mindSpike} from './macros/spells/level2/mindSpike.js';
 import {minorIllusion} from './macros/spells/cantrip/minorIllusion.js';
@@ -375,6 +394,7 @@ import {mudMephit} from './macros/monsters/cr0.250/mudMephit.js';
 import {mummy} from './macros/monsters/cr3/mummy.js';
 import {myconidAdult} from './macros/monsters/cr0.500/myconidAdult.js';
 import {myconidSprout} from './macros/monsters/cr0/myconidSprout.js';
+import {nalfeshnee} from './macros/monsters/cr13/nalfeshnee.js';
 import {nathairMischief} from './macros/spells/level2/nathairMischief.js';
 import {naturalRecovery} from './macros/classFeatures/druid/circleOfLand/naturalRecovery.js';
 import {naturesVeil} from './macros/classFeatures/ranger/naturesVeil.js';
@@ -383,6 +403,8 @@ import {neogiHatchling} from './macros/monsters/cr0.125/neogiHatchling.js';
 import {net} from './macros/items/weapons/net.js';
 import {nimbleEscape} from './macros/raceFeatures/goblin/nimbleEscape.js';
 import {nondetection} from './macros/spells/level3/nondetection.js';
+import {nothic} from './macros/monsters/cr2/nothic.js';
+import {nycaloth} from './macros/monsters/cr9/nycaloth.js';
 import {nystulMagicAura} from './macros/spells/level2/nystulMagicAura.js';
 import {oblexSpawn} from './macros/monsters/cr0.250/oblexSpawn.js';
 import {octopus} from './macros/monsters/cr0/octopus.js';
@@ -445,6 +467,7 @@ import {pyrotechnics} from './macros/spells/level2/pyrotechnics.js';
 import {quaggoth} from './macros/monsters/cr2/quaggoth.js';
 import {quasit} from './macros/monsters/cr1/quasit.js';
 import {quickenedHealing} from './macros/classFeatures/monk/quickenedHealing.js';
+import {quickling} from './macros/monsters/cr1/quickling.js';
 import {rabbitHop} from './macros/raceFeatures/harengon/rabbitHop.js';
 import {radiantConsumption} from './macros/raceFeatures/aasimar/radiantConsumption.js';
 import {radiantSoul} from './macros/raceFeatures/aasimar/radiantSoul.js';
@@ -458,6 +481,7 @@ import {regenerate} from './macros/spells/level7/regenerate.js';
 import {regeneration} from './macros/monsters/generic/regeneration.js';
 import {relentless} from './macros/monsters/generic/relentless.js';
 import {relentlessEndurance} from './macros/raceFeatures/orc/relentlessEndurance.js';
+import {remorhaz} from './macros/monsters/cr11/remorhaz.js';
 import {removeCurse} from './macros/spells/level3/removeCurse.js';
 import {removeTemplate} from './macros/generic/removeTemplate.js';
 import {resistance} from './macros/spells/cantrip/resistance.js';
@@ -465,9 +489,11 @@ import {returning} from './macros/animations/returning.js';
 import {revenant} from './macros/monsters/cr5/revenant.js';
 import {revivify} from './macros/spells/level3/revivify.js';
 import {rimeBindingIce} from './macros/spells/level2/rimeBindingIce.js';
+import {roper} from './macros/monsters/cr5/roper.js';
 import {ropeTrick} from './macros/spells/level2/ropeTrick.js';
 import {rotGrubs} from './macros/monsters/cr0.500/rotGrubs.js';
 import {sacredFlame} from './macros/spells/cantrip/sacredFlame.js';
+import {salamander} from './macros/monsters/cr5/salamander.js';
 import {sanctuary} from './macros/spells/level1/sanctuary.js';
 import {satyrPiper} from './macros/monsters/cr0.500/satyrPiper.js';
 import {scarecrow} from './macros/monsters/cr1/scarecrow.js';
@@ -511,6 +537,7 @@ import {spareTheDying} from './macros/spells/cantrip/spareTheDying.js';
 import {speakWithAnimals} from './macros/spells/level1/speakWithAnimals.js';
 import {speakWithDead} from './macros/spells/level3/speakWithDead.js';
 import {speakWithPlants} from './macros/spells/level3/speakWithPlants.js';
+import {spectator} from './macros/monsters/cr3/spectator.js';
 import {specter} from './macros/monsters/cr1/specter.js';
 import {spiderClimb} from './macros/spells/level2/spiderClimb.js';
 import {spikeGrowth} from './macros/spells/level2/spikeGrowth.js';
@@ -532,6 +559,7 @@ import {stirge} from './macros/monsters/cr0.125/stirge.js';
 import {stoneskin} from './macros/spells/level4/stoneskin.js';
 import {stoneCamouflage} from './macros/monsters/generic/stoneCamouflage.js';
 import {stoneEndurance} from './macros/raceFeatures/goliath/stoneEndurance.js';
+import {stoneGolem} from './macros/monsters/cr10/stoneGolem.js';
 import {stoneJuggernaut} from './macros/monsters/cr12/stoneJuggernaut.js';
 import {strengthOfTheGrave} from './macros/classFeatures/sorcerer/shadow/strengthOfTheGrave.js';
 import {strokeOfLuck} from './macros/classFeatures/rogue/strokeOfLuck.js';
@@ -560,6 +588,7 @@ import {telekinetic} from './macros/feats/telekinetic.js';
 import {tenserFloatingDisk} from './macros/spells/level1/tenserFloatingDisk.js';
 import {thaumaturgy} from './macros/spells/cantrip/thaumaturgy.js';
 import {thornWhip} from './macros/spells/cantrip/thornWhip.js';
+import {thornyVegepygmy} from './macros/monsters/cr1/thornyVegepygmy.js';
 import {thunderboltStrike} from './macros/classFeatures/cleric/tempestDomain/thunderboltStrike.js';
 import {thunderClap} from './macros/spells/cantrip/thunderClap.js';
 import {thunderStep} from './macros/spells/level3/thunderStep.js';
@@ -573,12 +602,14 @@ import {tongues} from './macros/spells/level3/tongues.js';
 import {torch} from './macros/items/torch.js';
 import {triFlowerFrond} from './macros/monsters/cr0.500/triFlowerFrond.js';
 import {troglodyte} from './macros/monsters/cr0.250/troglodyte.js';
+import {trueSeeing} from './macros/spells/level6/trueSeeing.js';
 import {trueStrike} from './macros/spells/cantrip/trueStrike.js';
 import {turnUndead} from './macros/classFeatures/cleric/turnUndead.js';
 import {unarmedStrike} from './macros/items/weapons/unarmedStrike.js';
 import {uncannyDodge} from './macros/classFeatures/rogue/uncannyDodge.js';
 import {underwaterCamouflage} from './macros/monsters/generic/underwaterCamouflage.js';
 import {unseenServant} from './macros/spells/level1/unseenServant.js';
+import {vampireSpawn} from './macros/monsters/cr5/vampireSpawn.js';
 import {vampiricTouch} from './macros/spells/level3/vampiricTouch.js';
 import {vanish} from './macros/classFeatures/ranger/vanish.js';
 import {vegepygmyChief} from './macros/monsters/cr2/vegepygmyChief.js';
@@ -592,6 +623,7 @@ import {waterBreathing} from './macros/spells/level3/waterBreathing.js';
 import {waterWeird} from './macros/monsters/cr3/waterWeird.js';
 import {weaponMastery} from './macros/items/weapon_mastery/weaponMastery.js';
 import {web} from './macros/spells/level2/web.js';
+import {wereboar} from './macros/monsters/cr4/wereboar.js';
 import {wholenessOfBody} from './macros/classFeatures/monk/openHand/wholenessOfBody.js';
 import {wight} from './macros/monsters/cr3/wight.js';
 import {willOWisp} from './macros/monsters/cr2/willOWisp.js';
@@ -606,6 +638,7 @@ import {wrathOfTheStorm} from './macros/classFeatures/cleric/tempestDomain/wrath
 import {wretchedSorrowsworn} from './macros/monsters/cr0.250/wretchedSorrowsworn.js';
 import {xvart} from './macros/monsters/cr0.125/xvart.js';
 import {yellowMuskCreeper} from './macros/monsters/cr2/yellowMuskCreeper.js';
+import {youngRemorhaz} from './macros/monsters/cr5/youngRemorhaz.js';
 import {yuanTiNightmareSpeaker} from './macros/monsters/cr4/yuanTiNightmareSpeaker.js';
 import {zephyrStrike} from './macros/spells/level1/zephyrStrike.js';
 import {zombie} from './macros/monsters/cr0.250/zombie.js';
@@ -637,11 +670,23 @@ async function onMoveEffect(macroName, token, selectedAura) {
         case 'auraOfWarding':
             await auraOfWarding(token, selectedAura);
             break;
+        case 'basiliskPetrifyingGazeAura':
+            await basilisk.petrifyingGazeAura(token, selectedAura);
+            break;
         case 'countercharm':
             await countercharm.aura(token, selectedAura);
             break;
+        case 'medusaPetrifyingGazeAura':
+            await medusa.petrifyingGazeAura(token, selectedAura);
+            break;
+        case 'negativeEnergyAura':
+            await atropal.negativeEnergyAura(token, selectedAura);
+            break;
         case 'passWithoutTrace':
             await passWithoutTrace.aura(token, selectedAura);
+            break;
+        case 'seaHagHorrificAppearance':
+            await seaHag.horrificAppearanceAura(token, selectedAura);
             break;
         case 'wardingWind':
             await wardingWind.aura(token, selectedAura);
@@ -684,15 +729,18 @@ let items = {
 };
 
 let monsters = {
+    'abishaiWhite': abishaiWhite,
     'airElemental': airElemental,
     'aggressive': aggressive,
     'archer': archer,
     'assassin': assassin,
     'assassinVine': assassinVine,
+    'atropal': atropal,
     'autoGrapple': autoGrapple,
     'autoGrappleRestrain': autoGrappleRestrain,
     'autoProne': autoProne,
     'azer': azer,
+    'barbedDevil': barbedDevil,
     'basilisk': basilisk,
     'beardedDevil': beardedDevil,
     'beholderZombie': beholderZombie,
@@ -711,6 +759,7 @@ let monsters = {
     'couatl': couatl,
     'crawlingClaw': crawlingClaw,
     'darkling': darkling,
+    'darklingElder': darklingElder,
     'darkmantle': darkmantle,
     'deathDog': deathDog,
     'derro': derro,
@@ -728,9 +777,12 @@ let monsters = {
     'erinyes': erinyes,
     'ettercap': ettercap,
     'falseHydra': falseHydra,
+    'firenewtWarlockOfImix': firenewtWarlockOfImix,
     'fireElemental': fireElemental,
     'fireSnake': fireSnake,
+    'flameskull': flameskull,
     'fleshGolem': fleshGolem,
+    'froghemoth': froghemoth,
     'frostGiant': frostGiant,
     'gazer': gazer,
     'gelatinousCube': gelatinousCube,
@@ -745,11 +797,15 @@ let monsters = {
     'goblin': goblin,
     'goblinBoss': goblinBoss,
     'grayOoze': grayOoze,
+    'greenHag': greenHag,
     'grell': grell,
     'hillGiant': hillGiant,
     'hoardScarab': hoardScarab,
     'hobgoblin': hobgoblin,
+    'hobgoblinWarlord': hobgoblinWarlord,
     'homunculus': homunculus,
+    'hornedDevil': hornedDevil,
+    'hydra': hydra,
     'iceMephit': iceMephit,
     'imp': imp,
     'intellectDevourer': intellectDevourer,
@@ -757,7 +813,9 @@ let monsters = {
     'jackalwere': jackalwere,
     'kamadan': kamadan,
     'kenku': kenku,
+    'koboldScaleSorcerer': koboldScaleSorcerer,
     'kuotoa': kuotoa,
+    'kuotoaWhip': kuotoaWhip,
     'leadership': leadership,
     'legendaryResistance': legendaryResistance,
     'lich': lich,
@@ -765,15 +823,20 @@ let monsters = {
     'magmin': magmin,
     'mawDemon': mawDemon,
     'medusa': medusa,
+    'merregon': merregon,
     'metallicWarbler': metallicWarbler,
     'mezzoloth': mezzoloth,
     'mimic': mimic,
+    'mindFlayer': mindFlayer,
     'minotaurSkeleton': minotaurSkeleton,
     'mudMephit': mudMephit,
     'mummy': mummy,
     'myconidAdult': myconidAdult,
     'myconidSprout': myconidSprout,
+    'nalfeshnee': nalfeshnee,
     'neogiHatchling': neogiHatchling,
+    'nothic': nothic,
+    'nycaloth': nycaloth,
     'oblexSpawn': oblexSpawn,
     'octopus': octopus,
     'orcNurturedOne': orcNurturedOne,
@@ -789,11 +852,15 @@ let monsters = {
     'pseudodragon': pseudodragon,
     'quaggoth': quaggoth,
     'quasit': quasit,
+    'quickling': quickling,
     'rampage': rampage,
     'regeneration': regeneration,
     'relentless': relentless,
+    'remorhaz': remorhaz,
     'revenant': revenant,
+    'roper': roper,
     'rotGrubs': rotGrubs,
+    'salamander': salamander,
     'satyrPiper': satyrPiper,
     'scarecrow': scarecrow,
     'seaHag': seaHag,
@@ -801,21 +868,26 @@ let monsters = {
     'shadowDemon': shadowDemon,
     'shamblingMound': shamblingMound,
     'smokeMephit': smokeMephit,
+    'spectator': spectator,
     'specter': specter,
     'sprite': sprite,
     'starSpawnGrue': starSpawnGrue,
     'steamMephit': steamMephit,
     'stenchKow': stenchKow,
     'stirge': stirge,
+    'stoneGolem': stoneGolem,
     'stoneJuggernaut': stoneJuggernaut,
     'suMonster': suMonster,
     'sunSickness': sunSickness.attack,
     'swarm': swarm,
+    'thornyVegepygmy': thornyVegepygmy,
     'triFlowerFrond': triFlowerFrond,
     'troglodyte': troglodyte,
+    'vampireSpawn': vampireSpawn,
     'vegepygmyChief': vegepygmyChief,
     'vineBlight': vineBlight,
     'waterWeird': waterWeird,
+    'wereboar': wereboar,
     'wight': wight,
     'willOWisp': willOWisp,
     'wineWeird': wineWeird,
@@ -823,6 +895,7 @@ let monsters = {
     'wretchedSorrowsworn': wretchedSorrowsworn,
     'xvart': xvart,
     'yellowMuskCreeper': yellowMuskCreeper,
+    'youngRemorhaz': youngRemorhaz,
     'yuanTiNightmareSpeaker': yuanTiNightmareSpeaker,
     'zombie': zombie,
     'zorbo': zorbo,
@@ -854,6 +927,7 @@ export let saves = {
     'duergarResilience': duergar.resilience,
     'feyAncestry': feyAncestry,
     'mentalFortitude': mentalFortitude,
+    'multipleHeads': hydra.multipleHeads,
     'nurturedOne': orcNurturedOne.resilience,
     'poisonResilience': poisonResilience,
     'psionicFortitude': psionicFortitude,
@@ -946,6 +1020,7 @@ export let macros = {
     'conditionVulnerabilityEarly': conditionVulnerabilityEarly,
     'conditionVulnerabilityLate': conditionVulnerabilityLate,
     'coneOfCold': coneOfCold,
+    'contactOtherPlane': contactOtherPlane,
     'continualFlame': continualFlame,
     'controlFlames': controlFlames,
     'cordonOfArrows': cordonOfArrows,
@@ -962,6 +1037,7 @@ export let macros = {
     'dancingMonkeyFruit': dancingMonkeyFruit,
     'darkness': darkness,
     'darkvision': darkvision,
+    'daylight': daylight,
     'deathWard': deathWard,
     'decanterOfEndlessWater': decanterOfEndlessWater,
     'deflectMissiles': deflectMissiles,
@@ -1039,12 +1115,14 @@ export let macros = {
     'fly': fly,
     'focusedAim': focusedAim,
     'fogCloud': fogCloud,
+    'foresight': foresight,
     'freedomOfMovement': freedomOfMovement,
     'friends': friends,
     'frostbite': frostbite,
     'frostFingers': frostFingers,
     'gameMasterHelper': gameMasterHelper,
     'gaseousForm': gaseousForm,
+    'gate': gate,
     'gentleRepose': gentleRepose,
     'giantsMight': giantsMight,
     'goodberry': goodberry,
@@ -1271,6 +1349,7 @@ export let macros = {
     'tirelessSpirit': tirelessSpirit,
     'tollTheDead': tollTheDead,
     'tongues': tongues,
+    'trueSeeing': trueSeeing,
     'trueStrike': trueStrike,
     'turnUndead': turnUndead,
     'unarmedStrike': unarmedStrike,

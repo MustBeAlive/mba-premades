@@ -1,11 +1,11 @@
+import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
 async function stickyShield(workflow) {
     let target = workflow.targets.first();
     if (workflow.hitTargets.size || workflow.item.system.actionType != "mwak" || !mba.findEffect(target.actor, "Sticky Shield")) return;
     if (mba.findEffect(target.actor, "Reaction")) return;
-    let optionsTarget = [["Use Sticky Shield (reaction)", "yes"], ["Cancel", false]];
-    let selectionTarget = await mba.remoteDialog(workflow.item.name, optionsTarget, mba.firstOwner(target).id, 'What would you like to do?');
+    let selectionTarget = await mba.remoteDialog("Kuo-toa: Sticky Shield", constants.yesNo, mba.firstOwner(target).id, "<b>Use reaction to attempt to stick enemy weapon to your shield?</b>");
     if (!selectionTarget) return;
     let saveRoll = await mba.rollRequest(workflow.token, 'save', 'str');
     if (saveRoll.total >= 11) {

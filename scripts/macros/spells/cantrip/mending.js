@@ -1,3 +1,6 @@
+
+// To do: autognome/artificer construct healing
+
 export async function mending({ speaker, actor, token, character, item, args, scope, workflow }) {
     new Sequence()
 

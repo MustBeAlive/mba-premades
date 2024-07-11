@@ -3,6 +3,7 @@ import {queue} from "../../mechanics/queue.js";
 
 async function item({speaker, actor, token, character, item, args, scope, workflow}) {
     let target = workflow.targets.first();
+    if (!target) return;
 
     new Sequence()
 

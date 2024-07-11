@@ -14,7 +14,7 @@ export async function critFumble(workflow) {
         .effect()
         .file(animation)
         .attachTo(workflow.token, { followRotation: false, offset: { y: -0.5 }, gridUnits: true })
-        .scaleToObject(1.7)
+        .size(2, { gridUnits: true })
         .playbackRate(0.85)
         .aboveInterface()
 

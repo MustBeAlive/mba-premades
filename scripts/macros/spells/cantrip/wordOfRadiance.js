@@ -3,7 +3,7 @@ import {constants} from "../../generic/constants.js";
 
 export async function wordOfRadiance({ speaker, actor, token, character, item, args, scope, workflow }) {
     let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Choose which targets to keep:');
-    if (selection.buttons === false) return;
+    if (!selection.buttons) return;
     let newTargets = selection.inputs.filter(i => i).slice(0);
     mba.updateTargets(newTargets);
     await warpgate.wait(100);

@@ -4,7 +4,7 @@ import {queue} from "../../mechanics/queue.js";
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         await (warpgate.wait(200));
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Banishing Smite` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} BanSmi` })
         let targetEffectUuid = effect.flags['mba-premades']?.spell?.banishingSmite?.targetEffectUuid;
         if (!targetEffectUuid) return;
         let targetEffect = await fromUuid(targetEffectUuid);
@@ -60,7 +60,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .delay(500)
         .file(`jb2a.particles.outward.red.02.03`)
-        .attachTo(token, { offset: { y: -0.25 }, gridUnits: true, followRotation: false })
+        .attachTo(workflow.token, { offset: { y: -0.25 }, gridUnits: true, followRotation: false })
         .scaleToObject(1.2)
         .playbackRate(2)
         .duration(2000)
@@ -74,7 +74,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .effect()
         .delay(1050)
         .file("jb2a.divine_smite.caster.reversed.pink")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .filter("ColorMatrix", { hue: 55 })
         .scaleToObject(2.2)
         .startTime(900)
@@ -82,7 +82,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.divine_smite.caster.pink")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .filter("ColorMatrix", { hue: 55 })
         .scaleToObject(1.85)
         .belowTokens()
@@ -90,19 +90,21 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .file("jb2a.token_border.circle.static.orange.007")
-        .atLocation(token)
-        .attachTo(token)
+        .atLocation(workflow.token)
+        .attachTo(workflow.token)
         .scaleToObject(2)
         .filter("ColorMatrix", { hue: 340 })
         .fadeOut(500)
         .persist()
-        .name(`${token.document.name} Banishing Smite`)
+        .name(`${workflow.token.document.name} BanSmi`)
+
+        .thenDo(async () => {
+            let effect = await mba.createEffect(workflow.actor, effectData);
+            let updates = { 'flags.mba-premades.spell.banishingSmite.targetEffectUuid': effect.uuid };
+            await mba.updateEffect(effect, updates);
+        })
 
         .play();
-
-    let effect = await mba.createEffect(workflow.actor, effectData);
-    let updates = { 'flags.mba-premades.spell.banishingSmite.targetEffectUuid': effect.uuid };
-    await mba.updateEffect(effect, updates);
 }
 
 async function damage({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -131,7 +133,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .file("jb2a.ground_cracks.blue.01")
         .atLocation(target)
         .filter("ColorMatrix", { hue: 160 })
-        .size(2.3 * token.document.width, { gridUnits: true })
+        .size(2.3 * target.document.width, { gridUnits: true })
         .belowTokens()
         .playbackRate(0.85)
         .randomRotation()
@@ -142,7 +144,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .rotateTowards(token)
         .filter("ColorMatrix", { hue: 55 })
         .scaleToObject(3)
-        .spriteOffset({ x: -1.5 * token.document.width, y: -0 * token.document.width }, { gridUnits: true })
+        .spriteOffset({ x: -1.5 * target.document.width, y: -0 * target.document.width }, { gridUnits: true })
         .mirrorY()
         .rotate(90)
         .zIndex(2)
@@ -150,7 +152,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
         .wait(600)
 
         .thenDo(function () {
-            Sequencer.EffectManager.endEffects({ name: `${token.document.name} Banishing Smite`, object: token })
+            Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} BanSmi` })
         })
 
         .play()
@@ -221,7 +223,12 @@ async function post({ speaker, actor, token, character, item, args, scope, workf
     }
     let effectData = {
         'name': 'Banishing Smite: Banish',
-        'description': "You are banished from the material plane by Banishing Smite. If you are native to a different plane of existence than the material plane, you disappear, returning to your home plane. If you are native to the plane you're on, you vanish into a harmless demiplane. While there, you are incapacitated. You remain there until the spell ends, at which point you reappear in the space you left or in the nearest unoccupied space if that space is occupied.",
+        'description': `
+            <p>You are banished from the material plane by Banishing Smite.</p>
+            <p>If you are native to a different plane of existence than the material plane, you disappear, returning to your home plane.</p>
+            <p>If you are native to the plane you're on, you vanish into a harmless demiplane. While there, you are incapacitated.</p>
+            <p>You remain there until the spell ends, at which point you reappear in the space you left or in the nearest unoccupied space if that space is occupied.</p>
+        `,
         'icon': effect.icon,
         'origin': effect.uuid,
         'duration': {

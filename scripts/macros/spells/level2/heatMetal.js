@@ -113,7 +113,7 @@ async function animation({ speaker, actor, token, character, item, args, scope, 
         .fadeIn(500)
         .fadeOut(1000)
         .persist()
-        .name(`${token.document.name} Heat Metal`)
+        .name(`${workflow.token.document.name} Heat Metal`)
 
         .play()
 }
@@ -223,7 +223,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     if (!damageDice || !targetUuid || !spellDC || !originUuid) return;
     let target = await fromUuid(targetUuid);
     if (!target) return;
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Heat Metal: Damage', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Heat Metal: Damage", false);
     if (!featureData) return;
     delete featureData._id;
     featureData.system.damage.parts = [[damageDice, 'fire']];
@@ -282,12 +282,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 }
 
 async function dialogue(token, actor, effect, origin) {
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Heat Metal", [['Yes (no save)', 'yes'], ['No/Unable (save)', 'no']], `<b>Do you want to drop the heated object?</b>`);
+    await mba.clearPlayerDialogMessage();
     if (selection === "yes") {
         await effect.delete();
         return;
     }
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Heat Metal: Disadvantage', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Heat Metal: Disadvantage", false);
     if (!featureData) return;
     delete featureData._id;
     let spellDC = effect.flags['mba-premades']?.spell?.heatMetal?.spellDC;
@@ -363,7 +365,7 @@ async function del(effect) {
     if (!targetUuid) return;
     let target = await fromUuid(targetUuid);
     if (!target) return;
-    let targetEffect = mba.findEffect(target.actor, 'Heat Metal: Disadvantage');
+    let targetEffect = mba.findEffect(target.actor, "Heat Metal: Disadvantage");
     if (!targetEffect) return;
     await mba.removeEffect(targetEffect);
 }

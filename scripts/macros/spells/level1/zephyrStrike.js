@@ -155,12 +155,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 }
 
 async function attack({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let effect = mba.findEffect(workflow.actor, 'Zephyr Strike');
+    let effect = mba.findEffect(workflow.actor, "Zephyr Strike");
     if (!effect) return;
-    if (workflow.item.system.actionType != 'mwak' && workflow.item.system.actionType != 'rwak') return;
-    let choices = [['Yes, go ahead', 'yes'], ['No!', 'no']];
+    if (workflow.item.system.actionType != "mwak" && workflow.item.system.actionType != "rwak") return;
+    let choices = [["Yes, go ahead", "yes"], ["No!", false]];
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Zephyr Strike", choices, `<b>Use Zephyr Strike to gain advantage on the attack roll?</b>`);
-    if (!selection || selection === 'no') return;
+    await mba.clearPlayerDialogMessage();
+    if (!selection) return;
     const effectData = {
         'name': 'Zephyr Strike: Advantage',
         'icon': 'modules/mba-premades/icons/generic/generic_buff.webp',

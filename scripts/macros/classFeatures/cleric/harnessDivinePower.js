@@ -40,7 +40,9 @@ export async function harnessDivinePower({speaker, actor, token, character, item
         return;
     }
     let options = validLevels.map(i => [(i.level != 'p' ? mba.nth(i.level) + ' Level' : 'Pact Slot'), i.key]);
+    await mba.playerDialogMessage();
     let selection = options.length > 1 ? await mba.dialog(workflow.item.name, options, `<b>Choose slot level:</b>`) : options[0][1];
+    await mba.clearPlayerDialogMessage();
     if (!selection) {
         ui.notifications.info('Failed to select slot level, try again!');
         let harness = await mba.getItem(workflow.actor, "CD: Harness Divine Power");

@@ -117,6 +117,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         }
     });
     if (!workflow.failedSaves.size) return;
+    let saveDC = mba.getSpellDC(workflow.item);
     let effectData = {
         'name': "Web: Restrain",
         'icon': workflow.item.img,
@@ -135,7 +136,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': `actionSave=true, rollType=check, saveAbility=str, saveDC=${mba.getSpellDC(workflow.item)}, saveMagic=true, name=Restrain: Action Save, killAnim=true`,
+                'value': `actionSave=true, rollType=check, saveAbility=str, saveDC=${saveDC}, saveMagic=true, name=Restrain: Action Save (DC${saveDC}), killAnim=true`,
                 'priority': 20
             }
         ],
@@ -152,7 +153,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    for (let target of Array.from(workflow.failedSaves)) await mba.createEffect(target.actor, effectData);
+    for (let target of Array.from(workflow.failedSaves)) {
+        if (!mba.getItem(token.actor, "Web Walker")) await mba.createEffect(target.actor, effectData);
+    }
 }
 
 async function enter(template, token) {
@@ -162,9 +165,10 @@ async function enter(template, token) {
 }
 
 async function trigger(token, trigger) {
+    if (mba.getItem(token.actor, "Web Walker")) return;
+    if (mba.checkTrait(token.actor, "ci", "restrained")) return;
     if (mba.findEffect(token.actor, "Web: Restrain")) return;
     if (mba.findEffect(token.actor, "Restrained")) return;
-    if (mba.checkTrait(token.actor, 'ci', 'restrained')) return;
     let template = await fromUuid(trigger.templateUuid);
     if (!template) return;
     if (mba.inCombat()) {
@@ -175,7 +179,7 @@ async function trigger(token, trigger) {
     }
     let originItem = await fromUuid(trigger.itemUuid);
     if (!originItem) return;
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Web: Restrain', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Web: Restrain", false);
     if (!featureData) return;
     delete featureData._id;
     featureData.system.save.dc = trigger.saveDC;
@@ -201,7 +205,7 @@ async function trigger(token, trigger) {
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': `actionSave=true, rollType=check, saveAbility=str, saveDC=${trigger.saveDC}, saveMagic=true, name=Restrain: Action Save, killAnim=true`,
+                'value': `actionSave=true, rollType=check, saveAbility=str, saveDC=${trigger.saveDC}, saveMagic=true, name=Restrain: Action Save (DC${trigger.saveDC}), killAnim=true`,
                 'priority': 20
             }
         ],

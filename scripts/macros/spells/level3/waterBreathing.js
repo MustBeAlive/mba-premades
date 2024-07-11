@@ -1,7 +1,6 @@
 import {mba} from "../../../helperFunctions.js";
 
 export async function waterBreathing({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let targets = Array.from(workflow.targets);
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} WatBre` })
     }
@@ -31,7 +30,7 @@ export async function waterBreathing({ speaker, actor, token, character, item, a
             }
         }
     };
-    for (let target of targets) {
+    for (let target of Array.from(workflow.targets)) {
         let delay = 2000 + Math.floor(Math.random() * (Math.floor(1500) - Math.ceil(50)) + Math.ceil(50));
         new Sequence()
 

@@ -26,8 +26,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Liquid", "liquid.01", "modules/jb2a_patreon/Library/2nd_Level/Spiritual_Weapon/SpiritualWeapon_LongSword01_01_Liquid_Blue_Thumb.webp"],
         ["Spectral", "spectral", "modules/jb2a_patreon/Library/2nd_Level/Spiritual_Weapon/SpiritualWeapon_LongSword01_02_Spectral_Green_Thumb.webp"]
     ];
+    await mba.playerDialogMessage();
     selectionStyle = await mba.selectImage("Spiritual Weapon: Style", selectionStyleOptions, "<b>Choose style:</b>", "value");
-    if (!selectionStyle) return;
+    if (!selectionStyle) {
+        await mba.clearPlayerDialogMessage();
+        return;
+    }
     if (selectionStyle === "astral.01") {
         selectionWeaponOptions = [
             ["Club", "club.01.", "modules/jb2a_patreon/Library/2nd_Level/Spiritual_Weapon/SpiritualWeapon_Club01_01_Astral_Purple_Thumb.webp"],
@@ -680,8 +684,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             if (!selectionColor) return;
         }
     }
+    await mba.clearPlayerDialogMessage();
     selectedImg = "jb2a.spiritual_weapon." + selectionWeapon + selectionStyle + selectionColor;
     selectedImg = await Sequencer.Database.getEntry(selectedImg).file;
+    if (!selectedImg) {
+        ui.notifications.warn("Unable to find the .webm file, try again!");
+        return;
+    }
     let updates = {
         "actor": {
             "name": tokenName,

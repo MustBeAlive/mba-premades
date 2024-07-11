@@ -4,6 +4,7 @@ export async function skywrite({ speaker, actor, token, character, item, args, s
     let template = canvas.scene.collections.templates.get(workflow.templateId);
     if (!template) return;
     let word = [];
+    await mba.playerDialogMessage();
     let wordInput = await warpgate.menu({
         inputs: [{
             label: `Input text (Max: 10 words)`,
@@ -17,6 +18,7 @@ export async function skywrite({ speaker, actor, token, character, item, args, s
     },
         { title: 'Skywrite' }
     );
+    await mba.clearPlayerDialogMessage();
     word.push(wordInput.inputs);
     let words = word.toString();
     let wordCount = words.trim().split(/\s+/).length;

@@ -3,7 +3,9 @@ import {mba} from "../../../helperFunctions.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let tokens = await mba.findNearby(workflow.token.document, 300, "ally", false, false);
+    await mba.playerDialogMessage();
     let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, tokens, false, 'multiple', undefined, false, 'Choose targets to be ignored by Cordon of Arrows:');
+    await mba.clearPlayerDialogMessage();
     if (!selection.buttons) return;
     let newTargets = selection.inputs.filter(i => i);
     mba.updateTargets(newTargets);

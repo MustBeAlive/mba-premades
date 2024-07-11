@@ -3,11 +3,16 @@ import {mba} from "../../../helperFunctions.js";
 export async function autoGrappleRestrain({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.hitTargets.size) return;
     let target = workflow.targets.first();
+    if (mba.checkTrait(target.actor, "ci", "grappled")) return;
     if (mba.findEffect(target.actor, "Grappled")) return;
     if (mba.findEffect(target.actor, `${workflow.token.document.name}: Grapple`)) return; //overly cautious
-    if (mba.checkTrait(target.actor, "ci", "grappled")) return;
     let saveDC = workflow.item.system.save.dc;
-    let effectData = {
+    async function effectMacroDelTarget() {
+        let originDoc = await fromUuid(effect.changes[0].value);
+        let originEffect = await mbaPremades.helpers.findEffect(originDoc.actor, `${originDoc.name}: Grapple (${token.document.name})`);
+        if (originEffect) await mbaPremades.helpers.removeEffect(originEffect);
+    };
+    let effectDataTarget = {
         'name': `${workflow.token.document.name}: Grapple`,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
@@ -39,7 +44,47 @@ export async function autoGrappleRestrain({ speaker, actor, token, character, it
         ],
         'flags': {
             'dae': {
-                'showIcon': false
+                'showIcon': false,
+                'specialDuration': ['combatEnd']
+            },
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDelTarget)
+                }
+            },
+            'mba-premades': {
+                'feature': {
+                    'grapple': {
+                        'originName': workflow.token.document.name
+                    }
+                }
+            }
+        }
+    };
+    async function effectMacroDelSource() {
+        let targetDoc = await fromUuid(effect.flags['mba-premades']?.feature?.grapple?.targetUuid);
+        let targetEffect = await mbaPremades.helpers.findEffect(targetDoc.actor, `${token.document.name}: Grapple`);
+        if (targetEffect) await mbaPremades.helpers.removeEffect(targetEffect);
+    };
+    let effectDataSource = {
+        'name': `${workflow.token.document.name}: Grapple (${target.document.name})`,
+        'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
+        'flags': {
+            'dae': {
+                'specialDuration': ['zeroHP', 'combatEnd']
+            },
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDelSource)
+                }
+            },
+            'mba-premades': {
+                'feature': {
+                    'grapple': {
+                        'targetUuid': target.document.uuid
+                    }
+                }
             }
         }
     };
@@ -63,7 +108,8 @@ export async function autoGrappleRestrain({ speaker, actor, token, character, it
         .wait(150)
 
         .thenDo(async () => {
-            await mba.createEffect(target.actor, effectData);
+            await mba.createEffect(target.actor, effectDataTarget);
+            await mba.createEffect(workflow.actor, effectDataSource);
         })
 
         .effect()

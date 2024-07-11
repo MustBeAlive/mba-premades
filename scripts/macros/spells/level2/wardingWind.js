@@ -4,7 +4,7 @@ import {mba} from "../../../helperFunctions.js";
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
         await mbaPremades.macros.wardingWind.end(token);
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Warding Wind` });
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} WarWin` });
     };
     const effectData = {
         'name': "Warding Wind: Aura",
@@ -92,7 +92,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .randomRotation()
         .opacity(0.6)
         .persist()
-        .name(`${workflow.token.document.name} Warding Wind`)
+        .name(`${workflow.token.document.name} WarWin`)
 
         .thenDo(async () => {
             await mba.createEffect(workflow.actor, effectData);

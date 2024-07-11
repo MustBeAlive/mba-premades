@@ -3,6 +3,7 @@ import { diseases } from "./diseases.js";
 import { jumping } from "./jumping.js";
 import { mba } from "../../helperFunctions.js";
 import { seanse } from "./ouija.js";
+import { weather } from "./weather.js";
 
 export async function gameMasterHelper() {
     let choices = [
@@ -195,7 +196,7 @@ export async function gameMasterHelper() {
                 ui.notifications.info("Current scene does not contain any player owned tokens!");
                 return;
             }
-            let selection = await mba.selectTarget("GM Helper: Money Manager", constants.okCancel, playerOwnedTokens, false, 'multiple', undefined, false, `<b>Choose character:</b>`);
+            let selection = await mba.selectTarget("GM Helper: Money Manager", constants.okCancel, playerOwnedTokens, false, 'one', undefined, false, `<b>Choose character:</b>`);
             if (!selection.buttons) return;
             let newTargets = selection.inputs.filter(i => i).slice(0);
             let target = await canvas.scene.tokens.get(newTargets[0]);
@@ -275,7 +276,7 @@ export async function gameMasterHelper() {
         let targets = Array.from(game.user.targets);
         if (!targets.length) return;
         async function effectMacroDel() {
-            Sequencer.EffectManager.endEffects({ name: `${token.document.name} Surprise` })
+            Sequencer.EffectManager.endEffects({ name: `${token.document.name} SPRS` })
         };
         let effectData = {
             'name': "Surprised",
@@ -299,6 +300,7 @@ export async function gameMasterHelper() {
             }
         };
         for (let target of targets) {
+            if (mba.findEffect(target.actor, "Foresight")) continue;
             new Sequence()
 
                 .effect()
@@ -311,7 +313,7 @@ export async function gameMasterHelper() {
                 .scaleOut(0, 1000, { ease: "easeOutExpo" })
                 .loopProperty("sprite", "position.y", { from: 0, to: -15, duration: 1500, pingPong: true })
                 .persist()
-                .name(`${target.document.name} Surprise`)
+                .name(`${target.document.name} SPRS`)
 
                 .effect()
                 .name("Surprise")
@@ -323,7 +325,7 @@ export async function gameMasterHelper() {
                 .anchor({ x: -0.3, y: 1.25 })
                 .loopProperty("sprite", "position.y", { from: 0, to: -15, duration: 1500, pingPong: true })
                 .persist()
-                .name(`${target.document.name} Surprise`)
+                .name(`${target.document.name} SPRS`)
 
                 .thenDo(async () => {
                     await mba.createEffect(target.actor, effectData);
@@ -333,6 +335,6 @@ export async function gameMasterHelper() {
         }
     }
     else if (helperType === "weather") {
-        ui.notifications.info("Under construction!");
+        await weather();
     }
 }

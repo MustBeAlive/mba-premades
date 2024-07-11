@@ -1,9 +1,11 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let choices = [["One Stone", 1], ["Two Stones", 2], ["Three Stones", 3]];
+    await mba.playerDialogMessage();
     let ammount = await mba.dialog("Magic Stone", choices, `<b>Choose ammount of stones:</b>`);
+    await mba.clearPlayerDialogMessage();
     if (!ammount) return;
     let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Magic Stone: Throw Stone", false);
     if (!featureData) return;
@@ -66,6 +68,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
+    if (!target) return;
     new Sequence()
 
         .effect()

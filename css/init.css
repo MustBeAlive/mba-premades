@@ -3986,6 +3986,7 @@ footer.svelte-auto-1g5ic18.svelte-auto-1g5ic18:hover {
 /* DFreds Effect Panel */
 .effect-panel .effect-item .effect-info a.content-link {
     color: var(--color-dracula-accent);
+    text-shadow: unset;
 }
 
 

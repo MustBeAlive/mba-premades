@@ -37,7 +37,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
 
     for (let target of targets) {
-
         new Sequence()
 
             .effect()

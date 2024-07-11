@@ -73,8 +73,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         }
     };
     effectAuras.add(flagAuras, workflow.token.document.uuid, true);
-
-    let targets = mbaPremades.helpers.findNearby(workflow.token, 30, "ally", false, false);
+    let targets = mba.findNearby(workflow.token, 30, "ally", false, false);
 
     new Sequence()
 

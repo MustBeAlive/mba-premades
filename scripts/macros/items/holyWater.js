@@ -12,17 +12,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Throw flask of Holy Water at someone (20 ft.)", "shatter"],
         ["Cancel", false]
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Holy Water", choices, `<b>What would you like to do?</b>`);
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     let featureData;
-    if (selection === "splash") {
-        featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Holy Water: Splash Water', false);
-        if (!featureData) return;
-    }
-    else if (selection === "shatter") {
-        featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Holy Water: Throw Flask', false);
-        if (!featureData) return;
-    }
+    if (selection === "splash") featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Holy Water: Splash Water', false);
+    else if (selection === "shatter") featureData = await mba.getItemFromCompendium('mba-premades.MBA Item Features', 'Holy Water: Throw Flask', false);
+    if (!featureData) return;
     delete featureData._id;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);

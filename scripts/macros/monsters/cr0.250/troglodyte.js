@@ -1,6 +1,8 @@
 import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
+// To do: check for overlap
+
 async function stench(token) {
     if (!mba.inCombat()) return;
     let tokenId = game.combat.current.tokenId;

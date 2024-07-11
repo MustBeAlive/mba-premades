@@ -8,14 +8,18 @@ async function martialAdvantage({ speaker, actor, token, character, item, args, 
     if (!nearbyTargets.length) return;
     let queueSetup = await queue.setup(workflow.item.uuid, 'martialAdvantage', 250);
     if (!queueSetup) return;
-    let choices = [["Yes (+2d6)", "yes"], ["No, cancel", false]];
+    let bonus = `2d6`;
+    if (workflow.token.document.name === "Hobgoblin Warlord") bonus = `4d6`;
+    let choices = [[`Yes (+${bonus})`, "yes"], ["No, cancel", false]];
+    await mba.gmDialogMessage();
     let selection = await mba.dialog("Martial Advantage", choices, "Use ability?");
+    await mba.clearGMDialogMessage();
     if (!selection) {
         queue.remove(workflow.item.uuid);
         return;
     }
     let oldFormula = workflow.damageRoll._formula;
-    let bonusDamageFormula = `2d6[${workflow.defaultDamageType}]`;
+    let bonusDamageFormula = `${bonus}[${workflow.defaultDamageType}]`;
     if (workflow.isCritical) bonusDamageFormula = mba.getCriticalFormula(bonusDamageFormula);
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRoll = await new Roll(damageFormula).roll({ async: true });

@@ -2,6 +2,7 @@ import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
+    if (!target) return;
     const armorKeywords = ["Breastplate", "Chain Mail", "Chain Shirt", "Half Plate", "Plate", "Plate Armor", "Ring Mail", "Scale Mail", "Spiked Armor", "Splint"]; // does partial match
     let hasMatchingArmor = target.actor.items.some(item => armorKeywords.some(keyword => item.name.includes(keyword)));
     if (!hasMatchingArmor) return;
@@ -31,6 +32,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let effect = mba.findEffect(workflow.actor, "Shocking Grasp: Metal Armor Advantage");
     if (effect) await mba.removeEffect(effect);
     let target = workflow.targets.first();
+    if (!target) return;
     new Sequence()
 
         .effect()

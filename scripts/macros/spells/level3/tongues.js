@@ -3,7 +3,7 @@ import {mba} from "../../../helperFunctions.js";
 export async function tongues({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Tongues Rune` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} TongRu` })
     }
     let effectData = {
         'name': workflow.item.name,
@@ -113,7 +113,7 @@ export async function tongues({ speaker, actor, token, character, item, args, sc
         .spriteOffset({ x: 0.5 }, { gridUnits: true })
         .rotate((360 / 6) * 1)
         .persist()
-        .name(`${target.document.name} Tongues Rune 1`)
+        .name(`${target.document.name} TongRu`)
 
         .effect()
         .file("jb2a.icon.runes02.blue")
@@ -128,7 +128,7 @@ export async function tongues({ speaker, actor, token, character, item, args, sc
         .spriteOffset({ x: 0.5 }, { gridUnits: true })
         .rotate((360 / 6) * 2)
         .persist()
-        .name(`${target.document.name} Tongues Rune 2`)
+        .name(`${target.document.name} TongRu`)
 
         .effect()
         .file("jb2a.icon.runes03.blue")
@@ -143,7 +143,7 @@ export async function tongues({ speaker, actor, token, character, item, args, sc
         .spriteOffset({ x: 0.5 }, { gridUnits: true })
         .rotate((360 / 6) * 3)
         .persist()
-        .name(`${target.document.name} Tongues Rune 3`)
+        .name(`${target.document.name} TongRu`)
 
         .effect()
         .file("jb2a.icon.runes.blue")
@@ -158,7 +158,7 @@ export async function tongues({ speaker, actor, token, character, item, args, sc
         .spriteOffset({ x: 0.5 }, { gridUnits: true })
         .rotate((360 / 6) * 4)
         .persist()
-        .name(`${target.document.name} Tongues Rune 4`)
+        .name(`${target.document.name} TongRu`)
 
         .effect()
         .file("jb2a.icon.runes02.blue")
@@ -173,7 +173,7 @@ export async function tongues({ speaker, actor, token, character, item, args, sc
         .spriteOffset({ x: 0.5 }, { gridUnits: true })
         .rotate((360 / 6) * 5)
         .persist()
-        .name(`${target.document.name} Tongues Rune 5`)
+        .name(`${target.document.name} TongRu`)
 
         .effect()
         .file("jb2a.icon.runes03.blue")
@@ -188,7 +188,7 @@ export async function tongues({ speaker, actor, token, character, item, args, sc
         .spriteOffset({ x: 0.5 }, { gridUnits: true })
         .rotate((360 / 6) * 6)
         .persist()
-        .name(`${target.document.name} Tongues Rune 6`)
+        .name(`${target.document.name} TongRu`)
 
         .play()
 }

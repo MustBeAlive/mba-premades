@@ -23,7 +23,9 @@ export async function chainLightning({ speaker, actor, token, character, item, a
     let addedTargets = [];
     let addedTargetUuids = [];
     if (nearbyTokens.length > maxTargets) {
+        await mba.playerDialogMessage();
         let selection = await mba.selectTarget("Chain Lightning", constants.okCancel, nearbyTokens, true, 'multiple', undefined, false, `Choose targets for the lightning to bounce to<br>Max: ${maxTargets}`);
+        await mba.clearPlayerDialogMessage();
         if (!selection.buttons) {
             queue.remove(workflow.item.uuid);
             Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} CL1` })

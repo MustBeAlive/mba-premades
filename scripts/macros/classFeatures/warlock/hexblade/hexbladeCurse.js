@@ -311,7 +311,9 @@ async function defeated(origin, effect) {
         async function effectMacro() {
             let validTargets = await mbaPremades.helpers.findNearby(token, 30, "enemy", false, false);
             if (validTargets.length) {
+                await mbaPremades.helpers.playerDialogMessage();
                 let selection = await mbaPremades.helpers.dialog('Master of Hexes', [['Apply healing as usual', true], ["Apply Hexblade's Curse to new target within 30ft", false]], "<b>What would you like to do?</b>");
+                await mbaPremades.helpers.clearPlayerDialogMessage();
                 if (selection) {
                     let damage = Math.max(origin.actor.system.abilities.cha.mod, 1);
                     let warlockLevels = origin.actor.classes.warlock?.system?.levels;
@@ -319,8 +321,11 @@ async function defeated(origin, effect) {
                     await mbaPremades.helpers.applyDamage(token, damage, 'healing');
                     let targetEffect = mbaPremades.helpers.findEffect(actor, "Hexblade's Curse: Target");
                     if (targetEffect) await mbaPremades.helpers.removeEffect(effect);
-                } else {
+                }
+                else {
+                    await mbaPremades.helpers.playerDialogMessage();
                     let selection2 = await mbaPremades.helpers.selectTarget("Hexblade's Curse", mbaPremades.constants.okCancel, validTargets, true, 'one', undefined, false, "Select target to curse:");
+                    await mbaPremades.helpers.clearPlayerDialogMessage();
                     if (!selection2.buttons) return;
                     let targetUuid = selection2.inputs.find(i => i);
                     if (!targetUuid) return;

@@ -1,9 +1,6 @@
 export async function lightningBolt({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
-    if (!template) {
-        ui.notifications.warn("Unable to find tempalte!");
-        return;
-    }
+    if (!template) return;
 
     new Sequence()
 
@@ -11,16 +8,16 @@ export async function lightningBolt({ speaker, actor, token, character, item, ar
 
         .effect()
         .file("jb2a.breath_weapons.lightning.line.blue")
-        .attachTo(token, { offset: { x: 0 }, gridUnits: true })
+        .attachTo(workflow.token, { offset: { x: 0 }, gridUnits: true })
         .stretchTo(template, { onlyX: true })
-        .spriteOffset({ x: token.document.width / 2.25 }, { gridUnits: true })
+        .spriteOffset({ x: workflow.token.document.width / 2.25 }, { gridUnits: true })
 
         .effect()
         .name("location")
         .file("jb2a.breath_weapons.lightning.line.blue")
-        .attachTo(token, { offset: { x: 0 }, gridUnits: true })
+        .attachTo(workflow.token, { offset: { x: 0 }, gridUnits: true })
         .stretchTo(template, { onlyX: true })
-        .spriteOffset({ x: token.document.width / 2.25 }, { gridUnits: true })
+        .spriteOffset({ x: workflow.token.document.width / 2.25 }, { gridUnits: true })
         .filter("ColorMatrix", { saturate: -1, brightness: 2, contrast: 1 })
         .duration(3350)
         .fadeOut(250)
@@ -30,12 +27,12 @@ export async function lightningBolt({ speaker, actor, token, character, item, ar
 
         .effect()
         .file("animated-spell-effects-cartoon.electricity.05")
-        .atLocation(token)
+        .atLocation(workflow.token)
         .rotateTowards({ x: template.x, y: template.y })
         .rotate(90)
         .filter("ColorMatrix", { saturate: -1, brightness: 2, contrast: 1 })
-        .spriteOffset({ x: -token.document.width - (0.25 * token.document.width), y: token.document.width / -4 }, { gridUnits: true })
-        .scaleToObject(token.document.width * 2, { uniform: false })
+        .spriteOffset({ x: -workflow.token.document.width - (0.25 * workflow.token.document.width), y: workflow.token.document.width / -4 }, { gridUnits: true })
+        .scaleToObject(workflow.token.document.width * 2, { uniform: false })
         .aboveLighting()
         .playbackRate(1.6)
         .delay(2800)
@@ -54,8 +51,8 @@ export async function lightningBolt({ speaker, actor, token, character, item, ar
         .belowTokens()
 
         .effect()
-        .from(token)
-        .atLocation(token)
+        .from(workflow.token)
+        .atLocation(workflow.token)
         .delay(2800)
         .duration(250)
         .fadeOut(200)

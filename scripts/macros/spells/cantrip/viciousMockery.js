@@ -3,6 +3,7 @@ import {constants} from "../../generic/constants.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
+    if (!target) return;
     if (!mba.findEffect(target.actor, "Deafened")) return;
     await mba.createEffect(target.actor, constants.immunityEffectData);
 }
@@ -34,6 +35,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     const gmInputType = "freeform"; //"freeform", "dropdown", "" (disable)
     const gmInputText = ["You smell worse than a golbin!", "I've seen more threatening geckos!", "Your momma's so ugly, clerics try to turn her!"];
     let target = workflow.targets.first();
+    if (!target) return;
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} VicMoc` })
     };
@@ -53,7 +55,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'dae': {
                 'showIcon': true,
-                'specialDuration': ["1Attack", "turnEnd"]
+                'specialDuration': ["1Attack", "turnEnd", "combatEnd"]
             },
             'effectmacro': {
                 'onDelete': {
@@ -74,6 +76,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
     let word = [];
     let wordInput;
+    await mba.playerDialogMessage();
     if (gmInputType === "dropdown") {
         wordInput = await warpgate.menu({
             inputs: [{
@@ -104,7 +107,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             { title: 'Vicious Mockery' }
         );
     }
-
+    await mba.clearPlayerDialogMessage();
     word.push(wordInput.inputs);
 
     const style = {

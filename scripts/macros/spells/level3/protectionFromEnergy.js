@@ -9,7 +9,9 @@ export async function protectionFromEnergy({ speaker, actor, token, character, i
         ['Lightning', 'Lightning', "modules/mba-premades/icons/spells/level3/protection_from_energy_lightning.webp"],
         ['Thunder', 'Thunder', "modules/mba-premades/icons/spells/level3/protection_from_energy_thunder.webp"]
     ];
+    await mba.playerDialogMessage();
     let selection = await mba.selectImage("Protection from Energy", choices, "Choose element:", "both");
+    await mba.clearPlayerDialogMessage();
     if (!selection.length) {
         await mba.removeCondition(workflow.actor, "Concentrating");
         return;

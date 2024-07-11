@@ -1,5 +1,5 @@
-import { constants } from "../../generic/constants.js";
-import { mba } from "../../../helperFunctions.js";
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function onHit(workflow, targetToken) {
     if (!workflow.damageRoll || !workflow.hitTargets.has(targetToken)) return;
@@ -102,7 +102,6 @@ async function onHit(workflow, targetToken) {
         },
     };
     await mba.createEffect(targetToken.actor, effectData);
-
 }
 
 async function turnStart(token, origin) {
@@ -110,7 +109,7 @@ async function turnStart(token, origin) {
     let regenEffect = await mba.findEffect(token.actor, "Regeneration");
     let zeroHPKey = regenEffect.changes.filter(i => i.key === "flags.mba-premades.regeneration.zeroHP");
     if (mba.checkTrait(token.actor, 'di', 'healing')) return;
-    let blockEffect = mba.findEffect(token.actor, 'Regeneration: Blocked');
+    let blockEffect = mba.findEffect(token.actor, "Regeneration: Blocked");
     if (blockEffect) {
         if (currentHP < 1) {
             await mba.removeEffect(regenEffect);
@@ -119,8 +118,11 @@ async function turnStart(token, origin) {
         await mba.removeEffect(blockEffect);
         return;
     }
-    if (zeroHPKey.length && currentHP === 0) return;
-    let reduceEffect = mba.findEffect(token.actor, 'Regeneration: Reduced');
+    if (zeroHPKey.length && currentHP === 0) {
+        await mba.removeEffect(regenEffect);
+        return;
+    }
+    let reduceEffect = mba.findEffect(token.actor, "Regeneration: Reduced");
     let featureData = duplicate(origin.toObject());
     delete featureData._id;
     if (reduceEffect) {
@@ -132,10 +134,7 @@ async function turnStart(token, origin) {
     setProperty(options, 'workflowOptions.allowIncapacitated', true);
     if (currentHP === 0) {
         let deadEffect = mba.findEffect(token.actor, 'Dead?');
-        if (deadEffect) {
-            await mba.removeEffect(deadEffect);
-        }
-
+        if (deadEffect) await mba.removeEffect(deadEffect);
     }
     new Sequence()
 

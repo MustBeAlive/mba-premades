@@ -1,10 +1,10 @@
-import {mba} from '../../helperFunctions.js';
 import {constants} from '../generic/constants.js';
+import {mba} from '../../helperFunctions.js';
 import {queue} from '../mechanics/queue.js';
 
 async function reroll({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (workflow.hitTargets.size === 0 || !workflow.damageRoll || !constants.attacks.includes(workflow.item.system.actionType)) return;
-    let originItem = mba.getItem(workflow.actor, 'Piercer: Reroll Damage');
+    let originItem = mba.getItem(workflow.actor, "Piercer: Reroll Damage");
     if (!originItem) return;
     let doExtraDamage = mba.perTurnCheck(originItem, "feat", "piercer", false, workflow.token.id);
     if (!doExtraDamage) return;
@@ -42,14 +42,16 @@ async function reroll({ speaker, actor, token, character, item, args, scope, wor
             return;
         }
     } else {
+        await mba.playerDialogMessage();
         let selection = await mba.dialog(originItem.name, constants.yesNo, `<p>Roll Result: <b>${lowRoll}</b></p><p>Would you like to reroll?</p>`);
+        await mba.clearPlayerDialogMessage();
         if (!selection) {
             queue.remove(workflow.item.uuid);
             return;
         }
     }
     if (mba.inCombat()) await originItem.setFlag('mba-premades', 'feat.piercer.turn', game.combat.round + '-' + game.combat.turn);
-    let roll = await new Roll('1d' + lowRollDice).roll({ 'async': true });
+    let roll = await new Roll(`'1d${lowRollDice}`).roll({ 'async': true });
     let newDamageRoll = workflow.damageRoll;
     newDamageRoll.terms[resultI].results[resultJ].result = roll.total;
     newDamageRoll._total = newDamageRoll._evaluateTotal();

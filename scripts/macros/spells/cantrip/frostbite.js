@@ -2,6 +2,7 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function frostbite({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
+    if (!target) return;
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} Frostbite` })
     };
@@ -29,7 +30,7 @@ export async function frostbite({ speaker, actor, token, character, item, args, 
         'flags': {
             'dae': {
                 'showIcon': true,
-                'specialDuration': ['turnEnd', '1Attack:mwak', '1Attack:rwak']
+                'specialDuration': ['turnEnd', '1Attack:mwak', '1Attack:rwak', 'combatEnd']
             },
             'effectmacro': {
                 'onDelete': {

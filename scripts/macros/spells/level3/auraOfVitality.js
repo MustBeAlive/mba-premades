@@ -1,11 +1,11 @@
 import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', 'Aura of Vitality: Heal Creature', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Aura of Vitality: Heal Creature", false);
     if (!featureData) return;
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} AoV` })
-        await warpgate.revert(token.document, 'Aura of Vitality');
+        await warpgate.revert(token.document, "Aura of Vitality");
     }
     const effectData = {
         'name': "Aura of Vitality",

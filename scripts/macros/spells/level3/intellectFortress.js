@@ -6,7 +6,9 @@ import {mba} from "../../../helperFunctions.js";
 export async function intellectFortress({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel - 2;
     if (workflow.targets.size > ammount) {
+        await mba.playerDialogMessage();
         let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+        await mba.clearPlayerDialogMessage();
         if (!selection.buttons) {
             ui.notifications.warn('Failed to select right ammount of targets, try again!')
             await mba.removeCondition(workflow.actor, "Concentrating");

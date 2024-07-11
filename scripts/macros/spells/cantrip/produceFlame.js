@@ -6,10 +6,10 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Produce Flame: Hurl", false);
     if (!featureData) return;
     delete featureData._id;
-    featureData.system.damage.parts[0][0] = dice + 'd8[fire]';
+    featureData.system.damage.parts[0][0] = `${dice}d8[fire]`;
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} ProFla` })
-        await warpgate.revert(token.document, 'Produce Flame');
+        await warpgate.revert(token.document, "Produce Flame");
     }
     let effectData = {
         'name': workflow.item.name,
@@ -128,6 +128,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
+    if (!target) return;
     let effect = await mba.findEffect(workflow.actor, "Produce Flame");
     Sequencer.EffectManager.endEffects({ name: `${token.document.name} ProFla` })
     if (!workflow.hitTargets.size) {

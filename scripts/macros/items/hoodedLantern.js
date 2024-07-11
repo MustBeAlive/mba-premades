@@ -9,13 +9,17 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             return;
         }
         let choices = [["Yes, light the lantern", "light"], ["No, cancel", false]];
+        await mba.playerDialogMessage();
         let selection = await mba.dialog("Hooded Lantern", choices, `Would you like to light a <b>Hooded Lantern</b>?`);
+        await mba.clearPlayerDialogMessage();
         if (!selection) return;
         await hoodedLantern.light(workflow)
         return;
     }
     let choices = [["Raise Lantern's hood (Bright Light)", "bright"], ["Lower Lantern's hood (Dim Light)", "dim"], ["Extinguish Lantern", "extinguish"]];
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Hooded Lantern", choices, `<b>What would you like to do?</b>`);
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     switch (selection) {
         case "bright": {

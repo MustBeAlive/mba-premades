@@ -6,7 +6,9 @@ export async function vortexWarp({ speaker, actor, token, character, item, args,
     let maxRange = 90 + (30 * (workflow.castData.castLevel - 2));
     let icon = target.document.texture.src;
     let interval = target.document.width % 2 === 0 ? 1 : -1;
+    await mba.playerDialogMessage();
     let position = await mba.aimCrosshair(workflow.token, maxRange, icon, interval, target.document.width);
+    await mba.clearPlayerDialogMessage();
     if (position.cancelled) return;
 
     await new Sequence()

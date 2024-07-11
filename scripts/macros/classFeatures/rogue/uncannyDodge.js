@@ -27,25 +27,23 @@ export async function uncannyDodge({ speaker, actor, token, character, item, arg
         x: token.x + canvas.grid.size * token.document.width / 2,
         y: token.y + canvas.grid.size * token.document.width / 2,
     };
-    
     const middleposition = {
         x: token.x - tokenCenter.x,
         y: token.y - tokenCenter.y,
     };
-    
     var Xmirror = false;
     var Ymirror = false;
-    
     if (middleposition.x > 0) {
         middleposition.x = 1;
-    } else if (middleposition.x < 0) {
+    }
+    else if (middleposition.x < 0) {
         middleposition.x = -1;
         Xmirror = true;
     }
-    
     if (middleposition.y > 0) {
         middleposition.y = 1;
-    } else if (middleposition.y < 0) {
+    }
+    else if (middleposition.y < 0) {
         middleposition.y = -1;
         Ymirror = true;
     }

@@ -5,7 +5,9 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     let ammount = workflow.castData.castLevel - 1;
     let concEffect = await mba.findEffect(workflow.actor, "Concentrating");
     if (workflow.targets.size > ammount) {
+        await mba.playerDialogMessage();
         let selection = await mba.selectTarget("Hold Person", constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+        await mba.clearPlayerDialogMessage();
         if (!selection.buttons) {
             ui.notifications.warn("Failed to select right ammount of targets, try again!")
             await mba.removeEffect(concEffect);
@@ -146,7 +148,10 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             .waitUntilFinished(-1600)
 
             .thenDo(async () => {
-                await mba.createEffect(target.actor, effectData);
+                let newEffect = await mba.createEffect(target.actor, effectData);
+                let concData = workflow.actor.getFlag("midi-qol", "concentration-data.removeUuids");
+                concData.push(newEffect.uuid);
+                await workflow.actor.setFlag("midi-qol", "concentration-data.removeUuids", concData);
             })
 
             .effect()

@@ -10,7 +10,9 @@ export async function stillnessOfMind({ speaker, actor, token, character, item, 
         ui.notifications.info("You are neither charmed nor frightened!");
         return;
     }
+    await mba.playerDialogMessage();
     let selection = await mba.dialog("Stillness of Mind", choices, "Choose condition to remove:");
+    await mba.clearPlayerDialogMessage();
     if (!selection) return;
     new Sequence()
 

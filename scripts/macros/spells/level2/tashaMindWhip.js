@@ -4,9 +4,11 @@ import {mba} from "../../../helperFunctions.js";
 export async function tashaMindWhip({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel - 1;
     if (workflow.targets.size > ammount) {
-        let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
+        await mba.playerDialogMessage();
+        let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, "multiple", undefined, false, `Too many targets selected. Choose which targets to keep (Max: ${ammount})`);
+        await mba.clearPlayerDialogMessage();
         if (!selection.buttons) {
-            ui.notifications.warn('Failed to select right ammount of targets, try again!')
+            ui.notifications.warn("Failed to select targets, try again!")
             return;
         }
         let check = selection.inputs.filter(i => i != false);
@@ -20,37 +22,38 @@ export async function tashaMindWhip({ speaker, actor, token, character, item, ar
     await warpgate.wait(100);
     let targets = Array.from(game.user.targets);
     if (mba.within30(targets) === false) {
-        ui.notifications.warn('Targets cannot be further than 30 ft. of each other, try again!')
+        ui.notifications.warn('Targets cannot be further than 30 ft. of each other. Try again!')
         return;
     }
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', "Tasha's Mind Whip: Damage", false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Tasha's Mind Whip: Damage", false);
     if (!featureData) return;
     delete featureData._id;
     featureData.system.save.dc = mba.getSpellDC(workflow.item);
     setProperty(featureData, 'mba-premades.spell.castData.school', workflow.item.system.school);
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
-    let targetUuids = [];
-    for (let i of targets) targetUuids.push(i.document.uuid);
+    let targetUuids = Array.from(targets).map(t => t.document.uuid);
     let [config, options] = constants.syntheticItemWorkflowOptions(targetUuids);
     await game.messages.get(workflow.itemCardId).delete();
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (!featureWorkflow.failedSaves.size) return;
     async function effectMacroTurnStart() {
         let choices = [['Action', 'action'], ['Bonus Action', 'bonus'], ['Movement', 'move']];
+        await mbaPremades.helpers.playerDialogMessage();
         let selection = await mbaPremades.helpers.dialog("Tasha's Mind Whip", choices, `<b>Choose which action you would like to keep:</b>`);
+        await mbaPremades.helpers.clearPlayerDialogMessage();
         if (!selection) return;
         let flavor;
         switch (selection) {
             case 'action': {
-                flavor = `Mind Whip: <b>${token.document.name}</b> chose to keep its <b>Action</b>`;
+                flavor = `Mind Whip: <b>${token.document.name}</b> chose to keep its <u>Action</u>`;
                 break;
             }
             case 'bonus': {
-                flavor = `Mind Whip: <b>${token.document.name}</b> chose to keep its <b>Bonus Action</b>`;
+                flavor = `Mind Whip: <b>${token.document.name}</b> chose to keep its <u>Bonus Action</u>`;
                 break;
             }
             case 'move': {
-                flavor = `Mind Whip: <b>${token.document.name}</b> chose to keep its <b>Movement Action</b>`;
+                flavor = `Mind Whip: <b>${token.document.name}</b> chose to keep its <u>Movement Action</u>`;
                 break;
             }
         }
@@ -60,7 +63,7 @@ export async function tashaMindWhip({ speaker, actor, token, character, item, ar
         });
     };
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Mind Whip`, object: token })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} MinWhi` })
     };
     const effectData = {
         'name': workflow.item.name,
@@ -131,7 +134,7 @@ export async function tashaMindWhip({ speaker, actor, token, character, item, ar
             .fadeOut(1000)
             .mask()
             .persist()
-            .name(`${target.document.name} Mind Whip`)
+            .name(`${target.document.name} MinWhi`)
             .playIf(() => {
                 return workflow.failedSaves.size
             })

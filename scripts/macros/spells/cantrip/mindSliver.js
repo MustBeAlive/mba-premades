@@ -2,8 +2,9 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function mindSliver({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
+    if (!target) return;
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Mind Sliver` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} MinSli` })
     };
     const effectData = {
         'name': workflow.item.name,
@@ -23,7 +24,7 @@ export async function mindSliver({ speaker, actor, token, character, item, args,
         'flags': {
             'dae': {
                 'showIcon': true,
-                'specialDuration': ['turnEndSource', 'isSave']
+                'specialDuration': ['turnEndSource', 'isSave', 'combatEnd']
             },
             'effectmacro': {
                 'onDelete': {
@@ -76,7 +77,7 @@ export async function mindSliver({ speaker, actor, token, character, item, args,
         .fadeOut(1000)
         .mask()
         .persist()
-        .name(`${target.document.name} Mind Sliver`)
+        .name(`${target.document.name} MinSli`)
         .playIf(() => {
             return workflow.failedSaves.size
         })

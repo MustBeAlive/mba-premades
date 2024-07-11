@@ -1,6 +1,8 @@
 import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
+// To do: check for overlap
+
 async function stench(token) {
     if (!mba.inCombat()) return;
     let tokenId = game.combat.current.tokenId;
@@ -48,7 +50,7 @@ async function stench(token) {
             'seconds': 3600
         }
     };
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Monster Features', 'Ghast: Stench', false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Monster Features", "Ghast: Stench", false);
     if (!featureData) return;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': token.actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
@@ -57,7 +59,6 @@ async function stench(token) {
         await mba.createEffect(target.actor, immuneData);
         return;
     }
-
     new Sequence()
 
         .effect()

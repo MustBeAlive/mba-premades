@@ -7,7 +7,9 @@ export async function cleansingTouch({ speaker, actor, token, character, item, a
         ui.notifications.warn('No effects to dispel!');
         return;
     }
+    await mba.playerDialogMessage();
     let effectToDispel = await mba.selectEffect("Cleansing Touch", effects, "<b>Choose one effect:</b>");
+    await mba.clearPlayerDialogMessage();
     if (!effectToDispel) return;
     new Sequence()
 

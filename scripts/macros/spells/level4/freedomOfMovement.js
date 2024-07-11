@@ -3,7 +3,7 @@ import {mba} from "../../../helperFunctions.js";
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} FoM` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} FrOfMo` })
         await warpgate.revert(token.document, "Freedom of Movement");
     };
     let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Freedom of Movement: End Grapple", false);
@@ -77,7 +77,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .belowTokens()
         .filter("ColorMatrix", { hue: 210 })
         .persist()
-        .name(`${target.document.name} FoM`)
+        .name(`${target.document.name} FrOfMo`)
 
         .thenDo(async () => {
             await warpgate.mutate(workflow.token.document, updates, {}, options);
@@ -99,17 +99,20 @@ async function grapple({ speaker, actor, token, character, item, args, scope, wo
             return;
         }
         await mba.removeEffect(grapple);
-    } else {
+    }
+    else {
         let effects = effectsFirst.filter(i => i.name != "Grappled");
         if (effects.length < 2) {
             let grapple = await mba.findEffect(workflow.actor, effects[0].name);
             if (!grapple) {
-                ui.notifications.warn(`Unable to find Poison: ${effects[0].name}`);
+                ui.notifications.warn(`Unable to find Grapple Effect: ${effects[0].name}`);
                 return;
             }
             await mba.removeEffect(grapple);
         } else {
+            await mba.playerDialogMessage();
             let effectToRemove = await mba.selectEffect("Freedom of Movement", effects, "<b>Choose one effect:</b>", false);
+            await mba.clearPlayerDialogMessage();
             if (!effectToRemove) return;
             await mba.removeEffect(effectToRemove);
         }

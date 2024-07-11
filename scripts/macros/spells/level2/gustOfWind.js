@@ -1,6 +1,6 @@
-//wip
-
 import {mba} from "../../../helperFunctions.js";
+
+//To do: 
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);

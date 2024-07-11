@@ -10,8 +10,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .scaleToObject(1.7 * token.document.texture.scaleX)
             .waitUntilFinished(-500)
 
-            .thenDo(function () {
-                Sequencer.EffectManager.endEffects({ name: `${token.document.name} Shield` })
+            .thenDo(async () => {
+                Sequencer.EffectManager.endEffects({ name: `${token.document.name} Shield` });
             })
 
             .play()
@@ -40,7 +40,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'flags': {
             'dae': {
                 'showIcon': true,
-                'specialDuration': ['turnStart']
+                'specialDuration': ['turnStart', 'combatEnd']
             },
             'effectmacro': {
                 'onDelete': {

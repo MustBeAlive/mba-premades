@@ -71,6 +71,7 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
     let type = workflow.item.system.damage.parts[0][1];
     if (type != "acid" && type != "cold" && type != "fire" && type != "lightning" && type != "thunder") return;
     let effect = mba.findEffect(source.actor, "Primordial Ward");
+    await mba.playerDialogMessage();
     await new Dialog({
         title: "Primodial Ward",
         content: `
@@ -139,11 +140,13 @@ async function item({speaker, actor, token, character, item, args, scope, workfl
                         }
                     };
                     await mba.createEffect(source.actor, effectData);
+                    await mba.clearPlayerDialogMessage();
                 },
             },
             no: {
                 label: "No",
                 callback: async () => {
+                    await mba.clearPlayerDialogMessage();
                     return;
                 }
             }

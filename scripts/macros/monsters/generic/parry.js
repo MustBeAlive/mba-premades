@@ -2,7 +2,10 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function parry({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.actor) return;
-    if (mba.findEffect(workflow.actor, "Blinded")) return;
+    if (mba.findEffect(workflow.actor, "Blinded")) {
+        ui.notifications.warn("You are blinded and thus are unable use to parry!");
+        return;
+    }
     let CR = await mba.levelOrCR(workflow.actor);
     let bonus;
     if (CR < 5 && workflow.token.document.name != "Karrnathi Undead Soldier") bonus = 2;
@@ -41,6 +44,7 @@ export async function parry({ speaker, actor, token, character, item, args, scop
 
         .thenDo(async () => {
             await mba.createEffect(workflow.actor, effectData);
+            if (!mba.findEffect(workflow.actor, "Reaction")) await mba.addCondition(workflow.actor, "Reaction");
         })
 
         .animation()

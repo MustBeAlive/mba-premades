@@ -17,7 +17,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Owlbear", "owlbear", "modules/mba-premades/icons/spells/level2/healing_spirit/healing_spirit_owlbear.webp"],
         ["Pig", "pig", "modules/mba-premades/icons/spells/level2/healing_spirit/healing_spirit_pig.webp"],
     ];
+    await mba.playerDialogMessage();
     let spiritImage = await mba.selectImage("Healing Spirit", images, "<b>Select spirit image:</b>", "path");
+    await mba.clearPlayerDialogMessage();
     if (!spiritImage) spiritImage = images[0][2];
     let template = canvas.scene.collections.templates.get(workflow.templateId);
     if (!template) return;
@@ -30,8 +32,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                     'casterUuid': workflow.token.document.uuid,
                     'disposition': workflow.token.document.disposition,
                     'image': spiritImage,
-                    'macroName': 'healingSpirit',
-                    'name': 'healingSpirit',
                     'saveDC': mba.getSpellDC(workflow.item),
                     'templateUuid': template.uuid,
                     'usesCurrent': uses,
@@ -217,8 +217,10 @@ async function trigger(token, trigger) {
     if (!originItem) return;
     let casterDoc = await fromUuid(trigger.casterUuid);
     let caster = casterDoc._object;
-    let selection = await mba.remoteDialog("Healing Spirit", [["Yes", "yes"], ["No", "no"]], mba.firstOwner(caster).id, `<b>Would you like to heal ${token.name}?</b>`);
-    if (selection === false) return;
+    await mba.playerDialogMessage();
+    let selection = await mba.remoteDialog("Healing Spirit", constants.yesNo, mba.firstOwner(caster).id, `<b>Would you like to heal ${token.name}?</b>`);
+    await mba.clearPlayerDialogMessage();
+    if (!selection) return;
     let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Healing Spirit: Heal", false);
     if (!featureData) return;
     delete featureData._id;

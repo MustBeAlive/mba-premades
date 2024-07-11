@@ -1,7 +1,7 @@
 import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
-// To do: overlapping issue
+// To do: check for overlap
 
 async function stench(token) {
     if (!mba.inCombat()) return;

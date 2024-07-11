@@ -3,8 +3,8 @@ import {mba} from "../../../helperFunctions.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     async function effectMacroDel() {
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} PWT` });
         await mbaPremades.macros.passWithoutTrace.end(token);
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} PWT` });
     };
     const effectData = {
         'name': "Pass without Trace: Aura",
@@ -91,8 +91,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .fadeOut(1500)
         .scaleIn(0, 5000, { ease: "easeOutCubic" })
         .scaleOut(0, 1500, { ease: "linear" })
-        .randomRotation()
         .opacity(0.25)
+        .randomRotation()
+        .belowTokens()
         .persist()
         .name(`${workflow.token.document.name} PWT`)
 

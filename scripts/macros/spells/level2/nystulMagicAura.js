@@ -1,6 +1,6 @@
 import {mba} from "../../../helperFunctions.js";
 
-// To do: the actual spell >.<
+// To do:
 
 export async function nystulMagicAura({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
@@ -32,7 +32,9 @@ export async function nystulMagicAura({ speaker, actor, token, character, item, 
             ["Plant", "plant"],
             ["Undead", "undead"]
         ];
+        await mba.playerDialogMessage();
         let selectionType = await mba.dialog("Nystul's Magic Aura: Type", choicesType, `Choose creature type:`);
+        await mba.clearPlayerDialogMessage();
         if (!selectionType) return;
         let effectData = {
             'name': "Nystul's Magic Aura",
