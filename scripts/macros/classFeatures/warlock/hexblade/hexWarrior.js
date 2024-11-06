@@ -9,7 +9,7 @@ export async function hexWarrior({ speaker, actor, token, character, item, args,
     let selection;
     if (weapons.length === 1) selection = weapons[0];
     else {
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         [selection] = await mba.selectDocument('Hex Warrior: Select Weapon:', weapons);
         await mba.clearPlayerDialogMessage();
     }
@@ -26,7 +26,8 @@ export async function hexWarrior({ speaker, actor, token, character, item, args,
             ability = 'cha';
             changed = true;
         }
-    } else {
+    }
+    else {
         if (score <= cha) {
             ability = 'cha';
             changed = true;

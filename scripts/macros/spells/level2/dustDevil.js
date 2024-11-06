@@ -134,7 +134,9 @@ async function move({ speaker, actor, token, character, item, args, scope, workf
         ui.notifications.warn("Unable to find template!");
         return;
     }
+    await mba.playerDialogMessage(game.user);
     let position = await mba.aimCrosshair(workflow.token, 30, workflow.item.img, 2, 3);
+    await mba.clearPlayerDialogMessage();
     if (position.canceled) {
         ui.notifications.warn("Failed to choose position, returning!");
         return;

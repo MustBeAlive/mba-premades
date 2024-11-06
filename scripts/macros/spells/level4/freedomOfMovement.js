@@ -13,7 +13,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>For the duration, your movement is unaffected by difficult terrain, and spells and other magical effects can neither reduce your speed nor cause you to be paralyzed or restrained.</p>
+            <p>For the duration, your movement is unaffected by difficult terrain, and spells and other magical effects can neither reduce your speed nor cause you to be @UUID[Compendium.mba-premades.MBA SRD.Item.jooSbuYlWEhaNpIi]{Paralyzed} or @UUID[Compendium.mba-premades.MBA SRD.Item.gfRbTxGiulUylAjE]{Restrained}.</p>
             <p>You can also spend 5 feet of movement to automatically escape from nonmagical restraints, such as manacles or a creature that has you @UUID[Compendium.mba-premades.MBA SRD.Item.EthsAglVRC2bOxun]{Grappled}.</p>
             <p>Finally, being underwater imposes no penalties on your movement or attacks.</p>
         `,
@@ -110,7 +110,7 @@ async function grapple({ speaker, actor, token, character, item, args, scope, wo
             }
             await mba.removeEffect(grapple);
         } else {
-            await mba.playerDialogMessage();
+            await mba.playerDialogMessage(game.user);
             let effectToRemove = await mba.selectEffect("Freedom of Movement", effects, "<b>Choose one effect:</b>", false);
             await mba.clearPlayerDialogMessage();
             if (!effectToRemove) return;

@@ -10,8 +10,9 @@ export async function accursedSpecter({ speaker, actor, token, character, item, 
     if (mba.raceOrType(target.actor) != "humanoid") return;
     let originItem = await mba.getItem(workflow.actor, "Accursed Specter");
     if (originItem.system.uses.value < 1) return;
-    await mba.playerDialogMessage();
-    let selection = await mba.dialog("Accursed Specter", [["Yes, summon Specter", true], ["No", false]], `Do you want to cause ${target.document.name} spirit to rise as a <b><u>Specter?</u></b>`);
+    let choices = [["Yes, summon Specter", true], ["No", false]];
+    await mba.playerDialogMessage(game.user);
+    let selection = await mba.dialog("Accursed Specter", choices, `Would you like to cause ${target.document.name} spirit to rise as a <b><u>Specter?</u></b>`);
     await mba.clearPlayerDialogMessage();
     if (!selection) return;
     let sourceActor = game.actors.getName("MBA: Accursed Specter");
@@ -21,7 +22,7 @@ export async function accursedSpecter({ speaker, actor, token, character, item, 
     }
     let tokenName = `${workflow.token.document.name} Accursed Specter`;
     let tempHP = Math.min(workflow.actor.classes.warlock?.system?.levels / 2);
-    let lifeDrainFeatureData = await mba.getItemFromCompendium('mba-premades.MBA Summon Features', 'Accursed Specter: Life Drain', false);
+    let lifeDrainFeatureData = await mba.getItemFromCompendium("mba-premades.MBA Summon Features", "Accursed Specter: Life Drain", false);
     if (!lifeDrainFeatureData) {
         ui.notifications.warn("Unable to find item in the compendium!! (Accursed Specter: Life Drain)");
         return;
@@ -55,8 +56,9 @@ export async function accursedSpecter({ speaker, actor, token, character, item, 
             }
         }
     };
-    await tashaSummon.spawn(sourceActor, updates, 86400, originItem, 100, workflow.token, "shadow");
-    await originItem.update({ "system.uses.value": 0 });
+    await mba.playerDialogMessage(game.user);
+    await tashaSummon.spawn(sourceActor, updates, 86400, originItem, 5, target, "shadow");
+    await mba.clearPlayerDialogMessage();
     async function effectMacroLongRest() {
         await effect.delete();
     }
@@ -71,4 +73,5 @@ export async function accursedSpecter({ speaker, actor, token, character, item, 
     }
     let effect = await mba.findEffect(workflow.actor, "Accursed Specter");
     if (effect) await mba.updateEffect(effect, updates2);
+    await originItem.update({ "system.uses.value": 0 });
 }

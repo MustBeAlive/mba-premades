@@ -47,13 +47,13 @@ export async function trueSeeing({ speaker, actor, token, character, item, args,
 
         .effect()
         .file("jb2a.swirling_sparkles.01.blue")
-        .attachTo(workflow.token)
+        .attachTo(target)
         .scaleToObject(1.7)
         .waitUntilFinished(-1000)
 
         .effect()
         .file(workflow.item.img)
-        .attachTo(workflow.token)
+        .attachTo(target)
         .scaleToObject(1)
         .duration(6000)
         .fadeIn(1000)
@@ -62,7 +62,7 @@ export async function trueSeeing({ speaker, actor, token, character, item, args,
 
         .effect()
         .file("jb2a.fireflies.few.02.blue")
-        .attachTo(workflow.token)
+        .attachTo(target)
         .scaleToObject(1.5)
         .duration(5500)
         .fadeIn(500)
@@ -71,7 +71,7 @@ export async function trueSeeing({ speaker, actor, token, character, item, args,
 
         .effect()
         .file("jb2a.fireflies.few.02.blue")
-        .attachTo(workflow.token)
+        .attachTo(target)
         .scaleToObject(1.5)
         .duration(5500)
         .fadeIn(500)
@@ -79,13 +79,13 @@ export async function trueSeeing({ speaker, actor, token, character, item, args,
         .zIndex(2)
 
         .thenDo(async () => {
-            await mba.createEffect(workflow.actor, effectData)
+            await mba.createEffect(target.actor, effectData)
         })
 
         .effect()
         .file("jb2a.energy_field.02.below.blue")
-        .attachTo(workflow.token)
-        .scaleToObject(1.5 * workflow.token.document.texture.scaleX)
+        .attachTo(target)
+        .scaleToObject(1.5 * target.document.texture.scaleX)
         .delay(1000)
         .duration(4000)
         .fadeIn(1000)

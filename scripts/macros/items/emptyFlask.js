@@ -17,7 +17,7 @@ export async function emptyFlask({ speaker, actor, token, character, item, args,
         [`Fill ${type} with Water`, "Water"],
         ["Cancel", false]
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog(`Empty ${type}`, liquids, `<b>Choose liquid type:</b>`);
     await mba.clearPlayerDialogMessage();
     if (!selection) return;

@@ -96,6 +96,9 @@ async function spawn(sourceActor, updates = {}, duration, originItem, maxRange, 
         },
         'origin': originItem.uuid,
         'flags': {
+            'dae': {
+                'specialDuration': ['zeroHP']
+            },
             'effectmacro': {
                 'onDelete': {
                     'script': mba.functionToString(effectMacroDel)
@@ -126,6 +129,9 @@ async function spawn(sourceActor, updates = {}, duration, originItem, maxRange, 
             'seconds': duration
         },
         'flags': {
+            'dae': {
+                'specialDuration': ['zeroHP']
+            },
             'effectmacro': {
                 'onDelete': {
                     'script': 'let effect = await fromUuid("' + targetEffect.uuid + '"); if (effect) await mbaPremades.helpers.removeEffect(effect);'

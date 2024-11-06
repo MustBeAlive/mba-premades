@@ -3,7 +3,7 @@ import {mba} from "../../../helperFunctions.js";
 export async function cunningAction({ speaker, actor, token, character, item, args, scope, workflow }) {
     let choices = [["Dash", "Dash"], ["Disengage", "Disengage"], ["Hide", "Hide"]];
     if (mba.getItem(workflow.actor, "Fast Hands")) choices.push(["Use Thieves' Tools (Fast Hands)", "fasthands"]);
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let actionName = await mba.dialog("Cunning Action", choices, `<b>Choose action type:</b>`);
     await mba.clearPlayerDialogMessage();
     if (!actionName) return;

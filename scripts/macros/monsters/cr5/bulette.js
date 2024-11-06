@@ -4,7 +4,9 @@ import {mba} from "../../../helperFunctions.js";
 async function deadlyLeap({ speaker, actor, token, character, item, args, scope, workflow }) {
     let icon = workflow.token.document.texture.src;
     let interval = workflow.token.document.width % 2 === 0 ? 1 : -1;
+    await mba.gmDialogMessage();
     let position = await mba.aimCrosshair(workflow.token, 30, icon, interval, workflow.token.document.width);
+    await mba.clearGMDialogMessage();
     if (position.cancelled) return;
 
     await new Sequence()

@@ -9,21 +9,54 @@ export async function chainLightning({ speaker, actor, token, character, item, a
         .file("jb2a.lightning_ball.blue")
         .attachTo(workflow.token)
         .scaleToObject(2)
-        .fadeIn(2000)
+        .fadeIn(500)
         .persist()
         .name(`${workflow.token.document.name} CL1`)
 
         .play()
+
     let maxTargets = workflow.castData.castLevel - 3;
     let target = workflow.targets.first();
     let nearbyTokens = mba.findNearby(target, 30, "ally", true, false);
-    if (!nearbyTokens.length) return;
+    if (!nearbyTokens.length) {
+        new Sequence()
+
+            .wait(500)
+
+            .effect()
+            .file("animated-spell-effects-cartoon.electricity.discharge.08")
+            .attachTo(workflow.token)
+            .scaleToObject(3.5)
+
+            .effect()
+            .file('jb2a.chain_lightning.secondary.blue')
+            .attachTo(workflow.token)
+            .stretchTo(target)
+
+            .effect()
+            .file("jb2a.static_electricity.03.blue")
+            .attachTo(target)
+            .scaleToObject(1.5)
+            .fadeOut(1000)
+            .playbackRate(2)
+            .opacity(2)
+            .randomRotation()
+            .repeats(10, 500)
+
+            .thenDo(async () => {
+                Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} CL1` })
+            })
+
+            .play();
+
+        return;
+    }
     let queueSetup = await queue.setup(workflow.item.uuid, 'chainLightning', 450);
     if (!queueSetup) return;
     let addedTargets = [];
     let addedTargetUuids = [];
     if (nearbyTokens.length > maxTargets) {
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let selection = await mba.selectTarget("Chain Lightning", constants.okCancel, nearbyTokens, true, 'multiple', undefined, false, `Choose targets for the lightning to bounce to<br>Max: ${maxTargets}`);
         await mba.clearPlayerDialogMessage();
         if (!selection.buttons) {

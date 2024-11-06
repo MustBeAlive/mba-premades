@@ -34,7 +34,7 @@ async function inkCloud({ speaker, actor, token, character, item, args, scope, w
         await action.use();
         return;
     }
-    let actionData = await mba.getItemFromCompendium('mba-premades.MBA Actions', "Dash", false);
+    let actionData = await mba.getItemFromCompendium("mba-premades.MBA Actions", "Dash", false);
     if (!actionData) {
         ui.notifications.warn(`Unable to find item in compendium! (Dash)`);
         return;

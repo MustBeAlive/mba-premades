@@ -20,7 +20,7 @@ export async function layOnHands({ speaker, actor, token, character, item, args,
     let choicesType = [["Restore Hitpoints", "heal", "modules/mba-premades/icons/class/paladin/lay_on_hands_heal.webp"]];
     if (uses >= 5) choicesType.push(["Remove Poison/Disease", "poisonDisease", "modules/mba-premades/icons/class/paladin/lay_on_hands_cure.webp"]);
     choicesType.push(["Cancel", false, "modules/mba-premades/icons/conditions/incapacitated.webp"]);
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selectionType = await mba.selectImage("Lay on Hands", choicesType, `What would you like to do to <u>${target.document.name}</u>?<br>Lay on Hands Pool: ${uses}`, "value");
     if (!selectionType) {
         await mba.clearPlayerDialogMessage();

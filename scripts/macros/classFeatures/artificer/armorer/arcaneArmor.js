@@ -12,7 +12,7 @@ async function selector({ speaker, actor, token, character, item, args, scope, w
         ui.notifications.warn("Something went terribly wrong, damn");
         return;
     }
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Arcane Armor", choices, `<b>Choose armor model:</b>`);
     await mba.clearPlayerDialogMessage();
     if (!selection) return;

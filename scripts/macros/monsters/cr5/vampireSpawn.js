@@ -97,6 +97,7 @@ async function biteItem({ speaker, actor, token, character, item, args, scope, w
         }
     };
     await mba.applyWorkflowDamage(workflow.token, lifestealRoll, "healing", [workflow.token], "Vampiric Bite", workflow.itemCardId);
+    if (mba.findEffect(target.actor, "Aura of Life")) return;
     await mba.createEffect(target.actor, effectData);
 }
 
@@ -106,8 +107,8 @@ async function claws({ speaker, actor, token, character, item, args, scope, work
     if (mba.checkTrait(target.actor, "ci", "grappled")) return;
     if (mba.findEffect(target.actor, `${workflow.token.document.name}: Grapple`)) return; //overly cautious
     if (mba.findEffect(target.actor, "Grappled")) return;
-    await mba.gmDialogMessage();
     let choices = [["Deal damage", false], ["Grapple", "grapple"]];
+    await mba.gmDialogMessage();
     let selection = await mba.dialog("Vampire Spawn: Claws", choices, "<b>What would you like to do?</b>");
     await mba.clearGMDialogMessage();
     if (!selection) return;

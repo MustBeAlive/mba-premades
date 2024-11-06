@@ -9,7 +9,7 @@ export async function shillelagh({ speaker, actor, token, character, item, args,
     let selection;
     if (weapons.length === 1) selection = weapons[0];
     if (!selection) {
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         [selection] = await mba.selectDocument("Which weapon would you like to empower?", weapons);
         await mba.clearPlayerDialogMessage();
     }

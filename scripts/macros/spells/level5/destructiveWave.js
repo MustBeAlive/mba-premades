@@ -19,7 +19,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let targets = Array.from(workflow.targets);
     let choices = [["Radiant", "radiant"], ["Necrotic", "necrotic"]];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Destructive Wave", choices, "<b>Choose second damage type:</b>");
     await mba.clearPlayerDialogMessage();
     if (!selection) return;

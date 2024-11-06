@@ -1,16 +1,17 @@
 import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
 
 // To do:
-// Tether-link lair action
 // Ghosts animation
+// Tether?
 
 async function paralyzingTouch({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
     if (mba.checkTrait(target.actor, "ci", "paralyzed")) return;
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} LichPT` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} LichPT` });
     };
     let effectData = {
         'name': "Lich: Paralyzing Touch",
@@ -470,33 +471,34 @@ async function lairSlot({ speaker, actor, token, character, item, args, scope, w
 async function lairTetherCast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     async function effectMacroDelSource() {
-
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} LiTeth` });
+        let targetDoc = await fromUuid(effect.flags['mba-premades']?.feature?.lich?.tether?.targetUuid);
+        if (!targetDoc) return;
+        let targetEffect = await mbaPremades.helpers.findEffect(targetDoc.actor, "Lich Tether: Target");
+        if (targetEffect) await mbaPremades.helpers.removeEffect(targetEffect);
     };
     let effectDataSource = {
-        'name': "Lich Tether",
+        'name': "Lich Tether: Source",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p></p>
+            <p>Target: <u>${target.document.name}</u></p>
         `,
         'duration': {
             'rounds': 1
         },
         'changes': [
             {
-                'key': 'flags.mba-premades.feature.lichTether.sourceUuid',
-                'mode': 5,
-                'value': target.document.uuid,
-                'priority': 20
-            },
-            {
-                'key': 'flags.mba-premades.feature.onHit.lichTether',
-                'mode': 5,
-                'value': true,
+                'key': 'flags.midi-qol.onUseMacroName',
+                'mode': 0,
+                'value': 'function.mbaPremades.macros.monsters.lich.lairTetherOnHit,preTargetDamageApplication',
                 'priority': 20
             }
         ],
         'flags': {
+            'dae': {
+                'specialDuration': ['combatEnd', 'zeroHP']
+            },
             'effectmacro': {
                 'onDelete': {
                     'script': mba.functionToString(effectMacroDelSource)
@@ -504,22 +506,49 @@ async function lairTetherCast({ speaker, actor, token, character, item, args, sc
             },
             'mba-premades': {
                 'feature': {
-                    'lichTether': {
-                        'targetUuid': target.document.uuid
+                    'lich': {
+                        'tether': {
+                            'targetUuid': target.document.uuid
+                        }
                     }
                 }
             },
         }
+    };
+    async function effectMacroDelTarget() {
+        let sourceDoc = await fromUuid(effect.flags['mba-premades']?.feature?.lich?.tether?.sourceUuid);
+        if (!sourceDoc) return;
+        let effectSource = await mbaPremades.helpers.findEffect(sourceDoc.actor, "Lich Tether: Source");
+        if (effectSource) await mbaPremades.helpers.removeEffect(effectSource);
     };
     let effectDataTarget = {
         'name': "Lich Tether: Target",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p></p>
+            <p>A crackling cord of negative energy tethers from the Lich to you.</p>
+            <p>Whenever the lich takes damage, you must make a DC 18 Constitution saving throw.</p>
+            <p>On a failed save, the lich takes half the damage (rounded down), and you take the remaining damage.</p>
         `,
-        'duration': {
-            'rounds': 1
+        'flags': {
+            'dae': {
+                'showIcon': true,
+                'specialDuration': ['zeroHP']
+            },
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDelTarget)
+                }
+            },
+            'mba-premades': {
+                'feature': {
+                    'lich': {
+                        'tether': {
+                            'sourceUuid': workflow.token.document.uuid
+                        }
+                    }
+                }
+            },
         }
     };
     await new Sequence()
@@ -566,6 +595,8 @@ async function lairTetherCast({ speaker, actor, token, character, item, args, sc
         .persist()
         .name(`${workflow.token.document.name} LiTeth`)
 
+        .wait(1500)
+
         .thenDo(async () => {
             await mba.createEffect(workflow.actor, effectDataSource);
             await mba.createEffect(target.actor, effectDataTarget);
@@ -574,8 +605,52 @@ async function lairTetherCast({ speaker, actor, token, character, item, args, sc
         .play()
 }
 
-async function lairTetherItem({ speaker, actor, token, character, item, args, scope, workflow }) {
-    let target = workflow.targets.first();
+// To do: понять, на что он тут плюётся
+async function lairTetherOnHit(token, { item, workflow, ditem }) {
+    if (ditem.appliedDamage == 0 || ditem.newHP == 0) return;
+    let lichToken = token;
+    let effect = mba.findEffect(lichToken.actor, "Lich Tether: Source");
+    if (!effect) return;
+    let tetherTokenUuid = effect.flags['mba-premades']?.feature?.lich?.tether?.targetUuid;
+    if (!tetherTokenUuid) return;
+    let queueSetup = await queue.setup(workflow.uuid, 'lichTether', 389);
+    if (!queueSetup) return;
+
+    let featureData1 = await mba.getItemFromCompendium("mba-premades.MBA Monster Features", "Lich Tether: Save", false);
+    if (!featureData1) {
+        queue.remove(workflow.uuid);
+        return;
+    }
+    let feature1 = new CONFIG.Item.documentClass(featureData1, { 'parent': lichToken.actor });
+    let [config1, options1] = constants.syntheticItemWorkflowOptions([tetherTokenUuid]);
+    let featureWorkflow = await MidiQOL.completeItemUse(feature1, config1, options1);
+    if (!featureWorkflow.failedSaves.size) {
+        queue.remove(workflow.uuid);
+        return;
+    }
+
+    let newDamage = Math.floor(ditem.appliedDamage / 2);
+    if (newDamage <= 0) newDamage = 0;
+    ditem.appliedDamage = newDamage;
+    ditem.hpDamage = newDamage;
+    ditem.newHP = ditem.oldHP - newDamage;
+    let featureData2 = await mba.getItemFromCompendium("mba-premades.MBA Monster Features", "Lich Tether: Damage Transfer", false);
+    if (!featureData2) {
+        queue.remove(workflow.uuid);
+        return;
+    }
+    featureData2.system.damage.parts = [[ditem.appliedDamage + '[none]', 'none']];
+    let feature2 = new CONFIG.Item.documentClass(featureData2, { 'parent': lichToken.actor });
+    let [config2, options2] = constants.syntheticItemWorkflowOptions([tetherTokenUuid]);
+    let damageWorkflow = await MidiQOL.completeItemUse(feature2, config2, options2);
+    if (damageWorkflow.targets.first().actor.system.attributes.hp.value != 0) {
+        queue.remove(workflow.uuid);
+        return;
+    }
+    else {
+        await mba.removeEffect(effect);
+        queue.remove(workflow.uuid);
+    }
 }
 
 async function lairGhosts({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -647,6 +722,6 @@ export let lich = {
     'legendaryDisruptLife': legendaryDisruptLife,
     'lairSlot': lairSlot,
     'lairTetherCast': lairTetherCast,
-    'lairTetherItem': lairTetherItem,
+    'lairTetherOnHit': lairTetherOnHit,
     'lairGhosts': lairGhosts
 }

@@ -242,7 +242,7 @@ async function moveTarget(token, changes) {
     await token.object?._animation;
     let distance = mba.getDistance(token, sourceToken);
     if (distance <= 60) return;
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(mba.firstOwner(token));
     let selection = await mba.dialog("Warding Bond", constants.yesNo, `<b>Distance from caster is over 60 feet, remove effect?</b>`);
     await mba.clearPlayerDialogMessage();
     if (!selection) return;
@@ -262,7 +262,7 @@ async function moveSource(token, changes) {
         if (!targetToken) continue;
         let distance = mba.getDistance(token, targetToken);
         if (distance <= 60) continue;
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(mba.firstOwner(token));
         let selection = await mba.dialog("Warding Bond", constants.yesNo, `<b>Distance from caster is over 60 feet, remove effect?</b>`);
         await mba.clearPlayerDialogMessage();
         if (!selection) continue;

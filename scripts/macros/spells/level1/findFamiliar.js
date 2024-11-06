@@ -10,7 +10,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     }
     let sourceActor = await mba.selectDocument('Choose Familiar', actors);
     if (!sourceActor) return;
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let creatureType = await mba.dialog(workflow.item.name, [['Celestial', 'celestial'], ['Fey', 'fey'], ['Fiend', 'fiend']], `<b>Choose creature type:</b>`);
     await mba.clearPlayerDialogMessage();
     if (!creatureType) return;
@@ -90,7 +90,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'fiend': 'fire'
     };
     let animation = defaultAnimations[creatureType];
+    await mba.playerDialogMessage(game.user);
     await summons.spawn(sourceActor, updates, 86400, workflow.item, undefined, undefined, 10, workflow.token, animation, {}, workflow.castData.castLevel);
+    await mba.clearPlayerDialogMessage();
     let effect = mba.findEffect(workflow.actor, workflow.item.name);
     setProperty(updates3, 'flags.effectmacro.onDelete.script', effect.flags.effectmacro?.onDelete?.script + '; await warpgate.revert(token.document, "Find Familiar");');
     await mba.updateEffect(effect, updates3);

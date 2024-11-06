@@ -4,7 +4,7 @@ export async function light({ speaker, actor, token, character, item, args, scop
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
     let color;
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     await Dialog.wait({
         title: "Pick color:",
         content: `<form><div class="form-group"><label for="color" style="line-height: 26px;">Color:</label><div class="form-fields"><input type="color" class="dialogImg" value="${game.user.color}" id="color"></div></div></form>`,
@@ -18,12 +18,9 @@ export async function light({ speaker, actor, token, character, item, args, scop
                 }
             }
         },
-        close: () => {
-            mba.clearPlayerDialogMessage(); 
-            return false 
-        },
     });
     await mba.clearPlayerDialogMessage();
+    if (!color) return;
     const effectData = {
         'name': workflow.item.name,
         'icon': workflow.item.img,
@@ -126,7 +123,7 @@ export async function light({ speaker, actor, token, character, item, args, scop
         .belowTokens()
 
         .thenDo(async () => {
-            await mba.createEffect(target.actor, effectData)
+            await mba.createEffect(target.actor, effectData);
         })
 
         .play()

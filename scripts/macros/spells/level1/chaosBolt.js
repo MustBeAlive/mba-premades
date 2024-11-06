@@ -26,6 +26,16 @@ export async function chaosBolt({speaker, actor, token, character, item, args, s
 
     class ChaosBoltWorkflow {
         elements = {
+            "Acid": "modules/mba-premades/icons/generic/generic_acid.webp",
+            "Cold": "modules/mba-premades/icons/generic/generic_cold.webp",
+            "Fire": "modules/mba-premades/icons/generic/generic_fire.webp",
+            "Force": "modules/mba-premades/icons/generic/generic_force.webp",
+            "Lightning": "modules/mba-premades/icons/generic/generic_lightning.webp",
+            "Poison": "modules/mba-premades/icons/generic/generic_poison.webp",
+            "Psychic": "modules/mba-premades/icons/generic/generic_psychic.webp",
+            "Thunder":"modules/mba-premades/icons/generic/generic_thunder.webp"
+        }
+        /*elements = {
             "Acid": "icons/magic/acid/projectile-faceted-glob.webp",
             "Cold": "icons/magic/air/wind-tornado-wall-blue.webp",
             "Fire": "icons/magic/fire/beam-jet-stream-embers.webp",
@@ -34,7 +44,7 @@ export async function chaosBolt({speaker, actor, token, character, item, args, s
             "Poison": "icons/magic/death/skull-poison-green.webp",
             "Psychic": "icons/magic/control/fear-fright-monster-grin-red-orange.webp",
             "Thunder":"icons/magic/sonic/explosion-shock-wave-teal.webp"
-        }
+        }*/
         constructor(args){
             this.params = args[args.length-1];
             this.actor = game.actors.get(this.params.actor.id);
@@ -114,12 +124,8 @@ export async function chaosBolt({speaker, actor, token, character, item, args, s
             const criticalMiss = attackRoll.dice[0].results[0].result === 1;
             game.dice3d?.showForRoll(attackRoll);
             let attackRollRender = await attackRoll.render();
-            if(criticalHit) {
-                attackRollRender = attackRollRender.replace('dice-total', 'dice-total critical');
-            }
-            if(criticalMiss) {
-                attackRollRender = attackRollRender.replace('dice-total', 'dice-total fumble');
-            }
+            if(criticalHit) attackRollRender = attackRollRender.replace('dice-total', 'dice-total critical');
+            if(criticalMiss) attackRollRender = attackRollRender.replace('dice-total', 'dice-total fumble');
             const attack = this.attackData[this.attackData.length-1];
             this.attackData[this.attackData.length-1] = {
                 ...attack,

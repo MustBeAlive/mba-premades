@@ -12,7 +12,7 @@ export async function elementalWeapon({ speaker, actor, token, character, item, 
     let weaponItem;
     if (weapons.length === 1) weaponItem = [weapons[0]];
     else {
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         weaponItem = await mba.selectDocument(workflow.item.name, weapons);
         await mba.clearPlayerDialogMessage();
     }
@@ -27,7 +27,7 @@ export async function elementalWeapon({ speaker, actor, token, character, item, 
         ["Lightning", "lightning", "modules/mba-premades/icons/spells/level3/elemental_weapon_lightning.webp"],
         ["Thunder", "thunder", "modules/mba-premades/icons/spells/level3/elemental_weapon_thunder.webp"],
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.selectImage("Elemental Weapon", choices, `<b>Choose damage type:</b>`, "both");
     await mba.clearPlayerDialogMessage();
     if (!selection.length) {

@@ -79,7 +79,9 @@ async function trigger(token, trigger) {
     if (token.uuid === sourceDoc.uuid) return;
     if (token.disposition === sourceDoc.disposition) return;
     let choices = [[`Yes (Saving Throw)`, true], [`No (Cancel)`, false]];
+    await mba.playerDialogMessage(mba.firstOwner(token));
     let check = await mba.remoteDialog("Halo of Spores", choices, mba.firstOwner(sourceDoc).id, `<p><b>${token.name}</b> is in the area of your <b>Halo of Spores</b>.</p><p>Would you like to use your <b>reaction</b>?</p>`);
+    await mba.clearPlayerDialogMessage();
     if (!check || check === false) return;
     let diceAmmount = 1;
     let symbioticEntity = await mba.findEffect(sourceDoc.actor, "Symbiotic Entity");

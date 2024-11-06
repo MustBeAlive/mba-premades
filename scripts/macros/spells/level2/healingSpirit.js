@@ -17,7 +17,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Owlbear", "owlbear", "modules/mba-premades/icons/spells/level2/healing_spirit/healing_spirit_owlbear.webp"],
         ["Pig", "pig", "modules/mba-premades/icons/spells/level2/healing_spirit/healing_spirit_pig.webp"],
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let spiritImage = await mba.selectImage("Healing Spirit", images, "<b>Select spirit image:</b>", "path");
     await mba.clearPlayerDialogMessage();
     if (!spiritImage) spiritImage = images[0][2];
@@ -217,7 +217,7 @@ async function trigger(token, trigger) {
     if (!originItem) return;
     let casterDoc = await fromUuid(trigger.casterUuid);
     let caster = casterDoc._object;
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(mba.firstOwner(caster));
     let selection = await mba.remoteDialog("Healing Spirit", constants.yesNo, mba.firstOwner(caster).id, `<b>Would you like to heal ${token.name}?</b>`);
     await mba.clearPlayerDialogMessage();
     if (!selection) return;
@@ -306,7 +306,9 @@ async function move({ speaker, actor, token, character, item, args, scope, workf
     if (game.modules.get('walledtemplates')?.active) {
         if (game.settings.get('walledtemplates', 'snapGrid')) interval = 2;
     }
+    await mba.playerDialogMessage(game.user);
     let position = await mba.aimCrosshair(workflow.token, 30, workflow.item.img, interval, 1);
+    await mba.clearPlayerDialogMessage();
     if (position.canceled) {
         ui.notifications.warn("Failed to choose position, returning!");
         return;

@@ -17,7 +17,7 @@ async function hexItem({ speaker, actor, token, character, item, args, scope, wo
         ['Wisdom', 'wis', "modules/mba-premades/icons/spells/level1/hex_wisdom.webp"],
         ['Charisma', 'cha', "modules/mba-premades/icons/spells/level1/hex_charisma.webp"]
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.selectImage("Hex", choices, '<b>Which ability should have disadvantage?</b>', "both");
     await mba.clearPlayerDialogMessage();
     if (!selection.length) {

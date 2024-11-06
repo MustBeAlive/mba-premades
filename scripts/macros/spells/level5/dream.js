@@ -283,7 +283,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     }
     else if (selectionGM1 === "awake") {
         let choicesAwake = [["Yes, wait for the target to fall asleep", "yes"], ["No, cancel casting Dream", "no"]];
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let selectionAwake = await mba.dialog("Target is awake. Would you like to wait?", choicesAwake);
         await mba.clearPlayerDialogMessage();
         if (!selectionAwake || selectionAwake === "no") return;
@@ -338,7 +338,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     }
     else if (selectionGM1 === "asleep") {
         let choicesAsleep = [["Friendly (dialog)", "dream"], ["Nightmare (save)", "nightmare"]];
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let selectionAsleep = await mba.dialog("Choose dream type:", choicesAsleep);
         await mba.clearPlayerDialogMessage();
         if (!selectionAsleep) return;
@@ -346,7 +346,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         else if (selectionAsleep === "nightmare") {
             let disadvantage = false;
             let choicesNightmare = [["Body part, lock of hair, clipping from a nail or similar", "yes"], ["Nothing", "no"]];
-            await mba.playerDialogMessage();
+            await mba.playerDialogMessage(game.user);
             let selectionNightmare = await mba.dialog("Do you have anything of the above?", choicesNightmare);
             await mba.clearPlayerDialogMessage();
             if (!selectionNightmare) return;
@@ -422,7 +422,7 @@ async function wait({ speaker, actor, token, character, item, args, scope, workf
     }
     else if (selectionGM1 === "asleep") {
         let choicesAsleep = [["Friendly (dialog)", "dream"], ["Nightmare (save)", "nightmare"]];
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let selectionAsleep = await mba.dialog("Choose dream type:", choicesAsleep);
         await mba.clearPlayerDialogMessage();
         if (!selectionAsleep) return;
@@ -434,7 +434,7 @@ async function wait({ speaker, actor, token, character, item, args, scope, workf
         else if (selectionAsleep === "nightmare") {
             let disadvantage = false;
             let choicesNightmare = [["Body part, lock of hair, clipping from a nail or similar", "yes"], ["Nothing", "no"]];
-            await mba.playerDialogMessage();
+            await mba.playerDialogMessage(game.user);
             let selectionNightmare = await mba.dialog("Do you have anything of the above?", choicesNightmare);
             await mba.clearPlayerDialogMessage();
             if (!selectionNightmare) return;

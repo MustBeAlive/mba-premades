@@ -4,6 +4,7 @@ import {queue} from "../../mechanics/queue.js";
 
 async function redirectAttack(workflow) {
     let goblin = workflow.targets.first();
+    if (!goblin) return;
     if (goblin.document.name != "Goblin Boss") return;
     if (mba.findEffect(goblin.actor, "Reaction")) {
         return;

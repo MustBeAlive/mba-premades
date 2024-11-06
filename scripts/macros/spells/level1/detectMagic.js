@@ -1,5 +1,5 @@
-import {constants} from "../../generic/constants.js";
-import {mba} from "../../../helperFunctions.js";
+import { constants } from "../../generic/constants.js";
+import { mba } from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Detect Magic: Ping", false);
@@ -51,11 +51,27 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         'name': "Detect Magic",
         'description': "Detect Magic"
     };
-    await warpgate.mutate(workflow.token.document, updates, {}, options);
-    let feature = await mba.getItem(workflow.actor, "Detect Magic: Ping");
-    if (!feature) return;
-    let [config, options2] = constants.syntheticItemWorkflowOptions([workflow.token.document.uuid]);
-    await MidiQOL.completeItemUse(feature, config, options2);
+    new Sequence()
+
+        .effect()
+        .file("jb2a.token_border.circle.spinning.blue.001")
+        .attachTo(workflow.token)
+        .scaleToObject(2)
+        .delay(1500)
+        .fadeOut(1000)
+        .scaleIn(0, 4000, { ease: "easeOutCubic" })
+        .persist()
+        .name(`${workflow.token.document.name} DeMa`)
+
+        .thenDo(async () => {
+            await warpgate.mutate(workflow.token.document, updates, {}, options);
+            let feature = await mba.getItem(workflow.actor, "Detect Magic: Ping");
+            if (!feature) return;
+            let [config, options2] = constants.syntheticItemWorkflowOptions([workflow.token.document.uuid]);
+            await MidiQOL.completeItemUse(feature, config, options2);
+        })
+
+        .play()
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -78,16 +94,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .fadeOut(4000)
         .opacity(0.75)
         .belowTokens()
-
-        .effect()
-        .file("jb2a.token_border.circle.spinning.blue.001")
-        .attachTo(workflow.token)
-        .scaleToObject(2)
-        .delay(1500)
-        .fadeOut(1000)
-        .scaleIn(0, 4000, { ease: "easeOutCubic" })
-        .persist()
-        .name(`${workflow.token.document.name} DeMa`)
 
         .play()
 

@@ -53,13 +53,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         healTargets.push(targetToken.object);
     }
     if (healTargets.length === 0) return;
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.selectTarget('Wither and Bloom', constants.yesNoButton, healTargets, true, 'one', undefined, false, "Heal a target?");
     await mba.clearPlayerDialogMessage();
     if (!selection.buttons) return;
     let targetTokenUuid = selection.inputs.find(id => id != false);
     if (!targetTokenUuid) return;
-    async function effectMacro() {
+    async function effectMacroCreate() {
         if (actor.type != 'character') {
             effect.delete();
             return;
@@ -91,7 +91,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             );
         }
         let maxHitDice = effect.flags['mba-premades'].spell.witherAndBloom.castLevel;
-        await mbaPremades.helpers.playerDialogMessage();
+        await mbaPremades.helpers.playerDialogMessage(mbaPremades.helpers.firstOwner(token));
         let selection = await mbaPremades.helpers.numberDialog(`Heal using hit dice? Max: ${maxHitDice}`, mbaPremades.constants.yesNoButton, inputs);
         await mbaPremades.helpers.clearPlayerDialogMessage();
         if (!selection.buttons) {
@@ -154,7 +154,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             },
             'effectmacro': {
                 'onCreate': {
-                    'script': mba.functionToString(effectMacro)
+                    'script': mba.functionToString(effectMacroCreate)
                 }
             },
             'mba-premades': {

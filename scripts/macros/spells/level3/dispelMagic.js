@@ -2,7 +2,7 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function dispelMagic({ speaker, actor, token, character, item, args, scope, workflow }) {
     let choicesType = [["Effect on a Creature", "creature"], ["Object or other Magical Effect (such as AoE)", "object"]];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let type = await mba.dialog("Dispel Magic", choicesType, "<b>What would you like to dispel?</b>");
     await mba.clearPlayerDialogMessage();
     if (!type) return;
@@ -50,7 +50,7 @@ export async function dispelMagic({ speaker, actor, token, character, item, args
             ui.notifications.warn('No effects to dispel!');
             return;
         }
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         const effectToDispel = await mba.selectEffect("Dispel Magic: Target", effects, "<b>Choose one effect:</b>");
         await mba.clearPlayerDialogMessage();
         if (!effectToDispel) return;

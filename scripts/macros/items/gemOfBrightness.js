@@ -19,7 +19,7 @@ export async function gemOfBrightness({ speaker, actor, token, character, item, 
         ["Cone of Blinding Light (5 charges)", "cone"],
         ["Cancel", false]
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Gem of Brightness", choices, `<b>Choose one of the effects:</b>`);
     await mba.clearPlayerDialogMessage();
     if (!selection) return;
@@ -57,7 +57,7 @@ export async function gemOfBrightness({ speaker, actor, token, character, item, 
             'description': `
                 <p>For the duration, you shed bright light in a 30-foot radius and dim light for an additional 30 feet.</p>
                 <p>Completely covering the object with something opaque blocks the light.</p>
-                <p>The spell ends if you cast it again or dismiss it as an action.</p>
+                <p>The effect lasts until you use a bonus action to repeat the command word or until you use another function of the gem.</p>
             `,
             'changes': [
                 {

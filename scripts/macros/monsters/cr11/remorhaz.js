@@ -107,7 +107,7 @@ async function swallowItem({ speaker, actor, token, character, item, args, scope
     await mba.createEffect(workflow.actor, effectDataSource);
 }
 
-async function swallowTurnStart(token) {
+async function swallowEveryTurn(token) {
     let effect = await mba.findEffect(token.actor, "Swallow: Passive");
     if (!effect) return;
     let updates = {
@@ -124,6 +124,9 @@ async function swallowTurnStart(token) {
         }
     };
     await mba.updateEffect(effect, updates);
+}
+
+async function swallowTurnStart(token) {
     let effects = token.actor.effects.filter(e => e.name.includes("Swallow") && e.name != "Swallow: Passive" && e.name != "Swallow: Save");
     if (!effects.length) return;
     let targetUuids = [];
@@ -207,6 +210,7 @@ async function swallowDamaged({ speaker, actor, token, character, item, args, sc
 export let remorhaz = {
     'biteCheck': biteCheck,
     'swallowCheck': swallowCheck,
+    'swallowEveryTurn': swallowEveryTurn,
     'swallowItem': swallowItem,
     'swallowTurnStart': swallowTurnStart,
     'swallowDamaged': swallowDamaged

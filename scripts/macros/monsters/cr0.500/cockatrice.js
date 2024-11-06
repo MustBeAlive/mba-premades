@@ -1,13 +1,14 @@
 import {mba} from "../../../helperFunctions.js";
 
 async function petrification({ speaker, actor, token, character, item, args, scope, workflow }) {
+    if (!workflow.hitTargets.size) return;
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
     if (mba.checkTrait(target.actor, "ci", "petrified")) return;
     if (mba.findEffect(target.actor, "Petrified")) return; //overly cautious
     if (mba.findEffect(target.actor, "Cockatrice: Petrifying Bite")) return;
     if (mba.findEffect(target.actor, "Cockatrice: Petrification")) return;
-    async function effectMacroDel() {
+    async function effectMacroEnd() {
         let saveRoll = await mbaPremades.helpers.rollRequest(token, "save", "con");
         if (saveRoll.total >= 11) {
             await mbaPremades.helpers.removeEffect(effect);
@@ -71,6 +72,8 @@ async function petrification({ speaker, actor, token, character, item, args, sco
             .name(`${token.document.name} CockatP`)
 
             .thenDo(async () => {
+                await mbaPremades.helpers.removeEffect(effect);
+                await warpgate.wait(100);
                 await mbaPremades.helpers.createEffect(actor, effectData);
             })
 
@@ -95,11 +98,10 @@ async function petrification({ speaker, actor, token, character, item, args, sco
         'flags': {
             'dae': {
                 'showIcon': true,
-                'specialDuration': ['turnEnd']
             },
             'effectmacro': {
                 'onTurnEnd': {
-                    'script': mba.functionToString(effectMacroDel)
+                    'script': mba.functionToString(effectMacroEnd)
                 }
             }
         }

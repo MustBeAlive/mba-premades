@@ -5,7 +5,7 @@ export async function haste({ speaker, actor, token, character, item, args, scop
     async function effectMacroDel() {
         Sequencer.EffectManager.endEffects({ name: `${token.document.name} Haste`, object: token });
         async function effectMacroLethargic() {
-            Sequencer.EffectManager.endEffects({ name: `${token.document.name} Lethargic`, object: token });
+            Sequencer.EffectManager.endEffects({ name: `${token.document.name} Lthrgc`, object: token });
         };
         const effectData = {
             'name': "Haste: Lethargic",
@@ -39,7 +39,7 @@ export async function haste({ speaker, actor, token, character, item, args, scop
             .opacity(0.9)
             .filter("ColorMatrix", { hue: 340 })
             .persist()
-            .name(`${token.document.name} Lethargic`)
+            .name(`${token.document.name} Lthrgc`)
 
             .play()
 

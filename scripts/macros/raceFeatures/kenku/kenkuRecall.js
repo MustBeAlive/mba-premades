@@ -8,7 +8,7 @@ export async function kenkuRecall({ speaker, actor, token, character, item, args
         ui.notifications.warn("Unable to find any proficient skill!");
         return;
     }
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Kenku Recall", choices, "Choose one of the skills:");
     await mba.clearPlayerDialogMessage();
     if (!selection) return;

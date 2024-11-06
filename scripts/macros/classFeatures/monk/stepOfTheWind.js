@@ -12,7 +12,7 @@ export async function stepOfTheWind({ speaker, actor, token, character, item, ar
         return;
     }
     let choices = [["Dash", "Dash"], ["Disengage", "Disengage"]];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let actionName = await mba.dialog("Step of the Wind", choices, "<b>Choose action type:</b>");
     await mba.clearPlayerDialogMessage();
     if (!actionName) return;

@@ -3,7 +3,7 @@ import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let nearbyAllies = Array.from(mba.findNearby(workflow.token.document, 100, 'ally', false, true));
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, nearbyAllies, true, 'multiple', undefined, false, "Choose creatures that won't trigger the alarm:");
     await mba.clearPlayerDialogMessage();
     if (!selection.buttons) return;
@@ -22,8 +22,6 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         }
     });
     new Sequence()
-
-        .wait(500)
 
         .effect()
         .file("jb2a.magic_signs.circle.02.abjuration.complete.blue")
@@ -56,7 +54,9 @@ async function trigger(token, trigger) {
     let ally = ignoreUuids.filter(i => i === token.uuid);
     if (ally.length) return;
     let sourceToken = await fromUuid(template.flags['mba-premades']?.template?.sourceUuid);
+    await mba.playerDialogMessage(mba.firstOwner(sourceToken));
     await mba.remoteDialog("Alarm!", [["Ok!", "ok"]], mba.firstOwner(sourceToken).id, '<b>Someone entered the Alarm zone!</b>');
+    await mba.clearPlayerDialogMessage();
 }
 
 export let alarm = {

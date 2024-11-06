@@ -43,7 +43,8 @@ async function attach({ speaker, actor, token, character, item, args, scope, wor
         `,
         'flags': {
             'dae': {
-                'showIcon': true
+                'showIcon': true,
+                'specialDuration': ['zeroHP'],
             },
             'effectmacro': {
                 'onTurnStart': {

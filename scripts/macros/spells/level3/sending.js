@@ -4,7 +4,7 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function sending({ speaker, actor, token, character, item, args, scope, workflow }) {
     let word = [];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let wordInput = await warpgate.menu({
         inputs: [{
             label: `Input text (Max: 25 words)`,

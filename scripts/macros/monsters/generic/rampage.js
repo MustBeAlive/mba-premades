@@ -14,7 +14,7 @@ export async function rampage({ speaker, actor, token, character, item, args, sc
         'icon': "modules/mba-premades/icons/generic/rampage.webp",
         'origin': workflow.item.uuid,
         'description': `
-            <p>After ${token.document.name} reduces a creature to 0 hit points with a melee attack on its turn, he moves up to half its speed (${moveBonus} ft.) and makes one Bite attack.</p>
+            <p>After ${workflow.token.document.name} reduces a creature to 0 hit points with a melee attack on its turn, he moves up to half its speed (${moveBonus} ft.) and makes one Bite attack.</p>
         `,
         'duration': {
             'turns': 1
@@ -32,15 +32,15 @@ export async function rampage({ speaker, actor, token, character, item, args, sc
 
         .effect()
         .file("jb2a.impact.ground_crack.orange.03")
-        .attachTo(token)
-        .scaleToObject(2.5 * token.document.texture.scaleX)
+        .attachTo(workflow.token, { followRotation: true })
+        .scaleToObject(2.5 * workflow.token.document.texture.scaleX)
         .belowTokens()
 
         .effect()
         .file("animated-spell-effects-cartoon.misc.demon")
         .delay(100)
-        .attachTo(token)
-        .scaleToObject(2 * token.document.texture.scaleX)
+        .attachTo(workflow.token, { followRotation: true })
+        .scaleToObject(2)
         .playbackRate(0.6)
 
         .thenDo(async () => {

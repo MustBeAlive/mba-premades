@@ -6,7 +6,7 @@ async function bonus({ speaker, actor, token, character, item, args, scope, work
     if (workflow.item.system?.actionType != "rwak" || workflow.item.system?.prof?.hasProficiency === false) return;
     let queueSetup = await queue.setup(workflow.item.uuid, 'sharpshooter', 150);
     if (!queueSetup) return;
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Sharpshooter", constants.yesNo, "<b>Use Shapshooter?</b><br>(<b>-5</b> to Attack roll, <b>+10</b> to Damage roll)");
     await mba.clearPlayerDialogMessage();
     if (!selection) {

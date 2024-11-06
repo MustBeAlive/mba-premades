@@ -4,7 +4,7 @@ import {queue} from "../../../mechanics/queue.js";
 export async function wrathOfTheStorm({speaker, actor, token, character, item, args, scope, workflow}) {
     let queueSetup = await queue.setup(workflow.item.uuid, 'wrathOfTheStorm', 50);
     if (!queueSetup) return;
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Wrath of the Storm", [['Lightning', '[lightning]'], ['Thunder', '[thunder]']],`<b>Choose damage type:</b>`);
     await mba.clearPlayerDialogMessage();
     if (!selection) selection = 'lightning';

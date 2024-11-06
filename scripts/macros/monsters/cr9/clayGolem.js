@@ -14,6 +14,7 @@ async function slam({ speaker, actor, token, character, item, args, scope, workf
         .play()
 
     if (!workflow.failedSaves.size) return;
+    if (mba.findEffect(target.actor, "Aura of Life")) return;
     let damageRoll = workflow.damageRoll.total;
     let effect = await mba.findEffect(target.actor, "Clay Golem: Max Health Reduction");
     if (effect) {

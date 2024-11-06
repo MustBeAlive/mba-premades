@@ -99,14 +99,14 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             ['Vertically', 'ver'],
             ['Stop Moving', 'stop']
         ];
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let selection = await mba.dialog("Telekinesis", choices, `<p>Which way would you like to move the <u>${target.document.name}</u>?</p><p>Distance left: ${distance} feet</p>`);
         await mba.clearPlayerDialogMessage();
         if (!selection) return;
         if (selection === "hor") {
             let oldCenter = target.center;
             let interval = target.document.width % 2 === 0 ? 1 : -1;
-            await mba.playerDialogMessage();
+            await mba.playerDialogMessage(game.user);
             let position = await mba.aimCrosshair(target, distance, workflow.item.img, interval, target.document.width);
             await mba.clearPlayerDialogMessage();
             if (position.cancelled) return;
@@ -131,7 +131,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             if (distance < 5) distance = 0;
         }
         else if (selection === "ver") {
-            await mba.playerDialogMessage();
+            await mba.playerDialogMessage(game.user);
             await new Promise((resolve) => {
                 new Dialog({
                     title: `Set elevation (Max: ${distance})`,

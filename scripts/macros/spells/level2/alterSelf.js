@@ -6,7 +6,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ['Change Appearance', 'change'],
         ['Natural Weapons', 'natural']
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Alter Self", choices, `<b>Choose transformation type:</b>`);
     await mba.clearPlayerDialogMessage();
     if (!selection) return;
@@ -66,7 +66,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         if (!featureData) return;
         delete featureData._id;
         let damageTypes = [['Piercing', 'piercing'], ['Slashing', 'slashing'], ['Bludgeoning', 'bludgeoning']];
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let chooseDamage = await mba.dialog("Alter Self: Damage Type", damageTypes, `<b>Choose damage type:</b>`);
         await mba.clearPlayerDialogMessage();
         if (!chooseDamage) {

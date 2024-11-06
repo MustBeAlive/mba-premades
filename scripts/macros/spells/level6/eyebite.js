@@ -213,7 +213,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Panicked", "panic", "modules/mba-premades/icons/spells/level6/eyebite_panicked.webp"],
         ["Sickened", "sick", "modules/mba-premades/icons/spells/level6/eyebite_sickened.webp"]
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.selectImage("Eyebite", choices, "<b>Choose effect:</b>", "value");
     await mba.clearPlayerDialogMessage();
     if (!selection) return;
@@ -268,7 +268,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         async function effectMacroEnd() {
             let effect = mbaPremades.helpers.findEffect(actor, 'Eyebite: Panicked');
             let casterNearby = await mbaPremades.helpers.findNearby(token, 60, "any", false, false, true, true).filter(t => t.document.uuid === effect.flags['mba-premades']?.spell?.eyebite?.originUuid);
-            console.log(casterNearby);
             if (casterNearby.length) return;
             await mbaPremades.helpers.removeEffect(effect);
         };

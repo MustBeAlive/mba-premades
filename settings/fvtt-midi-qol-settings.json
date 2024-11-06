@@ -13,7 +13,7 @@
     "autoCheckSaves": "allNoRoll",
     "autoFastForward": "off",
     "autoRollAttack": true,
-    "autoRollDamage": "saveOnly",
+    "autoRollDamage": "always",
     "autoTarget": "alwaysIgnoreDefeated",
     "checkSaveText": false,
     "concentrationAutomation": true,

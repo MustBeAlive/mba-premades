@@ -5,7 +5,7 @@ export async function magicMissile({ speaker, actor, token, character, item, arg
     if (!workflow.targets.size) return;
     let maxMissiles = 3 + (workflow.castData.castLevel - 1);
     let targets = Array.from(workflow.targets);
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.selectTarget(`Choose targets and ammount of missiles (Max: ${maxMissiles})`, constants.okCancel, targets, true, 'number');
     await mba.clearPlayerDialogMessage();
     if (!selection.buttons) return;

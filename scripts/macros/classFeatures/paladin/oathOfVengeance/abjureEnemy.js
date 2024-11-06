@@ -56,7 +56,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         changes = [
             {
                 'key': 'system.attributes.movement.walk',
-                'mode': 1,
+                'mode': 0,
                 'value': '*0.5',
                 'priority': 20
             },

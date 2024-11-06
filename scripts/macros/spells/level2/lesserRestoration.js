@@ -2,7 +2,7 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function lesserRestoration({ speaker, actor, token, character, item, args, scope, workflow }) {
     const target = workflow.targets.first();
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let resorationType = await mba.dialog("Lesser Restoration: Type", [["Condition", "condition"], ["Disease", "disease"]], `<b>Choose type of effect to remove:</b>`);
     await mba.clearPlayerDialogMessage();
     if (!resorationType) return;
@@ -15,7 +15,7 @@ export async function lesserRestoration({ speaker, actor, token, character, item
             ["Level of Exhaustion", "exhaustion", "modules/mba-premades/icons/conditions/exhausted.webp"]
         ];
         let effect;
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let conditionType = await mba.selectImage("Lesser Restoration: Condition", conditions, `<b>Which condition would you like to remove?</b>`, "value");
         await mba.clearPlayerDialogMessage();
         if (!conditionType) return;
@@ -71,7 +71,7 @@ export async function lesserRestoration({ speaker, actor, token, character, item
                         }
                         await mba.removeEffect(poison);
                     } else {
-                        await mba.playerDialogMessage();
+                        await mba.playerDialogMessage(game.user);
                         let effectToRemove = await mba.selectEffect("Lesser Restoration: Poison", effects, "<b>Choose one effect:</b>", false);
                         await mba.clearPlayerDialogMessage();
                         if (!effectToRemove) return;
@@ -87,12 +87,13 @@ export async function lesserRestoration({ speaker, actor, token, character, item
                     return;
                 }
                 let level = +exhaustion.name.slice(-1);
+                if (level === 0) level = 10;
                 if (level === 1) {
                     await mba.removeCondition(target.actor, "Exhaustion 1");
                     break;
                 }
-                level -= 1;
-                await mba.addCondition(target.actor, `Exhaustion ${level}`);
+                await mba.removeCondition(target.actor, `Exhaustion ${level}`);
+                await mba.addCondition(target.actor, `Exhaustion ${level - 1}`);
                 break
             }
         }
@@ -108,7 +109,7 @@ export async function lesserRestoration({ speaker, actor, token, character, item
             ui.notifications.warn("Targeted creature is affected by a disease which can not be cured with Lesser Restoration!");
             return;
         }
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         const [diseaseEffect] = await new Promise(async (resolve) => {
             let content = "<center><b>Choose disease to remove:</b></center>";
             let buttons = {},
@@ -138,7 +139,7 @@ export async function lesserRestoration({ speaker, actor, token, character, item
             })
         });
         await mba.clearPlayerDialogMessage();
-        if (diseaseEffect === false) return;
+        if (!diseaseEffect) return;
         await mba.removeEffect(diseaseEffect);
     }
 

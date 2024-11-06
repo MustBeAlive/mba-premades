@@ -36,9 +36,9 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     if (!doSneak) return;
     let queueSetup = await queue.setup(workflow.item.uuid, 'sneakAttack', 215);
     if (!queueSetup) return;
-    await mba.playerDialogMessage();
+    //await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog(originFeature.name, constants.yesNo, `Use <b>${originFeature.name}</b>?`);
-    await mba.clearPlayerDialogMessage();
+    //await mba.clearPlayerDialogMessage();
     if (!selection) {
         queue.remove(workflow.item.uuid);
         return;

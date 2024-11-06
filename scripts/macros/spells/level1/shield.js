@@ -79,7 +79,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .name(`${workflow.token.document.name} Shield`)
 
         .thenDo(async () => {
-            await mba.createEffect(workflow.actor, effectData)
+            await mba.createEffect(workflow.actor, effectData);
         })
 
         .play()

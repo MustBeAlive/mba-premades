@@ -159,7 +159,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     if (!effect) return;
     if (workflow.item.system.actionType != "mwak" && workflow.item.system.actionType != "rwak") return;
     let choices = [["Yes, go ahead", "yes"], ["No!", false]];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Zephyr Strike", choices, `<b>Use Zephyr Strike to gain advantage on the attack roll?</b>`);
     await mba.clearPlayerDialogMessage();
     if (!selection) return;

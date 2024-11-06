@@ -76,7 +76,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
     let word = [];
     let wordInput;
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     if (gmInputType === "dropdown") {
         wordInput = await warpgate.menu({
             inputs: [{
@@ -143,9 +143,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .fadeOutAudio(500)
 
         .effect()
-        .atLocation(target, { offset: { x: -0.25 * target.document.width, y: -0.3 * target.document.width }, gridUnits: true })
-        .delay(500)
+        .attachTo(target, { offset: { x: -0.25 * target.document.width, y: -0.3 * target.document.width }, gridUnits: true })
         .text(`${word}`, style)
+        .delay(500)
         .duration(5000)
         .fadeOut(1000)
         .animateProperty("sprite", "position.x", { from: -2.0, to: 0, duration: 2000, gridUnits: true, ease: "easeInExpo" })

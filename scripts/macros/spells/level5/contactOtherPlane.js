@@ -1,19 +1,29 @@
 import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
-//to do: icon, animations?
+// To do: better animations?
 
 export async function contactOtherPlane({ speaker, actor, token, character, item, args, scope, workflow }) {
     new Sequence()
 
         .effect()
-        .file("jb2a.magic_signs.circle.02.divination.complete.purple")
-        .attachTo(workflow.token)
-        .scaleToObject(2.5)
-        .fadeOut(3000)
+        .file("jb2a.magic_signs.circle.02.divination.intro.purple")
+        .attachTo(workflow.token, { followRotation: false })
+        .size(4, { gridUnits: true })
+        .fadeOut(1000)
+        .playbackRate(1.4)
+        .zIndex(1)
+        .belowTokens()
+
+        .effect()
+        .file("jb2a.magic_signs.circle.02.divination.loop.purple")
+        .attachTo(workflow.token, { followRotation: false })
+        .size(4, { gridUnits: true })
+        .delay(2000)
+        .zIndex(2)
         .belowTokens()
         .persist()
-        .name(`${workflow.token.document.name} CoOtP1`)
+        .name(`${workflow.token.document.name} CoOtPl`)
 
         .play()
 
@@ -22,12 +32,13 @@ export async function contactOtherPlane({ speaker, actor, token, character, item
     delete featureData._id;
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([workflow.token.document.uuid]);
-    await MidiQOL.completeItemUse(feature, config, options);
+    await warpgate.wait(2000);
+    let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
 
-    if (workflow.failedSaves.size) {
+    if (featureWorkflow.failedSaves.size) {
         let effectData = {
             'name': "Contact Other Plane: Insanity",
-            'icon': "",
+            'icon': "modules/mba-premades/icons/spells/level5/contact_other_plane_insanity.webp",
             'origin': workflow.item.uuid,
             'description': `
                 <p>You become insane until you finish a Long Rest.</p>
@@ -57,29 +68,69 @@ export async function contactOtherPlane({ speaker, actor, token, character, item
         };
         new Sequence()
 
-            .thenDo(async () => {
-                Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} CoOtP1` });
-            })
-
             .effect()
             .file("animated-spell-effects-cartoon.cantrips.sacred_flame.red")
             .attachTo(workflow.token)
-            .scaleToObject(1.8)
+            .scaleToObject(2.5)
+            .belowTokens()
+            .repeats(5, 500)
+
+            .effect()
+            .file("jb2a.magic_signs.circle.02.divination.outro.purple")
+            .attachTo(workflow.token, { followRotation: false })
+            .size(4, { gridUnits: true })
+            .zIndex(3)
             .belowTokens()
 
             .thenDo(async () => {
                 await mba.createEffect(workflow.actor, effectData);
             })
 
+            .wait(400)
+
+            .thenDo(async () => {
+                Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} CoOtPl` });
+            })
+
             .play()
 
+        return;
     }
-    else if (!workflow.failedSaves.size) {
+    else if (featureWorkflow.saves.size) {
         let count = 5;
         for (let i = 0; i != count;) {
-            let choices = [["Press when question is answered", false]];
-            await mba.dialog("Contact Other Plane: Counter", choices, `<p>This is a QoL counter for GM to track questions.</p><p>Questions left: <b>${count}</b></p>`);
-            i++
-        }
+            await new Promise((resolve) => {
+                new Dialog({
+                    title: `Contact other Plane: Counter`,
+                    content: `<p>This is a QoL counter for GM to track questions.</p><p>Questions left: <b>${count}</b></p>`,
+                    buttons: {
+                        plus: {
+                            label: "Press when question is answered",
+                            callback: async () => {
+                                count -= 1;
+                                resolve(count);
+                            },
+                        }
+                    },
+                    default: "plus"
+                }).render(true);
+            });
+        };
+        new Sequence()
+
+            .effect()
+            .file("jb2a.magic_signs.circle.02.divination.outro.purple")
+            .attachTo(workflow.token, { followRotation: false })
+            .size(4, { gridUnits: true })
+            .zIndex(3)
+            .belowTokens()
+
+            .wait(400)
+
+            .thenDo(async () => {
+                Sequencer.EffectManager.endEffects({ name: `${workflow.token.document.name} CoOtPl` });
+            })
+
+            .play()
     }
 }

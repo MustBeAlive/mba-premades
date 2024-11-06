@@ -13,7 +13,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Orange", "orange", "modules/jb2a_patreon/Library/2nd_Level/Flaming_Sphere/FlamingSphere_02_Orange_Thumb.webp"], 
         ["Purple", "purple", "modules/jb2a_patreon/Library/2nd_Level/Flaming_Sphere/FlamingSphere_02_Purple_Thumb.webp"]
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.selectImage("Flaming Sphere", images, `<b>Choose color:</b>`, "both");
     await mba.clearPlayerDialogMessage();
     if (!selection) selection = ["orange", "modules/jb2a_patreon/Library/2nd_Level/Flaming_Sphere/FlamingSphere_02_Orange_Thumb.webp"];
@@ -98,7 +98,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
+    await mba.playerDialogMessage(game.user);
     let spawned = await tashaSummon.spawn(sourceActor, updates, 60, workflow.item, 60, workflow.token, "fire", {}, workflow.castData.castLevel);
+    await mba.clearPlayerDialogMessage();
     let auraEffect = await mba.findEffect(spawned.actor, "Flaming Sphere: Aura");
     if (!auraEffect) return;
     let auraUpdates = {

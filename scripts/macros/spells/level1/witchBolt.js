@@ -16,7 +16,7 @@ export async function witchBolt({ speaker, actor, token, character, item, args, 
         }
         if (game.combat.current.tokenId != token.document.id) return;
         let choices = [['Yes!', 'yes'], ['No, stop concentrating!', false]];
-        await mbaPremades.helpers.playerDialogMessage();
+        await mbaPremades.helpers.playerDialogMessage(game.user);
         let selection = await mba.dialog("Witch Bolt", choices, `<b>Do you want to spend your Action to sustain Witch Bolt?</b>`);
         await mbaPremades.helpers.clearPlayerDialogMessage();
         if (!selection) {
@@ -58,7 +58,7 @@ export async function witchBolt({ speaker, actor, token, character, item, args, 
         ['Red', 'red'],
         ['Yellow', 'yellow']
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Witch Bolt", color, `<b>Choose color:</b>`);
     await mba.clearPlayerDialogMessage();
     if (!selection) selection = "blue";

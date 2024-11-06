@@ -212,6 +212,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         return;
     }
     choices.push(["Cancel", false, "modules/mba-premades/icons/conditions/incapacitated.webp"]);
+    await mba.playerDialogMessage(game.user);
     while (!stopper) {
         let selection = await mba.selectImage("Detect Poison & Disease", choices, "Select effect:", "value");
         if (!selection) {
@@ -220,6 +221,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         }
         await mba.dialog("Detect Poison & Disease", [["Ok!", false]], selection);
     }
+    await mba.clearPlayerDialogMessage();
 }
 
 export let detectPoisonAndDisease = {

@@ -1,6 +1,6 @@
 import {mba} from "../../../../helperFunctions.js";
 
-// To do
+// To do: everything?
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let supplies = await mba.getItem(workflow.actor, "Alchemist's Supplies");

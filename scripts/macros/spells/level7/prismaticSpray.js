@@ -37,6 +37,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 }
 
 async function damageRay(workflow, target, saved, damageType, animation, rayColor) {
+    // To do: округление в нижнюю
     let damageRoll = await new Roll(`10d6[${damageType}]`).roll({ 'async': true });
     if (saved) damageRoll = await new Roll(`10d6/2[${damageType}]`).roll({ 'async': true });
     new Sequence()

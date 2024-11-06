@@ -123,12 +123,13 @@ export async function cackleFever() {
                 console.log(exhaustion);
                 if (!exhaustion) return;
                 let level = +exhaustion.name.slice(-1);
+                if (level === 0) level = 10;
                 if (level === 1) {
                     await mbaPremades.helpers.removeCondition(actor, "Exhaustion 1");
                     return;
                 }
-                level -= 1;
-                await mbaPremades.helpers.addCondition(actor, "Exhaustion " + level);
+                await mbaPremades.helpers.removeCondition(actor, `Exhaustion ${level}`);
+                await mbaPremades.helpers.addCondition(actor, `Exhaustion ${level - 1}`);
             }
             let number = Math.floor(Math.random() * 10000);
             let effectData = {
@@ -179,9 +180,10 @@ export async function cackleFever() {
                 return;
             }
             let level = +exhaustion[0].name.slice(-1);
+            if (level === 0) level = 9;
             level += 1;
-            if (level > 6) level = 6;
-            await mbaPremades.helpers.addCondition(actor, "Exhaustion " + level);
+            await mbaPremades.helpers.removeCondition(actor, `Exhaustion ${level - 1}`);
+            await mbaPremades.helpers.addCondition(actor, `Exhaustion ${level}`);
             await mbaPremades.helpers.createEffect(actor, effectData);
             await mbaPremades.helpers.removeEffect(effect);
         });

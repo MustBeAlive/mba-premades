@@ -2,7 +2,7 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function arcaneLock({ speaker, actor, token, character, item, args, scope, workflow }) {
     let optionsPlayer = [["Door/Gate", "door"], ["Window/Chest/Other entryway", "other"]];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selectionPlayer = await mba.dialog("Aracane Lock", optionsPlayer, "<b>What are you attempting to lock?</b>");
     await mba.clearPlayerDialogMessage();
     if (!selectionPlayer) return;

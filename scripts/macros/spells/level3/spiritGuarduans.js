@@ -5,7 +5,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     let template = canvas.scene.collections.templates.get(workflow.templateId);
     if (!template) return;
     let choices = [["Radiant", "radiant"], ["Necrotic", "necrotic"]];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Choose damage type:", choices);
     await mba.clearPlayerDialogMessage();
     if (!selection) return;
@@ -49,7 +49,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         .size(7.5, { gridUnits: true })
         .playbackRate(0.9)
         .persist()
-        .name(`Spirit Guardians`)
+        .name(`SpiGua`)
 
         .play()
 
@@ -83,6 +83,13 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             'seconds': 600
         },
         'flags': {
+            'mba-premades': {
+                'spell': {
+                    'sanctuary': {
+                        'ignore': true
+                    }
+                }
+            },
             'midi-qol': {
                 'castData': {
                     baseLevel: 3,
@@ -111,6 +118,13 @@ async function trigger(template, token) {
     if (!originItem) return;
     let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Spirit Guardians: Damage", false);
     if (!featureData) return;
+    featureData.flags['mba-premades'] = {
+        'spell': {
+            'sanctuary': {
+                'ignore': true
+            }
+        }
+    };
     featureData.system.save.dc = trigger.saveDC;
     featureData.system.damage.parts = [[`${trigger.castLevel}d8[${trigger.damageType}]`, trigger.damageType]];
     delete featureData._id;

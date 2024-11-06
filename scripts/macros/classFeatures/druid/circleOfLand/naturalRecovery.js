@@ -49,7 +49,7 @@ export async function naturalRecovery({ speaker, actor, token, character, item, 
             .play();
     
         //repeat dialog promt until no points
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         while (ammount > 0) {
             await warpgate.wait(50);
     

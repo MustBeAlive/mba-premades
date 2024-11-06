@@ -1,7 +1,7 @@
-import { constants } from "../../generic/constants.js";
-import { effectAuras } from "../../mechanics/effectAuras.js";
-import { mba } from "../../../helperFunctions.js";
-import { queue } from "../../mechanics/queue.js";
+import {constants} from "../../generic/constants.js";
+import {effectAuras} from "../../mechanics/effectAuras.js";
+import {mba} from "../../../helperFunctions.js";
+import {queue} from "../../mechanics/queue.js";
 
 async function deathGlareCast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
@@ -13,7 +13,7 @@ async function deathGlareCast({ speaker, actor, token, character, item, args, sc
 
 async function deathGlareItem({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
-    let currentHP = target.actor.system.attributes.hp.value;
+    let currentHP = target.actor.system.attributes.hp.value + target.actor.system.attribute.hp.temp;
     let formula = currentHP.toString();
     let damageRoll = await new Roll(formula).roll({ 'async': true });
     let deathWard = await mba.findEffect(target.actor, "Death Ward");
@@ -52,6 +52,19 @@ async function deathGlareItem({ speaker, actor, token, character, item, args, sc
 }
 
 async function horrificAppearanceAuraCombatStart(token, origin) {
+    let duplicates = await mba.findNearby(token, 500, "any", true, false).filter(t => t.name === "Sea Hag");
+    // what the fuck is this...
+    if (duplicates.length) {
+        let delayRoll1 = await new Roll("1d10").roll({ 'async': true });
+        let delayRoll2 = await new Roll("1d10").roll({ 'async': true });
+        let delayRoll3 = await new Roll("1d10").roll({ 'async': true });
+        let delay1 = delayRoll1.total * 100;
+        let delay2 = delayRoll2.total * 100;
+        let delay3 = delayRoll3.total * 100;
+        await warpgate.wait(delay1);
+        await warpgate.wait(delay2);
+        await warpgate.wait(delay3);
+    }
     async function effectMacroDel() {
         await mbaPremades.macros.monsters.seaHag.horrificAppearanceAuraEnd(token);
     };
@@ -186,7 +199,7 @@ async function horrificAppearanceAuraTurnStart(token) {
     let seaHagToken = seaHagDoc.object;
     let choices = [["Avert Eyes (Disadvantage on Attack Rolls against Hag)", "avert"], ["Embrace Horrific Appearance (Saving Throw)", "save"]];
     let selection = await mba.dialog("Sea Hag: Horrific Appearance", choices, `<p>You are about to be affected by </p><p><u>Sea Hag's Horrific Appearance</u></p><p>What would you like to do?</p>`);
-    if (!selection) selection = "save";
+    if (!selection || mba.findEffect(token.actor, "Surprised")) selection = "save";
     if (selection === "avert") {
         const effectDataAvert = {
             'name': "Sea Hag: Avert Eyes",
@@ -414,8 +427,8 @@ async function horrificAppearanceAuraTurnEnd(token) {
     featureData.name = "Sea Hag Fear: Save (DC11)";
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': token.actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([token.document.uuid]);
-    let [quasitNearby] = await mba.findNearby(token, 200, "any", false, false, false, true).filter(t => t.document.uuid === originUuid);
-    if (quasitNearby) await mba.createEffect(token.actor, constants.disadvantageEffectData);
+    let [hagNearby] = await mba.findNearby(token, 200, "any", false, false, false, true).filter(t => t.document.uuid === originUuid);
+    if (hagNearby) await mba.createEffect(token.actor, constants.disadvantageEffectData);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
     if (featureWorkflow.failedSaves.size) return;
     else if (!featureWorkflow.failedSaves.size) {

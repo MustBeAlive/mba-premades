@@ -43,8 +43,9 @@ export async function throatLeeches() {
                 let saveDC = 12;
                 let saveRoll = await mbaPremades.helpers.rollRequest(token, 'save', 'con');
                 if (saveRoll.total < saveDC) {
+                    await mbaPremades.helpers.removeCondition(token.actor, `Exhaustion ${currentExhaustion}`);
                     currentExhaustion += 1;
-                    if (currentExhaustion > 6) currentExhaustion = 6; // temp workaround
+                    if (currentExhaustion > 10) currentExhaustion = 10;
                     await mbaPremades.helpers.addCondition(token.actor, `Exhaustion ${currentExhaustion}`);
                     let updates = {
                         'flags': {
@@ -57,6 +58,7 @@ export async function throatLeeches() {
                     return;
                 }
                 if (saveRoll.total >= saveDC && currentExhaustion > 1) {
+                    await mbaPremades.helpers.removeCondition(token.actor, `Exhaustion ${currentExhaustion}`);
                     currentExhaustion -= 1;
                     await mbaPremades.helpers.addCondition(token.actor, `Exhaustion ${currentExhaustion}`);
                     let updates = {
@@ -79,17 +81,19 @@ export async function throatLeeches() {
                 }
             }
             async function effectMacroThroatLeechesDel() {
-                let exhaustion = token.actor.effects.filter(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
-                if (!exhaustion.length) return
-                await mbaPremades.helpers.removeEffect(exhaustion[0]);
+                let exhaustion = token.actor.effects.find(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
+                if (!exhaustion) return;
+                await mbaPremades.helpers.removeCondition(token.actor, exhaustion.name);
             }
             let level;
-            let exhaustion = token.actor.effects.filter(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
-            if (!exhaustion.length) {
+            let exhaustion = token.actor.effects.find(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
+            if (!exhaustion) {
                 await mbaPremades.helpers.addCondition(token.actor, "Exhaustion 1");
                 level = 1;
-            } else {
-                level = +exhaustion[0].name.slice(-1);
+            }
+            else {
+                level = +exhaustion.name.slice(-1);
+                if (level === 0) level = 9;
                 level += 1;
                 await mbaPremades.helpers.addCondition(token.actor, `Exhaustion ${level}`);
             }

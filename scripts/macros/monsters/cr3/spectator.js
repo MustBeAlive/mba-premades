@@ -472,6 +472,7 @@ async function spellReflectionAttack({ speaker, actor, token, character, item, a
 
     let validTargets = await mba.findNearby(spectator, 30, "enemy", false, false, true, false).filter(t => t.document.uuid != workflow.token.document.uuid);
     if (!validTargets.length) {
+        await mba.clearGMDialogMessage();
         queue.remove(workflow.item.uuid);
         return;
     }
@@ -551,6 +552,7 @@ async function spellReflectionSave({ speaker, actor, token, character, item, arg
 
     let validTargets = await mba.findNearby(spectator, 30, "enemy", false, false, true, false).filter(t => t.document.uuid != workflow.token.document.uuid);
     if (!validTargets.length) {
+        await mba.clearGMDialogMessage();
         queue.remove(workflow.item.uuid);
         return;
     }
@@ -569,6 +571,11 @@ async function spellReflectionSave({ speaker, actor, token, character, item, arg
     featureData.name = "Spell Reflection: Save";
     featureData.system.save.dc = workflow.item.system.save.dc;
     featureData.system.save.ability = workflow.item.system.save.ability;
+    workflow.targets.delete(spectator);
+    workflow.hitTargets.delete(spectator);
+    workflow.saves.delete(spectator);
+    workflow.targets.add(newTarget);
+    workflow.hitTargets.add(newTarget);
     let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
     let [config, options] = constants.syntheticItemWorkflowOptions([newTargetDoc.uuid]);
     let featureWorkflow = await MidiQOL.completeItemUse(feature, config, options);
@@ -590,11 +597,6 @@ async function spellReflectionSave({ speaker, actor, token, character, item, arg
             .play()
     }
     else {
-        workflow.targets.delete(spectator);
-        workflow.hitTargets.delete(spectator);
-        workflow.saves.delete(spectator);
-        workflow.targets.add(newTarget);
-        workflow.hitTargets.add(newTarget);
         workflow.failedSaves.add(newTarget);
         queue.remove(workflow.item.uuid);
         new Sequence()

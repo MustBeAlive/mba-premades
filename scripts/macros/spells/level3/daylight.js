@@ -21,5 +21,7 @@ export async function daylight({ speaker, actor, token, character, item, args, s
             'name': tokenName,
         }
     };
+    await mba.playerDialogMessage(game.user);
     await tashaSummon.spawn(sourceActor, updates, 3600, workflow.item, 60, workflow.token, "celestial", {}, workflow.castData.castLevel);
+    await mba.clearPlayerDialogMessage();
 }

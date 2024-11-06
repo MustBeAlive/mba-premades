@@ -40,7 +40,7 @@ export async function harnessDivinePower({speaker, actor, token, character, item
         return;
     }
     let options = validLevels.map(i => [(i.level != 'p' ? mba.nth(i.level) + ' Level' : 'Pact Slot'), i.key]);
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = options.length > 1 ? await mba.dialog(workflow.item.name, options, `<b>Choose slot level:</b>`) : options[0][1];
     await mba.clearPlayerDialogMessage();
     if (!selection) {

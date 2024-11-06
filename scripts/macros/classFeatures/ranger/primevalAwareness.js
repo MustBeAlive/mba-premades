@@ -13,7 +13,7 @@ export async function primevalAwareness({ speaker, actor, token, character, item
         if (slot[1].value >= 1) choices.push([`<b>Level: ${level}</b> (Current: <b>${slot[1].value}/${slot[1].max}</b>)`, level, `modules/mba-premades/icons/class/sorcerer/spell_slot_restoration_level_${level}.webp`]);
     }
     choices.push(["Cancel", false, "modules/mba-premades/icons/conditions/incapacitated.webp"]);
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let slotLevel = await mba.selectImage("Primeval Awareness", choices, `Choose spell slot level to use:`, "value");
     await mba.clearPlayerDialogMessage();
     if (!slotLevel) return;
@@ -32,7 +32,7 @@ export async function primevalAwareness({ speaker, actor, token, character, item
         ["Fiend", "fiend"],
         ["Undead", "undead"]
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selectionType = await mba.dialog("Primeval Awareness", choicesType, "Select creature type:");
     await mba.clearPlayerDialogMessage();
     if (!selectionType) return;

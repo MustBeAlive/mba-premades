@@ -12,7 +12,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Throw vial at someone (20 ft.)", "shatter"],
         ["Cancel", false]
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Acid Vial", choices, `<b>What would you like to do?</b>`);
     await mba.clearPlayerDialogMessage();
     if (!selection) return;

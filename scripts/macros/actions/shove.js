@@ -16,7 +16,7 @@ export async function shove({ speaker, actor, token, character, item, args, scop
             [`Athletics (${target.actor.system.skills.ath.total})`, 'ath'],
             ['Uncontested', false]
         ];
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(mba.firstOwner(target));
         let selection = await mba.remoteDialog(workflow.item.name, options, mba.firstOwner(target).id, "<b>How would you like to contest the shove?</b>");
         await mba.clearPlayerDialogMessage();
         if (selection) {
@@ -25,9 +25,9 @@ export async function shove({ speaker, actor, token, character, item, args, scop
             if (targetRoll.total >= sourceRoll.total) return;
         }
     }
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Shove", [['Push 5 ft.', 'move'], ['Knock Prone', 'prone']], `<b>What would you like to do?</b>`);
-    await mba.clearPlayerDialogMessage();
+    await mba.clearPlayerDialogMessage(game.user);
     if (!selection) return;
     if (selection === 'prone') {
         await new Sequence()

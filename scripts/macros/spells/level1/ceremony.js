@@ -9,7 +9,7 @@ export async function ceremony({ speaker, actor, token, character, item, args, s
 		['Funeral Rite', 'Funeral'],
 		['Wedding', 'Wedding']
 	];
-	await mba.playerDialogMessage();
+	await mba.playerDialogMessage(game.user);
 	let selection = await mba.dialog("Ceremony", choices, `<b>Choose one of the rites:</b>`);
 	await mba.clearPlayerDialogMessage();
 	if (!selection) return;

@@ -1,6 +1,7 @@
 import {mba} from "../../../helperFunctions.js";
 
 async function autoPronePush({ speaker, actor, token, character, item, args, scope, workflow }) {
+    if (!workflow.hitTargets.size) return;
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
     await new Sequence()

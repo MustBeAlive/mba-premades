@@ -9,7 +9,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Warm Shield", "fire", "modules/mba-premades/icons/spells/level4/fire_shield_warm.webp"],
         ["Cold Shield", "cold", "modules/mba-premades/icons/spells/level4/fire_shield_chill.webp"]
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.selectImage ("Fire Shield", choices, "<b>Choose shield type:</b>", "both");
     await mba.clearPlayerDialogMessage();
     if (!selection.length) {

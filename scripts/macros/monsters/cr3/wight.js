@@ -1,6 +1,8 @@
 import {mba} from "../../../helperFunctions.js";
 import {socket} from "../../../module.js";
 
+// To do: zombie if dead
+
 async function lifeDrain({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     new Sequence()
@@ -21,6 +23,7 @@ async function lifeDrain({ speaker, actor, token, character, item, args, scope, 
         .play()
 
     if (!workflow.failedSaves.size) return;
+    if (mba.findEffect(target.actor, "Aura of Life")) return;
     let damageRoll = workflow.damageRoll.total;
     let effect = await mba.findEffect(target.actor, "Wight: Life Drain");
     if (effect) {

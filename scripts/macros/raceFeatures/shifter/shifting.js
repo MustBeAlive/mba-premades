@@ -8,7 +8,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Swiftstride", "Swiftstride", "modules/mba-premades/icons/generic/shifting_stride.webp"],
         ["Wildhunt", "Wildhunt", "modules/mba-premades/icons/generic/shifting_hunt.webp"]
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.selectImage("Shifting", choices, "<b>Choose form to assume:</b>", "both");
     await mba.clearPlayerDialogMessage();
     if (!selection.length) return;
@@ -185,7 +185,7 @@ async function swiftstride({ speaker, actor, token, character, item, args, scope
         ui.notifications.warn("You don't have a reaction available!");
         return;
     }
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let position = await mba.aimCrosshair(workflow.token, 10, workflow.item.img, 2, workflow.token.document.width);
     await mba.clearPlayerDialogMessage();
     if (position.canceled) return;

@@ -28,8 +28,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Daggers", "daggers", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_01_Light_Yellow_Thumb.webp"],
         ["Kunai", "kunai", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_Kunai_01_Light_Yellow_Thumb.webp"]
     ]
-    await mba.playerDialogMessage();
-    let selectionType = await mbaPremades.helpers.selectImage("Cloud of Daggers: Type", choicesType, "Choose animation type:", "value");
+    await mba.playerDialogMessage(game.user);
+    let selectionType = await mba.selectImage("Cloud of Daggers: Type", choicesType, "Choose animation type:", "value");
     if (!selectionType) selectionType === "daggers";
     if (selectionType === "daggers") {
         animation3 += "daggers.";
@@ -57,7 +57,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             ["Yellow", "yellow", "modules/jb2a_patreon/Library/2nd_Level/Cloud_Of_Daggers/CloudOfDaggers_Kunai_01_Light_Yellow_Thumb.webp"],
         ];
     }
-    let selectionColor = await mbaPremades.helpers.selectImage("Cloud of Daggers: Color", choicesColor, "Choose animation color:", "value");
+    let selectionColor = await mba.selectImage("Cloud of Daggers: Color", choicesColor, "Choose animation color:", "value");
     if (!selectionColor) selectionColor === "yellow";
     if (selectionColor === "blue") {
         if (selectionType === "kunai") animation1 = "jb2a.kunai.throw.01";

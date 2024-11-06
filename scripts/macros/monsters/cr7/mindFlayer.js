@@ -5,7 +5,7 @@ async function tentacles({ speaker, actor, token, character, item, args, scope, 
     let target = workflow.targets.first();
     let saveDC = workflow.item.system.save.dc;
     let grappleEffect = await mba.findEffect(target.actor, "Mind Flayer: Grapple");
-    if (grappleEffect) { //fucking abomination
+    if (grappleEffect) { 
         let isStunned = await mba.findEffect(target.actor, "Stunned");
         if (isStunned) return;
         if (!isStunned && !workflow.failedSaves.size) return;

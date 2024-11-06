@@ -718,7 +718,7 @@ async function future(location, token, updates, iteration) {
     let image = token.texture.src;
     let imageSize = token.width * token.texture.scaleX;
     new Sequence()
-    
+
         .wait(150)
 
         .effect()
@@ -817,6 +817,111 @@ async function future(location, token, updates, iteration) {
         .play();
 }
 
+async function undead(location, token, updates, iteration) {
+    new Sequence()
+
+        .effect()
+        .file("animated-spell-effects-cartoon.electricity.ball.06")
+        .atLocation(token)
+        .duration(1500)
+        .fadeOut(1500)
+        .size(1.75, { gridUnits: true })
+        .randomRotation()
+        .filter("ColorMatrix", { saturate: -1, brightness: 0 })
+        .zIndex(1)
+
+        //Build Up
+
+        .effect()
+        .file("jb2a.cast_generic.ice.01.blue.0")
+        .atLocation(token)
+        .size(1.5, { gridUnits: true })
+        .playbackRate(2)
+        .zIndex(2)
+        .opacity(0.8)
+        .filter("ColorMatrix", { brightness: 0, hue: -45 })
+        .waitUntilFinished(-200)
+
+        //Explosion
+        .effect()
+        .file("animated-spell-effects-cartoon.electricity.04")
+        .atLocation(token, { offset: { y: -0.4 }, gridUnits: true })
+        .size(1.5, { gridUnits: true })
+        .delay(200)
+        .playbackRate(1.5)
+        .mirrorY()
+        .filter("ColorMatrix", { saturate: -1, brightness: 0 })
+        .waitUntilFinished(-200)
+
+        .effect()
+        .file("animated-spell-effects-cartoon.electricity.discharge.06")
+        .atLocation(token)
+        .size(2.25, { gridUnits: true })
+        .fadeOut(500)
+        .playbackRate(0.8)
+        .filter("ColorMatrix", { saturate: -1, brightness: 0 })
+        .zIndex(2)
+
+        .effect()
+        .file("jb2a.impact.dark.01.red.0")
+        .atLocation(token)
+        .size(2.5, { gridUnits: true })
+        .randomizeMirrorX()
+        .randomizeMirrorY()
+        .filter("ColorMatrix", { hue: 90 })
+
+        .effect()
+        .file("jb2a.liquid.splash.red")
+        .atLocation(token)
+        .size(1.65, { gridUnits: true })
+        .zIndex(0.1)
+        .belowTokens()
+
+        .effect()
+        .delay(250)
+        .file("animated-spell-effects-cartoon.water.117")
+        .atLocation(token)
+        .size(1.3, { gridUnits: true })
+        .duration(5000)
+        .fadeOut(1000)
+        .zIndex(0.2)
+        .randomRotation()
+        .belowTokens()
+        .noLoop()
+        .filter("ColorMatrix", { hue: -5, saturate: 1, brightness: 0.6 })
+
+        .animation()
+        .on(token)
+        .fadeIn(500)
+
+        .effect()
+        .file("jb2a.fireflies.many.02.green")
+        .atLocation(token)
+        .size(1.25, { gridUnits: true })
+        .duration(5000)
+        .fadeIn(500)
+        .fadeOut(1000)
+        .scaleIn(0, 500, { ease: "easeOutCubic" })
+        .zIndex(3)
+        .randomRotation()
+
+        .effect()
+        .file("jb2a.static_electricity.03.blue")
+        .atLocation(token)
+        .size(1.25, { gridUnits: true })
+        .delay(250)
+        .fadeOut(1000)
+        .playbackRate(4)
+        .opacity(0.75)
+        .zIndex(0.3)
+        .randomRotation()
+        .belowTokens()
+        .filter("ColorMatrix", { saturate: -1, brightness: 0 })
+        .repeats(4, 1000, 1500)
+
+        .play()
+}
+
 export let summonEffects = {
     'default': defaultAnimation,
     'celestial': celestial,
@@ -827,5 +932,6 @@ export let summonEffects = {
     'earth': earth,
     'nature': nature,
     'shadow': shadow,
-    'future': future
+    'future': future,
+    'undead': undead
 }

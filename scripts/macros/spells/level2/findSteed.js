@@ -15,7 +15,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     await mba.clearPlayerDialogMessage();
     if (!sourceActor) return;
     let choicesType = [['Celestial', 'celestial'], ['Fey', 'fey'], ['Fiend', 'fiend']];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let creatureType = await mba.dialog(`Find Steed: Type`, choicesType, "Choose steed type:");
     await mba.clearPlayerDialogMessage();
     if (!creatureType) return;
@@ -24,7 +24,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ui.notifications.warn("Caster doesn't know any languages!");
         return;
     }
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let languageSelected = new Set(await mba.dialog(`Find Steed: Language`, languageOptions, "Choose language:"));
     await mba.clearPlayerDialogMessage();
     if (!languageSelected) return;
@@ -81,7 +81,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'fiend': 'fire'
     };
     let animation = defaultAnimations[creatureType];
+    await mba.playerDialogMessage(game.user);
     await summons.spawn(sourceActor, updates, 864000, workflow.item, undefined, undefined, 30, workflow.token, animation);
+    await mba.clearPlayerDialogMessage();
     let effect = mba.findEffect(workflow.actor, workflow.item.name);
     await mba.updateEffect(effect, updates2);
 }

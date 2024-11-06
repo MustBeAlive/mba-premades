@@ -1,6 +1,7 @@
 import {mba} from "../../../helperFunctions.js";
 
 export async function autoProne({ speaker, actor, token, character, item, args, scope, workflow }) {
+    if (!workflow.hitTargets.size) return;
     if (!workflow.failedSaves.size) return;
     let target = workflow.targets.first();
     if (mba.findEffect(target.actor, "Prone")) return;

@@ -40,7 +40,6 @@ export async function rayOfFrost({ speaker, actor, token, character, item, args,
             }
         }
     };
-    console.log(target);
 
     new Sequence()
 

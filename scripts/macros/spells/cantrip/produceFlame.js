@@ -8,7 +8,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     delete featureData._id;
     featureData.system.damage.parts[0][0] = `${dice}d8[fire]`;
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} ProFla` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} ProFla` });
         await warpgate.revert(token.document, "Produce Flame");
     }
     let effectData = {

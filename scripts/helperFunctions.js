@@ -128,10 +128,6 @@ export let mba = {
     'applyWorkflowDamage': async function _applyWorkflowDamage(sourceToken, damageRoll, damageType, targets, flavor, itemCardId) {
         new MidiQOL.DamageOnlyWorkflow(sourceToken.actor, sourceToken, damageRoll.total, damageType, targets, damageRoll, { 'flavor': flavor, 'itemCardId': itemCardId });
     },
-    'aseCheck': function _aseCheck() {
-        let cartoon = game.modules.get('animated-spell-effects-cartoon')?.active;
-        return cartoon;
-    },
     'canSense': function _canSense(token, target) {
         return MidiQOL.canSense(token, target);
     },
@@ -199,16 +195,12 @@ export let mba = {
     'checkTrait': function _checkTrait(actor, type, trait) {
         return actor.system.traits[type].value.has(trait);
     },
-    'clearGMDialogMessage': async function _clearThirdPartyReactionMessage() {
+    'clearGMDialogMessage': async function _clearGMDialogMessage() {
         let lastMessage = game.messages.find(m => m.flags?.['mba-premades']?.gmDialogMessage && m.user.id === game.user.id);
         if (lastMessage) await lastMessage.delete();
     },
     'clearPlayerDialogMessage': async function _clearPlayerDialogMessage() {
         let lastMessage = game.messages.find(m => m.flags?.['mba-premades']?.playerDialogMessage && m.user.id === game.user.id);
-        if (lastMessage) await lastMessage.delete();
-    },
-    'clearThirdPartyReactionMessage': async function _clearThirdPartyReactionMessage(key = true) {
-        let lastMessage = game.messages.find(m => m.flags?.['mba-premades']?.thirdPartyReactionMessage === key && m.user.id === game.user.id);
         if (lastMessage) await lastMessage.delete();
     },
     'createEffect': async function _createEffect(actor, effectData) {
@@ -565,36 +557,8 @@ export let mba = {
     'inCombat': function _inCombat() {
         return !(game.combat === null || game.combat === undefined || game.combat?.started === false);
     },
-    'increaseExhaustion': async function _increaseExhaustion(actor, originUuid) {
-        let effect = actor.effects.find(eff => eff.name.includes('Exhaustion'));
-        if (!effect) {
-            await mba.addCondition(actor, 'Exhaustion 1', false, originUuid);
-            return;
-        }
-        let level = Number(effect.name.substring(11));
-        if (isNaN(level)) return;
-        if (level >= 5) {
-            await mba.addCondition(actor, 'Dead', true, originUuid);
-            return;
-        }
-        let conditionName = effect.name.substring(0, 11) + (level + 1);
-        await mba.removeEffect(effect);
-        await mba.addCondition(actor, conditionName, false, originUuid);
-    },
     'itemDuration': function _itemDuration(item) {
         return DAE.convertDuration(item.system.duration, mba.inCombat());
-    },
-    'jb2aCheck': function _jb2aCheck() {
-        let patreon = game.modules.get('jb2a_patreon')?.active;
-        let free = game.modules.get('JB2A_DnD5e')?.active;
-        if (patreon && free) {
-            ui.notifications.info('Включены обе версии модуля JB2A. Выключи бесплатную.');
-            return 'patreon';
-        }
-        if (patreon) return 'patreon';
-        if (free) return 'free';
-        ui.notifications.info('Модуль JB2A не включен');
-        return false;
     },
     'lastGM': function _lastGM() {
         return game.settings.get('mba-premades', 'LastGM');
@@ -1161,15 +1125,16 @@ export let mba = {
         }
         return selection;
     },
-    'playerDialogMessage': async function _playerDialogMessage() {
+    'playerDialogMessage': async function _playerDialogMessage(user) {
+        let playerName = user.name;
         let lastMessage = game.messages.find(m => m.flags?.['mba-premades']?.playerDialogMessage);
-        let message = '<hr>Waiting for player dialogue selection...';
+        let message = `<hr>Waiting for ${playerName} option selection...`;
         if (lastMessage) {
             await lastMessage.update({ 'content': message });
         }
         else {
             ChatMessage.create({
-                'speaker': { 'alias': name },
+                'speaker': { 'alias': "MBA Premades" },
                 'content': message,
                 'blind': false,
                 'flags': {
@@ -1237,7 +1202,7 @@ export let mba = {
         }
         if (animation != 'none' && !callbacks.post) {
             let callbackFunction = summonEffects[animation];
-            if (typeof callbackFunction === 'function' && mba.jb2aCheck() === 'patreon' && mba.aseCheck()) {
+            if (typeof callbackFunction === 'function') {
                 callbacks.post = callbackFunction;
                 setProperty(updates, 'token.alpha', 0);
             }
@@ -1271,27 +1236,6 @@ export let mba = {
     },
     'templateTokens': function _templateTokens(template) {
         return game.modules.get('templatemacro').api.findContained(template);
-    },
-    'thirdPartyReactionMessage': async function _thirdPartyReactionMessage(user, dialogMessage, key = true) {
-        let playerName = user.name;
-        let lastMessage = game.messages.find(m => m.flags?.['mba-premades']?.thirdPartyReactionMessage);
-        let subMessage = dialogMessage ? 'a dialog selection' : 'a 3rd party reaction';
-        let message = '<hr>Waiting for a ' + subMessage + ' from:<br><b>' + playerName + '</b>';
-        if (lastMessage) {
-            await lastMessage.update({ 'content': message });
-        } else {
-            await ChatMessage.create({
-                'speaker': { 'alias': 'MBA Premades' },
-                'content': message,
-                'whisper': game.users.filter(u => u.isGM).map(u => u.id),
-                'blind': false,
-                'flags': {
-                    'mba-premades': {
-                        'thirdPartyReactionMessage': key
-                    }
-                }
-            });
-        }
     },
     'titleCase': function _titleCase(inputString) {
         return inputString.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());

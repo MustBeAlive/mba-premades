@@ -1,5 +1,5 @@
-import { constants } from "../../generic/constants.js";
-import { mba } from "../../../helperFunctions.js";
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
@@ -18,7 +18,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .play()
 
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let storming = await mba.dialog("Call Lightning", constants.yesNo, "<b>Is it already storming? (ask GM)</b>");
     await mba.clearPlayerDialogMessage();
     let spellLevel = workflow.castData.castLevel;

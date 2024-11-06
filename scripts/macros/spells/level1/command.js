@@ -11,7 +11,7 @@ export async function command({ speaker, actor, token, character, item, args, sc
         ["Halt", "Halt", "modules/mba-premades/icons/spells/level1/command_halt.webp"],
         ["Other", "Other", "modules/mba-premades/icons/spells/level1/command_halt.webp"]
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.selectImage("Command", choices, `<b>Choose command word:</b>`, "both");
     await mba.clearPlayerDialogMessage();
     if (!selection) return;

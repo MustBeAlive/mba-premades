@@ -19,7 +19,7 @@ export async function sacredFlame({ speaker, actor, token, character, item, args
     ];
     if (animation === "default") color = "white";
     else if (animation === "selection") {
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         color = await mba.dialog("Sacred Flame", choices, `<b>Choose color:</b>`);
         await mba.clearPlayerDialogMessage();
         if (!color) color = "white";

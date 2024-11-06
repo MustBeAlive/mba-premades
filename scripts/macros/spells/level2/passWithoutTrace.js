@@ -80,7 +80,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             'macroName': 'passWithoutTrace'
         }
     };
-    effectAuras.add(flagAuras, workflow.token.document.uuid, true);
     new Sequence()
 
         .effect()
@@ -119,7 +118,7 @@ async function aura(token, selectedAura) {
         'origin': originItem.uuid,
         'description': `
             <p>You have a +10 bonus to Dexterity (Stealth) checks and can't be tracked except by magical means.</p>
-            <p>Also, you leaves behind no tracks or other traces of your passage.</p>
+            <p>Also, you leave no tracks behind or other traces of your passage.</p>
             <p>Source: <b>${originToken.name}</b></p>
         `,
         'changes': [

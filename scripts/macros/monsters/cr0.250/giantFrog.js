@@ -1,46 +1,70 @@
+import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 
-//To do: remake with synth item
+async function biteCheck({ speaker, actor, token, character, item, args, scope, workflow }) {
+    let target = workflow.targets.first();
+    let effects = workflow.actor.effects.filter(e => e.name.includes("Giant Frog: Grapple") && e.name != "Grappled");
+    if (!effects.length) return;
+    if (!mba.findEffect(workflow.actor, `${workflow.token.document.name}: Grapple (${target.document.name})`)) {
+        ui.notifications.warn("You can only attack the grappled target!");
+        return false;
+    }
+}
 
-async function swallow({ speaker, actor, token, character, item, args, scope, workflow }) {
+async function swallowItem({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.hitTargets.size) return;
     let target = workflow.targets.first();
     if (mba.getSize(target.actor) > 1) {
         ui.notifications.warn("Target is too big to swallow!");
         return;
     }
-    let effect = await mba.findEffect(target.actor, "Giant Frog: Grapple");
-    if (!effect) return;
+    let effects = workflow.actor.effects.filter(e => e.name.includes("Swallow") && e.name != "Swallow: Passive");
+    if (effects.length) {
+        ui.notifications.warn("You can't swallow another target!");
+        return;
+    }
+    let grappleEffect = await mba.findEffect(target.actor, "Giant Frog: Grapple");
+    async function effectMacroDelSource() {
+        let targetDoc = await fromUuid(effect.flags['mba-premades']?.feature?.giantFrog?.swallow?.targetUuid);
+        let targetEffect = await mbaPremades.helpers.findEffect(targetDoc.actor, "Giant Frog: Swallow");
+        if (targetEffect) await mbaPremades.helpers.removeEffect(targetEffect);
+    };
+    let effectDataSource = {
+        'name': `Swallow (${target.document.name})`,
+        'icon': workflow.item.img,
+        'origin': workflow.item.uuid,
+        'flags': {
+            'dae': {
+                'specialDuration': ['zeroHP']
+            },
+            'effectmacro': {
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDelSource)
+                }
+            },
+            'mba-premades': {
+                'feature': {
+                    'giantFrog': {
+                        'swallow': {
+                            'targetUuid': target.document.uuid
+                        }
+                    }
+                }
+            }
+        }
+    };
     async function effectMacroDelTarget() {
         if (!mbaPremades.helpers.findEffect(token.actor, "Prone")) await mbaPremades.helpers.addCondition(token.actor, "Prone");
-    }
-    async function effectMacroDelSource() {
-        let targets = Array.from(canvas.scene.tokens).filter(t => t.actor.effects.some(e => e.name === "Giant Frog: Swallow"));
-        if (!targets.length) return;
-        for (let target of targets) {
-            let effect = await mbaPremades.helpers.findEffect(target.actor, "Giant Frog: Swallow");
-            let sourceUuid = effect.flags['mba-premades']?.feature?.giantFrog?.sourceUuid;
-            if (token.document.uuid != sourceUuid) continue;
-            await mbaPremades.helpers.removeEffect(effect);
-        }
-    }
-    async function effectMacroTurnStartSource() {
-        let sourceEffect = await mbaPremades.helpers.findEffect(token.actor, "Acid Stomach");
-        if (!sourceEffect) return;
-        let target = await fromUuid(sourceEffect.flags['mba-premades']?.feature?.giantFrog?.targetUuid);
-        let damageRoll = await new Roll('2d4[acid]').roll({ 'async': true });
-        await MidiQOL.displayDSNForRoll(damageRoll);
-        damageRoll.toMessage({
-            rollMode: 'roll',
-            speaker: { 'alias': name },
-            flavor: "Giant Frog: Acid Stomach"
-        });
-        await mbaPremades.helpers.applyDamage([target.object], damageRoll.total, 'acid');
-    }
-    const effectDataTarget = {
+    };
+    let effectDataTarget = {
         'name': "Giant Frog: Swallow",
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
+        'description': `
+            <p>You've been swallowed by Giant Frog.</p>
+            <p>While swallowed, you are @UUID[Compendium.mba-premades.MBA SRD.Item.3NxmNhGQQqUDnu73]{Blinded} and @UUID[Compendium.mba-premades.MBA SRD.Item.gfRbTxGiulUylAjE]{Restrained}, have total cover against attacks and other effects outside the Giant Frog, and take 2d4 acid damage at the start of each of the Giant Frog's turns.</p>
+            <p>If the Giant Frog dies, you are no longer @UUID[Compendium.mba-premades.MBA SRD.Item.gfRbTxGiulUylAjE]{Restrained} by it and can escape from the corpse using 5 feet of movement, exiting @UUID[Compendium.mba-premades.MBA SRD.Item.LbGCc4TiQnxaUoGn]{Prone}.</p>
+        `,
         'changes': [
             {
                 'key': 'macro.CE',
@@ -53,60 +77,47 @@ async function swallow({ speaker, actor, token, character, item, args, scope, wo
                 'mode': 0,
                 'value': "Restrained",
                 'priority': 20
-            }
+            },
         ],
         'flags': {
             'dae': {
-                'showIcon': false,
+                'showIcon': true,
                 'specialDuration': ['combatEnd']
             },
             'effectmacro': {
                 'onDelete': {
                     'script': mba.functionToString(effectMacroDelTarget)
                 }
-            },
-            'mba-premades': {
-                'feature': {
-                    'giantFrog': {
-                        'sourceUuid': workflow.token.document.uuid
-                    }
-                }
             }
         }
     };
-    const effectDataSource = {
-        'name': "Acid Stomach",
-        'icon': workflow.item.img,
-        'origin': workflow.item.uuid,
-        'flags': {
-            'dae': {
-                'showIcon': false,
-                'specialDuration': ['zeroHP']
-            },
-            'effectmacro': {
-                'onDelete': {
-                    'script': mba.functionToString(effectMacroDelSource),
-                },
-                'onTurnStart': {
-                    'script': mba.functionToString(effectMacroTurnStartSource),
-                }
-            },
-            'mba-premades': {
-                'feature': {
-                    'giantFrog': {
-                        'targetUuid': target.document.uuid
-                    }
-                }
-            }
-        }
-    };
-    await mba.removeEffect(effect);
+    let distance = await mba.getDistance(workflow.token, target);
+    if (grappleEffect) await mba.removeEffect(grappleEffect);
     await warpgate.wait(100);
-    await mba.pushToken(workflow.token, target, -5);
+    await mba.pushToken(workflow.token, target, -distance);
     await mba.createEffect(target.actor, effectDataTarget);
     await mba.createEffect(workflow.actor, effectDataSource);
 }
 
+async function swallowTurnStart(token) {
+    let effects = token.actor.effects.filter(e => e.name.includes("Swallow") && e.name != "Swallow: Passive");
+    if (!effects.length) return;
+    let targetUuids = [];
+    for (let effect of effects) {
+        let swallowEffect = await mba.findEffect(token.actor, effect.name);
+        targetUuids.push(swallowEffect.flags['mba-premades']?.feature?.giantFrog?.swallow?.targetUuid);
+    }
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Monster Features", "Giant Frog Swallow: Damage", false);
+    if (!featureData) return;
+    delete featureData._id;
+    featureData.name = "Giant Frog: Acid Stomach";
+    let feature = new CONFIG.Item.documentClass(featureData, { 'parent': token.actor });
+    let [config, options] = constants.syntheticItemWorkflowOptions(targetUuids);
+    await MidiQOL.completeItemUse(feature, config, options);
+}
+
 export let giantFrog = {
-    'swallow': swallow
+    'biteCheck': biteCheck,
+    'swallowItem': swallowItem,
+    'swallowTurnStart': swallowTurnStart
 }

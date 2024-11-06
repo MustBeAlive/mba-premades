@@ -21,6 +21,7 @@ async function lifeDrain({ speaker, actor, token, character, item, args, scope, 
         .play()
 
     if (!workflow.failedSaves.size) return;
+    if (mba.findEffect(target.actor, "Aura of Life")) return;
     let damageRoll = workflow.damageRoll.total;
     let effect = await mba.findEffect(target.actor, "Wraith: Life Drain");
     if (effect) {
@@ -97,7 +98,7 @@ async function createSpecter({ speaker, actor, token, character, item, args, sco
     }
     let sourceActor = game.actors.getName("Specter");
     if (!sourceActor) {
-        ui.notifications.warn("Unale to find actor! (Specter)");
+        ui.notifications.warn("Unable to find actor! (Specter)");
         return;
     }
     let updates = {
@@ -110,7 +111,9 @@ async function createSpecter({ speaker, actor, token, character, item, args, sco
             'disposition': workflow.token.document.disposition,
         }
     };
+    await mba.gmDialogMessage();
     let [spawnedTokenId] = await mba.spawn(sourceActor, updates, {}, workflow.token, 10, "shadow");
+    await mba.clearGMDialogMessage();
     if (mba.inCombat()) {
         let specterDoc = canvas.scene.tokens.get(spawnedTokenId);
         let casterCombatant = game.combat.combatants.contents.find(combatant => combatant.actorId === workflow.actor.id);

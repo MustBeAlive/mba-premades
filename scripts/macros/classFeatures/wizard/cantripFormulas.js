@@ -89,7 +89,7 @@ export async function cantripFormulas({ speaker, actor, token, character, item, 
         newCantrips.push(cantrip);
     }
 
-    await mba.playerDialogMessage()
+    await mba.playerDialogMessage(game.user)
     let toDelete = await mba.selectDocument("Choose cantrip to delete:", actorCantrips);
     await mba.clearPlayerDialogMessage();
     if (!toDelete.length) {
@@ -97,7 +97,7 @@ export async function cantripFormulas({ speaker, actor, token, character, item, 
         if (uses < 1) await feature.update({ "system.uses.value": 1 })
         return;
     }
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let toCreate = await mba.selectDocument("Choose cantrip to create:", newCantrips);
     await mba.clearPlayerDialogMessage();
     if (!toCreate.length) {

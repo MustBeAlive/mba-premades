@@ -8,7 +8,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ['Orange', 'orange'],
         ['Purple', 'purple']
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog(workflow.item.name, choices, `<b>Choose color:</b>`);
     if (!selection) selection = "orange";
     await mba.clearPlayerDialogMessage();

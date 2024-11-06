@@ -6,7 +6,7 @@ export async function gust({ speaker, actor, token, character, item, args, scope
         ['Create Blast', 'blast'],
         ['Create Harmless Effect', 'effect']
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog(workflow.item.name, choices, `<b>Choose one of the following effects:</b>`);
     await mba.clearPlayerDialogMessage();
     if (!selection) return;

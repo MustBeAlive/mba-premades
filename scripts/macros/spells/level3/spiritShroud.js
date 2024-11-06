@@ -2,18 +2,37 @@ import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 import {queue} from "../../mechanics/queue.js";
 
-//To do: descriptions, animations
-
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let choices = [
         ["Cold", "cold", "modules/mba-premades/icons/generic/generic_cold.webp"],
         ["Necrotic", "necrotic", "modules/mba-premades/icons/generic/generic_necrotic.webp"],
         ["Radiant", "radiant", "modules/mba-premades/icons/generic/generic_radiant.webp"]
     ];
-    await mba.playerDialogMessage();
-    let selection = await mba.selectImage("Spirit Shroud", choices, "<b><Choose damage type:/b>", "value");
+    await mba.playerDialogMessage(game.user);
+    let selection = await mba.selectImage("Spirit Shroud", choices, "<b><Choose damage type:</b>", "value");
     await mba.clearPlayerDialogMessage();
     if (!selection) return;
+    let diceNum;
+    switch (workflow.castData.castLevel) {
+        case 3:
+        case 4:
+            diceNum = 1;
+            break;
+        case 5:
+        case 6:
+            diceNum = 2;
+            break;
+        case 7:
+        case 8:
+            diceNum = 3;
+            break;
+        case 9:
+            diceNum = 4;
+            break;
+    };
+    async function effectMacroDel() {
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} SpiShr` })
+    };
     async function effectMacroEveryTurn() {
         await mbaPremades.macros.spiritShroud.slow(token, origin);
     };
@@ -22,8 +41,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p></p>
-            <p></p>
+            <p>Until the spell ends, any attack you make deals extra ${diceNum}d8 ${selection} damage when you hit a creature within 10 feet of you.</p>
+            <p>Any creature that takes this damage can't regain hit points until the start of your next turn.</p>
+            <p>In addition, any creature of your choice that you can see that starts its turn within 10 feet of you has its speed reduced by 10 feet until the start of your next turn.</p>
         `,
         'duration': {
             'seconds': 60
@@ -40,6 +60,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             'effectmacro': {
                 'onEachTurn': {
                     'script': mba.functionToString(effectMacroEveryTurn)
+                },
+                'onDelete': {
+                    'script': mba.functionToString(effectMacroDel)
                 }
             },
             'mba-premades': {
@@ -58,7 +81,56 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
-    await mba.createEffect(workflow.actor, effectData);
+    let animation1;
+    let animation2;
+    let hue1;
+    switch (selection) {
+        case "cold":
+            animation1 = "jb2a.aura_themed.01.inward.complete.wood.01.purple";
+            animation2 = "jb2a.aura_themed.01.inward.loop.wood.01.purple";
+            hue1 = 290;
+            break;
+        case "necrotic":
+            animation1 = "jb2a.aura_themed.01.inward.complete.wood.01.green";
+            animation2 = "jb2a.aura_themed.01.inward.loop.wood.01.green";
+            hue1 = 70;
+            break;
+        case "radiant":
+            animation1 = "jb2a.aura_themed.01.inward.complete.wood.01.red";
+            animation2 = "jb2a.aura_themed.01.inward.loop.wood.01.red";
+            hue1 = 70;
+            break;
+    };
+
+    new Sequence()
+
+        .effect()
+        .file(animation1)
+        .attachTo(workflow.token)
+        .size(6.6, { gridUnits: true })
+        .belowTokens()
+        .opacity(0.85)
+        .filter("ColorMatrix", { hue: hue1 })
+
+        .wait(500)
+
+        .thenDo(async () => {
+            await mba.createEffect(workflow.actor, effectData);
+        })
+
+        .effect()
+        .file(animation2)
+        .attachTo(workflow.token)
+        .size(6.6, { gridUnits: true })
+        .delay(1500)
+        .fadeOut(1500)
+        .belowTokens()
+        .opacity(0.85)
+        .filter("ColorMatrix", { hue: hue1 })
+        .persist()
+        .name(`${workflow.token.document.name} SpiShr`)
+
+        .play()
 }
 
 async function attack({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -98,6 +170,29 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     let damageRoll = await new Roll(damageFormula).roll({ async: true });
     await workflow.setDamageRoll(damageRoll);
     queue.remove(workflow.item.uuid);
+    let effectData = {
+        'name': "Spirit Shroud: Healing",
+        'icon': "modules/mba-premades/icons/generic/generic_debuff.webp",
+        'origin': workflow.item.uuid,
+        'description': `
+            <p>You are unable to regain hitpoints until the start of ${workflow.token.document.name}'s next turn.</p>
+        `,
+        'changes': [
+            {
+                'key': 'system.traits.di.value',
+                'mode': 0,
+                'value': 'healing',
+                'priority': 20
+            },
+        ],
+        'flags': {
+            'dae': {
+                'showIcon': true,
+                'specialDuration': ['turnStartSource', 'combatEnd']
+            },
+        }
+    };
+    await mba.createEffect(workflow.targets.first().actor, effectData);
 }
 
 async function slow(token, origin) {
@@ -112,7 +207,7 @@ async function slow(token, origin) {
         'icon': "modules/mba-premades/icons/generic/generic_debuff.webp",
         'origin': origin.actor.uuid,
         'description': `
-            <p></p>
+            <p>Your speed is reduced by 10 feet until the start of ${token.document.name}'s next turn.</p>
         `,
         'duration': {
             'rounds': 1

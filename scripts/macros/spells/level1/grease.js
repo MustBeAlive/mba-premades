@@ -4,6 +4,18 @@ import {mba} from "../../../helperFunctions.js";
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let template = canvas.scene.collections.templates.get(workflow.templateId);
     if (!template) return;
+    await template.update({
+        'flags': {
+            'mba-premades': {
+                'template': {
+                    'castLevel': workflow.castData.castLevel,
+                    'itemUuid': workflow.item.uuid,
+                    'saveDC': mba.getSpellDC(workflow.item),
+                    'templateUuid': template.uuid,
+                }
+            }
+        }
+    });
     new Sequence()
 
         .wait(500)
@@ -58,18 +70,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .play()
 
-    await template.update({
-        'flags': {
-            'mba-premades': {
-                'template': {
-                    'castLevel': workflow.castData.castLevel,
-                    'itemUuid': workflow.item.uuid,
-                    'saveDC': mba.getSpellDC(workflow.item),
-                    'templateUuid': template.uuid,
-                }
-            }
-        }
-    });
     if (!workflow.failedSaves.size) return;
     for (let target of Array.from(workflow.failedSaves)) await mba.addCondition(target.actor, 'Prone');
 }

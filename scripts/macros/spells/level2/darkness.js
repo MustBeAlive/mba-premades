@@ -15,7 +15,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     });
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let attachToken = await mba.dialog('Darkness', constants.yesNo, `<b>Attach template to yourself?</b>`) || false;
     await mba.clearPlayerDialogMessage();
     if (attachToken) {

@@ -31,17 +31,24 @@ export async function potionOfHealing({ speaker, actor, token, character, item, 
     };
     let typeSelection = "heal";
     if (exhaustion) {
+        await mba.playerDialogMessage(game.user);
         typeSelection = await mba.dialog("Potion of healing", [["<b>Heal</b> target", "heal"], ["Remove <b>Exhaustion</b> levels", "exhaustion"]], "<b>What would you like to do?</b>");
+        await mba.clearPlayerDialogMessage();
+        if (!typeSelection) return;
     }
     if (typeSelection === "exhaustion") {
-        let [exhaustionEffect] = target.actor.effects.filter(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
+        let exhaustionEffect = target.actor.effects.find(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
         if (!exhaustionEffect) {
             ui.notifications.warn("Target has no levels of Exhaustion!");
             return;
         }
         let level = +exhaustionEffect.name.slice(-1);
+        if (level === 0) level = 10;
         if (level <= exhaustion) await mba.removeCondition(target.actor, `Exhaustion ${level}`);
-        else if (level > exhaustion ) await mba.addCondition(target.actor, `Exhaustion ${level - exhaustion}`);
+        else if (level > exhaustion ) {
+            await mba.removeCondition(target.actor, `Exhaustion ${level}`);
+            await mba.addCondition(target.actor, `Exhaustion ${level - exhaustion}`);
+        }
     }
     else if (typeSelection === "heal") {
         let choices = [["Action (max healing)", "action"], ["Bonus (roll healing)", "bonus"], ["Cancel", false]];

@@ -1,3 +1,4 @@
+import {mba} from "../../../helperFunctions.js";
 import {tashaSummon} from "../../generic/tashaSummon.js";
 
 export async function unseenServant({speaker, actor, token, character, item, args, scope, workflow}) {
@@ -20,5 +21,7 @@ export async function unseenServant({speaker, actor, token, character, item, arg
             'disposition': workflow.token.document.disposition
         }
     };
+    await mba.playerDialogMessage(game.user);
     await tashaSummon.spawn(sourceActor, updates, 3600, workflow.item, 60, workflow.token, "celestial", {}, workflow.castData.castLevel);
+    await mba.clearPlayerDialogMessage();
 }

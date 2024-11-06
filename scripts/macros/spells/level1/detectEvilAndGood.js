@@ -1,5 +1,5 @@
-import {constants} from "../../generic/constants.js";
-import {mba} from "../../../helperFunctions.js";
+import { constants } from "../../generic/constants.js";
+import { mba } from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Detect Evil and Good: Ping", false);
@@ -57,11 +57,28 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
         'name': "Detect Evil and Good",
         'description': "Detect Evil and Good",
     };
-    await warpgate.mutate(workflow.token.document, updates, {}, options);
-    let feature = await mba.getItem(workflow.actor, "Detect Evil and Good: Ping");
-    if (!feature) return;
-    let [config, options2] = constants.syntheticItemWorkflowOptions([workflow.token.document.uuid]);
-    await MidiQOL.completeItemUse(feature, config, options2);
+    new Sequence()
+
+        .effect()
+        .file("jb2a.token_border.circle.spinning.blue.001")
+        .attachTo(workflow.token)
+        .scaleToObject(2)
+        .delay(1500)
+        .fadeOut(1000)
+        .scaleIn(0, 4000, { ease: "easeOutCubic" })
+        .filter("ColorMatrix", { saturate: -1 })
+        .persist()
+        .name(`${token.document.name} DeEaG`)
+
+        .thenDo(async () => {
+            await warpgate.mutate(workflow.token.document, updates, {}, options);
+            let feature = await mba.getItem(workflow.actor, "Detect Evil and Good: Ping");
+            if (!feature) return;
+            let [config, options2] = constants.syntheticItemWorkflowOptions([workflow.token.document.uuid]);
+            await MidiQOL.completeItemUse(feature, config, options2);
+        })
+
+        .play()
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -84,17 +101,6 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         .fadeOut(4000)
         .opacity(0.75)
         .belowTokens()
-
-        .effect()
-        .file("jb2a.token_border.circle.spinning.blue.001")
-        .attachTo(workflow.token)
-        .scaleToObject(2)
-        .delay(1500)
-        .fadeOut(1000)
-        .scaleIn(0, 4000, { ease: "easeOutCubic" })
-        .filter("ColorMatrix", { saturate: -1 })
-        .persist()
-        .name(`${token.document.name} DeEaG`)
 
         .play()
 

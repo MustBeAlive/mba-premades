@@ -1,5 +1,7 @@
 import {mba} from "../../helperFunctions.js";
 
+//To do: fix token flip like flameblade
+
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let effect = await mba.findEffect(workflow.actor, "Bullseye Lantern");
     if (!effect) {
@@ -9,7 +11,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             return;
         }
         let choices = [["Yes, light the lantern", "light"], ["No, cancel", false]];
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let selection = await mba.dialog("Bullseye Lantern", choices, `Would you like to light the <b>Bullseye Lantern</b>?`);
         await mba.clearPlayerDialogMessage();
         if (!selection) return;
@@ -17,7 +19,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         return;
     }
     let choices = [["Pour more Oil (restart duration)", "renew"], ["Extinguish Lantern", "extinguish"]];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Bullseye Lantern", choices, `<b>What would you like to do?</b>`);
     await mba.clearPlayerDialogMessage();
     if (!selection) return;
@@ -26,14 +28,12 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         await warpgate.wait(100);
         await bullseyeLantern.light(workflow)
     } 
-    else if (selection === "extinguish") {
-        await mba.removeEffect(effect);
-    }
+    else if (selection === "extinguish") await mba.removeEffect(effect);
 }
 
 async function light(workflow) {
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Bullseye Lantern` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} BulLan` })
     }
     let effectData = {
         'name': workflow.item.name,
@@ -131,7 +131,7 @@ async function light(workflow) {
         .zeroSpriteRotation()
         .fadeOut(500)
         .persist()
-        .name(`${workflow.token.document.name} Bullseye Lantern`)
+        .name(`${workflow.token.document.name} BulLan`)
 
         .thenDo(async () => {
             await mba.createEffect(workflow.actor, effectData);
@@ -140,11 +140,8 @@ async function light(workflow) {
         .play()
 
     let oilFlaskItem = await mba.getItem(workflow.actor, "Oil Flask");
-    if (oilFlaskItem.system.quantity > 1) {
-        await oilFlaskItem.update({ "system.quantity": oilFlaskItem.system.quantity - 1 });
-    } else {
-        await workflow.actor.deleteEmbeddedDocuments("Item", [oilFlaskItem.id]);
-    }
+    if (oilFlaskItem.system.quantity > 1) await oilFlaskItem.update({ "system.quantity": oilFlaskItem.system.quantity - 1 });
+    else await workflow.actor.deleteEmbeddedDocuments("Item", [oilFlaskItem.id]);
     let emptyFlaskItem = await mba.getItem(workflow.actor, "Empty Flask");
     if (!emptyFlaskItem) {
         const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
@@ -153,9 +150,8 @@ async function light(workflow) {
             return
         }
         await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
-    } else {
-        await emptyFlaskItem.update({ "system.quantity": emptyFlaskItem.system.quantity + 1 });
     }
+    else await emptyFlaskItem.update({ "system.quantity": emptyFlaskItem.system.quantity + 1 }); 
 }
 
 export let bullseyeLantern = {

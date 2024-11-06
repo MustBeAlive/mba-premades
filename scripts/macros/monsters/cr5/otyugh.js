@@ -8,6 +8,7 @@ async function bite({ speaker, actor, token, character, item, args, scope, workf
     if (mba.checkTrait(target.actor, "ci", "poisoned")) return;
     if (mba.checkTrait(target.actor, "ci", "diseased")) return;
     if (mba.findEffect(target.actor, 'Otyugh: Poison')) return;
+    if (mba.findEffect(target.actor, "Aura of Life")) return;
     let otyughPoison = game.Gametime.doEvery({ day: 1 }, async (actorUuid) => {
         const tokenOrActor = await fromUuid(actorUuid);
         let actor;

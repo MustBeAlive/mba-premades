@@ -1,10 +1,10 @@
-import { constants } from "../../generic/constants.js";
-import { mba } from "../../../helperFunctions.js";
+import {constants} from "../../generic/constants.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function cast({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel - 3;
     if (workflow.targets.size <= ammount) return;
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
     await mba.clearPlayerDialogMessage();
     if (!selection.buttons) return;
@@ -19,7 +19,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     };
     async function effectMacroEnd() {
         let choices = [["Home Plane (Stay there)", false], ["Demiplane (Return)", true]];
-        await mbaPremades.helpers.playerDialogMessage();
+        await mbaPremades.helpers.playerDialogMessage(mbaPremades.helpers.firstOwner(token));
         let selection = await mbaPremades.helpers.dialog("Banishment", choices, "<b></b>");
         await mbaPremades.helpers.clearPlayerDialogMessage();
         if (!selection) return;
@@ -114,6 +114,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .file("jb2a.magic_signs.circle.02.abjuration.intro.dark_blue")
             .atLocation(target)
             .scaleToObject(2)
+            .playbackRate(2)
             .belowTokens()
 
             .effect()
@@ -121,38 +122,38 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .atLocation(target)
             .scaleToObject(2)
             .belowTokens()
-            .delay(3000)
-            .duration(13000)
+            .delay(1000)
+            .duration(10000)
             .fadeOut(1000)
 
             .effect()
             .file("jb2a.magic_signs.rune.abjuration.complete.blue")
             .atLocation(target, { offset: { x: 70, y: 22 } })
             .scaleToObject(0.5)
-            .delay(3750)
+            .delay(1000)
             .playbackRate(0.65)
-            .animateProperty("sprite", "position.x", { from: 0, to: -70, duration: 500, delay: 4000, ease: "easeInBack" })
-            .animateProperty("sprite", "position.y", { from: 0, to: -97, duration: 500, delay: 4000, ease: "easeInBack" })
+            .animateProperty("sprite", "position.x", { from: 0, to: -70, duration: 500, delay: 1500, ease: "easeInBack" })
+            .animateProperty("sprite", "position.y", { from: 0, to: -97, duration: 500, delay: 1500, ease: "easeInBack" })
             .duration(4500)
 
             .effect()
             .file("jb2a.magic_signs.rune.abjuration.complete.blue")
             .atLocation(target, { offset: { x: 45, y: -61 } })
             .scaleToObject(0.5)
-            .delay(4250)
+            .delay(1000)
             .playbackRate(0.65)
-            .animateProperty("sprite", "position.x", { from: 0, to: -45, duration: 500, delay: 3500, ease: "easeInBack" })
-            .animateProperty("sprite", "position.y", { from: 0, to: -14, duration: 500, delay: 3500, ease: "easeInBack" })
+            .animateProperty("sprite", "position.x", { from: 0, to: -45, duration: 500, delay: 1500, ease: "easeInBack" })
+            .animateProperty("sprite", "position.y", { from: 0, to: -14, duration: 500, delay: 1500, ease: "easeInBack" })
             .duration(4000)
 
             .effect()
             .file("jb2a.magic_signs.rune.abjuration.complete.blue")
             .atLocation(target, { offset: { x: -45, y: -61 } })
             .scaleToObject(0.5)
-            .delay(4750)
+            .delay(1000)
             .playbackRate(0.65)
-            .animateProperty("sprite", "position.x", { from: 0, to: 45, duration: 500, delay: 3000, ease: "easeInBack" })
-            .animateProperty("sprite", "position.y", { from: 0, to: -14, duration: 500, delay: 3000, ease: "easeInBack" })
+            .animateProperty("sprite", "position.x", { from: 0, to: 45, duration: 500, delay: 1500, ease: "easeInBack" })
+            .animateProperty("sprite", "position.y", { from: 0, to: -14, duration: 500, delay: 1500, ease: "easeInBack" })
             .zIndex(0.9)
             .duration(3500)
 
@@ -160,10 +161,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .file("jb2a.magic_signs.rune.abjuration.complete.blue")
             .atLocation(target, { offset: { x: -70, y: 22 } })
             .scaleToObject(0.5)
-            .delay(5250)
+            .delay(1000)
             .playbackRate(0.65)
-            .animateProperty("sprite", "position.x", { from: 0, to: 70, duration: 500, delay: 2500, ease: "easeInBack" })
-            .animateProperty("sprite", "position.y", { from: 0, to: -97, duration: 500, delay: 2500, ease: "easeInBack" })
+            .animateProperty("sprite", "position.x", { from: 0, to: 70, duration: 500, delay: 1500, ease: "easeInBack" })
+            .animateProperty("sprite", "position.y", { from: 0, to: -97, duration: 500, delay: 1500, ease: "easeInBack" })
             .zIndex(0.9)
             .duration(3000)
 
@@ -171,10 +172,10 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .file("jb2a.magic_signs.rune.abjuration.complete.blue")
             .atLocation(target, { offset: { x: 0, y: 75 } })
             .scaleToObject(0.5)
-            .delay(5750)
+            .delay(1000)
             .playbackRate(0.65)
-            .animateProperty("sprite", "position.x", { from: 0, to: 0, duration: 500, delay: 2000, ease: "easeInBack" })
-            .animateProperty("sprite", "position.y", { from: 0, to: -150, duration: 500, delay: 2000, ease: "easeInBack" })
+            .animateProperty("sprite", "position.x", { from: 0, to: 0, duration: 500, delay: 1500, ease: "easeInBack" })
+            .animateProperty("sprite", "position.y", { from: 0, to: -150, duration: 500, delay: 1500, ease: "easeInBack" })
             .zIndex(0.9)
             .duration(2500)
 
@@ -182,18 +183,18 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             .file("jb2a.explosion.01.blue")
             .atLocation(target, { offset: { x: 5, y: -75 } })
             .scaleToObject(1.5)
-            .delay(8250)
+            .delay(3000)
             .zIndex(1)
 
             .effect()
             .file("jb2a.portals.vertical.vortex.blue")
             .atLocation(target, { offset: { x: 0, y: -75 } })
             .scaleToObject(2)
+            .delay(3000)
             .duration(6000)
             .scaleIn({ x: 0, y: 0.8 }, 500)
             .scaleOut({ x: 0, y: 0.4 }, 500, { ease: "easeInBack" })
             .fadeOut(250)
-            .delay(8250)
             .zIndex(0.7)
             .belowTokens()
             .waitUntilFinished(-5750)

@@ -9,7 +9,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             return;
         }
         let choices = [["Yes, light the lantern", "light"], ["No, cancel", false]];
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let selection = await mba.dialog("Hooded Lantern", choices, `Would you like to light a <b>Hooded Lantern</b>?`);
         await mba.clearPlayerDialogMessage();
         if (!selection) return;
@@ -17,13 +17,13 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         return;
     }
     let choices = [["Raise Lantern's hood (Bright Light)", "bright"], ["Lower Lantern's hood (Dim Light)", "dim"], ["Extinguish Lantern", "extinguish"]];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Hooded Lantern", choices, `<b>What would you like to do?</b>`);
     await mba.clearPlayerDialogMessage();
     if (!selection) return;
     switch (selection) {
         case "bright": {
-            Sequencer.EffectManager.endEffects({ name: `${token.document.name} Hooded Lantern` });
+            Sequencer.EffectManager.endEffects({ name: `${token.document.name} HooLan` });
             let updates = {
                 'changes': [
                     {
@@ -104,7 +104,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 .zeroSpriteRotation()
                 .fadeOut(500)
                 .persist()
-                .name(`${workflow.token.document.name} Hooded Lantern`)
+                .name(`${workflow.token.document.name} HooLan`)
 
                 .thenDo(async () => {
                     await mba.updateEffect(effect, updates);
@@ -115,7 +115,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             break;
         }
         case "dim": {
-            await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Hooded Lantern` });
+            await Sequencer.EffectManager.endEffects({ name: `${token.document.name} HooLan` });
             let updates = {
                 'changes': [
                     {
@@ -197,7 +197,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                 .zeroSpriteRotation()
                 .fadeOut(500)
                 .persist()
-                .name(`${workflow.token.document.name} Hooded Lantern`)
+                .name(`${workflow.token.document.name} HooLan`)
 
                 .thenDo(async () => {
                     await mba.updateEffect(effect, updates);
@@ -215,7 +215,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
 async function light(workflow) {
     async function effectMacroDel() {
-        await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Hooded Lantern` })
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} HooLan` })
     }
     let effectData = {
         'name': workflow.item.name,
@@ -314,7 +314,7 @@ async function light(workflow) {
         .zeroSpriteRotation()
         .fadeOut(500)
         .persist()
-        .name(`${workflow.token.document.name} Hooded Lantern`)
+        .name(`${workflow.token.document.name} HooLan`)
 
         .thenDo(async () => {
             await mba.createEffect(workflow.actor, effectData);
@@ -323,11 +323,8 @@ async function light(workflow) {
         .play()
 
     let oilFlaskItem = await mba.getItem(workflow.actor, "Oil Flask");
-    if (oilFlaskItem.system.quantity > 1) {
-        await oilFlaskItem.update({ "system.quantity": oilFlaskItem.system.quantity - 1 });
-    } else {
-        await workflow.actor.deleteEmbeddedDocuments("Item", [oilFlaskItem.id]);
-    }
+    if (oilFlaskItem.system.quantity > 1) await oilFlaskItem.update({ "system.quantity": oilFlaskItem.system.quantity - 1 });
+    else await workflow.actor.deleteEmbeddedDocuments("Item", [oilFlaskItem.id]);
     let emptyFlaskItem = await mba.getItem(workflow.actor, "Empty Flask");
     if (!emptyFlaskItem) {
         const itemData = await mba.getItemFromCompendium('mba-premades.MBA Items', 'Empty Flask', false);
@@ -336,9 +333,8 @@ async function light(workflow) {
             return
         }
         await workflow.actor.createEmbeddedDocuments("Item", [itemData]);
-    } else {
-        await emptyFlaskItem.update({ "system.quantity": emptyFlaskItem.system.quantity + 1 });
     }
+    else await emptyFlaskItem.update({ "system.quantity": emptyFlaskItem.system.quantity + 1 });
 }
 
 export let hoodedLantern = {

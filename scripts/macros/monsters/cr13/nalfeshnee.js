@@ -176,7 +176,9 @@ async function teleport({ speaker, actor, token, character, item, args, scope, w
         animation2 = "jb2a.misty_step.02." + selection;
     }
     let interval = workflow.token.document.width % 2 === 0 ? 1 : -1;
+    await mba.gmDialogMessage();
     let position = await mba.aimCrosshair(workflow.token, 120, workflow.item.img, interval, workflow.token.document.width);
+    await mba.clearGMDialogMessage();
     if (position.cancelled) return;
 
     new Sequence()

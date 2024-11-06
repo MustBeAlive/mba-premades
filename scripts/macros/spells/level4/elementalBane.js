@@ -7,7 +7,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     let ammount = workflow.castData.castLevel - 3;
     let concEffect = await mba.findEffect(workflow.actor, 'Concentrating');
     if (workflow.targets.size > ammount) {
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
         await mba.clearPlayerDialogMessage();
         if (!selection.buttons) {
@@ -64,7 +64,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             ['Lightning ⚡', 'lightning'],
             ['Thunder ☁️', 'thunder']
         ];
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let selection = await mba.dialog("Elemental Bane", choices, `Choose damage type for <u>${target.document.name}</u>:`);
         await mba.clearPlayerDialogMessage();
         if (!selection) return;

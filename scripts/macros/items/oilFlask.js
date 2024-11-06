@@ -9,7 +9,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Pour oil on the ground (5 ft. square)", "pour"],
         ["Cancel", false]
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Oil Flask", choices, `<b>What would you like to do?</b>`);
     await mba.clearPlayerDialogMessage();
     if (!selection) return;

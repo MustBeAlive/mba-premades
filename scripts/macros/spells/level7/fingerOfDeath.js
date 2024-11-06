@@ -235,7 +235,9 @@ async function zombie(token) {
             'name': tokenName,
         }
     };
+    await mba.playerDialogMessage(game.user);
     await tashaSummon.spawn(sourceActor, updates, 31104000, originItem, 5, token, "shadow", {}, effect.flags['mba-premades']?.spell?.fingerOfDeath?.castLevel);
+    await mba.clearPlayerDialogMessage();
 }
 
 export let fingerOfDeath = {

@@ -10,7 +10,7 @@ export async function thunderStep({ speaker, actor, token, character, item, args
     let selection;
     let selectedTargets = [workflow.token];
     if (nearbyTargets.length > 0) {
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         selection = await mba.selectTarget("Thunder Step: Teleport Creature?", constants.okCancel, nearbyTargets, true, 'one');
         await mba.clearPlayerDialogMessage();
         if (selection.buttons) {
@@ -21,7 +21,7 @@ export async function thunderStep({ speaker, actor, token, character, item, args
             }
         }
     }
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let position = await mba.aimCrosshair(workflow.token, 90, workflow.item.img, -1, workflow.token.document.width);
     await mba.clearPlayerDialogMessage();
     queue.remove(workflow.item.uuid);

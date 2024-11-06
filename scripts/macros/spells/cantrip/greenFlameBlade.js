@@ -11,7 +11,7 @@ export async function greenFlameBlade({ speaker, actor, token, character, item, 
     let selection;
     if (weapons.length === 1) selection = weapons[0];
     if (!selection) {
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         [selection] = await mba.selectDocument('Attack with what weapon?', weapons);
         await mba.clearPlayerDialogMessage();
     }
@@ -69,7 +69,7 @@ export async function greenFlameBlade({ speaker, actor, token, character, item, 
     let modifier = mba.getSpellMod(workflow.item);
     let damageType = "fire";
     let damageFormula = level > 4 ? diceNumber + 'd8[' + damageType + '] + ' + modifier : modifier + '[' + damageType + ']';
-    if (workflow.isCritical && !ignoreCrit) damageFormula = mba.getCriticalFormula(damageFormula);
+    if (workflow.isCritical) damageFormula = mba.getCriticalFormula(damageFormula);
     let damageRoll = await new CONFIG.Dice.DamageRoll(damageFormula, workflow.actor.getRollData(), options).evaluate();
     await mba.applyWorkflowDamage(workflow.token, damageRoll, 'fire', [target], workflow.item.name, attackWorkflow.itemCardId);
 }

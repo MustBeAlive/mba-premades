@@ -174,7 +174,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     if (effect.flags['mba-premades']?.feature?.radiantConsumption?.used === 1) return;
     let queueSetup = await queue.setup(workflow.item.uuid, "radiantConsumption", 249);
     if (!queueSetup) return;
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Radiant Consumption", constants.yesNo, `Deal extra damage? (+${workflow.actor.system.attributes.prof}[radiant])`);
     await mba.clearPlayerDialogMessage();
     if (!selection) {

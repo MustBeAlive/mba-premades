@@ -1,4 +1,4 @@
-import { mba } from "../../../helperFunctions.js";
+import {mba} from "../../../helperFunctions.js";
 
 async function pincer({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.failedSaves.size) return;

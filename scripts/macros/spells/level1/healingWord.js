@@ -11,7 +11,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let target = workflow.targets.first();
     let word = [];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let wordInput = await warpgate.menu({
         inputs: [{
             label: `What do you say?`,
@@ -69,7 +69,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 
         .effect()
         .text(`${word}`, style)
-        .atLocation(target, { followRotation: false, offset: { x: 0, y: -0.6 * target.data.width }, gridUnits: true })
+        .attachTo(target, { followRotation: false, offset: { x: 0, y: -0.6 * target.data.width }, gridUnits: true })
         .duration(2000)
         .fadeOut(1000)
         .animateProperty("sprite", "position.y", { from: 0, to: 0.6 * target.data.width, duration: 1000, gridUnits: true, delay: 500 })

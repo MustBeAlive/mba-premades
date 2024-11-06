@@ -67,7 +67,7 @@ export async function crownOfMadness({ speaker, actor, token, character, item, a
 	async function effectMacroCaster() {
 		await warpgate.wait(100);
 		let choices = [['Yes!', 'yes'], ['No, stop concentrating!', 'no']];
-		await mbaPremades.helpers.playerDialogMessage();
+		await mbaPremades.helpers.playerDialogMessage(mbaPremades.helpers.firstOwner(token));
 		let selection = await mbaPremades.helpers.dialog("Crown of Madness", choices, `<b>Use action to maintain Crown of Madness?</b>`);
 		await mbaPremades.helpers.clearPlayerDialogMessage();
 		if (!selection || selection === "yes") return;

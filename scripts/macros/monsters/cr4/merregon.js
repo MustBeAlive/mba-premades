@@ -13,8 +13,8 @@ async function loyalBodyguard(workflow) {
     if (!queueSetup) return;
     await mba.gmDialogMessage();
     let reaction = await mba.remoteDialog("Merregon: Loyal Bodyguard", constants.yesNo, mba.firstOwner(merregon).id, `<b>Use ability to redirect attack to you?</b>`);
+    await mba.clearGMDialogMessage();
     if (!reaction) {
-        await mba.clearGMDialogMessage();
         queue.remove(workflow.item.uuid);
         return;
     }

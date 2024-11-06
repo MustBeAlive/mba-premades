@@ -20,7 +20,7 @@ export async function mageHand({ speaker, actor, token, character, item, args, s
         ["Red", "red", "modules/jb2a_patreon/Library/5th_Level/Arcane_Hand/ArcaneHand_Human_01_Idle_Red_Thumb.webp"],
         ["Rainbow", "rainbow", "modules/jb2a_patreon/Library/5th_Level/Arcane_Hand/ArcaneHand_Human_01_Idle_Rainbow_Thumb.webp"],
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.selectImage("Mage Hand", images, "<b>Select color:</b>", "both");
     if (!selection) selection = ["blue", "modules/jb2a_patreon/Library/5th_Level/Arcane_Hand/ArcaneHand_Human_01_Idle_Blue_Thumb.webp"];
     await mba.clearPlayerDialogMessage();
@@ -52,7 +52,8 @@ export async function mageHand({ speaker, actor, token, character, item, args, s
             }
         }
     };
-    let animation = 'air';
-    let hand = await tashaSummon.spawn(sourceActor, updates, 60, workflow.item, maxRange, workflow.token, animation, {}, workflow.castData.castLevel);
+    await mba.playerDialogMessage(game.user);
+    let hand = await tashaSummon.spawn(sourceActor, updates, 60, workflow.item, maxRange, workflow.token, "air", {}, workflow.castData.castLevel);
+    await mba.clearPlayerDialogMessage();
     if (invisible === true) await mba.addCondition(hand.actor, "Invisible");
 }

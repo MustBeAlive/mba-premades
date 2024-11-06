@@ -3,7 +3,7 @@ import {mba} from "../../../helperFunctions.js";
 
 export async function pyrotechnics({ speaker, actor, token, character, item, args, scope, workflow }) {
     let choices = [['Smoke Cloud', 'cloud'], ['Explosion of Fireworks', 'explosion']];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Pyrotechnics", choices, `<b>Choose one of the effects:</b>`);
     await mba.clearPlayerDialogMessage();
     if (!selection) return;

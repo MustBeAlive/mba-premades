@@ -16,7 +16,7 @@ export async function suggestion({ speaker, actor, token, character, item, args,
         'icon': workflow.item.img,
         'origin': workflow.item.uuid,
         'description': `
-            <p>You are affected by <b>Suggestion</b>.</p>
+            <p>You are affected by Suggestion.</p>
             <p>You must pursue the course of actions you were suggested by the caster of the spell to the best of your ability.</p>
             <p>If the suggested activity can be completed in a shorter time, the spell ends when you finish what you were asked to do.</p>
             <p>If caster or any of caster's companions deal damage to you, the spell ends.</p>

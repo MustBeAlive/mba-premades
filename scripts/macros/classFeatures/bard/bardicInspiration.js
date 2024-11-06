@@ -160,7 +160,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     if (!effect) return;
     let queueSetup = await queue.setup(workflow.item.uuid, 'bardicInspiration', 150);
     if (!queueSetup) return;
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog(effect.name, constants.yesNo, `Use ${effect.name}? (Attack Total: <b>${workflow.attackTotal}</b>)`);
     await mba.clearPlayerDialogMessage();
     if (!selection) {
@@ -197,7 +197,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     if (!effect) return;
     let queueSetup = await queue.setup(workflow.item.uuid, 'bardicInspiration', 150);
     if (!queueSetup) return;
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.selectTarget('Use Magical Inspiration?', constants.yesNoButton, workflow.targets, false, 'one');
     await mba.clearPlayerDialogMessage();
     if (!selection.buttons) {

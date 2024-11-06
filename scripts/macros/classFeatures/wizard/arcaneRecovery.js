@@ -54,7 +54,7 @@ export async function arcaneRecovery({ speaker, actor, token, character, item, a
         .play();
 
     //repeat dialog promt until no points
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     while (ammount > 0) {
         await warpgate.wait(50);
 

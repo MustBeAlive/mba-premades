@@ -4,11 +4,8 @@ export async function removeCurse({ speaker, actor, token, character, item, args
     let target = workflow.targets.first();
     let effects = target.actor.effects.filter(i => i.flags['mba-premades']?.isCurse === true);
     if (!effects.length) {
+        let choicesGM = [["Yes, break attunement", true], ["No, target is not cursed", false]];
         await mba.gmDialogMessage();
-        let choicesGM = [
-            ["Yes, break attunement", true],
-            ["No, target is not cursed", false]
-        ];
         let selectionGM = await mba.remoteDialog("Remove Curse", choicesGM, game.users.activeGM.id, `Is <u>${target.document.name}</u> attuned to a cursed magical item?`);
         await mba.clearGMDialogMessage();
         if (!selectionGM) {

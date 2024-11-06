@@ -1,3 +1,4 @@
+import {constants} from "../../generic/constants.js";
 import {mba} from "../../../helperFunctions.js";
 import {queue} from "../../mechanics/queue.js";
 
@@ -12,8 +13,8 @@ export async function relentlessEndurance(token, {item, workflow, ditem}) {
     let originItem = await fromUuid(effect.origin);
     if (!originItem) return;
     if (originItem.system.uses.value === 0) return;
-    await mba.playerDialogMessage();
-    let selection = await mba.remoteDialog(originItem.name, [['Yes', true], ['No', false]], mba.firstOwner(token.document).id, `Use <b>Relentless Endurance</b>?`);
+    await mba.playerDialogMessage(mba.firstOwner(token));
+    let selection = await mba.remoteDialog(originItem.name, constants.yesNo, mba.firstOwner(token.document).id, `Use <b>Relentless Endurance</b>?`);
     await mba.clearPlayerDialogMessage();
     if (!selection) return;
     let queueSetup = await queue.setup(workflow.uuid, 'relentlessEndurance', 389);

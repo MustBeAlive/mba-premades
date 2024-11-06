@@ -5,7 +5,7 @@ export async function skillEmpowerment({ speaker, actor, token, character, item,
     let options = Object.entries(CONFIG.DND5E.skills).filter(([key, value]) => target.actor.system.skills[key].value === 1).map(([i, j]) => ({ 'value': i, 'html': j.label }));
     let choices = [];
     for (let i = 0; i < options.length; i++) choices.push([options[i].html, options[i].value]);
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Skill Empowerment", choices, "Choose skill to gain expertise in:");
     await mba.clearPlayerDialogMessage();
     if (!selection) return;

@@ -20,7 +20,7 @@ export async function healingLight({ speaker, actor, token, character, item, arg
             'type': 'number'
         }
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.menu("Healing Light", constants.okCancel, inputs, true);
     await mba.clearPlayerDialogMessage();
     if (!selection.buttons) return;

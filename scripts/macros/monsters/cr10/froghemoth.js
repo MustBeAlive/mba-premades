@@ -85,7 +85,7 @@ async function swallowItem({ speaker, actor, token, character, item, args, scope
     await mba.createEffect(workflow.actor, effectDataSource);
 }
 
-async function swallowTurnStart(token) {
+async function swallowEveryTurn(token) {
     let effect = await mba.findEffect(token.actor, "Swallow: Passive");
     if (!effect) return;
     let updates = {
@@ -102,6 +102,9 @@ async function swallowTurnStart(token) {
         }
     };
     await mba.updateEffect(effect, updates);
+}
+
+async function swallowTurnStart(token) {
     let effects = token.actor.effects.filter(e => e.name.includes("Swallow") && e.name != "Swallow: Passive" && e.name != "Swallow: Save");
     if (!effects.length) return;
     let targetUuids = [];
@@ -381,6 +384,7 @@ async function shockSusceptibility({ speaker, actor, token, character, item, arg
 
 export let froghemoth = {
     'swallowItem': swallowItem,
+    'swallowEveryTurn': swallowEveryTurn,
     'swallowTurnStart': swallowTurnStart,
     'swallowDamaged': swallowDamaged,
     'tentacle': tentacle,

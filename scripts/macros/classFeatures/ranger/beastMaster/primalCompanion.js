@@ -5,7 +5,7 @@ import {tashaSummon} from '../../../generic/tashaSummon.js';
 // To do: rework after PHB2024?
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog(workflow.item.name, [['Land', 'Land'], ['Sea', 'Sea'], ['Sky', 'Sky']], "<b>Choose companion type:</b>");
     await mba.clearPlayerDialogMessage();
     if (!selection) return;
@@ -225,7 +225,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'Sea': 'water'
     };
     let animation = defaultAnimations[selection];
+    await mba.playerDialogMessage(game.user);
     await tashaSummon.spawn(sourceActor, updates, 86400, workflow.item, 30, workflow.token, animation);
+    await mba.clearPlayerDialogMessage();
     let updates3 = {
         'embedded': {
             'Item': {

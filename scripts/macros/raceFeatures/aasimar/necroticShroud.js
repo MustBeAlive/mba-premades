@@ -95,7 +95,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     if (effect.flags['mba-premades']?.feature?.necroticShroud?.used === 1) return;
     let queueSetup = await queue.setup(workflow.item.uuid, "necroticShroud", 249);
     if (!queueSetup) return;
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Necrotic Shroud", constants.yesNo, `Deal extra damage? (+${workflow.actor.system.attributes.prof}[necrotic])`);
     await mba.clearPlayerDialogMessage();
     if (!selection) {

@@ -3,6 +3,19 @@ import {effectAuras} from "../../mechanics/effectAuras.js";
 import {mba} from "../../../helperFunctions.js";
 
 async function petrifyingGazeAuraCombatStart(token, origin) {
+    let duplicates = await mba.findNearby(token, 500, "any", true, false).filter(t => t.name === "Medusa");
+    // what the fuck is this...
+    if (duplicates.length) {
+        let delayRoll1 = await new Roll("1d10").roll({ 'async': true });
+        let delayRoll2 = await new Roll("1d10").roll({ 'async': true });
+        let delayRoll3 = await new Roll("1d10").roll({ 'async': true });
+        let delay1 = delayRoll1.total * 100;
+        let delay2 = delayRoll2.total * 100;
+        let delay3 = delayRoll3.total * 100;
+        await warpgate.wait(delay1);
+        await warpgate.wait(delay2);
+        await warpgate.wait(delay3);
+    }
     async function effectMacroDel() {
         await mbaPremades.macros.monsters.medusa.petrifyingGazeAuraEnd(token);
     };

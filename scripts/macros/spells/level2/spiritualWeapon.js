@@ -26,7 +26,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Liquid", "liquid.01", "modules/jb2a_patreon/Library/2nd_Level/Spiritual_Weapon/SpiritualWeapon_LongSword01_01_Liquid_Blue_Thumb.webp"],
         ["Spectral", "spectral", "modules/jb2a_patreon/Library/2nd_Level/Spiritual_Weapon/SpiritualWeapon_LongSword01_02_Spectral_Green_Thumb.webp"]
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     selectionStyle = await mba.selectImage("Spiritual Weapon: Style", selectionStyleOptions, "<b>Choose style:</b>", "value");
     if (!selectionStyle) {
         await mba.clearPlayerDialogMessage();
@@ -715,7 +715,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
+    await mba.playerDialogMessage(game.user);
     let spawned = await tashaSummon.spawn(sourceActor, updates, 60, workflow.item, 60, workflow.token, "celestial", {}, workflow.castData.castLevel);
+    await mba.clearPlayerDialogMessage();
     let weaponType = selectionWeapon.replace(/[0-9.]/g, "");
     let spawnedEffect = await mba.findEffect(spawned.actor, `${workflow.token.document.name} Spiritual Weapon`);
     if (!spawnedEffect) return;

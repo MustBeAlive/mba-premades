@@ -15,7 +15,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Lightning", "lightning", "modules/mba-premades/icons/spells/level2/dragon_breath_lightning.webp"],
         ["Poison", "poison", "modules/mba-premades/icons/spells/level2/dragon_breath_poison.webp"]
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selectionType = await mba.selectImage("Dragon's Breath", damageTypes, `<b>Choose damage type:</b>`, "both");
     await mba.clearPlayerDialogMessage();
     if (!selectionType.length) {

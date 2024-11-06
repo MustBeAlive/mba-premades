@@ -10,9 +10,9 @@ export async function speakWithDead({ speaker, actor, token, character, item, ar
         ui.notifications.warn("Speak with Dead fails!");
         return;
     }
-    let options = [["Yes, proceed", "yes"], ["No, deny Speak with Dead", false]];
+    let choices = [["Yes, proceed", "yes"], ["No, deny Speak with Dead", false]];
     await mba.gmDialogMessage();
-    let selection = await mba.remoteDialog(workflow.item.name, options, game.users.activeGM.id, `Is <u>${target.document.name}</u> eligible to cast Speak with Dead on?`);
+    let selection = await mba.remoteDialog(workflow.item.name, choices, game.users.activeGM.id, `Is <u>${target.document.name}</u> eligible to cast Speak with Dead on?`);
     await mba.clearGMDialogMessage();
     if (!selection) {
         ui.notifications.info("GM has denied your request. Sorry!");

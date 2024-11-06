@@ -31,7 +31,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             }
         }
     };
+    await mba.playerDialogMessage(game.user);
     await tashaSummon.spawn(sourceActor, updates, 60, workflow.item, 30, workflow.token, "earth", {}, workflow.castData.castLevel);
+    await mba.clearPlayerDialogMessage();
 }
 
 async function attack({ speaker, actor, token, character, item, args, scope, workflow }) {

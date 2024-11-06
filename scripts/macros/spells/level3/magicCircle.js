@@ -11,7 +11,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Fiend", "fiend", "modules/mba-premades/icons/spells/level3/magic_circle_fiend.webp"],
         ["Undead", "undead", "modules/mba-premades/icons/spells/level3/magic_circle_undead.webp"],
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.selectImage("Magic Circle", choices, "<b>Select creature type:</b>", "both");
     await mba.clearPlayerDialogMessage();
     if (!selection.length) return;

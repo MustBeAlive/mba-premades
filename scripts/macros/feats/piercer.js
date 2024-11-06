@@ -3,23 +3,18 @@ import {mba} from '../../helperFunctions.js';
 import {queue} from '../mechanics/queue.js';
 
 async function reroll({ speaker, actor, token, character, item, args, scope, workflow }) {
-    if (workflow.hitTargets.size === 0 || !workflow.damageRoll || !constants.attacks.includes(workflow.item.system.actionType)) return;
+    if (!workflow.hitTargets.size || !workflow.damageRoll || !constants.attacks.includes(workflow.item.system.actionType)) return;
     let originItem = mba.getItem(workflow.actor, "Piercer: Reroll Damage");
     if (!originItem) return;
     let doExtraDamage = mba.perTurnCheck(originItem, "feat", "piercer", false, workflow.token.id);
     if (!doExtraDamage) return;
-    if (mba.inCombat()) {
-        let currentTurn = game.combat.round + '-' + game.combat.turn;
-        if (currentTurn === originItem.flags['mba-premades']?.feat?.piercer?.turn) return;
-    }
-    let queueSetup = await queue.setup(workflow.item.uuid, 'piercerReroll', 390);
+    let queueSetup = await queue.setup(workflow.item.uuid, "piercerReroll", 390);
     if (!queueSetup) return;
     let damageTypes = mba.getRollDamageTypes(workflow.damageRoll);
-    if (!damageTypes.has('piercing')) {
+    if (!damageTypes.has("piercing")) {
         queue.remove(workflow.item.uuid);
         return;
     }
-    let autoPiercer = false;
     let lowRoll = null;
     let lowRollDice = null;
     let resultI;
@@ -36,42 +31,36 @@ async function reroll({ speaker, actor, token, character, item, args, scope, wor
             resultJ = j;
         }
     }
-    if (autoPiercer) {
-        if (lowRoll > autoPiercer) {
-            queue.remove(workflow.item.uuid);
-            return;
-        }
-    } else {
-        await mba.playerDialogMessage();
-        let selection = await mba.dialog(originItem.name, constants.yesNo, `<p>Roll Result: <b>${lowRoll}</b></p><p>Would you like to reroll?</p>`);
-        await mba.clearPlayerDialogMessage();
-        if (!selection) {
-            queue.remove(workflow.item.uuid);
-            return;
-        }
+    //await mba.playerDialogMessage(game.user);
+    let selection = await mba.dialog(originItem.name, constants.yesNo, `<p>Roll Result: <b>${lowRoll}</b></p><p>Would you like to reroll?</p>`);
+    //await mba.clearPlayerDialogMessage();
+    if (!selection) {
+        queue.remove(workflow.item.uuid);
+        return;
     }
-    if (mba.inCombat()) await originItem.setFlag('mba-premades', 'feat.piercer.turn', game.combat.round + '-' + game.combat.turn);
-    let roll = await new Roll(`'1d${lowRollDice}`).roll({ 'async': true });
+    if (mba.inCombat()) await originItem.setFlag("mba-premades", "feat.piercer.turn", `${game.combat.round}-${game.combat.turn}`);
+    let roll = await new Roll(`1d${lowRollDice}`).roll({ 'async': true });
+    MidiQOL.displayDSNForRoll(roll);
     let newDamageRoll = workflow.damageRoll;
     newDamageRoll.terms[resultI].results[resultJ].result = roll.total;
     newDamageRoll._total = newDamageRoll._evaluateTotal();
     await workflow.setDamageRoll(newDamageRoll);
-    await originItem.use();
+    await originItem.displayCard();
     queue.remove(workflow.item.uuid);
 }
 
 async function combatEnd(origin) {
-    await origin.setFlag('mba-premades', 'feat.piercer.turn', '');
+    await origin.setFlag("mba-premades", "feat.piercer.turn", "");
 }
 
 async function critical({ speaker, actor, token, character, item, args, scope, workflow }) {
     if (!workflow.isCritical || !workflow.damageRoll) return;
-    let feature = mba.getItem(workflow.actor, 'Piercer: Critical Hit');
+    let feature = mba.getItem(workflow.actor, "Piercer: Critical Hit");
     if (!feature) return;
-    let queueSetup = await queue.setup(workflow.item.uuid, 'piercerCritical', 250);
+    let queueSetup = await queue.setup(workflow.item.uuid, "piercerCritical", 250);
     if (!queueSetup) return;
     let damageTypes = mba.getRollDamageTypes(workflow.damageRoll);
-    if (!damageTypes.has('piercing')) {
+    if (!damageTypes.has("piercing")) {
         queue.remove(workflow.item.uuid);
         return;
     }
@@ -96,7 +85,7 @@ async function critical({ speaker, actor, token, character, item, args, scope, w
     let damageFormula = oldFormula + ' + ' + bonusDamageFormula;
     let damageRollNew = await new Roll(damageFormula).roll({ async: true });
     await workflow.setDamageRoll(damageRollNew);
-    await feature.use();
+    await feature.displayCard();
     queue.remove(workflow.item.uuid);
 }
 
@@ -104,4 +93,4 @@ export let piercer = {
     'reroll': reroll,
     'combatEnd': combatEnd,
     'critical': critical
-};
+}

@@ -36,7 +36,7 @@ export async function massCureWounds({ speaker, actor, token, character, item, a
     let wait = 2000;
     if (validTargets.length > 6) {
         wait = 10;
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, validTargets, false, 'multiple', undefined, false, 'Choose which targets to keep (Max: ' + ammount + ')');
         await mba.clearPlayerDialogMessage();
         if (!selection.buttons) {

@@ -25,7 +25,7 @@ export async function handOfHealing(workflow) {
         ui.notifications.warn("Unable to find allies nearby!");
         return;
     }
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.selectTarget("Hand of Healing", constants.okCancel, targets, true, "one", null, false, "Choose ally to heal:");
     await mba.clearPlayerDialogMessage();
     if (!selection.buttons) return;
@@ -44,7 +44,7 @@ export async function handOfHealing(workflow) {
     if (physicianTouch) {
         let effects = target.actor.effects.filter(e => e.name === "Blinded" || e.name === "Deafened" || e.name === "Paralyzed" || e.name === "Poisoned" || e.name === "Stunned");
         if (effects.length) {
-            await mba.playerDialogMessage();
+            await mba.playerDialogMessage(game.user);
             effectToRemove = await mba.selectEffect("Hand of Healing: Remove Condiion", effects, "Choose condition to remove:");
             await mba.clearPlayerDialogMessage();
         }

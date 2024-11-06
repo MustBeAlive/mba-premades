@@ -3,7 +3,7 @@ import {mba} from "../../../helperFunctions.js";
 export async function blessingOfTheRavenQueen({ speaker, actor, token, character, item, args, scope, workflow }) {
     let icon = workflow.token.document.texture.src;
     let interval = workflow.token.document.width % 2 === 0 ? 1 : -1;
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let position = await mba.aimCrosshair(workflow.token, 30, icon, interval, workflow.token.document.width);
     await mba.clearPlayerDialogMessage();
     if (position.cancelled) return;

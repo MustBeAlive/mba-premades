@@ -32,7 +32,7 @@ export async function nystulMagicAura({ speaker, actor, token, character, item, 
             ["Plant", "plant"],
             ["Undead", "undead"]
         ];
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let selectionType = await mba.dialog("Nystul's Magic Aura: Type", choicesType, `Choose creature type:`);
         await mba.clearPlayerDialogMessage();
         if (!selectionType) return;

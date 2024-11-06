@@ -105,8 +105,8 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     };
     let options = {
         'permanent': false,
-        'name': 'Flame Blade',
-        'description': 'Flame Blade'
+        'name': "Flame Blade",
+        'description': "Flame Blade"
     };
     let rotation = -90;
     let mirror = false;

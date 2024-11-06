@@ -10,7 +10,7 @@ export async function fireball({ speaker, actor, token, character, item, args, s
         .stretchTo(template)
 
         .effect()
-        .file("jb2a.particles.outward.greenyellow.01.04")
+        .file("jb2a.particles.outward.orange.01.04")
         .atLocation(workflow.token)
         .rotateTowards(template, { cacheLocation: true })
         .scaleToObject(2)
@@ -26,7 +26,7 @@ export async function fireball({ speaker, actor, token, character, item, args, s
         .file("modules/dnd5e-animations/assets/sounds/Damage/Fire/fire-blast-binaural-1.mp3")
         .fadeInAudio(500)
         .fadeOutAudio(500)
-        .volume(0.5)
+        .volume(0.4)
         .waitUntilFinished()
 
         .effect()
@@ -50,6 +50,7 @@ export async function fireball({ speaker, actor, token, character, item, args, s
         .duration(5000)
         .fadeOut(3000)
         .zIndex(0.1)
+        .opacity(0.8)
         .randomRotation()
         .belowTokens()
         .persist()

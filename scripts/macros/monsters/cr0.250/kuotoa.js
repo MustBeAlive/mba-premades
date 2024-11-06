@@ -5,7 +5,9 @@ async function stickyShield(workflow) {
     let target = workflow.targets.first();
     if (workflow.hitTargets.size || workflow.item.system.actionType != "mwak" || !mba.findEffect(target.actor, "Sticky Shield")) return;
     if (mba.findEffect(target.actor, "Reaction")) return;
+    await mba.gmDialogMessage();
     let selectionTarget = await mba.remoteDialog("Kuo-toa: Sticky Shield", constants.yesNo, mba.firstOwner(target).id, "<b>Use reaction to attempt to stick enemy weapon to your shield?</b>");
+    await mba.clearGMDialogMessage();
     if (!selectionTarget) return;
     let saveRoll = await mba.rollRequest(workflow.token, 'save', 'str');
     if (saveRoll.total >= 11) {

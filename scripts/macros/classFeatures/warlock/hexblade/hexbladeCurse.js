@@ -311,7 +311,7 @@ async function defeated(origin, effect) {
         async function effectMacro() {
             let validTargets = await mbaPremades.helpers.findNearby(token, 30, "enemy", false, false);
             if (validTargets.length) {
-                await mbaPremades.helpers.playerDialogMessage();
+                await mbaPremades.helpers.playerDialogMessage(mbaPremades.helpers.firstOwner(token));
                 let selection = await mbaPremades.helpers.dialog('Master of Hexes', [['Apply healing as usual', true], ["Apply Hexblade's Curse to new target within 30ft", false]], "<b>What would you like to do?</b>");
                 await mbaPremades.helpers.clearPlayerDialogMessage();
                 if (selection) {
@@ -323,7 +323,7 @@ async function defeated(origin, effect) {
                     if (targetEffect) await mbaPremades.helpers.removeEffect(effect);
                 }
                 else {
-                    await mbaPremades.helpers.playerDialogMessage();
+                    await mbaPremades.helpers.playerDialogMessage(mbaPremades.helpers.firstOwner(token));
                     let selection2 = await mbaPremades.helpers.selectTarget("Hexblade's Curse", mbaPremades.constants.okCancel, validTargets, true, 'one', undefined, false, "Select target to curse:");
                     await mbaPremades.helpers.clearPlayerDialogMessage();
                     if (!selection2.buttons) return;

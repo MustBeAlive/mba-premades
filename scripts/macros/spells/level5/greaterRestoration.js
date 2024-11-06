@@ -10,7 +10,7 @@ export async function greaterRestoration({ speaker, actor, token, character, ite
         ['Hit Point Maximum Reduction', 'health'],
         ['Up to 3 levels of Exhaustion', 'exhaustion'] //HB
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog('Greater Restoration', choices, "<b>Which condition do you wish to remove?</b>");
     await mba.clearPlayerDialogMessage();
     if (!selection) return;
@@ -47,7 +47,7 @@ export async function greaterRestoration({ speaker, actor, token, character, ite
                 }
                 await mba.removeEffect(effectToRemove);
             } else {
-                await mba.playerDialogMessage();
+                await mba.playerDialogMessage(game.user);
                 effectToRemove = await mba.selectEffect("Greater Restoration: Petrification", effects, "<b>Choose one effect:</b>");
                 await mba.clearPlayerDialogMessage();
                 if (!effectToRemove) return;
@@ -78,7 +78,7 @@ export async function greaterRestoration({ speaker, actor, token, character, ite
             await mba.removeEffect(effectToRemove);
         }
         else {
-            await mba.playerDialogMessage();
+            await mba.playerDialogMessage(game.user);
             effectToRemove = await mba.selectEffect("Greater Restoration: Curse", effects, "<b>Choose effect to remove:</b>");
             await mba.clearPlayerDialogMessage();
             if (!effectToRemove) return;
@@ -105,7 +105,7 @@ export async function greaterRestoration({ speaker, actor, token, character, ite
             await mba.removeEffect(effectToRemove);
         } 
         else {
-            await mba.playerDialogMessage();
+            await mba.playerDialogMessage(game.user);
             effectToRemove = await mba.selectEffect("Greater Restoration: Ability Reduction", effects, "<b>Select effect to remove:</b>");
             await mba.clearPlayerDialogMessage();
             if (!effectToRemove) return;
@@ -132,7 +132,7 @@ export async function greaterRestoration({ speaker, actor, token, character, ite
             await mba.removeEffect(effectToRemove);
         } 
         else {
-            await mba.playerDialogMessage();
+            await mba.playerDialogMessage(game.user);
             effectToRemove = await mba.selectEffect("Greater Restoration: Heath Reduction", effects, "<b>Choose effect to remove:</b>");
             await mba.clearPlayerDialogMessage();
             if (!effectToRemove) return;
@@ -147,17 +147,12 @@ export async function greaterRestoration({ speaker, actor, token, character, ite
             ui.notifications.warn("Target has no levels of Exhaustion!");
             return;
         }
-        let exhaustName;
         let level = +exhaustion.name.slice(-1);
-        if (level <= 3) {
-            exhaustName = `Exhaustion ${level}`;
-            let effect = await mba.findEffect(target.actor, exhaustName);
-            if (effect) await mba.removeEffect(effect);
-        }
+        if (level === 0) level = 10;
+        if (level <= 3) await mba.removeCondition(target.actor, `Exhaustion ${level}`);
         else {
-            level -= 3;
-            exhaustName = `Exhaustion ${level}`;
-            await mba.addCondition(target.actor, exhaustName);
+            await mba.removeCondition(target.actor, `Exhaustion ${level}`);
+            await mba.addCondition(target.actor, `Exhaustion ${level - 3}`);
         }
     }
 

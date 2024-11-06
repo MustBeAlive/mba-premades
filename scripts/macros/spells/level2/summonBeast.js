@@ -12,7 +12,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         ["Land", "Land", "modules/mba-premades/icons/spells/level2/summon_beast/spirit_land.webp"],
         ["Water", "Water", "modules/mba-premades/icons/spells/level2/summon_beast/spirit_water.webp"]
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.selectImage('Summon Beast', choices, "<b>Choose type:</b>", "both");
     await mba.clearPlayerDialogMessage();
     if (!selection) return;
@@ -132,7 +132,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'Water': 'water'
     };
     let animation = defaultAnimations[selection[0]];
+    await mba.playerDialogMessage(game.user);
     await tashaSummon.spawn(sourceActor, updates, 3600, workflow.item, 90, workflow.token, animation, {}, workflow.castData.castLevel);
+    await mba.clearPlayerDialogMessage();
 }
 
 async function attack({ speaker, actor, token, character, item, args, scope, workflow }) {

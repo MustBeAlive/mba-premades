@@ -70,7 +70,7 @@ async function damage({ speaker, actor, token, character, item, args, scope, wor
     if (effect.flags['mba-premades']?.feature?.radiantSoul?.used === 1) return;
     let queueSetup = await queue.setup(workflow.item.uuid, "radiantSoul", 249);
     if (!queueSetup) return;
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Radiant Soul", constants.yesNo, `Deal extra damage? (+${workflow.actor.system.attributes.prof}[radiant])`);
     await mba.clearPlayerDialogMessage();
     if (!selection) {

@@ -282,7 +282,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 }
 
 async function dialogue(token, actor, effect, origin) {
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(mba.firstOwner(token));
     let selection = await mba.dialog("Heat Metal", [['Yes (no save)', 'yes'], ['No/Unable (save)', 'no']], `<b>Do you want to drop the heated object?</b>`);
     await mba.clearPlayerDialogMessage();
     if (selection === "yes") {

@@ -10,7 +10,7 @@ export async function combatWildShape({ speaker, actor, token, character, item, 
         let level = +i[0].slice(5);
         if (i[1].value > 0) choices.push([`<b>Level: ${level} (${level}d8)</b> (Current: <b>${i[1].value}/${i[1].max}</b>)`, level, `modules/mba-premades/icons/class/sorcerer/spell_slot_restoration_level_${level}.webp`]);
     }
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let slotLevel = await mba.selectImage("Combat Wild Shape", choices, `Choose spell level:`, "value");
     await mba.clearPlayerDialogMessage();
     if (!slotLevel) return;

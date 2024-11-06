@@ -52,7 +52,7 @@ export async function divineSmite({ speaker, actor, token, character, item, args
     if (spell8 > 0) choices.push([`8th Level (5d8)  |  Current: <b>${spell8}/${spell8max}</b>`, 8]);
     if (spell9 > 0) choices.push([`9th Level (5d8)  |  Current: <b>${spell9}/${spell9max}</b>`, 9]);
     choices.push(['Cancel', false]);
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Divine Smite", choices, "<b>Choose spell slot level:</b>");
     await mba.clearPlayerDialogMessage();
     if (!selection) {

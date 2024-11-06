@@ -115,9 +115,9 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 }
 
 async function hook(workflow) {
-    if (!workflow.item) return;
-    if (!constants.attacks.includes(workflow.item.system.actionType)) return;
+    if (!workflow.item || !constants.attacks.includes(workflow.item?.system?.actionType)) return;
     let target = workflow.targets.first();
+    if (!target) return;
     let effect = await mba.findEffect(target.actor, "True Strike");
     if (!effect) return;
     let currentRound = game.combat.round;

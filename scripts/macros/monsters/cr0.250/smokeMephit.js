@@ -35,7 +35,7 @@ async function cinderBreathItem({ speaker, actor, token, character, item, args, 
             }
         }
     };
-    for (let target of Array.from(workflow.failedSaves)) await mba.createEffect(target.actor, effectData)
+    for (let target of Array.from(workflow.failedSaves)) await mba.createEffect(target.actor, effectData);
 }
 
 async function deathBurstCast({ speaker, actor, token, character, item, args, scope, workflow }) {

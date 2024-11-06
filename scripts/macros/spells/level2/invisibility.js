@@ -4,7 +4,7 @@ import {mba} from "../../../helperFunctions.js";
 export async function invisibility({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel - 1;
     if (workflow.targets.size > ammount) {
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
         await mba.clearPlayerDialogMessage();
         if (!selection.buttons) {
@@ -62,15 +62,15 @@ export async function invisibility({ speaker, actor, token, character, item, arg
             .effect()
             .file("jb2a.particle_burst.01.circle.orangepink")
             .attachTo(target)
-            .scaleToObject(2.3 * target.document.texture.scaleX)
+            .scaleToObject(2.3)
             .duration(1300)
             .fadeOut(300)
 
             .effect()
-            .delay(1000)
             .file("animated-spell-effects-cartoon.misc.weird.01")
             .atLocation(target)
-            .scaleToObject(2 * target.document.texture.scaleX)
+            .scaleToObject(2)
+            .delay(1000)
             .opacity(0.8)
             .filter("ColorMatrix", { hue: 100 })
 

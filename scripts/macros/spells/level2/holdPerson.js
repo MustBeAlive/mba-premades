@@ -5,7 +5,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
     let ammount = workflow.castData.castLevel - 1;
     let concEffect = await mba.findEffect(workflow.actor, "Concentrating");
     if (workflow.targets.size > ammount) {
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let selection = await mba.selectTarget("Hold Person", constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
         await mba.clearPlayerDialogMessage();
         if (!selection.buttons) {
@@ -71,7 +71,7 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': `turn=end, saveAbility=wis, saveDC=${saveDC}, saveMagic=true, name=Hold Person: Turn End (DC${saveDC}), killAnim=true`,
+                'value': `turn=end, saveAbility=wis, saveDC=${saveDC}, saveMagic=true, name=Hold Person: Turn End (Wis Save, DC${saveDC}), killAnim=true`,
                 'priority': 20
             },
         ],

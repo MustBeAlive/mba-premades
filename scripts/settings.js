@@ -483,6 +483,40 @@ export function registerSettings() {
     });
     addMenuSetting('Armor of Hexes', 'Class Features');
 
+    game.settings.register(moduleName, 'Interception', {
+        'name': 'Fighting Style: Interception',
+        'hint': 'Включает автоматизацию способности Fighting Style: Interception через Midi-QoL hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preTargetDamageApplication', macros.fightingStyle.interception);
+            } else {
+                Hooks.off('midi-qol.preTargetDamageApplication', macros.fightingStyle.interception);
+            }
+        }
+    });
+    addMenuSetting('Interception', 'Feats');
+
+    game.settings.register(moduleName, 'Protection', {
+        'name': 'Fighting Style: Protection',
+        'hint': 'Включает автоматизацию способности Fighting Style: Protection через Midi-QoL hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preAttackRoll', macros.fightingStyle.protection);
+            } else {
+                Hooks.off('midi-qol.preAttackRoll', macros.fightingStyle.protection);
+            }
+        }
+    });
+    addMenuSetting('Protection', 'Feats');
+
     game.settings.register(moduleName, 'Ranged Smite', {
         'name': 'Ranged Divine Smite',
         'hint': 'Включает срабатывание способности Divine Smite на RWAK (Ranged Weapon Attacks).',
@@ -651,6 +685,23 @@ export function registerSettings() {
         }
     });
     addMenuSetting('Kuo-toa', 'Monster Features');
+
+    game.settings.register(moduleName, 'Lich', {
+        'name': 'Lich: Tether',
+        'hint': 'Включает автоматизацию способности Lich "Magic Tether".',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preTargetDamageApplication', macros.monsters.lich.lairTetherOnHit);
+            } else {
+                Hooks.off('midi-qol.preTargetDamageApplication', macros.monsters.lich.lairTetherOnHit);
+            }
+        }
+    });
+    addMenuSetting('Lich', 'Monster Features');
 
     game.settings.register(moduleName, 'Merregon', {
         'name': 'Merregon: Loyal Bodyguard',
@@ -842,23 +893,6 @@ export function registerSettings() {
     });
     addMenuSetting('Compelled Duel', 'Spells');
 
-    game.settings.register(moduleName, 'Fog Cloud', {
-        'name': 'Fog Cloud',
-        'hint': 'Включает автоматизацию заклинания Fog Cloud через Midi-Qol hooks.',
-        'scope': 'world',
-        'config': false,
-        'type': Boolean,
-        'default': false,
-        'onChange': value => {
-            if (value) {
-                Hooks.on('midi-qol.preAttackRoll', macros.fogCloud.hook);
-            } else {
-                Hooks.off('midi-qol.preAttackRoll', macros.fogCloud.hook);
-            }
-        }
-    });
-    addMenuSetting('Fog Cloud', 'Spells');
-
     game.settings.register(moduleName, 'Darkness', {
         'name': 'Darkness',
         'hint': 'Включает автоматизацию заклинания Darkness через Midi-Qol hooks.',
@@ -892,6 +926,40 @@ export function registerSettings() {
         }
     });
     addMenuSetting('Death Ward', 'Spells');
+
+    game.settings.register(moduleName, 'Fog Cloud', {
+        'name': 'Fog Cloud',
+        'hint': 'Включает автоматизацию заклинания Fog Cloud через Midi-Qol hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preAttackRoll', macros.fogCloud.hook);
+            } else {
+                Hooks.off('midi-qol.preAttackRoll', macros.fogCloud.hook);
+            }
+        }
+    });
+    addMenuSetting('Fog Cloud', 'Spells');
+
+    game.settings.register(moduleName, 'Globe of Invulnerability', {
+        'name': 'Globe of Invulnerability',
+        'hint': 'Включает автоматизацию заклинания Globe of Invulnerability через Midi-Qol hooks.',
+        'scope': 'world',
+        'config': false,
+        'type': Boolean,
+        'default': false,
+        'onChange': value => {
+            if (value) {
+                Hooks.on('midi-qol.preambleComplete', macros.globeOfInvulnerability.target);
+            } else {
+                Hooks.off('midi-qol.preambleComplete', macros.globeOfInvulnerability.target);
+            }
+        }
+    });
+    addMenuSetting('Globe of Invulnerability', 'Spells');
 
     game.settings.register(moduleName, 'Mirror Image', {
         'name': 'Mirror Image',

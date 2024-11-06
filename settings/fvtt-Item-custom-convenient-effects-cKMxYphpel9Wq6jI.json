@@ -1776,7 +1776,7 @@
           "wallsBlock": "system"
         }
       },
-      "icon": "modules/dfreds-convenient-effects/images/concentrating.svg",
+      "icon": "modules/mba-premades/icons/conditions/concentrating.webp",
       "name": "Concentrating",
       "origin": null,
       "tint": null,
@@ -2377,6 +2377,11 @@
           "hostile": false,
           "onlyOnce": false,
           "wallsBlock": "system"
+        },
+        "effectmacro": {
+          "onCreate": {
+            "script": "let stillAlive = await mbaPremades.helpers.findEffect(actor, \"Unconscious\");\nif (stillAlive) await mbaPremades.helpers.removeEffect(stillAlive);"
+          }
         }
       },
       "icon": "modules/mba-premades/icons/conditions/dead.webp",
@@ -2396,7 +2401,7 @@
           "key": "system.attributes.movement.all",
           "mode": 0,
           "value": "0",
-          "priority": 25
+          "priority": 50
         }
       ],
       "description": "<p>A grappled creature's speed becomes 0, and it can't benefit from any bonus to its speed.</p><p>The condition ends if the grappler is @UUID[Compendium.mba-premades.MBA SRD.Item.LCcuJNMKrGouZbFJ]{Incapacitated}.</p><p>The condition also ends if an effect removes the grappled creature from the reach of the grappler or grappling effect.</p><p></p><p>Скорость схваченного существа равна 0, и оно не получает выгоды ни от каких бонусов к скорости.</p><p>Состояние оканчивается, если схвативший становится недееспособным.</p><p>Это состояние также оканчивается, если какой-либо эффект выводит схваченное существо из зоны досягаемости того, кто его удерживает, или из зоны удерживающего эффекта. Например, когда существо отбрасывается заклинанием Волна Грома (@UUID[Compendium.mba-premades.MBA Spells.Item.iSlvXdqXcGgDbK0Y]{Thunderwave}).</p>",
@@ -2459,6 +2464,424 @@
         "grappled"
       ],
       "_id": "3nRdJoSV0ukI6icZ"
+    },
+    {
+      "changes": [],
+      "description": "<p>You can Move or take one action on your turn, not both. You also can't take a Bonus action or a Reaction.</p>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/dazed.webp",
+      "name": "Dazed",
+      "origin": "Item.cKMxYphpel9Wq6jI",
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Dazed"
+      ],
+      "_id": "yNqZ6l4WgrAyDVLS"
+    },
+    {
+      "changes": [
+        {
+          "key": "system.attributes.exhaustion",
+          "mode": 5,
+          "value": "8",
+          "priority": 50
+        },
+        {
+          "key": "system.bonuses.All-Attacks",
+          "mode": 2,
+          "value": "-8",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.check",
+          "mode": 2,
+          "value": "-8",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.save",
+          "mode": 2,
+          "value": "-8",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.spell.dc",
+          "mode": 2,
+          "value": "-8",
+          "priority": 20
+        }
+      ],
+      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves).</p><p></p><p>Каждый уровень усталости дает -1 штраф на все броски (атаки, проверки характеристик, спасброски).</p>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/exhausted7.webp",
+      "name": "Exhaustion 8",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Exhaustion 8"
+      ],
+      "_id": "v1HBcLAds3d0NT5r"
+    },
+    {
+      "changes": [
+        {
+          "key": "system.attributes.exhaustion",
+          "mode": 5,
+          "value": "9",
+          "priority": 50
+        },
+        {
+          "key": "system.bonuses.All-Attacks",
+          "mode": 2,
+          "value": "-9",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.check",
+          "mode": 2,
+          "value": "-9",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.save",
+          "mode": 2,
+          "value": "-9",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.spell.dc",
+          "mode": 2,
+          "value": "-9",
+          "priority": 20
+        }
+      ],
+      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves).</p><p></p><p>Каждый уровень усталости дает -1 штраф на все броски (атаки, проверки характеристик, спасброски).</p>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/exhausted9.webp",
+      "name": "Exhaustion 9",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Exhaustion 9"
+      ],
+      "_id": "Jrv8MMDmNIjIchj6"
+    },
+    {
+      "changes": [
+        {
+          "key": "system.attributes.exhaustion",
+          "mode": 5,
+          "value": "10",
+          "priority": 50
+        },
+        {
+          "key": "system.bonuses.All-Attacks",
+          "mode": 2,
+          "value": "-10",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.check",
+          "mode": 2,
+          "value": "-10",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.save",
+          "mode": 2,
+          "value": "-10",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.spell.dc",
+          "mode": 2,
+          "value": "-10",
+          "priority": 20
+        }
+      ],
+      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves).</p><p></p><p>Каждый уровень усталости дает -1 штраф на все броски (атаки, проверки характеристик, спасброски).</p>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/exhausted10.webp",
+      "name": "Exhaustion 10",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Exhaustion 10"
+      ],
+      "_id": "HepPvaVatG33q2tg"
+    },
+    {
+      "changes": [
+        {
+          "key": "system.attributes.exhaustion",
+          "mode": 5,
+          "value": "7",
+          "priority": 50
+        },
+        {
+          "key": "system.bonuses.All-Attacks",
+          "mode": 2,
+          "value": "-7",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.check",
+          "mode": 2,
+          "value": "-7",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.abilities.save",
+          "mode": 2,
+          "value": "-7",
+          "priority": 20
+        },
+        {
+          "key": "system.bonuses.spell.dc",
+          "mode": 2,
+          "value": "-7",
+          "priority": 20
+        }
+      ],
+      "description": "<p>Each level of exhaustion grants -1 to all rolls (attack, skill checks, saves).</p><p></p><p>Каждый уровень усталости дает -1 штраф на все броски (атаки, проверки характеристик, спасброски).</p>",
+      "disabled": false,
+      "duration": {
+        "rounds": null,
+        "seconds": null,
+        "turns": null,
+        "startTime": null,
+        "combat": null,
+        "startRound": null,
+        "startTurn": null
+      },
+      "flags": {
+        "dfreds-convenient-effects": {
+          "isConvenient": true,
+          "isDynamic": false,
+          "isViewable": true,
+          "nestedEffects": [],
+          "subEffects": []
+        },
+        "times-up": {
+          "isPassive": false
+        },
+        "dae": {
+          "disableIncapacitated": false,
+          "selfTarget": false,
+          "selfTargetAlways": false,
+          "dontApply": false,
+          "stackable": "noneName",
+          "showIcon": false,
+          "durationExpression": "",
+          "macroRepeat": "none",
+          "specialDuration": []
+        },
+        "ActiveAuras": {
+          "isAura": false,
+          "aura": "None",
+          "nameOverride": "",
+          "radius": "",
+          "alignment": "",
+          "type": "",
+          "customCheck": "",
+          "ignoreSelf": false,
+          "height": false,
+          "hidden": false,
+          "displayTemp": false,
+          "hostile": false,
+          "onlyOnce": false,
+          "wallsBlock": "system"
+        }
+      },
+      "icon": "modules/mba-premades/icons/conditions/exhausted7.webp",
+      "name": "Exhaustion 7",
+      "origin": null,
+      "tint": null,
+      "transfer": false,
+      "statuses": [
+        "Convenient Effect: Exhaustion 7"
+      ],
+      "_id": "yRCqGJ6fkZQfcXQ7"
     }
   ],
   "folder": null,
@@ -2475,7 +2898,7 @@
     "systemVersion": "2.4.1",
     "coreVersion": "11.315",
     "createdTime": 1698551381684,
-    "modifiedTime": 1717827737799,
+    "modifiedTime": 1721120479864,
     "lastModifiedBy": "AaGlXPdfBCo8JJO1"
   }
 }

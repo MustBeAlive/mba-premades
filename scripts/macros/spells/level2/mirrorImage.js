@@ -178,8 +178,8 @@ async function hook(workflow) {
     await MidiQOL.displayDSNForRoll(roll);
     roll.toMessage({
         'rollMode': 'roll',
-        'speaker': { 'alias': name },
-        'flavor': 'Mirror Image'
+        'speaker': { 'alias': "MBA Premades" },
+        'flavor': 'Mirror Image Roll'
     });
     let rollNeeded;
     switch (duplicates) {

@@ -38,7 +38,7 @@ async function trigger({ speaker, actor, token, character, item, args, scope, wo
     let selection;
     if (choices.length === 1) selection = choices[0][1];
     if (!selection) {
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         selection = await mba.dialog("Weapon Mastery", choices, "<b>Choose weapon mastery to use:</b>");
         await mba.clearPlayerDialogMessage();
     }
@@ -48,7 +48,7 @@ async function trigger({ speaker, actor, token, character, item, args, scope, wo
             let promt = await mba.dialog("Cleave", constants.yesNo, "<b>Would you like to use Cleave?</b>")
             if (!promt) return;
         }
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let selection = await mba.selectTarget("Cleave", constants.okCancel, cleaveValidTargets, true, "one", undefined, false, "<b>Select target to cleave:</b>")
         await mba.clearPlayerDialogMessage();
         if (!selection.buttons) return;
@@ -73,7 +73,7 @@ async function trigger({ speaker, actor, token, character, item, args, scope, wo
         let damage = workflow.attackTotal - workflow.d20AttackRoll - workflow.actor.system.attributes.prof;
         let damageType = workflow.item.system.damage.parts[0][1];
         featureData.system.damage.parts = [[`${damage}[${damageType}]`, `${damageType}`]];
-        if (workflow.item.system.properties.mgc === true) featureData.system.properties.push('mgc');
+        //if (workflow.item.system.properties.mgc === true) featureData.system.properties.push('mgc'); borked
         let feature = new CONFIG.Item.documentClass(featureData, { 'parent': workflow.actor });
         let [config, options] = constants.syntheticItemWorkflowOptions([target.document.uuid]);
         await MidiQOL.completeItemUse(feature, config, options);
@@ -81,7 +81,7 @@ async function trigger({ speaker, actor, token, character, item, args, scope, wo
     else if (selection === "push") {
         if (mba.getSize(target.actor) > (mba.getSize(workflow.actor) + 1)) return;
         if (choices.length < 2) {
-            await mba.playerDialogMessage();
+            await mba.playerDialogMessage(game.user);
             let promt = await mba.dialog("Push", constants.yesNo, `Would you like to Push <u>${target.document.name}</u> 10 feet away?`);
             await mba.clearPlayerDialogMessage();
             if (!promt) return;
@@ -90,7 +90,7 @@ async function trigger({ speaker, actor, token, character, item, args, scope, wo
     }
     else if (selection === "sap") {
         if (choices.length < 2) {
-            await mba.playerDialogMessage();
+            await mba.playerDialogMessage(game.user);
             let promt = await mba.dialog("Sap", constants.yesNo, `Would you like to Sap <u>${target.document.name}</u>?`);
             await mba.clearPlayerDialogMessage();
             if (!promt) return;
@@ -121,7 +121,7 @@ async function trigger({ speaker, actor, token, character, item, args, scope, wo
     }
     else if (selection === "slow") {
         if (choices.length < 2) {
-            await mba.playerDialogMessage();
+            await mba.playerDialogMessage(game.user);
             let promt = await mba.dialog("Slow", constants.yesNo, `Would you like to Slow <u>${target.document.name}</u>?`);
             await mba.clearPlayerDialogMessage();
             if (!promt) return;
@@ -152,7 +152,7 @@ async function trigger({ speaker, actor, token, character, item, args, scope, wo
     }
     else if (selection === "topple") {
         if (choices.length < 2) {
-            await mba.playerDialogMessage();
+            await mba.playerDialogMessage(game.user);
             let promt = await mba.dialog("Topple", constants.yesNo, `Would you like to Topple <u>${target.document.name}</u>?`);
             await mba.clearPlayerDialogMessage();
             if (!promt) return;

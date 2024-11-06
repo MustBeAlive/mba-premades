@@ -1,5 +1,3 @@
-2024/07/09-18:06:59.721 2ffc Recovering log #1576
-2024/07/09-18:06:59.721 2ffc Level-0 table #1578: started
-2024/07/09-18:06:59.723 2ffc Level-0 table #1578: 2354 bytes OK
-2024/07/09-18:06:59.729 2ffc Delete type=0 #1576
-2024/07/09-18:06:59.729 2ffc Delete type=3 #1575
+2024/11/06-20:49:02.945 4fb0 Recovering log #1720
+2024/11/06-20:49:02.977 4fb0 Delete type=0 #1720
+2024/11/06-20:49:02.977 4fb0 Delete type=3 #1718

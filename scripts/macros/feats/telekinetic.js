@@ -5,7 +5,7 @@ export async function telekinetic({ speaker, actor, token, character, item, args
     let distance = 5;
     let choices = [["Push target 5 feet away", 5], ["Pull target 5 feet closer", -5]];
     if (workflow.failedSaves.size) {
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         distance = await mba.dialog("Telekinetic", choices, `<b>What would you like to do?</b>`);
         await mba.clearPlayerDialogMessage();
     }

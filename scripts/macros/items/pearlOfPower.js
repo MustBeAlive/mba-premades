@@ -1,22 +1,28 @@
 import {mba} from "../../helperFunctions.js";
 
+// To do: pact slots
+
 export async function pearlOfPower({ speaker, actor, token, character, item, args, scope, workflow }) {
     let pearlItem = mba.getItem(workflow.actor, "Pearl of Power");
     if (!pearlItem) {
         ui.notifications.warn("Unable to find item! (Pearl of Power)");
+        await game.messages.get(workflow.itemCardId).delete();
         return;
     }
     if (pearlItem.system.attunement != 2) {
         ui.notifications.warn("Pearl of Power requires attunement!");
+        await game.messages.get(workflow.itemCardId).delete();
         return;
     }
     if (pearlItem.system.uses.value < 1) {
         ui.notifications.warn("Pearl of Power is out of charges!");
+        await game.messages.get(workflow.itemCardId).delete();
         return;
     }
     const slots = Array.from(Object.entries(workflow.actor.system.spells).filter(i => i[0] === "spell1" || i[0] === "spell2" || i[0] === "spell3").filter(i => i[1].value < i[1].max));
     if (!slots.length) {
         ui.notifications.info("You don't have any expended spell slots!");
+        await game.messages.get(workflow.itemCardId).delete();
         return;
     }
     let choices = [];

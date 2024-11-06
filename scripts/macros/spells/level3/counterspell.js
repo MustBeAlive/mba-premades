@@ -14,7 +14,7 @@ export async function counterspell({ speaker, actor, token, character, item, arg
         ["Level 8", 8],
         ["Level 9", 9]
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(mba.firstOwner(target));
     let selection = await mba.remoteDialog(workflow.item.name, choices, mba.firstOwner(target).id, "What is the level of the spell you are attempting to cast?");
     await mba.clearPlayerDialogMessage();
     if (!selection) {

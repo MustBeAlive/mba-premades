@@ -20,6 +20,7 @@ async function lifeDrain({ speaker, actor, token, character, item, args, scope, 
         .play()
 
     if (!workflow.failedSaves.size) return;
+    if (mba.findEffect(target.actor, "Aura of Life")) return;
     let damageRoll = workflow.damageRoll.total;
     let effect = await mba.findEffect(target.actor, "Specter: Life Drain");
     if (effect) {

@@ -22,7 +22,7 @@ export async function focusedAim({ speaker, actor, token, character, item, args,
     if (kiPoints >= 2) featureMenu.push(['Yes: 2 Ki Point / +4 to hit', 4]);
     if (kiPoints >= 3) featureMenu.push(['Yes: 3 Ki Point / +6 to hit', 6]);
     featureMenu.push(['No', false]);
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Focused Aim", featureMenu, `<p>Attack roll total: <b>${attackTotal} (missed)</b></p><p>Use Focused Aim? (Ki Points left: ${kiPoints})</p>`);
     await mba.clearPlayerDialogMessage();
     if (!selection) {

@@ -250,16 +250,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
                     if ('y' in delta.token) delete delta.token.y;
                 }
             };
-            if (mba.jb2aCheck() === 'patreon') {
-                await enlargeReduce.enlargeAnimation(workflow.token, updates2, 'Giant Stature', callbacks);
-            } else {
-                let options = {
-                    'permanent': false,
-                    'name': 'Giant Stature',
-                    'description': 'Giant Stature'
-                };
-                await warpgate.mutate(workflow.token.document, updates2, callbacks, options);
-            }
+            await enlargeReduce.enlargeAnimation(workflow.token, updates2, 'Giant Stature', callbacks);
             effectData.changes = effectData.changes.concat([
                 {
                     'key': 'flags.midi-qol.range.mwak',

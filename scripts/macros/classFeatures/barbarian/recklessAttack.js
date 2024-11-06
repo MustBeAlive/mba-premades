@@ -9,7 +9,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     if (!mba.perTurnCheck(originFeature, "feature", "recklessAttack")) return;
     let queueSetup = await queue.setup(workflow.item.uuid, 'recklessAttack', 30);
     if (!queueSetup) return;
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog(originFeature.name, constants.yesNo, `Use <b>${originFeature.name}</b>?`);
     await mba.clearPlayerDialogMessage();
     if (!selection) {

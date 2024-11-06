@@ -11,7 +11,7 @@ export async function strengthOfTheGrave(token, { item, workflow, ditem }) {
     if (!originItem) return;
     if (!originItem.system.uses.value) return;
     if (workflow.isCritical || mba.checkTrait(tokenActor, 'di', 'healing') || mba.totalDamageType(tokenActor, ditem.damageDetail[0], 'radiant') > 0 || mba.totalDamageType(tokenActor, ditem.damageDetail[0], 'none')) return;
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(mba.firstOwner(token));
     let selection = await mba.dialog(originItem.name, constants.yesNo, `Use <b>${originItem.name}</b>?`);
     await mba.clearPlayerDialogMessage();
     if (!selection) return;

@@ -10,16 +10,14 @@ async function cast({ speaker, actor, token, character, item, args, scope, workf
 			});
 			await mba.createEffect(target.actor, constants.immunityEffectData);
 		}
-		else if (mba.inCombat()) {
-			await mba.createEffect(target.actor, constants.advantageEffectData)
-		}
+		else if (mba.inCombat()) await mba.createEffect(target.actor, constants.advantageEffectData)
 	}
 }
 
 async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
 	let ammount = workflow.castData.castLevel;
 	if (workflow.targets.size > ammount) {
-		await mba.playerDialogMessage();
+		await mba.playerDialogMessage(game.user);
 		let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
 		await mba.clearPlayerDialogMessage();
 		if (!selection.buttons) {

@@ -4,7 +4,7 @@ import {mba} from "../../../helperFunctions.js";
 export async function tashaMindWhip({ speaker, actor, token, character, item, args, scope, workflow }) {
     let ammount = workflow.castData.castLevel - 1;
     if (workflow.targets.size > ammount) {
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, "multiple", undefined, false, `Too many targets selected. Choose which targets to keep (Max: ${ammount})`);
         await mba.clearPlayerDialogMessage();
         if (!selection.buttons) {
@@ -38,7 +38,7 @@ export async function tashaMindWhip({ speaker, actor, token, character, item, ar
     if (!featureWorkflow.failedSaves.size) return;
     async function effectMacroTurnStart() {
         let choices = [['Action', 'action'], ['Bonus Action', 'bonus'], ['Movement', 'move']];
-        await mbaPremades.helpers.playerDialogMessage();
+        await mbaPremades.helpers.playerDialogMessage(mbaPremades.helpers.firstOwner(token));
         let selection = await mbaPremades.helpers.dialog("Tasha's Mind Whip", choices, `<b>Choose which action you would like to keep:</b>`);
         await mbaPremades.helpers.clearPlayerDialogMessage();
         if (!selection) return;

@@ -66,9 +66,9 @@ export async function item({ speaker, actor, token, character, item, args, scope
         .play();
 
     //Exhaustion block
-    let exhaustion = target.actor.effects.filter(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
-    if (exhaustion.length) {
-        let exhaustionEffect = await mba.findEffect(target.actor, exhaustion[0].name);
+    let exhaustion = target.actor.effects.find(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
+    if (exhaustion) {
+        let exhaustionEffect = await mba.findEffect(target.actor, exhaustion.name);
         if (exhaustionEffect) await mba.removeEffect(exhaustionEffect);
     }
 

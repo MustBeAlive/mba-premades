@@ -8,7 +8,7 @@ export async function melfAcidArrow({ speaker, actor, token, character, item, ar
     let overtimeFormula = `${level}d4[acid]`;
     if (!workflow.hitTargets.size) damageFormula = `min(${damageFormula} / 2)`;
     async function effectMacroDel() {
-        Sequencer.EffectManager.endEffects({ name: `${token.document.name} Acid Arrow` });
+        Sequencer.EffectManager.endEffects({ name: `${token.document.name} AciArr` });
     }
     let effectData = {
         'name': workflow.item.name,
@@ -44,7 +44,7 @@ export async function melfAcidArrow({ speaker, actor, token, character, item, ar
             }
         }
     };
-    let featureData = await mba.getItemFromCompendium('mba-premades.MBA Spell Features', "Melf's Acid Arrow: Damage", false);
+    let featureData = await mba.getItemFromCompendium("mba-premades.MBA Spell Features", "Melf's Acid Arrow: Damage", false);
     if (!featureData) return;
     delete featureData._id;
     featureData.system.damage.parts[0][0] = damageFormula;
@@ -78,7 +78,7 @@ export async function melfAcidArrow({ speaker, actor, token, character, item, ar
         .mask(target)
         .zIndex(0.1)
         .persist()
-        .name(`${target.document.name} Acid Arrow`)
+        .name(`${target.document.name} AciArr`)
         .playIf(() => {
             return workflow.hitTargets.size
         })
@@ -95,7 +95,7 @@ export async function melfAcidArrow({ speaker, actor, token, character, item, ar
         .randomizeMirrorX()
         .zIndex(0.2)
         .persist()
-        .name(`${target.document.name} Acid Arrow`)
+        .name(`${target.document.name} AciArr`)
         .playIf(() => {
             return workflow.hitTargets.size
         })
@@ -115,7 +115,7 @@ export async function melfAcidArrow({ speaker, actor, token, character, item, ar
         .mask(target)
         .zIndex(0.1)
         .persist()
-        .name(`${target.document.name} Acid Arrow`)
+        .name(`${target.document.name} AciArr`)
         .playIf(() => {
             return workflow.hitTargets.size
         })
@@ -132,7 +132,7 @@ export async function melfAcidArrow({ speaker, actor, token, character, item, ar
         .randomizeMirrorX()
         .zIndex(0.2)
         .persist()
-        .name(`${target.document.name} Acid Arrow`)
+        .name(`${target.document.name} AciArr`)
         .playIf(() => {
             return workflow.hitTargets.size
         })
@@ -152,7 +152,7 @@ export async function melfAcidArrow({ speaker, actor, token, character, item, ar
         .mask(target)
         .zIndex(0.1)
         .persist()
-        .name(`${target.document.name} Acid Arrow`)
+        .name(`${target.document.name} AciArr`)
         .playIf(() => {
             return workflow.hitTargets.size
         })
@@ -169,7 +169,7 @@ export async function melfAcidArrow({ speaker, actor, token, character, item, ar
         .randomizeMirrorX()
         .zIndex(0.2)
         .persist()
-        .name(`${target.document.name} Acid Arrow`)
+        .name(`${target.document.name} AciArr`)
         .playIf(() => {
             return workflow.hitTargets.size
         })

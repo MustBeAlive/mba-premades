@@ -11,7 +11,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
     let selection;
     if (weapons.length === 1) selection = weapons[0];
     if (!selection) {
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         [selection] = await mba.selectDocument('Attack with what weapon?', weapons);
         await mba.clearPlayerDialogMessage();
     }

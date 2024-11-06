@@ -5,7 +5,7 @@ import {queue} from "../mechanics/queue.js";
 
 export async function item({ speaker, actor, token, character, item, args, scope, workflow }) {
     let types = [["Weapon (Slashing or Piercing)", "weapon"], ["Ammo (3 pieces)", "ammo"], ["Cancel", false]];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let typeSelection = await mba.dialog("Basic Poison", types, `<b>What would you like to coat with Basic Poison?</b>`);
     await mba.clearPlayerDialogMessage();
     if (!typeSelection) return;
@@ -15,7 +15,7 @@ export async function item({ speaker, actor, token, character, item, args, scope
             ui.notifications.warn("No valid weapons equppied!");
             return;
         }
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let [weaponSelection] = await mba.selectDocument('Coat which weapon?', weapons);
         await mba.clearPlayerDialogMessage();
         if (!weaponSelection) return;

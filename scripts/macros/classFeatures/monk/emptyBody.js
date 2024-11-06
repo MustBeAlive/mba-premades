@@ -14,7 +14,7 @@ export async function emptyBody({ speaker, actor, token, character, item, args, 
     let choices = [["Become Invisible (4 Ki Points)", "invisibility"]];
     if (kiPoints >= 8) choices.push(["Cast Astral Projection (8 Ki Points)", "astral"]);
     choices.push(["Cancel", false]);
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Empty Body", choices, `<b>What would you like to do?</b>`);
     await mba.clearPlayerDialogMessage();
     if (!selection) return;

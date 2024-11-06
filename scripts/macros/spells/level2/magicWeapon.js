@@ -12,7 +12,7 @@ export async function magicWeapon({ speaker, actor, token, character, item, args
     let selection;
     if (weapons.length === 1) selection = [weapons[0]];
     else {
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         selection = await mba.selectDocument(workflow.item.name, weapons);
         await mba.clearPlayerDialogMessage();
     }

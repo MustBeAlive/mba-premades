@@ -1,3 +1,4 @@
+import {mba} from "../../helperFunctions.js";
 import {tashaSummon} from "../generic/tashaSummon.js";
 
 export async function panpipesOfTheSewers({ speaker, actor, token, character, item, args, scope, workflow }) {
@@ -71,6 +72,8 @@ export async function panpipesOfTheSewers({ speaker, actor, token, character, it
         .zIndex(1)
     
         .play();
-    
+
+    await mba.playerDialogMessage(game.user);
     await tashaSummon.spawn(sourceActor, updates, 86400, workflow.item, 30, workflow.token, "nature");
+    await mba.clearPlayerDialogMessage();
 }

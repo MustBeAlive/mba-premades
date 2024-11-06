@@ -157,7 +157,7 @@ export async function powerWordHeal({ speaker, actor, token, character, item, ar
             if (!isProne) return;
             async function effectMacroCreate() {
                 let effect = mbaPremades.helpers.findEffect(actor, 'Power Word: Heal');
-                await mbaPremades.helpers.playerDialogMessage();
+                await mbaPremades.helpers.playerDialogMessage(mbaPremades.helpers.firstOwner(token));
                 let selection = await mbaPremades.helpers.dialog("Power Word Heal", mbaPremades.constants.yesNo, "<p>Do you wish to spend your reaction to stand up?</p>");
                 await mbaPremades.helpers.clearPlayerDialogMessage();
                 if (!selection) {

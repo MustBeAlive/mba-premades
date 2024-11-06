@@ -21,7 +21,7 @@ export async function balmOfTheSummerCourt({ speaker, actor, token, character, i
             'type': 'number'
         }
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.menu("Balm of the Summer Court", constants.okCancel, inputs, true);
     await mba.clearPlayerDialogMessage();
     if (!selection.buttons) return;

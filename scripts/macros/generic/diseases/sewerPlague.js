@@ -46,7 +46,7 @@ export async function sewerPlague() {
                 if (saveRoll.total < 11) {
                     await mbaPremades.helpers.removeCondition(token.actor, "Exhaustion " + currentExhaustion);
                     currentExhaustion += 1;
-                    if (currentExhaustion > 6) currentExhaustion = 6; // temp workaround
+                    if (currentExhaustion > 10) currentExhaustion = 10
                     await mbaPremades.helpers.addCondition(token.actor, "Exhaustion " + currentExhaustion);
                     let updates = {
                         'flags': {

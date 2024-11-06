@@ -18,7 +18,7 @@ export async function dancingLights({ speaker, actor, token, character, item, ar
         ["Red", "red", "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_Red_Thumb.webp"],
         ["Yellow", "yellow", "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_Yellow_Thumb.webp"]
     ];
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.selectImage("Dancing Lights", images, "<b>Select color:</b>", "both");
     if (!selection) selection = ["blueteal", "modules/jb2a_patreon/Library/Cantrip/Dancing_Lights/DancingLights_01_BlueTeal_Thumb.webp"];
     await mba.clearPlayerDialogMessage();
@@ -46,6 +46,7 @@ export async function dancingLights({ speaker, actor, token, character, item, ar
             }
         }
     }
-    let animation = 'celestial';
-    await summons.spawn(sourceActors, updates, 60, workflow.item, undefined, undefined, 120, workflow.token, animation, {}, workflow.castData.castLevel);
+    await mba.playerDialogMessage(game.user);
+    await summons.spawn(sourceActors, updates, 60, workflow.item, undefined, undefined, 120, workflow.token, "celestial", {}, workflow.castData.castLevel);
+    await mba.clearPlayerDialogMessage();
 }

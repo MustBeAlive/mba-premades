@@ -196,7 +196,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
 	let currentElevation = target.elevation;
 	let maxElevation = 20 - currentElevation;
 	let minElevation = +("-" + (20 - maxElevation));
-	await mba.playerDialogMessage();
+	await mba.playerDialogMessage(game.user);
 	const changeValue = await warpgate.menu(
 		{
 			inputs: [{

@@ -1,9 +1,10 @@
 import {mba} from "../../../helperFunctions.js";
 
 export async function tireless(actor, token) {
-    let exhaustion = actor.effects.filter(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
-    if (!exhaustion.length) return;
-    let level = +exhaustion[0].name.slice(-1);
+    let exhaustion = actor.effects.find(e => e.name.toLowerCase().includes("Exhaustion".toLowerCase()));
+    if (!exhaustion) return;
+    let level = +exhaustion.name.slice(-1);
+    if (level === 0) level = 10;
     new Sequence()
 
         .effect()
@@ -19,7 +20,10 @@ export async function tireless(actor, token) {
                 speaker: ChatMessage.getSpeaker({ actor: actor })
             });
             if (level === 1) await mba.removeCondition(actor, "Exhaustion 1");
-            else await mba.addCondition(actor, `Exhaustion ${level -= 1}`);
+            else {
+                await mba.removeCondition(actor, `Exhaustion ${level}`);
+                await mba.addCondition(actor, `Exhaustion ${level - 1}`);
+            }
         })
 
         .play()

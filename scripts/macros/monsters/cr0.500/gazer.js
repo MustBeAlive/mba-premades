@@ -71,7 +71,7 @@ async function rayDazing({ speaker, actor, token, character, item, args, scope, 
             },
             {
                 'key': 'system.attributes.movement.walk',
-                'mode': 1,
+                'mode': 0,
                 'value': '*0.5',
                 'priority': 20
             },

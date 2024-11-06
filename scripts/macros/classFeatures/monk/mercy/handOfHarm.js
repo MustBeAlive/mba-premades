@@ -29,7 +29,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     }
     let queueSetup = await queue.setup(workflow.item.uuid, 'handOfHarm', 215);
     if (!queueSetup) return;
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog(originFeature.name, constants.yesNo, `Use <b>${originFeature.name}</b>?`);
     await mba.clearPlayerDialogMessage();
     if (!selection) {
@@ -51,7 +51,7 @@ async function attack({ speaker, actor, token, character, item, args, scope, wor
     let physicianTouch = false
     if (monkLevel >= 6) physicianTouch = true;
     if (physicianTouch && !mba.checkTrait(target.actor, "ci", "poisoned")/*&& !mba.findEffect(target.actor, "Hand of Harm: Poison")*/) {
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let poisonCheck = await mba.dialog("Hand of Harm: Poison", constants.okCancel, `Would you like to poison <u>${target.document.name}</u>?`);
         await mba.clearPlayerDialogMessage();
         if (poisonCheck) {

@@ -5,7 +5,7 @@ export async function blindnessDeafness({ speaker, actor, token, character, item
     let ammount = workflow.castData.castLevel - 1;
     let targets = Array.from(workflow.targets);
     if (workflow.targets.size > ammount) {
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let selection = await mba.selectTarget(workflow.item.name, constants.okCancel, Array.from(workflow.targets), false, 'multiple', undefined, false, 'Too many targets selected. Choose which targets to keep (Max: ' + ammount + ')');
         await mba.clearPlayerDialogMessage();
         if (!selection.buttons) return;
@@ -32,7 +32,7 @@ export async function blindnessDeafness({ speaker, actor, token, character, item
     if (!featureWorkflow.failedSaves.size) return;
     for (let target of Array.from(featureWorkflow.failedSaves)) {
         let choices = [['Blindness', 'blind'], ['Deafness', 'deaf']];
-        await mba.playerDialogMessage();
+        await mba.playerDialogMessage(game.user);
         let selection = await mba.dialog(`Blindness/Deafness`, choices, `Choose condition for <u>${target.document.name}</u>:`);
         await mba.clearPlayerDialogMessage();
         if (!selection) return;

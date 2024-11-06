@@ -18,7 +18,7 @@ export async function thunderboltStrike({ speaker, actor, token, character, item
         queue.remove(workflow.item.uuid);
         return;
     }
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.selectTarget("Thunderbolt Strike", constants.yesNoButton, targets, true, 'multiple', undefined, false, `<b>Choose targets to push 10 ft. away from you:</b>`);
     await mba.clearPlayerDialogMessage();
     if (!selection.buttons) {

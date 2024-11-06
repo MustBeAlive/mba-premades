@@ -12,7 +12,9 @@ async function magicalGift({ speaker, actor, token, character, item, args, scope
         ['Charm of the Swollen Hag', 'hag'],
         ['Charm of Treasure Sense', 'treasure']
     ];
-    let selection = await mba.dialog('Magical Gift', choices, `What charm do you wish to bestow?`);
+    await mba.gmDialogMessage();
+    let selection = await mba.dialog('Magical Gift', choices, `Which charm would you like to bestow?`);
+    await mba.clearGMDialogMessage();
     if (!selection) return;
     let target = workflow.targets.first();
     if (selection === "nine") {
@@ -254,18 +256,18 @@ async function nineLives(token, { item, workflow, ditem }) {
 
         .effect()
         .file("jb2a.particles.swirl.orange.02.01")
-        .fadeIn(1000)
-        .fadeOut(700)
         .atLocation(token)
         .scaleToObject(1.7 * token.document.texture.scaleX)
         .duration(8300)
+        .fadeIn(1000)
+        .fadeOut(700)
 
         .effect()
         .file("jb2a.magic_signs.rune.abjuration.complete.orange")
-        .fadeIn(1500)
-        .fadeOut(700)
         .attachTo(token)
         .scaleToObject(1.2)
+        .fadeIn(1500)
+        .fadeOut(700)
         .aboveInterface()
 
         .thenDo(async () => {

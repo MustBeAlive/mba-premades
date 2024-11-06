@@ -136,7 +136,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
             {
                 'key': 'flags.midi-qol.OverTime',
                 'mode': 0,
-                'value': `actionSave=true, rollType=check, saveAbility=str, saveDC=${saveDC}, saveMagic=true, name=Restrain: Action Save (DC${saveDC}), killAnim=true`,
+                'value': `actionSave=true, rollType=check, saveAbility=str, saveDC=${saveDC}, saveMagic=true, name=Restrain: Action Save (Str Ability, DC${saveDC}), killAnim=true`,
                 'priority': 20
             }
         ],

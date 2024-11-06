@@ -216,7 +216,9 @@ async function summonWraith({ speaker, actor, token, character, item, args, scop
         .name(`${token.document.name} AtrC`)
 
         .thenDo(async () => {
+            await mba.gmDialogMessage();
             let [spawnedTokenId] = await mba.spawn(sourceActor, updates, {}, workflow.token, 30, "shadow");
+            await mba.clearGMDialogMessage();
             Sequencer.EffectManager.endEffects({ name: `${token.document.name} AtrC` });
             if (mba.inCombat()) {
                 let specterDoc = canvas.scene.tokens.get(spawnedTokenId);
@@ -336,7 +338,9 @@ async function wailItem({ speaker, actor, token, character, item, args, scope, w
             continue;
         }
         let level = +exhaustion.name.slice(-1);
+        if (level === 0) level = 9;
         level += 1;
+        await mba.removeCondition(target.actor, `Exhaustion ${level - 1}`);
         await mba.addCondition(target.actor, `Exhaustion ${level}`);
     }
 }

@@ -3,12 +3,12 @@ import {mba} from "../../../helperFunctions.js";
 async function aversionOfFire({ speaker, actor, token, character, item, args, scope, workflow }) {
     let aversionEffect = await mba.findEffect(actor, "Aversion of Fire");
     if (!aversionEffect) return;
-    let aversionDebuff = await mba.findEffect(actor, "Flesh Golem: Aversion of Fire");
+    let aversionDebuff = await mba.findEffect(actor, "Golem: Aversion of Fire");
     if (aversionDebuff) return;
     let typeCheck = workflow.damageDetail?.some(i => i.type === "fire");
     if (!typeCheck) return;
     const effectData = {
-        'name': "Flesh Golem: Aversion of Fire",
+        'name': "Golem: Aversion of Fire",
         'icon': "modules/mba-premades/icons/generic/generic_fire.webp",
         'description': `
             <p>${actor.prototypeToken.name} recieved fire damage and has disadvantage on attack rolls and ability checks until the end of its next turn.</p>
@@ -59,7 +59,7 @@ async function berserk(token) {
 
         .play();
 
-    await Sequencer.EffectManager.endEffects({ name: `${token.document.name} Berserk` })
+    Sequencer.EffectManager.endEffects({ name: `${token.document.name} Berserk` })
     };
     let effectData = {
         'name': "Berserk",

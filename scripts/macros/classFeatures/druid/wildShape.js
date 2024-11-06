@@ -29,7 +29,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         'Water Elemental'
     ];
     if (elementalWildShape && workflow.item.system.uses.value >= 2) documents = documents.concat(index.filter(i => elementals.includes(i.name)));
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selectedCreatures = await mba.selectDocument(workflow.item.name, documents, false, false, true, true);
     await mba.clearPlayerDialogMessage();
     if (!selectedCreatures) return;

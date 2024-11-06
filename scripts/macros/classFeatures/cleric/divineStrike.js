@@ -18,7 +18,7 @@ async function item({ speaker, actor, token, character, item, args, scope, workf
         queue.remove(workflow.item.uuid);
         return;
     }
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Divine Strike", constants.yesNo, `<b>Apply extra damage? (${diceNumber}d8)</b>`);
     await mba.clearPlayerDialogMessage();
     if (!selection) {

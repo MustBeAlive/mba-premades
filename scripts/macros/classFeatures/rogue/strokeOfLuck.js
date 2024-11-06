@@ -6,7 +6,7 @@ export async function strokeOfLuck({ speaker, actor, token, character, item, arg
     let strokeOfLuckItem = await mba.getItem(workflow.actor, "Stroke of Luck");
     if (!strokeOfLuckItem) return;
     if (strokeOfLuckItem.system.uses.value < 1) return;
-    await mba.playerDialogMessage();
+    await mba.playerDialogMessage(game.user);
     let selection = await mba.dialog("Stroke of Luck", constants.yesNo, "<p>You've missed your attack.</p><p>Would you like to use <b>Stroke of Luck</b> to succeed instead?</p>")
     await mba.clearPlayerDialogMessage();
     if (!selection) return;
